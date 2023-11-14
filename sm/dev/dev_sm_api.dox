@@ -1,0 +1,180 @@
+/*
+** ###################################################################
+**
+** Copyright 2023 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+
+@defgroup DEV_SM DEVICE: SM Device Interface
+
+@brief Module for the device interface for the SM.
+
+Device Module {#DEV_SM_DETAIL}
+=============
+
+This module abstracts the SoC device. It contains a common API and
+implementations for each supported SoC.
+
+*/
+
+/*!
+ * @addtogroup DEV_SM
+ * @{
+ */
+
+/*!
+ * @addtogroup DEV_SM_API SM Device API
+ * @brief Module for the device interface API.
+ *
+ * This module provides a common API for the SM device layer. It contains most functions
+ * and  types to call the SM device layer of code. It also contain redirection macros
+ * for most of those functions. This allows brd_sm.h defines to redirect calls
+ * from the SM that go to device functions to instead go to board functions. Those
+ * functions then usually add resources or functionality but still call the device
+ * function for device resources.
+ *
+ * For example, in brd_sm.h:
+ * 
+ *     #define SM_SENSORNAMEGET       BRD_SM_SensorNameGet
+ * 
+ * Would redirct calls for device sensors names made via ::SM_SENSORNAMEGET to
+ * BRD_SM_SensorNameGet() instead of DEV_SM_SensorNameGet().
+ *
+ * @{
+ */
+
+/*!
+@defgroup DEV_SM_COMMON_API DEVICE_COMMON: SM Device Interface (COMMON)
+
+@brief Module for the device common functions.
+*/
+
+/*!
+@defgroup DEV_SM_CONFIG_API DEVICE_CONFIG: SM Device Interface (CONFIG)
+
+@brief Module for the device configuration functions.
+*/
+
+/*!
+@defgroup DEV_SM_ROM_API DEVICE_ROM: SM Device Interface (ROM)
+
+@brief Module for the device ROM functions.
+*/
+
+/*!
+@defgroup DEV_SM_RDC_API DEVICE_RDC: SM Device Interface (RDC)
+
+@brief Module for the device RDC functions.
+*/
+
+/*!
+@defgroup DEV_SM_POWER_API DEVICE_POWER: SM Device Interface (POWER)
+
+@brief Module for the device power functions.
+*/
+
+/*!
+@defgroup DEV_SM_SYS_API DEVICE_SYS: SM Device Interface (SYS)
+
+@brief Module for the device system functions.
+*/
+
+/*!
+@defgroup DEV_SM_PERF_API DEVICE_PERF: SM Device Interface (PERF)
+
+@brief Module for the device performance functions.
+*/
+
+/*!
+@defgroup DEV_SM_CLOCK_API DEVICE_CLOCK: SM Device Interface (CLOCK)
+
+@brief Module for the device clock functions.
+*/
+
+/*!
+@defgroup DEV_SM_SENSOR_API DEVICE_SENSOR: SM Device Interface (SENSOR)
+
+@brief Module for the device sensor functions.
+*/
+
+/*!
+@defgroup DEV_SM_RESET_API DEVICE_RESET: SM Device Interface (RESET)
+
+@brief Module for the device reset functions.
+*/
+
+/*!
+@defgroup DEV_SM_VOLTAGE_API DEVICE_VOLTAGE: SM Device Interface (VOLTAGE)
+
+@brief Module for the device voltage functions.
+*/
+
+/*!
+@defgroup DEV_SM_PIN_API DEVICE_PIN: SM Device Interface (PIN)
+
+@brief Module for the device pin functions.
+*/
+
+/*!
+@defgroup DEV_SM_BBM_API DEVICE_BBM: SM Device Interface (BBM)
+
+@brief Module for the device BBM functions.
+*/
+
+/*!
+@defgroup DEV_SM_CPU_API DEVICE_CPU: SM Device Interface (CPU)
+
+@brief Module for the device CPU functions.
+*/
+
+/*!
+@defgroup DEV_SM_CTRL_API DEVICE_CTRL: SM Device Interface (CTRL)
+
+@brief Module for the device control functions.
+*/
+
+/*!
+@defgroup DEV_SM_FAULT_API DEVICE_FAULT: SM Device Interface (FAULT)
+
+@brief Module for the device fault functions.
+*/
+
+/** @} */
+
+/*!
+ * @defgroup DEV_SM_API SM Device API
+ * @defgroup DEV_SM_MX95 DEVICE_MX95: SM i.MX95 Device Implementation
+ * @defgroup DEV_SM_SIMU DEVICE_SIMU: SM Simulated Device Implementation
+ */
+
+/** @} */
+

@@ -1,0 +1,7 @@
+/*!
+@defgroup ele_driver ELE: EdgeLock Enclave Driver
+Driver for the ELE IP.
+
+@details It is an MCUXpresso SDK driver for the ELE module of i.MX devices.
+
+*/

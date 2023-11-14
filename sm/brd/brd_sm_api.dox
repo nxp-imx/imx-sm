@@ -1,0 +1,82 @@
+/*
+** ###################################################################
+**
+** Copyright 2023 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+
+@defgroup BRD_SM BOARD: SM Board Interface
+
+@brief Module for the board interface for the SM.
+
+Board Module
+============
+
+This module abstracts the board. It contains a common API and implementations for each
+supported board.
+
+*/
+
+/*!
+ * @addtogroup BRD_SM
+ * @{
+ */
+
+/*!
+ * @defgroup BRD_SM_API SM Board API
+ * @brief Module for the board interface API.
+ *
+ * This module provides a common API for the SM board layer. It contains most functions
+ * and types to call the SM board layer of code. The brd_sm.h file also allows defines
+ * to redirect calls from the SM device API that go to device functions to instead
+ * go to board functions. Those functions then usually add resources or functionality
+ * but still call the device function for device resources. See the
+ * [device API](@ref DEV_SM_API) for a list of these redirection defines.
+ *
+ * For example, in brd_sm.h:
+ * 
+ *     #define SM_SENSORNAMEGET       BRD_SM_SensorNameGet
+ * 
+ * Would redirct calls for device sensors names made via ::SM_SENSORNAMEGET to
+ * BRD_SM_SensorNameGet() instead of DEV_SM_SensorNameGet().
+ *
+ */
+
+/*!
+ * @defgroup BRD_SM_API SM Board API
+ * @defgroup BRD_SM_MX95EVK BOARD_MX95EVK: i.MX95 EVK SM Implementation
+ * @defgroup BRD_SM_MX95STUB BOARD_MX95STUB: i.MX95 Stub SM Implementation
+ * @defgroup BRD_SM_SIMU BOARD_SIMU: Simulation Board SM Implementation
+ */
+
+/** @} */
+

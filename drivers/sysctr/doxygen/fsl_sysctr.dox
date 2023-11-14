@@ -1,0 +1,7 @@
+/*!
+@defgroup sysctr_driver SYSCTR: System Counter Driver
+Driver for the SYSCTR IP.
+
+@details It is an MCUXpresso SDK driver for the SYSCTR module of i.MX devices.
+
+*/

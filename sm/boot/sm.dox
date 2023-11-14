@@ -1,0 +1,110 @@
+/*
+** ###################################################################
+**
+** Copyright 2023 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+ * @defgroup scmi_proto SCMI:  System Control and Management Interface Protocol
+ * @defgroup smt_proto SMT:  Shared Memory Transport Protocol
+ * @defgroup BOOT BOOT: Top level boot code
+ * @defgroup SM_CONFIG CONFIG: SM Configuration Data
+ * @defgroup MB_MU MB_MU: Mailbox-MU
+ * @defgroup MB_LOOPBACK MB_LOOPBACK: Mailbox-Loopback
+ * @defgroup RPC_SMT RPC_SMT: Platform-side Shared Memory Transport
+ * @defgroup RPC_SCMI RPC_SCMI: Platform-side System Control and Management Interface
+ * @defgroup LMM LMM: Logical Machine Manager
+ * @defgroup DEV_SM DEVICE: SM Device Interface
+ * @defgroup BRD_SM BOARD: SM Board Interface
+ * @defgroup drivers DRIVER: Device Drivers
+ * @defgroup components COMPONENT: Board Devices
+ * @defgroup UTIL UTIL: Misc. Utilities
+ * @defgroup crc CRC: CRC Library
+ */
+
+/*!
+ * @defgroup BOOT BOOT: Top level boot code
+ * @brief Module for the SM boot.
+ */
+
+/*!
+ * @defgroup components COMPONENT: Board Devices
+ * @brief Device drivers for board components.
+ */
+
+/*!
+ * @defgroup drivers DRIVER: Device Drivers
+ * @brief Device drivers for SoC IP.
+ *
+ * Drivers come from the MCUXpresso SDK. Some are not listed here as they don't have
+ * doxygen comments. See the [Architecture](@ref ARCH_SDK) section for a complete list.
+ */
+
+/*!
+ * @defgroup bbnsm Battery-Backed Non-Secure Module
+ * @ingroup drivers
+ */
+
+/*!
+ * @defgroup ele_driver ELE: EdgeLock Enclave Driver
+ * @ingroup drivers
+ */
+
+/*!
+ * @defgroup lpi2c LPI2C: Low Power Inter-Integrated Circuit Driver
+ * @ingroup drivers
+ */
+
+/*!
+ * @page drv_err Driver errors status
+ * @ingroup lpi2c
+ */
+
+/*!
+ * @defgroup mu MU: Messaging Unit
+ * @ingroup drivers
+ */
+
+/*!
+ * @defgroup rgpio RGPIO: Rapid General-Purpose Input/Output Driver
+ * @ingroup drivers
+ */
+
+/*!
+ * @defgroup sysctr_driver SYSCTR: System Counter Driver
+ * @ingroup drivers
+ */
+
+/*!
+ * @defgroup systick_driver SYSTICK: System Timer Driver
+ * @ingroup drivers
+ */
+

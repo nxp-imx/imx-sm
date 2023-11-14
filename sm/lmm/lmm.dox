@@ -1,0 +1,153 @@
+/*
+** ###################################################################
+**
+** Copyright 2023 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+@defgroup LMM LMM: Logical Machine Manager
+
+@brief Module for the Logical Machine Manager.
+
+The Logical Machine Manager (LMM) is an SM module responsible for managing
+[Logical Machines (LM)](@ref SYS_ARCH_LM). In the SM [architecture](@ref LOG_ARCH)
+it sits between the RPC modules and the device/board modules. The API is device
+agnostic. It has three primary functions:
+
+- Aggregates requests from multiple LM into a single state requested of the
+  device/board
+- Manages the lifecycle state (boot, shutdown, reset, suspend, wake) of LM
+- Distributes notifications to the various LM via RPC notifications
+
+Most of the API is structure in the same way as the RPC and device modules. For
+example, the [SCMI RPC](@ref RPC_SCMI) power functions include a function to set
+the power state. This in turn calls the LMM_PowerStateSet() function which in
+turn calls the DEV_SM_PowerStateSet() function via the ::SM_POWERSTATESET redirection
+define. The LMM_PowerStateSet() function aggregates the requests for from each LM
+into a single request for the device. This structure exists for performance, clock,
+sensor, reset, voltage, etc. modules.
+
+The [LMM System](@ref LMM_SYS) module is unique in that it does not aggregate
+requests. Instead it applies the requests to the specified LM or full system. For
+example, the LMM_SystemLmBoot() function will boot an LM. The LMM_SystemLmReset()
+function will reset an LM.
+
+In addition, various LMM modules have functions that will distribute notifications
+to all the linked RPC. For example, the LMM_SensorEvent() function will send a sensor
+event to all linked RPC sensor modules. The [LMM Fault](@ref LMM_FAULT) module
+handles fault reports by taking actions on LM as [configured](@ref LMM_CONFIG).
+*/
+
+/*!
+ * @addtogroup LMM
+ * @{
+ */
+
+/*!
+@defgroup LMM_CONFIG LMM_CONFIG: Logical Machine Manager (CONFIG)
+
+@brief Module for the LMM config data.
+*/
+
+/*!
+@defgroup LMM_POWER LMM_POWER: Logical Machine Manager (POWER)
+
+@brief Module for the LMM power functions.
+*/
+
+/*!
+@defgroup LMM_SYS LMM_SYS: Logical Machine Manager (SYS)
+
+@brief Module for the LMM system functions.
+*/
+
+/*!
+@defgroup LMM_PERF LMM_PERF: Logical Machine Manager (PERF)
+
+@brief Module for the LMM performance functions.
+*/
+
+/*!
+@defgroup LMM_CLOCK LMM_CLOCK: Logical Machine Manager (CLOCK)
+
+@brief Module for the LMM clock functions.
+*/
+
+/*!
+@defgroup LMM_SENSOR LMM_SENSOR: Logical Machine Manager (SENSOR)
+
+@brief Module for the LMM sensor functions.
+*/
+
+/*!
+@defgroup LMM_RESET LMM_RESET: Logical Machine Manager (RESET)
+
+@brief Module for the LMM reset functions.
+*/
+
+/*!
+@defgroup LMM_VOLTAGE LMM_VOLTAGE: Logical Machine Manager (VOLTAGE)
+
+@brief Module for the LMM voltage functions.
+*/
+
+/*!
+@defgroup LMM_BBM LMM_BBM: Logical Machine Manager (BBM)
+
+@brief Module for the LMM BBM functions.
+*/
+
+/*!
+@defgroup LMM_CPU LMM_CPU: Logical Machine Manager (CPU)
+
+@brief Module for the LMM CPU functions.
+*/
+
+/*!
+@defgroup LMM_MISC LMM_MISC: Logical Machine Manager (MISC)
+
+@brief Module for the LMM misc functions.
+*/
+
+/*!
+@defgroup LMM_FAULT LMM_FAULT: Logical Machine Manager (FAULT)
+
+@brief Module for the LMM fault functions.
+*/
+
+/*!
+@defgroup LMM_FUSA LMM_FUSA: Logical Machine Manager (FUSA)
+
+@brief Module for the LMM FuSa functions.
+*/
+
+/** @} */
+

@@ -1,0 +1,26 @@
+/*!
+@page driver_log Driver Change Log
+
+@section mu MU
+  The Current MU driver version is 2.2.0.
+
+  - 2.2.0
+    - New features
+      - Added support for i.MX RT118x.
+
+  - 2.1.2
+    - Bug Fixes
+      - Fixed bug that general purpose interrupt can't be configured.
+
+  - 2.1.1
+    - Bug Fixes
+      - Fixed MISRA C-2012 issues.
+
+  - 2.1.0
+    - Improvements
+      - Added new enum mu_msg_reg_index_t.
+
+  - 2.0.0
+    - Initial version.
+
+*/

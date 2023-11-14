@@ -1,0 +1,7 @@
+/*!
+@defgroup systick_driver SYSTICK: System Timer Driver
+Driver for the SYSTICK IP.
+
+@details It is an MCUXpresso SDK driver for the SYSTICK module of i.MX devices.
+
+*/

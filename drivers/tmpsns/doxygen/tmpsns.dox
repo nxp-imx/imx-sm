@@ -1,0 +1,16 @@
+/*!
+@defgroup tmpsns TMPSNS: Temperature Sensor
+@ingroup drivers
+@brief Driver for TMPSNS IP.
+@details The MCUXpresso SDK provides a driver for the TMPSNS module of MCUXpresso SDK devices.
+
+# Function description {#TMPSNSFunc}
+
+The TMPSNS driver provides these functions:
+ - Functions to initialize the TMPSNS module.
+ - Function to read the temp sensor.
+ - Function to configure the thresholds.
+ - Functions for status flags and interrupts.
+ - Other miscellaneous functions.
+
+*/
