@@ -1,0 +1,14 @@
+
+/*!
+ * @addtogroup components
+ * @{
+ */
+
+/*!
+@defgroup pf53 PF53 Driver
+@brief Component driver for a PF53 PMIC
+@details Component driver for a PF53 PMIC.
+*/
+
+/** @} */
+

@@ -1,0 +1,413 @@
+
+/*!
+@defgroup scmi_proto SCMI:  System Control and Management Interface Protocol
+
+@brief Client-side protocol for the System Control and Management interface (SCMI).
+
+The client-side SCMI implementation offers the following protocols:
+
+- [Base Protocol](@ref scmi_proto_base) - describes the properties of the implementation.
+- [Power Protocol](@ref scmi_proto_power) - management of power states of power domains.
+- [System Protocol](@ref scmi_proto_sys) - system shutdown, suspend, and reset.
+- [Performance Protocol](@ref scmi_proto_perf) - management of groups of devices or APs that run
+  in the same performance domain.
+- [Clock Protocol](@ref scmi_proto_clock) - management of clocks.
+- [Sensor Protocol](@ref scmi_proto_sensor) - manage platform sensors,
+- [Reset Protocol](@ref scmi_proto_reset) - control of reset capable domains in the platform.
+- [Voltage Protocol](@ref scmi_proto_voltage) - management of configuration and voltage levels
+  of voltage domains.
+- [Pin Control Protocol](@ref scmi_proto_pinctrl) - management of pins.
+- [LMM Protocol](@ref scmi_proto_lmm) - management of logical machines.
+- [BBM Protocol](@ref scmi_proto_bbm) - access to the battery-backed module.
+- [CPU Protocol](@ref scmi_proto_cpu) - management of CPUs.
+- [Misc Protocol](@ref scmi_proto_misc) - management of misc. controls and functions.
+- [FuSa Protocol](@ref scmi_proto_fusa) - safety service and notifications.
+*/
+
+/*!
+ * @addtogroup scmi_proto
+ * @{
+ */
+
+/*!
+@defgroup scmi_proto_base SCMI_BASE:  System Control and Management Interface Driver (BASE)
+
+@brief Client-side protocol for the SCMI base protocol.
+
+This protocol describes the properties of the implementation and provides generic error management.
+The Base protocol provides functions to:
+
+- Describe protocol version.
+- Discover implementation attributes and vendor identification.
+- Discover which protocols are implemented.
+- Discover which agents are in the system.
+
+See section *4.2 Base protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_power SCMI_POWER:  System Control and Management Interface Driver (POWER)
+
+@brief Client-side protocol for the SCMI power protocol.
+
+This protocol is intended for management of power states of power domains.
+The power domain management protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Set the power state of a domain.
+- Get the current power state of a domain.
+
+The power domains can be found in the POWER section of the SoC @ref DEV_SM. They can also be found
+in the SoC RM. See the Domain/Mix Slice List table in the System Reset Controller (SRC) section. 
+Board code can add additional power domains.
+
+Power domain states are aggregated across all agents and LMs. The power domain state of the hardware
+will be the lowest possible state to satisfy the setting from all clients. For example, the state
+will be off only if all clients with access rights to a domain have the domain set to off.
+
+See section *4.3 Power domain management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_sys SCMI_SYS:  System Control and Management Interface Driver (SYSTEM)
+
+@brief Client-side protocol for the SCMI system protocol.
+
+This protocol is intended for LM (self) shutdown, suspend, and reset. It can also allow for
+shutdown and reset of the entire system. The system power protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Shut down the LM.
+- Suspend the LM.
+- Reset the LM.
+- Request a graceful shutdown or reset of the LM.
+- Allow an agent to forcibly power down or reset the entire system.
+
+Note reading boot/shutdown/reset reason info for the LM/system can be done via the
+[Misc Protocol](@ref scmi_proto_misc). Management of other logical machines is done via
+the [LMM Protocol](@ref scmi_proto_lmm).
+
+See section *4.4 System power management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_perf SCMI_PERF:  System Control and Management Interface Driver (PERFORMANCE)
+
+@brief Client-side protocol for the SCMI performance protocol.
+
+This protocol is intended for performance management of groups of devices or APs that run in the same
+performance domain. Performance domains must not be confused with power domains. A performance domain
+is defined by a set of devices that always have to run at the same performance level. For a given
+performance domain, there is a single point of control that affects all the devices in the domain,
+making it impossible to set the performance level of an individual device in the domain independently
+from other devices in that domain. For example, a set of CPUs that share a voltage domain, and have a
+common frequency control, is said to be in the same performance domain. The functions in this protocol
+provide functionality to:
+
+- Describe the protocol version.
+- Describe attribute flags of the protocol.
+- Set the performance level of a domain.
+- Read the current performance level of a domain.
+- Return the list of performance levels supported by a performance domain, and the properties of each
+  performance level.
+
+The performance domains can be found in the PERF section of the SoC @ref DEV_SM. Board code can
+add additional performance domains.
+
+Performance levels are aggregated across all **LM** (but not agents). The performance level of the hardware
+will be the lowest possible level to satisfy the setting from all LM.
+
+See section *4.5 Performance domain management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_clock SCMI_CLOCK:  System Control and Management Interface Driver (CLOCK)
+
+@brief Client-side protocol for the SCMI clock protocol.
+
+This protocol is intended for management of clocks. It is used to enable or disable clocks, and to set
+rates. The protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Describe a clock.
+- Enable or disable a clock.
+- Set the rate and other configuration of the clock synchronously.
+- Get and set the parent of a clock.
+
+The clock IDs can be found in the CLOCK section of the SoC @ref DEV_SM. Board code can
+add additional clock IDs.
+
+Device clock IDs are made up of three kinds of clocks: sources, roots, and GPR mux selects. All of
+these are documented in different parts of Clock Control Module (CCM) section of the SoC RM:
+
+| Clock type | Start | End | RM Documentation                                 |
+|------------|-------|-----|--------------------------------------------------|
+| Sources    | 0     | X   | Clock Sources table + 2 external clock sources   |
+| Roots      | X + 1 | Y   | Clock Root table                                 |
+| GPR Muxes  | Y + 1 | Z   | General Purpose Register (GPR_SHAREDx) registers |
+
+Clock enable states are aggregated across all agents and LMs. The clock state of the hardware
+will be the lowest possible state to satisfy the setting from all clients. For example, the clock
+will be disabled only if all clients with access rights to a clock have the clock disabled. Clock
+rates and parents are not aggregated. The setting will reflect the last setting which is why it is
+normal to give exclusive access to set these to one agent in the system.
+
+See section *4.6 Clock management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_sensor SCMI_SENSOR:  System Control and Management Interface Driver (SENSOR)
+
+@brief Client-side protocol for the SCMI sensor protocol.
+
+This protocol provides functions to manage platform sensors, and provides the following functions:
+
+- Describe the protocol version.
+- Describe the attribute flags of the protocol.
+- Discover sensors that are implemented and managed by the platform.
+- Read a sensor synchronously or asynchronously as allowed by the platform.
+- Obtain and program sensor attributes, if applicable.
+- Configure a sensor.
+- Receive notifications on specific changes to sensor data, for example when a sensor value
+  crosses a threshold.
+
+The sensor IDs can be found in the SENSOR section of the SoC @ref DEV_SM. Board code can
+add additional sensor IDs.
+
+Sensor enable states are aggregated across all agents and LMs. The sensor state of the hardware
+will be the lowest possible state to satisfy the setting from all clients. For example, the sensor
+will be disabled only if all clients with access rights to a sensor have the sensor disabled. Sensor
+trip points are not aggregated. The setting will reflect the last setting which is why it is
+normal to give exclusive access to set these to one agent in the system.
+
+See section *4.7 Sensor management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_reset SCMI_RESET:  System Control and Management Interface Driver (RESET)
+
+@brief Client-side protocol for the SCMI reset protocol.
+
+This protocol is intended for control of reset capable domains in the platform. The reset
+management protocol provides functions to:
+
+- Describe the protocol version.
+- Discover the attributes and capabilities of the reset domains in the system.
+- Reset a given domain.
+
+The reset domains can be found in the RESET section of the SoC @ref DEV_SM. Board code can
+add additional reset domains.
+
+Reset settings are not aggregated and setting their state is normally exclusive to one client.
+
+See section *4.8 Reset domain management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_voltage SCMI_VOLTAGE:  System Control and Management Interface Driver (VOLTAGE)
+
+@brief Client-side protocol for the SCMI voltage protocol.
+
+This protocol is intended for the management of configuration and voltage levels of voltage domains.
+The voltage domain management protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Discover the voltage levels supported by a domain.
+- Get the configuration and voltage level of a domain.
+- Set the configuration and voltage level of a domain.
+
+The voltage domains can be found in the VOLTAGE section of the SoC @ref DEV_SM. Board code can
+add additional voltage domains.
+
+Voltage domain modes are aggregated across all agents and LMs. The voltage domain mode of the hardware
+will be the lowest possible mode to satisfy the setting from all clients. For example, the mode
+will be off only if all clients with access rights to a domain have the domain set to off. Voltage
+domain levels are not aggregated. The setting will reflect the last setting which is why it is
+normal to give exclusive access to set these to one agent in the system.
+
+See section *4.9 Voltage domain management protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_pinctrl SCMI_PINCTRL:  System Control and Management Interface Driver (PINCTRL)
+
+@brief Client-side protocol for the SCMI pin control protocol.
+
+This protocol allows configuration of a pin. The pin control protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Get pin attributes.
+- Configure a pin (mux, config) and input select daisy function.
+- Get the configuration of a pin.
+
+The SM only implements pins. It does not support groups or functions. It supports four OEM
+specific config types:
+
+| OEM Config Type               | Enumeration | Value/Unit                 |
+|-------------------------------|-------------|----------------------------|
+| ::SCMI_PINCTRL_TYPE_MUX       | 192         | Pin mux register value     |
+| ::SCMI_PINCTRL_TYPE_CONFIG    | 193         | Pin config register value  |
+| ::SCMI_PINCTRL_TYPE_DAISY_ID  | 194         | Daisy index (input select) |
+| ::SCMI_PINCTRL_TYPE_DAISY_CFG | 195         | Daisy register value       |
+
+It does not support any of the other SCMI standard pin units. Calls for daisy must include
+both the ::SCMI_PINCTRL_TYPE_DAISY_ID and ::SCMI_PINCTRL_TYPE_DAISY_CFG types.
+
+The pin identifiers can be found in the SoC specific *dev_sm_pin.h* file. They, and the daisy
+ID, can also be calculated from SoC RM info as:
+
+    identifier = (IOMUX_mux_register_address - IOMUX_mux base_address) / 4
+    daisy_index = (IOMUX_daisy_register_address - IOMUX_daisy base_address) / 4
+
+Note SCMI_PinctrlConfigGet() only returns the mux and config values as there is no daisy ID
+passed in to be able to return that value based in identifier alone.
+
+Pin settings are not aggregated and setting their state is normally exclusive to one client.
+
+See section *4.11 Pin control protocol* in the [SCMI Spec](@ref DOCS).
+*/
+
+/*!
+@defgroup scmi_proto_lmm SCMI_LMM:  System Control and Management Interface Driver (LMM)
+
+@brief Client-side protocol for the SCMI LMM protocol.
+
+This protocol is intended for boot, shutdown, and reset of other
+[logical machines (LM)](@ref SYS_ARCH_LM). It is usually used to allow one LM to manager
+another used as an offload or accelerator engine. Notifications from this protocol can also
+be used to manage a communication link to another LM. The LMM protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Discover the LMs defined in the system.
+- Boot an LM.
+- Shut down an LM.
+- Reset an LM.
+- Wake an LM from suspend.
+- Suspend an LM (gracefully).
+- Request a graceful shutdown or reset of an LM.
+- Allow an agent to forcibly power down or reset an LM.
+- Read boot/shutdown/reset information for an LM.
+- Get notifications when an LM boots or shuts down.
+
+The boot/shutdown/reset reasons can be found in the SYS section of the SoC @ref DEV_SM. They
+can also be found in the SoC RM. See the SRSR/SRESR register description in the System Reset
+Controller (SRC) section. Board code can add additional reasons.
+
+This is an NXP vendor extension.
+*/
+
+/*!
+@defgroup scmi_proto_bbm SCMI_BBM:  System Control and Management Interface Driver (BBM)
+
+@brief Client-side protocol for the SCMI BBM protocol.
+
+This protocol is intended provide access to the battery-backed module. This contains
+persistent storage (GPR), an RTC, and the ON/OFF button. The protocol can also provide
+access to similar functions implemented via external board components. The BBM protocol
+provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Read/write GPR
+- Discover the RTCs available in the system.
+- Read/write the RTC time in seconds and ticks
+- Set an alarm (per LM) in seconds
+- Get notifications on RTC update, alarm, or rollover.
+- Get notification on ON/OFF button activity.
+
+The GPR and RTC IDs can be found in the BBM section of the SoC @ref DEV_SM. Board code can add
+additional GPR and RTC. For most SoC, there is one on-chip RTC (e.g. in BBNSM) and this is RTC
+ID 0.
+
+GPR are not aggregated. The RTC time is also not aggregated. Setting these sets for all so normally
+exclusive access would be granted to one agent for each. However, RTC alarms are maintained for
+each **LM** and the hardware is programmed with the next nearest alarm time. So only one agent in
+an LM should be given access rights to set an RTC alarm.
+
+This is an NXP vendor extension.
+*/
+
+/*!
+@defgroup scmi_proto_cpu SCMI_CPU:  System Control and Management Interface Driver (CPU)
+
+@brief Client-side protocol for the SCMI CPU protocol.
+
+This protocol allows an agent to start or stop a CPU. It is used to manage auxiliary CPUs in
+an LM (e.g. additional cores in an AP cluster), The CPU protocol provides functions to:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Discover the CPUs defined in the system.
+- Start a CPU.
+- Stop a CPU.
+- Set the boot and resume addresses for a CPU.
+- Set the sleep mode of a CPU.
+- Configure wake-up sources for a CPU.
+- Configure power domain reactions (LPM mode and retention mask) for a CPU.
+
+The CPU IDs can be found in the CPU section of the SoC @ref DEV_SM. They can also be found
+in the SoC RM. See the CPU Mode Control (CMC) list in General Power Controller (GPC) section.
+
+CPU settings are not aggregated and setting their state is normally exclusive to one client.
+
+This is an NXP vendor extension.
+*/
+
+/*!
+@defgroup scmi_proto_fusa SCMI_FUSA:  System Control and Management Interface Driver (FUSA)
+
+@brief Client-side protocol for the SCMI functional safety (FuSa) protocol.
+
+This protocol supports the following functions:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Get/set the state of the F-EENV
+- Get/set state of an S-EENV
+- Get/set faults
+- Control fault checking during sCheck
+- Submit CRC tasks and obtain results
+- Send notifications on state changes
+- Send notifications about faults
+- Handle fault reporting
+
+This is an NXP vendor extension.
+*/
+
+/*!
+@defgroup scmi_proto_misc SCMI_MISC:  System Control and Management Interface Driver (MISC)
+
+@brief Client-side protocol for the SCMI misc protocol.
+
+Provides misc. functions. This includes controls that are misc. settings/actions that must be
+exposed from the SM to agents. They are device specific and are usually define to access bit
+fields in various mix block control modules, IOMUX_GPR, and other GPR/CSR owned by the SM.
+
+This protocol supports the following functions:
+
+- Describe the protocol version.
+- Discover implementation attributes.
+- Set/Get a control.
+- Initiate an action on a control.
+- Obtain platform (i.e. SM) build information.
+- Obtain ROM passover data.
+- Read boot/shutdown/reset information for the LM or the system.
+
+The control IDs can be found in the CTRL section of the SoC @ref DEV_SM. The boot/shutdown/reset
+reasons can be found in the SYS section. The boot/shutdown/reset reasons can be found in the SYS
+section of the SoC @ref DEV_SM. They can also be found in the SoC RM. See the SRSR/SRESR register
+description in the System Reset Controller (SRC) section. Board code can add additional reasons.
+
+Control settings are not aggregated and setting their state is normally exclusive to one client.
+
+This is an NXP vendor extension.
+*/
+
+/** @} */
+

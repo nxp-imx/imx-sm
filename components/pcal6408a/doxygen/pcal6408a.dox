@@ -1,0 +1,20 @@
+
+/*!
+ * @addtogroup components
+ * @{
+ */
+
+/*!
+@defgroup pcal6408a PCAL6408A Driver
+@brief Component driver for a PCAL6408A I2C bus expander
+@details Component driver for a PCAL6408A I2C bus expander.
+
+This expander supports 8 GPIO pins with the following capabilities:
+- Configuration of the expander
+- Read of input pins
+- Write of output pins
+- Interrupt management
+*/
+
+/** @} */
+

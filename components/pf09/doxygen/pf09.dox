@@ -1,0 +1,14 @@
+
+/*!
+ * @addtogroup components
+ * @{
+ */
+
+/*!
+@defgroup pf09 PF09 Driver
+@brief Component driver for a PF09 PMIC
+@details Component driver for a PF09 PMIC.
+*/
+
+/** @} */
+

@@ -1,0 +1,7 @@
+/*!
+@defgroup crc CRC: CRC Library
+@brief Module of CRC library functions.
+@details The MCUXpresso SDK provides a CRC component with various CRC algorithms
+         used in communication.
+*/
+

@@ -1,0 +1,13 @@
+NXP Software Content Register
+
+Release Name:     imx_sm_2023q4_er1
+Version:          2023q4_er1
+Outgoing License: BSD-3-Clause
+License File:     LICENSE.txt
+Description:      i.MX System Manager
+Release Location: https://github.com/nxp-imx/imx-sm
+Origin:           NXP
+                  CMSIS (Apache-2.0) - https://github.com/ARM-software/CMSIS_5/releases/tag/5.4.0
+                  aeabi_memset-thumb2.S (BSD-3-Clause) - https://sourceware.org/git/?p=newlib-cygwin.git;a=tree;h=refs/tags/cygwin-3_3_6-release
+                  memcpy-armv7m.S (BSD-3-Clause) - https://sourceware.org/git/?p=newlib-cygwin.git;a=tree;h=refs/tags/cygwin-3_3_6-release
+ 

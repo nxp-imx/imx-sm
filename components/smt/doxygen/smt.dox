@@ -1,0 +1,7 @@
+
+/*!
+ * @defgroup smt_proto SMT:  Shared Memory Transport Protocol
+ *
+ * @brief Client-side protocol for the Shared Memory Transport (SMT).
+ */
+
