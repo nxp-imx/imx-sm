@@ -1,0 +1,157 @@
+/*
+** ###################################################################
+**
+** Copyright 2023 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+ * @addtogroup DEV_SM
+ * @{
+ */
+
+/*!
+
+@defgroup DEV_SM_MX95 DEVICE_MX95: SM i.MX95 Device Implementation
+
+@brief Module for the i.MX95 device for the SM.
+
+Device Module
+=============
+
+Lots of detail here.
+
+*/
+
+/*!
+ * @addtogroup DEV_SM_MX95
+ * @{
+ */
+
+/*!
+@defgroup DEV_SM_MX95_CONFIG DEVICE_MX95_CONFIG: SM i.MX95 Device (CONFIG)
+
+@brief Module for the i.MX95 device configuration functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_HANDLERS DEVICE_MX95_HANDLERS: SM i.MX95 Device (HANDLERS)
+
+@brief Module for the i.MX95 device IRQ handlers.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_ROM DEVICE_MX95_ROM: SM i.MX95 Device (ROM)
+
+@brief Module for the i.MX95 device ROM functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_RDC DEVICE_MX95_RDC: SM i.MX95 Device (RDC)
+
+@brief Module for the i.MX95 device RDC functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_POWER DEVICE_MX95_POWER: SM i.MX95 Device (POWER)
+
+@brief Module for the i.MX95 device power functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_SYS DEVICE_MX95_SYS: SM i.MX95 Device (SYS)
+
+@brief Module for the i.MX95 device system functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_PERF DEVICE_MX95_PERF: SM i.MX95 Device (PERF)
+
+@brief Module for the i.MX95 device performance functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_CLOCK DEVICE_MX95_CLOCK: SM i.MX95 Device (CLOCK)
+
+@brief Module for the i.MX95 device clock functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_SENSOR DEVICE_MX95_SENSOR: SM i.MX95 Device (SENSOR)
+
+@brief Module for the i.MX95 device sensor functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_RESET DEVICE_MX95_RESET: SM i.MX95 Device (RESET)
+
+@brief Module for the i.MX95 device reset functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_VOLTAGE DEVICE_MX95_VOLTAGE: SM i.MX95 Device (VOLTAGE)
+
+@brief Module for the i.MX95 device voltage functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_PIN DEVICE_MX95_PIN: SM i.MX95 Device (PIN)
+
+@brief Module for the i.MX95 device pin functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_BBM DEVICE_MX95_BBM: SM i.MX95 Device (BBM)
+
+@brief Module for the i.MX95 device BBM functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_CPU DEVICE_MX95_CPU: SM i.MX95 Device (CPU)
+
+@brief Module for the i.MX95 device CPU functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_CTRL DEVICE_MX95_CTRL: SM i.MX95 Device (CTRL)
+
+@brief Module for the i.MX95 device control functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX95_FAULT DEVICE_MX95_FAULT: SM i.MX95 Device (FAULT)
+
+@brief Module for the i.MX95 device fault functions.
+*/
+
+/** @} */
+
+/** @} */
+
