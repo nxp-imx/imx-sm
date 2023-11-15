@@ -1,0 +1,151 @@
+/*
+** ###################################################################
+**
+** Copyright 2023 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+ * @addtogroup DEV_SM
+ * @{
+ */
+
+/*!
+
+@defgroup DEV_SM_SIMU DEVICE_SIMU: SM Simulated Device Implementation
+
+@brief Module for the simulated device for the SM.
+
+Device Module
+=============
+
+Lots of detail here.
+
+*/
+
+/*!
+ * @addtogroup DEV_SM_SIMU
+ * @{
+ */
+
+/*!
+@defgroup DEV_SM_SIMU_CONFIG DEVICE_SIMU_CONFIG: SM i.SIMU Device (CONFIG)
+
+@brief Module for the i.SIMU device configuration functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_ROM DEVICE_SIMU_ROM: SM i.SIMU Device (ROM)
+
+@brief Module for the i.SIMU device ROM functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_RDC DEVICE_SIMU_RDC: SM i.SIMU Device (RDC)
+
+@brief Module for the i.SIMU device RDC functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_POWER DEVICE_SIMU_POWER: SM i.SIMU Device (POWER)
+
+@brief Module for the i.SIMU device power functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_SYS DEVICE_SIMU_SYS: SM i.SIMU Device (SYS)
+
+@brief Module for the i.SIMU device system functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_PERF DEVICE_SIMU_PERF: SM i.SIMU Device (PERF)
+
+@brief Module for the i.SIMU device performance functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_CLOCK DEVICE_SIMU_CLOCK: SM i.SIMU Device (CLOCK)
+
+@brief Module for the i.SIMU device clock functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_SENSOR DEVICE_SIMU_SENSOR: SM i.SIMU Device (SENSOR)
+
+@brief Module for the i.SIMU device sensor functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_RESET DEVICE_SIMU_RESET: SM i.SIMU Device (RESET)
+
+@brief Module for the i.SIMU device reset functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_VOLTAGE DEVICE_SIMU_VOLTAGE: SM i.SIMU Device (VOLTAGE)
+
+@brief Module for the i.SIMU device voltage functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_PIN DEVICE_SIMU_PIN: SM i.SIMU Device (PIN)
+
+@brief Module for the i.SIMU device pin functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_BBM DEVICE_SIMU_BBM: SM i.SIMU Device (BBM)
+
+@brief Module for the i.SIMU device BBM functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_CPU DEVICE_SIMU_CPU: SM i.SIMU Device (CPU)
+
+@brief Module for the i.SIMU device CPU functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_CTRL DEVICE_SIMU_CTRL: SM i.SIMU Device (CTRL)
+
+@brief Module for the i.SIMU device control functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_FAULT DEVICE_SIMU_FAULT: SM i.SIMU Device (FAULT)
+
+@brief Module for the i.SIMU device fault functions.
+*/
+
+/** @} */
+
+/** @} */
+
