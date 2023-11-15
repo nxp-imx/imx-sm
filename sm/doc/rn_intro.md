@@ -26,10 +26,8 @@ The table below lists the release information:
 \htmlonly
 <font color="red">\endhtmlonly
 
-This is a code **snapshot**! It is not a release. It is not production quality
-and is unsupported. Do not report any issues or questions against this snapshot.
-These release notes are a work-in-progress towards the next release and are not
-updated and the information may not be correct.
+This is an engineering release (ER)! It is not production quality and has no guarantee
+of functionality.
 
 \htmlonly
 </font>\endhtmlonly
@@ -38,6 +36,7 @@ Highlights {#RN_HIGH}
 ==========
 
 - Initial creation of the SM
+- Support for i.MX95 A0 and the i.MX95 EVK
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.

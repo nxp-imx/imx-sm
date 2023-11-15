@@ -9,4 +9,29 @@ New Feature {#RN_KN_NEW}
 | Key     | Summary                        | i.MX95<br> (A0) |
 |------------|-------------------------------|---|
 | [SM-10](https://jira.sw.nxp.com/projects/SCF/issues/SM-10) | Add eMCEM driver to support FCCU | Y |
+| [SM-21](https://jira.sw.nxp.com/projects/SCF/issues/SM-21) | Implement interfaces to FuSa SAF/SCST | Y |
+
+Improvement {#RN_KN_IMP}
+============
+
+| Key     | Summary                        | i.MX95<br> (A0) |
+|------------|-------------------------------|---|
+| [SM-12](https://jira.sw.nxp.com/projects/SCF/issues/SM-12) | Load temp sensor trim from fuses and configure panic | Y |
+| [SM-13](https://jira.sw.nxp.com/projects/SCF/issues/SM-13) | Load FRO trim from fuses and run closed-loop | Y |
+| [SM-14](https://jira.sw.nxp.com/projects/SCF/issues/SM-14) | Include ELE status in reset record | Y |
+| [SM-15](https://jira.sw.nxp.com/projects/SCF/issues/SM-15) | Support reporting notification overflow as fault | Y |
+| [SM-16](https://jira.sw.nxp.com/projects/SCF/issues/SM-16) | Reset voltages and retention masks on LM reset | Y |
+| [SM-17](https://jira.sw.nxp.com/projects/SCF/issues/SM-17) | Implement message sequence checking | Y |
+| [SM-18](https://jira.sw.nxp.com/projects/SCF/issues/SM-18) | Support final SCMI 3.2 spec changes | Y |
+| [SM-19](https://jira.sw.nxp.com/projects/SCF/issues/SM-19) | Optimize boot time | Y |
+| [SM-20](https://jira.sw.nxp.com/projects/SCF/issues/SM-20) | Add V2X TRDC MDAC mapping | Y |
+| [SM-22](https://jira.sw.nxp.com/projects/SCF/issues/SM-22) | Add PMIC voltage ramp delay | Y |
+| [SM-23](https://jira.sw.nxp.com/projects/SCF/issues/SM-23) | Vet PD and CLK parameters in CPU LP protocol | Y |
+
+Bug {#RN_KN_BUG}
+============
+
+| Key     | Summary                        | i.MX95<br> (A0) |
+|------------|-------------------------------|---|
+| [SM-24](https://jira.sw.nxp.com/projects/SCF/issues/SM-24) | Delay for reset line toggle not specified in SoC documentation | Y |
 

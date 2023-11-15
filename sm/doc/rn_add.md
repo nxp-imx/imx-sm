@@ -8,7 +8,7 @@ General {#RN_ADD_GEN}
 =======
 
 When the SM is compiled for release into production devices, it is critical that this is
-done without the debug monitor (M=0, default is debug monitor enabled). For example:
+done without the debug monitor (M=0). The default is monitor enabled (M=1). For example:
 
 	make config=mx95evk M=0
 
