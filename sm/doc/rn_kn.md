@@ -10,6 +10,13 @@ New Feature {#RN_KN_NEW}
 |------------|-------------------------------|---|
 | [SM-10](https://jira.sw.nxp.com/projects/SCF/issues/SM-10) | Add eMCEM driver to support FCCU | Y |
 | [SM-21](https://jira.sw.nxp.com/projects/SCF/issues/SM-21) | Implement interfaces to FuSa SAF/SCST | Y |
+| [SM-26](https://jira.sw.nxp.com/projects/SCF/issues/SM-26) | Add support for vendor-defined SCMI system power states | Y |
+| [SM-27](https://jira.sw.nxp.com/projects/SCF/issues/SM-27) | Add low-power mode entry during SM idle | Y |
+| [SM-28](https://jira.sw.nxp.com/projects/SCF/issues/SM-28) | Add support for DRAM retention | Y |
+| [SM-29](https://jira.sw.nxp.com/projects/SCF/issues/SM-29) | Add support for PLL spread spectrum mode | Y |
+| [SM-30](https://jira.sw.nxp.com/projects/SCF/issues/SM-30) | Support management of peripheral low-power signals (WAIT/DOZE/STOP/QCHAN) | Y |
+| [SM-31](https://jira.sw.nxp.com/projects/SCF/issues/SM-31) | Create log for SUSPEND entry/exit | Y |
+| [SM-32](https://jira.sw.nxp.com/projects/SCF/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling | Y |
 
 Improvement {#RN_KN_IMP}
 ============
@@ -27,11 +34,5 @@ Improvement {#RN_KN_IMP}
 | [SM-20](https://jira.sw.nxp.com/projects/SCF/issues/SM-20) | Add V2X TRDC MDAC mapping | Y |
 | [SM-22](https://jira.sw.nxp.com/projects/SCF/issues/SM-22) | Add PMIC voltage ramp delay | Y |
 | [SM-23](https://jira.sw.nxp.com/projects/SCF/issues/SM-23) | Vet PD and CLK parameters in CPU LP protocol | Y |
-
-Bug {#RN_KN_BUG}
-============
-
-| Key     | Summary                        | i.MX95<br> (A0) |
-|------------|-------------------------------|---|
 | [SM-24](https://jira.sw.nxp.com/projects/SCF/issues/SM-24) | Delay for reset line toggle not specified in SoC documentation | Y |
 

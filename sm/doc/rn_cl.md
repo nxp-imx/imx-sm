@@ -19,6 +19,13 @@ New Feature {#RN_CL_NEW}
 | [SM-4](https://jira.sw.nxp.com/projects/SCF/issues/SM-4) | Add support for i.MX95 |   | Y |
 | [SM-6](https://jira.sw.nxp.com/projects/SCF/issues/SM-6) | Add support for the i.MX95 EVK |   | Y |
 
+Improvement {#RN_CL_IMP}
+------------
+
+| Key     | Summary                        | Patch | i.MX95<br> (A0) |
+|------------|-------------------------------|-------|---|
+| [SM-25](https://jira.sw.nxp.com/projects/SCF/issues/SM-25) | Configure IP-level ISO controls based on feature fuses |   | Y |
+
 Documentation {#RN_CL_DOC}
 ------------
 
