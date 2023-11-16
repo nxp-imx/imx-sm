@@ -383,8 +383,8 @@ BBNSM).
 | INTM               | AON       | Safety IP used by SAF                                |
 | IOMUXC             | AON       | Arbitrate shared access                              |
 | IOMUX_GPR          | AON       | Arbitrate shared access                              |
-| LPI2C1             | AON       | Communicate to PMIC                                  |
-| LPUART1            | AON       | Debug output                                         |
+| LPI2C1/2           | AON       | Communicate to PMIC                                  |
+| LPUART1/2          | AON       | Debug output                                         |
 | MSGINTR1           | AON       | Message interrupts                                   |
 | MU1-6              | AON       | Provides communication channels from clients         |
 | ROMCP_M33          | AON       | Access to callback functions                         |

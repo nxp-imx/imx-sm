@@ -70,7 +70,7 @@ Logical Machine Commands
 | lm *lm* default             | set default LM to *lm*                                       |
 | lm [*lm*] boot              | boot LM (default unless *lm* specified)                      |
 | lm [*lm*] shutdown [gful]   | power off LM (default unless *lm* specified)                 |
-| lm [*lm*] reset [gful]      | reset/reboot LM (default unless *lm* specified)              |
+| lm [*lm*] reset [rs] [gful] | reset/reboot LM with reason *rs* (default unless *lm* spec)  |
 | lm [*lm*] suspend           | suspend LM (default unless *lm* specified)                   |
 | lm [*lm*] wake              | wake LM (default unless *lm* specified)                      |
 | lm [*lm*] reason            | display reset reason for LM (default unless *lm* specified)  |
