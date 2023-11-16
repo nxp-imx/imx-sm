@@ -627,10 +627,10 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
         printf("IMEM state     = 0x%X\n", info.imemState);
 
         /* Display UID */
-        printf("UID[31:0]      = 0x%08X\n", info.uid[0]);
-        printf("UID[63:32]     = 0x%08X\n", info.uid[1]);
-        printf("UID[95:64]     = 0x%08X\n", info.uid[2]);
-        printf("UID[127:96]    = 0x%08X\n", info.uid[3]);
+        printf("UID[127:96]    = 0x%08X\n", info.uid[0]);
+        printf("UID[95:64]     = 0x%08X\n", info.uid[1]);
+        printf("UID[63:32]     = 0x%08X\n", info.uid[2]);
+        printf("UID[31:0]      = 0x%08X\n", info.uid[3]);
     }
 
     /* Display ELE abort */
