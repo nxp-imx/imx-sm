@@ -30,16 +30,17 @@ See the *Release Notes* for the exact toolchain version the SM was tested with.
 Compiling an SM Image
 =====================
 
-To get started with the SM on an NXP board, download the git repository and then compile the SM for the
-target configuration.
+To get started with the SM on an NXP board, download the [github](https://github.com/nxp-imx/imx-sm)
+repository and then compile the SM for the target configuration.
 
 For example, in the top directory of the code base:
 
     make config=mx95evk all
 
-Then copy the resulting binary image file, *build/mx95evk/m33_image.bin*, to the iMX9 directory of the
-mkimage tool. Build a boot container using mkimage, program it to the boot device, and boot the board.
-The SM will display a debug monitor prompt on the M33 debug UART.
+Then copy the resulting binary image file, *build/mx95evk/m33_image.bin*, to the iMX95 directory of the
+[mkimage tool](https://github.com/nxp-imx/imx-mkimage). Build a boot container using mkimage, program
+it to the boot device, and boot the board. The SM will display a debug monitor prompt on the M33 debug
+UART.
 
 Building the Documentation
 ==========================
