@@ -250,9 +250,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_HSIO),
         .cpuMask = 0U,
-        .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* PCIE1 */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK | /* PCIE2 */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_2_MASK | /* HSIO PLL */
+        .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_2_MASK | /* HSIO PLL */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_3_MASK | /* USB1 */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_4_MASK | /* USB1 */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_5_MASK | /* USB2 */

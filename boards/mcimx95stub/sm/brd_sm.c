@@ -142,6 +142,29 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     /* Init the device */
     status = DEV_SM_Init(BOARD_BOOT_LEVEL, BOARD_PERF_LEVEL);
 
+    /* Configure ISO controls based on feature fuses */
+    uint32_t ipIsoMask = 0U;
+
+    /* Deassert PCIe ISO if corresponding module is enabled */
+    uint32_t fuseHwCfg2 = FSB->FUSE[FSB_FUSE_HW_CFG2];
+
+    /* PCIe1 is tied to HSIO ISO[0] */
+    if ((fuseHwCfg2 & FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK) == 0U)
+    {
+        ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK;
+    }
+
+    /* PCIe2 is tied to HSIO ISO[1] */
+    if ((fuseHwCfg2 & FSB_FUSE_HW_CFG2_PCIE2_DISABLE_MASK) == 0U)
+    {
+        ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK;
+    }
+
+    if (ipIsoMask != 0U)
+    {
+        SRC_XSPR_HSIOMIX_TOP->SLICE_SW_CTRL &= (~ipIsoMask);
+    }
+
     /* Return status */
     return status;
 }
