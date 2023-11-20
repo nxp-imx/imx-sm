@@ -186,7 +186,7 @@ serial.
 The port makes use of the following additional drivers: [RGPIO](@ref rgpio), [PF09](@ref pf09),
 [PF53](@ref pf53), and [PCAL6408A](@ref pcal6408a). In addition it adds voltage domains, a sensor, and
 controls. These are implemented in corresponding [brd_sm_voltage.h/c](@ref mcimx95evk/sm/brd_sm_voltage.h),
-[brd_sm_sensor.h/c](@ref mcimx95evk/sm/brd_sm_sensor.h), and 
+[brd_sm_sensor.h/c](@ref mcimx95evk/sm/brd_sm_sensor.h), and
 [brd_sm_control.h/c](@ref mcimx95evk/sm/brd_sm_control.h) files. These define redirection macros to route
 the LMM function calls for these type of resources to these files. They then append the following resources
 to the existing device resources:
@@ -302,7 +302,7 @@ complex board ports.
 
 -#  Copy an existing board port for the same SoC to a new board name:
 
-        cp -r boards/mcimx95evk boards/mcimx95new 
+        cp -r boards/mcimx95evk boards/mcimx95new
 
 -#  [Create a new config](@ref CONFIGURATION) and modify it to point to the new board:
 
@@ -334,6 +334,12 @@ complex board ports.
 
 -#  Search and replace all instances of the group name in the new board files.
 
+-#  Add a the new defgroup name at the end of *sm/brd/brd_sm_api.dox*.
+
+-#  Add the new board directory in the INPUT section of the *sm/doc/common.cfg* file.
+
+-#  [optional] Update the SCMI_SUB_VENDOR string in the new board *sm/brd_sm.h* file.
+
 -#  [Compile the documentation](@ref GUIDE_DOC) and ensure the new board port looks correct in the board
     modules section:
 
@@ -345,12 +351,12 @@ complex board ports.
     directory or in a *components* directory within the new board port directory.
 
 -#  Copy in any new drivers from the MCUXpresso SDK. Examples might be an lpspi driver.
-    
+
 -#  Modify the new board *sm/Makefile* to update the INCLUDE, VPATH, and OBJS definitions to remove
     unused components and add any new drivers or components.
 
 -#  Modify the BOARD_InitPins() function in the new *pin_mux.c*. This should initialize any pins needed by
-    the SM including those for any LPUART, LPI2C, GPIO, etc. 
+    the SM including those for any LPUART, LPI2C, GPIO, etc.
 
 -#  Modify the functions in the new *board.c*:
   - Defines to configure the SYSTICK, WDOG, handlers, etc.
@@ -359,7 +365,7 @@ complex board ports.
   - BOARD_InitDebugConsole() - init the UART used for SM debug and monitor
   - BOARD_InitHandlers() - enable handlers used by the SM and board code (for example a new GPIO
     interrupt)
-  - BOARD_InitTimers() - configure SM timers and watchdogs 
+  - BOARD_InitTimers() - configure SM timers and watchdogs
   - BOARD_WdogModeSet() - configure watchdog for various modes
   - BOARD_WdogRefresh() - refresh the timeout for the watchdog used by the SM
   - BOARD_InitSerialBus() - init serial interfaces like the LPI2C to the PMIC
@@ -377,14 +383,14 @@ complex board ports.
   - BRD_SM_ShutdownRecordSave() - save a shutdown record (NSP ports save to BBNSM GPR)
   - BRD_SM_PmicInfoGet() - call associated PMIC driver(s) to get the device ID (used by the monitor)
   - BRD_SM_PmicWrite() - call associated PMIC driver(s) to write a random register (used by the monitor)
-  - BRD_SM_PmicRead() - call associated PMIC driver(s) to read a random register (used by the monitor) 
+  - BRD_SM_PmicRead() - call associated PMIC driver(s) to read a random register (used by the monitor)
   - BRD_SM_SupplyModeSet() - call associated PMIC driver(s) to enable/disable a PMIC supply to the SoC
   - BRD_SM_SupplyModeGet() - call associated PMIC driver(s) to get the state of a PMIC supply to the SoC
   - BRD_SM_SupplyLevelSet() - call associated PMIC driver(s) to set the voltage of a PMIC supply to the SoC
   - BRD_SM_SupplyLevelGet() - call associated PMIC driver(s) to get the voltage of a PMIC supply to the SoC
 
   Note the supply functions only apply to SoC supplies. To manage other voltages the board port needs to
-  redirect the DEV_SM_Voltage*() functions found in dev_sm_voltage_api.h. 
+  redirect the DEV_SM_Voltage*() functions found in dev_sm_voltage_api.h.
 
 -#  Implement desire redirection functions:
   - Normally done by adding brd_sm_*.h/c files. Some can be copied from other board ports to start.
