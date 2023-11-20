@@ -26,13 +26,20 @@ Improvement {#RN_KN_IMP}
 | [SM-12](https://jira.sw.nxp.com/projects/SCF/issues/SM-12) | Load temp sensor trim from fuses and configure panic | Y |
 | [SM-13](https://jira.sw.nxp.com/projects/SCF/issues/SM-13) | Load FRO trim from fuses and run closed-loop | Y |
 | [SM-14](https://jira.sw.nxp.com/projects/SCF/issues/SM-14) | Include ELE status in reset record | Y |
-| [SM-15](https://jira.sw.nxp.com/projects/SCF/issues/SM-15) | Support reporting notification overflow as fault | Y |
+| [SM-15](https://jira.sw.nxp.com/projects/SCF/issues/SM-15) | Support reporting SCMI notification queue overflow as a fault | Y |
 | [SM-16](https://jira.sw.nxp.com/projects/SCF/issues/SM-16) | Reset voltages and retention masks on LM reset | Y |
-| [SM-17](https://jira.sw.nxp.com/projects/SCF/issues/SM-17) | Implement message sequence checking | Y |
+| [SM-17](https://jira.sw.nxp.com/projects/SCF/issues/SM-17) | Implement SCMI message sequence checking | Y |
 | [SM-18](https://jira.sw.nxp.com/projects/SCF/issues/SM-18) | Support final SCMI 3.2 spec changes | Y |
 | [SM-19](https://jira.sw.nxp.com/projects/SCF/issues/SM-19) | Optimize boot time | Y |
 | [SM-20](https://jira.sw.nxp.com/projects/SCF/issues/SM-20) | Add V2X TRDC MDAC mapping | Y |
 | [SM-22](https://jira.sw.nxp.com/projects/SCF/issues/SM-22) | Add PMIC voltage ramp delay | Y |
 | [SM-23](https://jira.sw.nxp.com/projects/SCF/issues/SM-23) | Vet PD and CLK parameters in CPU LP protocol | Y |
-| [SM-24](https://jira.sw.nxp.com/projects/SCF/issues/SM-24) | Delay for reset line toggle not specified in SoC documentation | Y |
+| [SM-24](https://jira.sw.nxp.com/projects/SCF/issues/SM-24) | Align reset toggle delay with SoC specification | Y |
+
+Bug {#RN_KN_BUG}
+============
+
+| Key     | Summary                        | i.MX95<br> (A0) |
+|------------|-------------------------------|---|
+| [SM-34](https://jira.sw.nxp.com/projects/SCF/issues/SM-34) | Cortex-A55 LM reset may leave the GIC in an unusable state | Y |
 
