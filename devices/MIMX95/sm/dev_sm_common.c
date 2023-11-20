@@ -67,7 +67,7 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 
     if (fuseWord < 610U)
     {
-        *addr = 0x47518000UL + (fuseWord * 4U);
+        *addr = FSB_BASE + 0x8000U + (fuseWord * 4U);
     }
     else
     {
