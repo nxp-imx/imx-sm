@@ -760,9 +760,9 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                             rc = CPU_SwMultiWakeup(cpuIdx);
                         }                        
                         
-                        /* Process MIX handshakes until CPU MIX is ready */
                         if (rc)
                         {
+                            /* Process MIX handshakes until CPU MIX is ready */
                             while (!SRC_MixIsPwrReady(s_cpuMgmtInfo[cpuIdx].srcMixIdx))
                             {
                                 if (NVIC_GetPendingIRQ(GPC_SM_REQ_IRQn) == 1U)
@@ -771,11 +771,8 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                                     NVIC_ClearPendingIRQ(GPC_SM_REQ_IRQn);
                                 }
                             }
-                        }
 
-                        /* Inhibit GPC LP handshake during CPU reset */
-                        if (rc)
-                        {
+                            /* Inhibit GPC LP handshake during CPU reset */
                             rc = CPU_GpcHandshakeSet(cpuIdx, false);
                         }
 
@@ -940,7 +937,7 @@ bool CPU_SleepModeSet(uint32_t cpuIdx, uint32_t sleepMode)
 /*--------------------------------------------------------------------------*/
 /* Set CPU sleep mode for multiple CPUs                                     */
 /*--------------------------------------------------------------------------*/
-bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode)
+static bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode)
 {
     bool rc = false;
 
