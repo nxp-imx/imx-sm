@@ -41,6 +41,8 @@
 
 /* Local Functions */
 static bool CPU_SwWakeup(uint32_t cpuIdx);
+static bool CPU_SwMultiWakeup(uint32_t cpuIdx);
+static bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode);
 static bool CPU_WdogReset(uint32_t cpuIdx);
 static bool CPU_MiscCtrlSet(uint32_t cpuIdx, uint32_t mask, uint32_t val);
 static bool CPU_MiscCtrlGet(uint32_t cpuIdx, uint32_t mask, uint32_t *val);
@@ -315,6 +317,39 @@ static bool CPU_SwWakeup(uint32_t cpuIdx)
 {
     bool rc = false;
 
+    /* Assert SW_WAKEUP */
+    rc = CPU_MiscCtrlSet(cpuIdx,
+        GPC_CPU_CTRL_CMC_MISC_SW_WAKEUP_MASK,
+        GPC_CPU_CTRL_CMC_MISC_SW_WAKEUP_MASK);
+
+    /* Wait for CPU to wake */
+    if (rc)
+    {
+        uint32_t fsmStat;
+        do
+        {
+            rc = CPU_FsmStateGet(cpuIdx, &fsmStat);
+        } while (rc && (fsmStat == CPU_FSM_STATE_IDLE_SLEEP));
+    }
+
+    /* Deassert SW_WAKEUP */
+    if (rc)
+    {
+        rc = CPU_MiscCtrlSet(cpuIdx,
+            GPC_CPU_CTRL_CMC_MISC_SW_WAKEUP_MASK,
+            0);
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Generate SW_WAKEUP event for multiple CPUs                               */
+/*--------------------------------------------------------------------------*/
+static bool CPU_SwMultiWakeup(uint32_t cpuIdx)
+{
+    bool rc = false;
+
     uint32_t cpuIdxCur = cpuIdx;
     uint32_t cpuIdxEnd = cpuIdx;
     if (cpuIdx == CPU_IDX_A55P)
@@ -324,28 +359,8 @@ static bool CPU_SwWakeup(uint32_t cpuIdx)
     }
     do
     {
-        /* Assert SW_WAKEUP */
-        rc = CPU_MiscCtrlSet(cpuIdxCur,
-            GPC_CPU_CTRL_CMC_MISC_SW_WAKEUP_MASK,
-            GPC_CPU_CTRL_CMC_MISC_SW_WAKEUP_MASK);
-        
-        /* Wait for CPU to wake */
-        if (rc)
-        {
-            uint32_t fsmStat;
-            do
-            {
-                rc = CPU_FsmStateGet(cpuIdxCur, &fsmStat);
-            } while (rc && (fsmStat == CPU_FSM_STATE_IDLE_SLEEP));
-        }
-        
-        /* Deassert SW_WAKEUP */
-        if (rc)
-        {
-            rc = CPU_MiscCtrlSet(cpuIdxCur,
-                GPC_CPU_CTRL_CMC_MISC_SW_WAKEUP_MASK,
-                0);
-        }        
+        /* Wake each CPU */
+        rc = CPU_SwWakeup(cpuIdxCur);
         ++cpuIdxCur;
     } while (rc && (cpuIdxCur <= cpuIdxEnd));
 
@@ -735,14 +750,14 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         /* Reset CPU sleep mode */
                         if (rc)
                         {
-                            rc = CPU_SleepModeSet(cpuIdx, CPU_SLEEP_MODE_RUN);
+                            rc = CPU_SleepModeMultiSet(cpuIdx, CPU_SLEEP_MODE_RUN);
                         }
 
                         /* Wake all sleeping CPUs */
                         if (rc)
                         {
                             /* Perform SW wakeup */
-                            rc = CPU_SwWakeup(cpuIdx);
+                            rc = CPU_SwMultiWakeup(cpuIdx);
                         }                        
                         
                         /* Process MIX handshakes until CPU MIX is ready */
@@ -901,6 +916,36 @@ bool CPU_SleepModeSet(uint32_t cpuIdx, uint32_t sleepMode)
 
     if ((cpuIdx < CPU_NUM_IDX) && (sleepMode <= CPU_NUM_SLEEP_MODES))
     {
+        uint32_t cmcModeCtrl = s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_CTRL;
+        cmcModeCtrl &= (~GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET_MASK);
+        cmcModeCtrl |= GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET(sleepMode);
+        s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_CTRL = cmcModeCtrl;
+
+        /* All targeted sleep modes other than RUN need GPC-controlled LPM */
+        uint32_t srcMixIdx = s_cpuMgmtInfo[cpuIdx].srcMixIdx;
+        if ((g_pwrMixMgmtInfo[srcMixIdx].authenCtrl &
+            AUTHEN_CTRL_LPM_MODE_MASK) != 0U)
+        {
+            rc = SRC_MixLpmModeSet(srcMixIdx, sleepMode != CPU_SLEEP_MODE_RUN);
+        }
+        else
+        {
+            rc = true;
+        }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CPU sleep mode for multiple CPUs                                     */
+/*--------------------------------------------------------------------------*/
+bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode)
+{
+    bool rc = false;
+
+    if ((cpuIdx < CPU_NUM_IDX) && (sleepMode <= CPU_NUM_SLEEP_MODES))
+    {
         uint32_t cpuIdxCur = cpuIdx;
         uint32_t cpuIdxEnd = cpuIdx;
         if (cpuIdx == CPU_IDX_A55P)
@@ -910,22 +955,8 @@ bool CPU_SleepModeSet(uint32_t cpuIdx, uint32_t sleepMode)
         }
         do
         {
-            uint32_t cmcModeCtrl = s_gpcCpuCtrlPtrs[cpuIdxCur]->CMC_MODE_CTRL;
-            cmcModeCtrl &= (~GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET_MASK);
-            cmcModeCtrl |= GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET(sleepMode);
-            s_gpcCpuCtrlPtrs[cpuIdxCur]->CMC_MODE_CTRL = cmcModeCtrl;
-
-            /* All targeted sleep modes other than RUN need GPC-controlled LPM */
-            uint32_t srcMixIdx = s_cpuMgmtInfo[cpuIdxCur].srcMixIdx;
-            if ((g_pwrMixMgmtInfo[srcMixIdx].authenCtrl &
-                AUTHEN_CTRL_LPM_MODE_MASK) != 0U)
-            {
-                rc = SRC_MixLpmModeSet(srcMixIdx, sleepMode != CPU_SLEEP_MODE_RUN);
-            }
-            else
-            {
-                rc = true;
-            }
+            /* Set sleep mode for each CPU */
+            rc = CPU_SleepModeSet(cpuIdxCur, sleepMode);
             ++cpuIdxCur;
         } while (rc && (cpuIdxCur <= cpuIdxEnd));
     }
