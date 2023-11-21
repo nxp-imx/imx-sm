@@ -54,13 +54,18 @@
 /* Defines */
 
 /*! Number of device controls */
-#define DEV_SM_NUM_CTRL  1UL
+#define DEV_SM_NUM_CTRL  6UL
 
 /*!
  * @name Device control indexes
  */
 /** @{ */
-#define DEV_SM_CTRL_TEST  0U  /*!< Control for test */
+#define DEV_SM_CTRL_PDM_CLK_SEL    0U  /*!< AON PDM clock sel */
+#define DEV_SM_CTRL_MQS1_SETTINGS  1U  /*!< AON MQS settings */
+#define DEV_SM_CTRL_SAI1_MCLK      2U  /*!< AON SAI1 MCLK */
+#define DEV_SM_CTRL_SAI3_MCLK      3U  /*!< WAKE SAI3 MCLK */
+#define DEV_SM_CTRL_SAI4_MCLK      4U  /*!< WAKE SAI4 MCLK */
+#define DEV_SM_CTRL_SAI5_MCLK      5U  /*!< WAKE SAI5 MCLK */
 /** @} */
 
 /* Types */

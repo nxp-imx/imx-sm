@@ -45,9 +45,48 @@
 
 /* Local types */
 
+/* Device control map structure */
+typedef struct
+{
+    uint32_t addr;  /* Address of control */
+    uint32_t mask;  /* Mask of control */
+} dev_sm_ctrl_t;
+
 /* Local variables */
 
-static uint32_t s_ctrl[DEV_SM_NUM_CTRL];
+static const dev_sm_ctrl_t s_control[DEV_SM_NUM_CTRL] =
+{
+    [DEV_SM_CTRL_PDM_CLK_SEL] =
+    {
+        .addr = BLK_CTRL_NS_AONMIX_BASE + 0x78U,
+        .mask = 0x00000001U,
+    },
+    [DEV_SM_CTRL_MQS1_SETTINGS] =
+    {
+        .addr = BLK_CTRL_NS_AONMIX_BASE + 0x88U,
+        .mask = 0x0000FF0EU,
+    },
+    [DEV_SM_CTRL_SAI1_MCLK] =
+    {
+        .addr = BLK_CTRL_NS_AONMIX_BASE + 0xA4U,
+        .mask = 0x00000007U,
+    },
+    [DEV_SM_CTRL_SAI3_MCLK] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x1CU,
+        .mask = 0x000001FFU,
+    },
+    [DEV_SM_CTRL_SAI4_MCLK] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x1CU,
+        .mask = 0x0003FE00U,
+    },
+    [DEV_SM_CTRL_SAI5_MCLK] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x1CU,
+        .mask = 0x07FC0000U,
+    }
+};
 
 /*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
@@ -62,7 +101,16 @@ int32_t DEV_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
     {
         if (numVal == 1U)
         {
-            s_ctrl[ctrlId] = val[0];
+            uint32_t temp = Read32(s_control[ctrlId].addr);
+
+            /* Clear fields */
+            temp &= ~s_control[ctrlId].mask;
+
+            /* Update fields */
+            temp |= (val[0] & s_control[ctrlId].mask);
+
+            /* Write value */
+            Write32(s_control[ctrlId].addr, temp);
         }
         else
         {
@@ -89,7 +137,8 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
     if (ctrlId < DEV_SM_NUM_CTRL)
     {
         *numRtn = 1U;
-        rtn[0] = s_ctrl[ctrlId];
+        rtn[0] = (Read32(s_control[ctrlId].addr)
+            & s_control[ctrlId].mask);
     }
     else
     {
