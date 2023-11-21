@@ -745,7 +745,7 @@ Resources support the following key=value pairs.
 |                | nmrc      | Number of MRC |
 | MDAC_am=r1-r2  | sa        | Security attribute (secure, nonsecure, bypass), range (-r2) optional|
 |                | pa        | Privileged attribute (privileged, user, bypass)|
-|                | mdid      | Override LM/DOM DID |
+|                | mdid      | Override LM/DOM DID, mdid=none will skip MDAC |
 |                | sid       | Stream ID |
 |                | kpa       | Known physical address (default to 1) |
 | MBC_am=s.b1-b2 | perm      | Permission value (see table below), range (-b2) optional |

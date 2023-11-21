@@ -2406,7 +2406,14 @@ sub get_trdc
             # Extract MDID
             if ($line =~ /\bmdid=(\w+) /)
             {
-                $e .= ' mdid=' . $1;
+	            if ($1 eq 'none')
+	            {
+	                next;
+	            }
+	            else
+	            {
+                	$e .= ' mdid=' . $1;
+               	}
             }
             else
             {
