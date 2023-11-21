@@ -42,4 +42,5 @@ Bug {#RN_KN_BUG}
 | Key     | Summary                        | i.MX95<br> (A0) |
 |------------|-------------------------------|---|
 | [SM-34](https://jira.sw.nxp.com/projects/SCF/issues/SM-34) | Cortex-A55 LM reset may leave the GIC in an unusable state | Y |
+| [SM-38](https://jira.sw.nxp.com/projects/SCF/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes | Y |
 

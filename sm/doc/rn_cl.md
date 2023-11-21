@@ -26,6 +26,13 @@ Improvement {#RN_CL_IMP}
 |------------|-------------------------------|-------|---|
 | [SM-25](https://jira.sw.nxp.com/projects/SCF/issues/SM-25) | Configure IP-level PCEe ISO controls based on feature fuses [[detail]](@ref RN_DETAIL_SM_25) |   | Y |
 
+Bug {#RN_CL_BUG}
+------------
+
+| Key     | Summary                        | Patch | i.MX95<br> (A0) |
+|------------|-------------------------------|-------|---|
+| [SM-35](https://jira.sw.nxp.com/projects/SCF/issues/SM-35) | Sending SCMI CPU_SLEEP_MODE_SET for the A55 cluster should not impact A55 CPUs   [[detail]](@ref RN_DETAIL_SM_35) |   | Y |
+
 Documentation {#RN_CL_DOC}
 ------------
 
@@ -58,4 +65,9 @@ SM-25: Configure IP-level PCEe ISO controls based on feature fuses {#RN_DETAIL_S
 ----------
 
 Modified the i.MX95 boards ports (EVK and stub) to read the PCIe feature fuses and configure the PCIe ISOs accordingly.
+
+SM-35: Sending SCMI CPU_SLEEP_MODE_SET for the A55 cluster should not impact A55 CPUs   {#RN_DETAIL_SM_35}
+----------
+
+The implementation of SCMI CPU_SLEEP_MODE_SET was updated such that when called with the CPU ID parameter set to the A55 cluster, only the target sleep mode for the A55 cluster is updated (target sleep mode of the respective A55 CPUs will remain unmodified).
 
