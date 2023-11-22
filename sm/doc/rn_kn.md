@@ -35,6 +35,7 @@ Improvement {#RN_KN_IMP}
 | [SM-22](https://jira.sw.nxp.com/projects/SCF/issues/SM-22) | Add PMIC voltage ramp delay | Y |
 | [SM-23](https://jira.sw.nxp.com/projects/SCF/issues/SM-23) | Vet PD and CLK parameters in CPU LP protocol | Y |
 | [SM-24](https://jira.sw.nxp.com/projects/SCF/issues/SM-24) | Align reset toggle delay with SoC specification | Y |
+| [SM-40](https://jira.sw.nxp.com/projects/SCF/issues/SM-40) | Add device controls for some AON/WAKE peripherals | Y |
 
 Bug {#RN_KN_BUG}
 ============

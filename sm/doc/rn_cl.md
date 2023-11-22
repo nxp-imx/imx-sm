@@ -32,6 +32,7 @@ Bug {#RN_CL_BUG}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) |
 |------------|-------------------------------|-------|---|
 | [SM-35](https://jira.sw.nxp.com/projects/SCF/issues/SM-35) | Sending SCMI CPU_SLEEP_MODE_SET for the A55 cluster should not impact A55 CPUs   [[detail]](@ref RN_DETAIL_SM_35) |   | Y |
+| [SM-39](https://jira.sw.nxp.com/projects/SCF/issues/SM-39) | Allow access to the ISP OCRAM [[detail]](@ref RN_DETAIL_SM_39) |   | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -70,4 +71,9 @@ SM-35: Sending SCMI CPU_SLEEP_MODE_SET for the A55 cluster should not impact A55
 ----------
 
 The implementation of SCMI CPU_SLEEP_MODE_SET was updated such that when called with the CPU ID parameter set to the A55 cluster, only the target sleep mode for the A55 cluster is updated (target sleep mode of the respective A55 CPUs will remain unmodified).
+
+SM-39: Allow access to the ISP OCRAM {#RN_DETAIL_SM_39}
+----------
+
+Address space for OCRAM_C is not the system address space. Addresses seems to be modified to a local camera space address before getting to the TRDC MRC. The TRDC MRC config for the OCRAM_C had to be changed to this new address space.
 
