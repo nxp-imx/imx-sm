@@ -322,7 +322,7 @@
         SM_CFG_Z1(0x00010020U), \
         SM_CFG_Z1(0x00012020U), \
         SM_CFG_Z1(0x00014020U), \
-        SM_CFG_W1(0x00016020U), 0x6666U, \
+        SM_CFG_W1(0x00016020U), 0x7777U, \
         SM_CFG_C1(0x00000000U), 0x0000C001U, \
         SM_CFG_END \
     }
