@@ -44,11 +44,16 @@ Assuming an Ubuntu 22.04 host, the following packages need to be installed for n
 Tool Chain {#GUIDE_TOOLCHAIN}
 ------------
 
-To compile the SM, one must download and install from the [Arm GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)
-site. The latest toolchain should work but it is highly recommended to use the specific version listed in the
-release notes as this version was used for testing.
+Compiling requires an ARM cross-compiler. Download and install the required arm-none-eabi toolchain from
+the [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare-metal target
+(arm-none-eabi) section, download the *.xv file to a directory for the tool chain (e.g. tools) and then:
 
-Note the Linux-based ARM cross-compile toolchain requires a 64-bit Linux to run.
+    tar xvf *.mv
+
+The latest toolchain should work but it is highly recommended to use the specific version listed in the
+release notes as this version was used for testing. Note the Linux-based ARM cross-compile toolchain
+requires a 64-bit Linux to run.
 
 The makefile looks for the compiler using \$(TOOLS)/arm-gnu-toolchain-*-none-eabi.
 If using bash, then set the TOOLS environment variable as follows:
@@ -259,9 +264,9 @@ The documentation is compiled via [doxygen](https://www.doxygen.nl/). This tool 
 generate PDF, HTML, and RTF documentation from the source code and supplemental markdown
 files.
 
-The following need to be installed:
+Also ensure the Linux installation is up-to-date and then install:
 
-    sudo apt-get -y install doxygen texlive texlive-latex-extra
+    sudo apt-get -y install make doxygen texlive texlive-latex-extra
 
 Then change to the documentation directory (sm/doc) and execute the following:
 

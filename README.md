@@ -12,7 +12,10 @@ Installing the Toolchain
 
 Compiling requires an ARM cross-compiler. Download and install the required arm-none-eabi toolchain from
 the [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
-website.
+website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare-metal target
+(arm-none-eabi) section, download the *.xv file to a directory for the tool chain (e.g. tools) and then:
+
+    tar xvf *.mv
 
 Set the TOOLS shell variable to the directory the toolchain is installed in. For example:
 
@@ -21,9 +24,9 @@ Set the TOOLS shell variable to the directory the toolchain is installed in. For
 When the toolchain is in a directory like arm-gnu-toolchain-12.3.rel1-x86_64-arm-none-eabi in this
 *tools* directory.
 
-Also install:
+Also ensure the Linux installation is up-to-date and then install:
 
-    sudo apt-get -y install make srecord
+    sudo apt-get -y install make gcc g++-multilib srecord
 
 See the *Release Notes* for the exact toolchain version the SM was tested with.
 
@@ -47,7 +50,7 @@ Building the Documentation
 
 To build the full documentation, install the required tools:
 
-    sudo apt-get -y install doxygen texlive texlive-latex-extra
+    sudo apt-get -y install make doxygen texlive texlive-latex-extra
 
 Then change to the documentation directory (sm/doc) and execute the following:
 
