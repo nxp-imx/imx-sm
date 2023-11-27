@@ -108,7 +108,7 @@ int32_t LMM_MiscControlFlagsSet(uint32_t lmId, uint32_t ctrlId,
         /* Record new state */
         s_ctrlNotify[ctrlId][lmId] = flags;
 
-        /* Aggregate power state */
+        /* Aggregate flags */
         for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
         {
             newFlags |= s_ctrlNotify[ctrlId][lm];
