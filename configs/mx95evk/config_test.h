@@ -143,7 +143,7 @@
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
-    {.testId = TEST_BUTTON, .channel = 3U, .rsrc = DEV_SM_BUTTON_0}, \
+    {.testId = TEST_BUTTON, .channel = 5U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_CLK, .channel = 0U, .rsrc = DEV_SM_CLK_LPUART3}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_CAMCM0}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_DISPOCRAM}, \
