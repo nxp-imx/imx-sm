@@ -2278,7 +2278,7 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                     uint32_t ctrl;
                     uint32_t numVal = 0U;
                     uint32_t val[24] = {};
-                    
+
                     status = MONITOR_ConvU32(argv[0], &ctrl);
 
                     while ((status == SM_ERR_SUCCESS) && (numVal <
@@ -2288,7 +2288,7 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                             &val[numVal]);
                         numVal++;
                     }
-                    
+
                     if (status == SM_ERR_SUCCESS)
                     {
                         status = LMM_MiscControlSet(s_lm, ctrl, numVal,
@@ -2308,13 +2308,13 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                 {
                     uint32_t ctrl;
                     uint32_t flags;
-                
+
                     status = MONITOR_ConvU32(argv[0], &ctrl);
                     if (status == SM_ERR_SUCCESS)
                     {
                         status = MONITOR_ConvU32(argv[1], &flags);
                     }
-                
+
                     if (status == SM_ERR_SUCCESS)
                     {
                         status = LMM_MiscControlFlagsSet(s_lm, ctrl,
