@@ -48,6 +48,7 @@
 /* Number of voltage setpoints */
 #define DEV_SM_NUM_PERF_LVL_SOC     4U
 #define DEV_SM_NUM_PERF_LVL_ARM     5U
+#define DEV_SM_MAX_PERF_LVL_ARM     4U
 #define DEV_SM_PERF_INIT_LAST       DEV_SM_PERF_DISP
 #define DEV_SM_A55_GPR_SEL_IDX      1U
 #define DEV_SM_A55_GPR_SEL_MASK     0x7FU
@@ -171,7 +172,7 @@ static uint32_t const s_perfDvsTableArm[DEV_SM_NUM_PERF_LVL_ARM] =
 static dev_sm_perf_ps_cfg_t const s_psCfgArm =
 {
     .psIdx = PS_VDD_ARM,
-    .numLevels = DEV_SM_NUM_PERF_LVL_ARM,
+    .numLevels = DEV_SM_MAX_PERF_LVL_ARM,
     .idStart = DEV_SM_PERF_A55PER,
     .idEnd = DEV_SM_PERF_A55C5,
     .dvsTable = s_perfDvsTableArm
