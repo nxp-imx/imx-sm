@@ -60,7 +60,8 @@
 #define COMMAND_CLOCK_POSSIBLE_PARENTS_GET   0xCU
 #define COMMAND_CLOCK_PARENT_SET             0xDU
 #define COMMAND_CLOCK_PARENT_GET             0xEU
-#define COMMAND_SUPPORTED_MASK               0x78FFUL
+#define COMMAND_CLOCK_GET_PERMISSIONS        0xFU
+#define COMMAND_SUPPORTED_MASK               0xF8FFUL
 
 /* SCMI max clock argument lengths */
 #define CLOCK_MAX_NAME     16U
@@ -86,6 +87,7 @@
 #define CLOCK_ATTR_ENABLE_DENIED(x)  (((x) & 0x1U) << 15U)
 #define CLOCK_ATTR_RATE_DENIED(x)    (((x) & 0x1U) << 14U)
 #define CLOCK_ATTR_PARENT_DENIED(x)  (((x) & 0x1U) << 13U)
+#define CLOCK_ATTR_RESTRICTED(x)     (((x) & 0x1U) << 1U)
 #define CLOCK_ATTR_ENABLED(x)        (((x) & 0x1U) << 0U)
 
 /* SCMI clock num rate flags */
@@ -111,6 +113,11 @@
 /* SCMI clock num rate flags */
 #define CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(x)  (((x) & 0xFFU) << 24U)
 #define CLOCK_NUM_PARENT_FLAGS_NUM_PARENTS(x)      (((x) & 0xFFU) << 0U)
+
+/* SCMI clock permissions */
+#define CLOCK_PERM_STATE(x)   (((x) & 0x1U) << 31U)
+#define CLOCK_PERM_PARENT(x)  (((x) & 0x1U) << 30U)
+#define CLOCK_PERM_RATE(x)    (((x) & 0x1U) << 29U)
 
 /* Local types */
 
@@ -338,6 +345,26 @@ typedef struct
     uint32_t parentId;
 } msg_tclock14_t;
 
+/* Request type for ClockGetPermissions() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the clock device */
+    uint32_t clockId;
+} msg_rclock15_t;
+
+/* Response type for ClockGetPermissions() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Permissions */
+    uint32_t permissions;
+} msg_tclock15_t;
+
 /* Local functions */
 
 static int32_t ClockProtocolVersion(const scmi_caller_t *caller,
@@ -364,6 +391,8 @@ static int32_t ClockParentSet(const scmi_caller_t *caller,
     const msg_rclock13_t *in, const scmi_msg_status_t *out);
 static int32_t ClockParentGet(const scmi_caller_t *caller,
     const msg_rclock14_t *in, msg_tclock14_t *out);
+static int32_t ClockGetPermissions(const scmi_caller_t *caller,
+    const msg_rclock15_t *in, msg_tclock15_t *out);
 static int32_t ClockResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -444,6 +473,11 @@ int32_t RPC_SCMI_ClockDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tclock14_t);
             status = ClockParentGet(caller, (const msg_rclock14_t*) in,
                 (msg_tclock14_t*) out);
+            break;
+        case COMMAND_CLOCK_GET_PERMISSIONS:
+            lenOut = sizeof(msg_tclock15_t);
+            status = ClockGetPermissions(caller, (const msg_rclock15_t*) in,
+                (msg_tclock15_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -642,17 +676,17 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   Set to 1 if parent clock identifiers are advertised for this clock.    */
 /*   Set to 0 if parent clock identifiers are not advertised for this       */
 /*   clock.                                                                 */
-/*   Bits[27:16] Reserved, must be zero.                                    */
-/*   Bit[15] Enabled denied.                                                */
-/*   Set to 1 if a call to enable/disable the clock will be denied.         */
-/*   Set to 0 if a call to enable/disable the clock will not be denied.     */
-/*   Bit[14] Set rate denied.                                               */
-/*   Set to 1 if a call to set the rate of the clock will be denied.        */
-/*   Set to 0 if a call to set the rate of the clock will not be denied.    */
-/*   Bit[13] Set parent denied.                                             */
-/*   Set to 1 if a call to set the parent of the clock will be denied.      */
-/*   Set to 0 if a call to set the parent of the clock will not be denied.  */
-/*   Bits[12:1] Reserved, must be zero.                                     */
+/*   Bits[27:2] Reserved, must be zero.                                     */
+/*   Bit[1] Restricted clock.                                               */
+/*   Set to 1 if the clock has restrictions on changing some of its         */
+/*   configuration or settings, and the CLOCK_GET_PERMISSIONS command, as   */
+/*   specified in Section 4.6.2.16, can be used to discover the             */
+/*   restrictions in place. Set to 0 if either of the following are true:   */
+/*   -- The clocks restrictions cannot be discovered because                */
+/*   CLOCK_GET_PERMISSIONS is not implemented.                              */
+/*   -- The clock has no restrictions on changing its configuration or      */
+/*   setting. Attempts to change a restricted clock configuration or        */
+/*   setting returns DENIED.                                                */
 /*   Bit[0] Enabled/disabled.                                               */
 /*   If set to 1, the clock device is enabled.                              */
 /*   If set to 0, the clock device is disabled                              */
@@ -672,6 +706,7 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /* - CLOCK_ATTR_ENABLE_DENIED() - Enabled/disable will be denied            */
 /* - CLOCK_ATTR_RATE_DENIED() - Set rate will be denied                     */
 /* - CLOCK_ATTR_PARENT_DENIED() - Set parent will be denied                 */
+/* - CLOCK_ATTR_RESTRICTED() - Restricted clock                             */
 /* - CLOCK_ATTR_ENABLED() - Enabled/disabled                                */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -744,6 +779,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
         {
             out->attributes |= CLOCK_ATTR_RATE_DENIED(1UL)
                 | CLOCK_ATTR_PARENT_DENIED(1UL);
+
+            out->attributes |= CLOCK_ATTR_RESTRICTED(1UL);
         }
 
         /* Return enable status */
@@ -876,8 +913,9 @@ static int32_t ClockDescribeRates(const scmi_caller_t *caller,
 /*   If Bit[3] is set to 1, the platform rounds up/down autonomously to     */
 /*   choose a physical rate closest to the requested rate, and Bit[2] is    */
 /*   ignored.                                                               */
-/*   If Bit[3] is set to 0, then the platform rounds up if Bit[2] is set    */
-/*   to 1, and rounds down if Bit[2] is set to 0.                           */
+/*   If Bit[3] is set to 0, the platform:                                   */
+/*   -- rounds up if Bit[2] is set to 1                                     */
+/*   -- rounds down if Bit[2] is set to 0                                   */
 /*   Bit[1] Ignore delayed response:                                        */
 /*   If the Async flag, bit[0], is set to 1 and this bit is set to 1, the   */
 /*   platform does not send a CLOCK_RATE_SET delayed response.              */
@@ -1336,7 +1374,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
 /*   because of inability to maintain child clock requirements.             */
 /* - SM_ERR_NOT_SUPPORTED: if the request is not supported.                 */
 /* - SM_ERR_DENIED: if the calling agent is not allowed to set the          */
-/*   parent..                                                               */
+/*   parent.                                                                */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t ClockParentSet(const scmi_caller_t *caller,
@@ -1393,7 +1431,7 @@ static int32_t ClockParentSet(const scmi_caller_t *caller,
 /*   exist.                                                                 */
 /* - SM_ERR_NOT_SUPPORTED: if the request is not supported.                 */
 /* - SM_ERR_DENIED: f the calling agent is not allowed to get the           */
-/*   parent..                                                               */
+/*   parent.                                                                */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t ClockParentGet(const scmi_caller_t *caller,
@@ -1418,6 +1456,82 @@ static int32_t ClockParentGet(const scmi_caller_t *caller,
     {
         status = LMM_ClockParentGet(caller->lmId, in->clockId,
             &out->parentId);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get clock permissions                                                    */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->clockId: Identifier for the clock device                           */
+/* - out->permissions: Permissions:                                         */
+/*   Bit[31] Clock state control                                            */
+/*   Set to 1 if the clock can be disabled or enabled by the agent.         */
+/*   Set to 0 if the clock state cannot be changed by the agent. Attempts   */
+/*   to change the clock state using SCMI_ClockConfigSet() function         */
+/*   returns DENIED.                                                        */
+/*   Bit[30] Clock parent control                                           */
+/*   Set to 1 if the clock parent can be changed by the agent.              */
+/*   Set to 0 if the clock parent cannot be changed by the agent.           */
+/*   SCMI_ClockParentSet() function returns DENIED.                         */
+/*   Bit[29] Clock rate control                                             */
+/*   Set to 1 if the clock rate can be changed by the agent.                */
+/*   Set to 0 if the clock rate cannot be changed by the agent.             */
+/*   SCMI_ClockRateSet() function returns DENIED.                           */
+/*    Bits[28:0] Reserved, must be zero                                     */
+/*                                                                          */
+/* Process the CLOCK_GET_PERMISSIONS message. Platform handler for          */
+/* SCMI_ClockGetPermissions(). See section 4.6.2.16 in the SCMI spec.       */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - CLOCK_PERM_STATE() - Clock state control                               */
+/* - CLOCK_PERM_PARENT() - Clock parent control                             */
+/* - CLOCK_PERM_RATE() - Clock rate control                                 */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if valid clock permissions are returned.               */
+/* - SM_ERR_NOT_FOUND: if the clock identified by clockId does not          */
+/*   exist.                                                                 */
+/* - SM_ERR_NOT_SUPPORTED: if the request is not supported.                 */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t ClockGetPermissions(const scmi_caller_t *caller,
+    const msg_rclock15_t *in, msg_tclock15_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check clock */
+    if ((status == SM_ERR_SUCCESS) && (in->clockId >= SM_NUM_CLOCK))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Initial value */
+    out->permissions = 0U;
+
+    /* Enable? */
+    if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+        >= SM_SCMI_PERM_SET))
+    {
+        out->permissions |= CLOCK_PERM_STATE(1UL);
+    }
+
+    /* Set parent/rate? */
+    if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+        >= SM_SCMI_PERM_EXCLUSIVE))
+    {
+        out->permissions |= CLOCK_PERM_RATE(1UL)
+            | CLOCK_PERM_PARENT(1UL);
     }
 
     /* Return status */

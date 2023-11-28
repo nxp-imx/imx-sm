@@ -682,3 +682,72 @@ int32_t SCMI_ClockParentGet(uint32_t channel, uint32_t clockId,
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Get clock permissions                                                    */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_ClockGetPermissions(uint32_t channel, uint32_t clockId,
+    uint32_t *permissions)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t permissions;
+    } msg_rclockd15_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t clockId;
+        } msg_tclockd15_t;
+        msg_tclockd15_t *msgTx = (msg_tclockd15_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->clockId = clockId;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_CLOCK_GET_PERMISSIONS, sizeof(msg_tclockd15_t),
+            &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rclockd15_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rclockd15_t *msgRx = (const msg_rclockd15_t*) msg;
+
+        /* Extract permissions */
+        if (permissions != NULL)
+        {
+            *permissions = msgRx->permissions;
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
