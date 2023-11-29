@@ -46,6 +46,7 @@
 #include "MIMX95_DDRC.h"
 #include "MIMX95_FRO.h"
 #include "MIMX95_FSB.h"
+#include "MIMX95_GICR.h"
 #include "MIMX95_GPC_CPU_CTRL.h"
 #include "MIMX95_GPC_GLOBAL.h"
 #include "MIMX95_IOMUXC.h"

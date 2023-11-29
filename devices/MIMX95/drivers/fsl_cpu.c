@@ -50,6 +50,7 @@ static bool CPU_LpmMixDependSet(uint32_t cpuIdx, uint32_t lpmSetting);
 
 /* Local Variables */
 static GPC_CPU_CTRL_Type *const s_gpcCpuCtrlPtrs[] = GPC_CPU_CTRL_BASE_PTRS;
+static GICR_Type *const s_gicrPtrs[] = GICR_BASE_PTRS;
 
 static uint32_t s_cpuDdrMixDependMask;
 static uint32_t s_cpuNocMixDependMask;
@@ -549,6 +550,25 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
 
         case CPU_IDX_A55P:
             {
+                /* Prior to reset of A55, quiese the GIC interfaces */
+                if (resetType == RST_LINE_CTRL_ASSERT)
+                {
+                    uint32_t gicdIdxLast = CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
+                    for (uint32_t gicdIdx = 0U; gicdIdx <= gicdIdxLast; gicdIdx++)
+                    {
+                        GICR_Type *GICR = s_gicrPtrs[gicdIdx];
+
+                        /* Set ProcessorSleep to quiesce GIC redistributor instance */
+                        GICR->GICR_WAKER |= GICR_WAKER_PROCESSORSLEEP_MASK;
+
+                        /* Wait for ChildrenAsleep */
+                        while ((GICR->GICR_WAKER & GICR_WAKER_CHILDRENASLEEP_MASK) == 0U)
+                        {
+                            ; /* Intentional empty while */
+                        }
+                    }
+                }
+
                 /* Apply reset to A55 cluster */
                 rc = SRC_MixSetResetLine(RST_LINE_CORTEXAMIX_PLATFORM, resetType);
 
