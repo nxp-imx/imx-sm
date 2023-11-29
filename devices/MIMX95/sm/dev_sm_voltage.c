@@ -76,8 +76,8 @@ int32_t DEV_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
 
     static string const s_name[DEV_SM_NUM_VOLT] =
     {
-        [DEV_SM_VOLT_SOC] = "SOC",
-        [DEV_SM_VOLT_ARM] = "ARM",
+        [DEV_SM_VOLT_SOC] = "soc",
+        [DEV_SM_VOLT_ARM] = "arm",
     };
 
     /* Get max string width */

@@ -61,9 +61,9 @@ int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
 
     static string const s_name[BRD_SM_NUM_SENSOR] =
     {
-        "TEMP_PF09",
-        "TEMP_PF53_SOC",
-        "TEMP_PF53_ARM"
+        "temp_pf09",
+        "temp_pf53_soc",
+        "temp_pf53_arm"
     };
 
     /* Get max string width */

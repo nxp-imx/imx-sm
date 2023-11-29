@@ -175,46 +175,46 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
     string *reasonNameAddr, int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_REASON] =
+    static string const s_name[DEV_SM_NUM_REASON] =
     {
-        [DEV_SM_REASON_CM33_LOCKUP] = "CM33_LOCKUP",
-        [DEV_SM_REASON_CM33_SWREQ] = "CM33_SWREQ",
-        [DEV_SM_REASON_CM7_LOCKUP] = "CM7_LOCKUP",
-        [DEV_SM_REASON_CM7_SWREQ] = "CM7_SWREQ",
-        [DEV_SM_REASON_FCCU] = "FCCU",
-        [DEV_SM_REASON_JTAG_SW] = "JTAG_SW",
-        [DEV_SM_REASON_ELE] = "ELE",
-        [DEV_SM_REASON_TEMPSENSE] = "TEMPSENSE",
-        [DEV_SM_REASON_WDOG1] = "WDOG1",
-        [DEV_SM_REASON_WDOG2] = "WDOG2",
-        [DEV_SM_REASON_WDOG3] = "WDOG3",
-        [DEV_SM_REASON_WDOG4] = "WDOG4",
-        [DEV_SM_REASON_WDOG5] = "WDOG5",
-        [DEV_SM_REASON_JTAG] = "JTAG",
-        [DEV_SM_REASON_CM33_EXC] = "CM33_EXC",
-        [DEV_SM_REASON_BBM] = "BBM",
-        [DEV_SM_REASON_SW] = "SW",
-        [DEV_SM_REASON_UNUSED2] = "UNUSED2",
-        [DEV_SM_REASON_UNUSED3] = "UNUSED3",
-        [DEV_SM_REASON_UNUSED4] = "UNUSED4",
-        [DEV_SM_REASON_UNUSED5] = "UNUSED5",
-        [DEV_SM_REASON_UNUSED6] = "UNUSED6",
-        [DEV_SM_REASON_UNUSED7] = "UNUSED7",
-        [DEV_SM_REASON_UNUSED8] = "UNUSED8",
-        [DEV_SM_REASON_UNUSED9] = "UNUSED9",
-        [DEV_SM_REASON_UNUSED10] = "UNUSED10",
-        [DEV_SM_REASON_UNUSED11] = "UNUSED11",
-        [DEV_SM_REASON_UNUSED12] = "UNUSED12",
-        [DEV_SM_REASON_UNUSED13] = "UNUSED13",
-        [DEV_SM_REASON_UNUSED14] = "UNUSED14",
-        [DEV_SM_REASON_UNUSED15] = "UNUSED15",
-        [DEV_SM_REASON_POR] = "POR"
+        [DEV_SM_REASON_CM33_LOCKUP] = "cm33_lockup",
+        [DEV_SM_REASON_CM33_SWREQ] =  "cm33_swreq",
+        [DEV_SM_REASON_CM7_LOCKUP] =  "cm7_lockup",
+        [DEV_SM_REASON_CM7_SWREQ] =   "cm7_swreq",
+        [DEV_SM_REASON_FCCU] =        "fccu",
+        [DEV_SM_REASON_JTAG_SW] =     "jtag_sw",
+        [DEV_SM_REASON_ELE] =         "ele",
+        [DEV_SM_REASON_TEMPSENSE] =   "tempsense",
+        [DEV_SM_REASON_WDOG1] =       "wdog1",
+        [DEV_SM_REASON_WDOG2] =       "wdog2",
+        [DEV_SM_REASON_WDOG3] =       "wdog3",
+        [DEV_SM_REASON_WDOG4] =       "wdog4",
+        [DEV_SM_REASON_WDOG5] =       "wdog5",
+        [DEV_SM_REASON_JTAG] =        "jtag",
+        [DEV_SM_REASON_CM33_EXC] =    "cm33_exc",
+        [DEV_SM_REASON_BBM] =         "bbm",
+        [DEV_SM_REASON_SW] =          "sw",
+        [DEV_SM_REASON_UNUSED2] =     "unused2",
+        [DEV_SM_REASON_UNUSED3] =     "unused3",
+        [DEV_SM_REASON_UNUSED4] =     "unused4",
+        [DEV_SM_REASON_UNUSED5] =     "unused5",
+        [DEV_SM_REASON_UNUSED6] =     "unused6",
+        [DEV_SM_REASON_UNUSED7] =     "unused7",
+        [DEV_SM_REASON_UNUSED8] =     "unused8",
+        [DEV_SM_REASON_UNUSED9] =     "unused9",
+        [DEV_SM_REASON_UNUSED10] =    "unused10",
+        [DEV_SM_REASON_UNUSED11] =    "unused11",
+        [DEV_SM_REASON_UNUSED12] =    "unused12",
+        [DEV_SM_REASON_UNUSED13] =    "unused13",
+        [DEV_SM_REASON_UNUSED14] =    "unused14",
+        [DEV_SM_REASON_UNUSED15] =    "unused15",
+        [DEV_SM_REASON_POR] =         "por"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_REASON);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_REASON);
 
     /* Check reason */
     if (resetReason >= DEV_SM_NUM_REASON)
@@ -224,7 +224,7 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
     else
     {
         /* Return pointer to name */
-        *reasonNameAddr = name[resetReason];
+        *reasonNameAddr = s_name[resetReason];
     }
 
     /* Return status */

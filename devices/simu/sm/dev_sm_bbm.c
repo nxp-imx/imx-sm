@@ -133,7 +133,7 @@ int32_t DEV_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
 
     static string const s_name[DEV_SM_NUM_RTC] =
     {
-        [DEV_SM_RTC_BBM] = "BBM"
+        [DEV_SM_RTC_BBM] = "bbm"
     };
 
     /* Get max string width */

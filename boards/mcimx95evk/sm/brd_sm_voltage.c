@@ -58,13 +58,13 @@ int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
 
     static string const s_name[BRD_SM_NUM_VOLT] =
     {
-        "VDD_GPIO_3P3",
-        "VDD_ANA_0P8",
-        "VDD_GPIO_1P8",
-        "VDDQ_DDR",
-        "VDD2_DDR",
-        "SD_CARD",
-        "NVCC_SD2"
+        "vdd_gpio_3p3",
+        "vdd_ana_0p8",
+        "vdd_gpio_1p8",
+        "vddq_ddr",
+        "vdd2_ddr",
+        "sd_card",
+        "nvcc_sd2"
     };
 
     /* Get max string width */

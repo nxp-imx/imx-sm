@@ -1812,35 +1812,35 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_PERF] =
+    static string const s_name[DEV_SM_NUM_PERF] =
     {
-        [DEV_SM_PERF_ELE] = "ELE",
-        [DEV_SM_PERF_M33] = "M33",
-        [DEV_SM_PERF_WAKEUP] = "WAKEUP",
-        [DEV_SM_PERF_M7] = "M7",
-        [DEV_SM_PERF_DRAM] = "DRAM",
-        [DEV_SM_PERF_HSIO] = "HSIO",
-        [DEV_SM_PERF_NPU] = "NPU",
-        [DEV_SM_PERF_NOC] = "NOC",
-        [DEV_SM_PERF_A55] = "A55",
-        [DEV_SM_PERF_GPU] = "GPU",
-        [DEV_SM_PERF_VPU] = "VPU",
-        [DEV_SM_PERF_CAM] = "CAM",
-        [DEV_SM_PERF_DISP] = "DISP",
-        [DEV_SM_PERF_A55PER] = "A55PER",
-        [DEV_SM_PERF_A55P] = "A55P",
-        [DEV_SM_PERF_A55C0] = "A55C0",
-        [DEV_SM_PERF_A55C1] = "A55C1",
-        [DEV_SM_PERF_A55C2] = "A55C2",
-        [DEV_SM_PERF_A55C3] = "A55C3",
-        [DEV_SM_PERF_A55C4] = "A55C4",
-        [DEV_SM_PERF_A55C5] = "A55C5"
+        [DEV_SM_PERF_ELE] =    "ele",
+        [DEV_SM_PERF_M33] =    "m33",
+        [DEV_SM_PERF_WAKEUP] = "wakeup",
+        [DEV_SM_PERF_M7] =     "m7",
+        [DEV_SM_PERF_DRAM] =   "dram",
+        [DEV_SM_PERF_HSIO] =   "hsio",
+        [DEV_SM_PERF_NPU] =    "npu",
+        [DEV_SM_PERF_NOC] =    "noc",
+        [DEV_SM_PERF_A55] =    "a55",
+        [DEV_SM_PERF_GPU] =    "gpu",
+        [DEV_SM_PERF_VPU] =    "vpu",
+        [DEV_SM_PERF_CAM] =    "cam",
+        [DEV_SM_PERF_DISP] =   "disp",
+        [DEV_SM_PERF_A55PER] = "a55per",
+        [DEV_SM_PERF_A55P] =   "a55p",
+        [DEV_SM_PERF_A55C0] =  "a55c0",
+        [DEV_SM_PERF_A55C1] =  "a55c1",
+        [DEV_SM_PERF_A55C2] =  "a55c2",
+        [DEV_SM_PERF_A55C3] =  "a55c3",
+        [DEV_SM_PERF_A55C4] =  "a55c4",
+        [DEV_SM_PERF_A55C5] =  "a55c5"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_PERF);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_PERF);
 
     /* Check domain */
     if (domainId >= DEV_SM_NUM_PERF)
@@ -1850,7 +1850,7 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
     else
     {
         /* Return pointer to name */
-        *perfNameAddr = name[domainId];
+        *perfNameAddr = s_name[domainId];
     }
 
     /* Return status */

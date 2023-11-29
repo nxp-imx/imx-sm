@@ -79,37 +79,37 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_POWER] =
+    static string const s_name[DEV_SM_NUM_POWER] =
     {
-        [DEV_SM_PD_ANA] =       "ANA",
-        [DEV_SM_PD_AON] =       "AON",
-        [DEV_SM_PD_BBSM] =      "BBSM",
-        [DEV_SM_PD_CAMERA] =    "CAMERA",
-        [DEV_SM_PD_CCMSRCGPC] = "CCMSRCGPC",
-        [DEV_SM_PD_A55C0] =     "A55C0",
-        [DEV_SM_PD_A55C1] =     "A55C1",
-        [DEV_SM_PD_A55C2] =     "A55C2",
-        [DEV_SM_PD_A55C3] =     "A55C3",
-        [DEV_SM_PD_A55C4] =     "A55C4",
-        [DEV_SM_PD_A55C5] =     "A55C5",
-        [DEV_SM_PD_A55P] =      "A55P",
-        [DEV_SM_PD_DDR] =       "DDR",
-        [DEV_SM_PD_DISPLAY] =   "DISPLAY",
-        [DEV_SM_PD_GPU] =       "GPU",
-        [DEV_SM_PD_HSIO_TOP] =  "HSIO_TOP",
-        [DEV_SM_PD_HSIO_WAON] = "HSIO_WAON",
-        [DEV_SM_PD_M7] =        "M7",
-        [DEV_SM_PD_NETC] =      "NETC",
-        [DEV_SM_PD_NOC] =       "NOC",
-        [DEV_SM_PD_NPU] =       "NPU",
-        [DEV_SM_PD_VPU] =       "VPU",
-        [DEV_SM_PD_WAKEUP] =    "WAKEUP"
+        [DEV_SM_PD_ANA] =       "ana",
+        [DEV_SM_PD_AON] =       "aon",
+        [DEV_SM_PD_BBSM] =      "bbsm",
+        [DEV_SM_PD_CAMERA] =    "camera",
+        [DEV_SM_PD_CCMSRCGPC] = "ccmsrcgpc",
+        [DEV_SM_PD_A55C0] =     "a55c0",
+        [DEV_SM_PD_A55C1] =     "a55c1",
+        [DEV_SM_PD_A55C2] =     "a55c2",
+        [DEV_SM_PD_A55C3] =     "a55c3",
+        [DEV_SM_PD_A55C4] =     "a55c4",
+        [DEV_SM_PD_A55C5] =     "a55c5",
+        [DEV_SM_PD_A55P] =      "a55p",
+        [DEV_SM_PD_DDR] =       "ddr",
+        [DEV_SM_PD_DISPLAY] =   "display",
+        [DEV_SM_PD_GPU] =       "gpu",
+        [DEV_SM_PD_HSIO_TOP] =  "hsio_top",
+        [DEV_SM_PD_HSIO_WAON] = "hsio_waon",
+        [DEV_SM_PD_M7] =        "m7",
+        [DEV_SM_PD_NETC] =      "netc",
+        [DEV_SM_PD_NOC] =       "noc",
+        [DEV_SM_PD_NPU] =       "npu",
+        [DEV_SM_PD_VPU] =       "vpu",
+        [DEV_SM_PD_WAKEUP] =    "wakeup"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_POWER);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_POWER);
 
     /* Check domain */
     if (domainId >= DEV_SM_NUM_POWER)
@@ -119,7 +119,7 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
     else
     {
         /* Return pointer to name */
-        *domainNameAddr = name[domainId];
+        *domainNameAddr = s_name[domainId];
     }
 
     /* Return status */
@@ -133,16 +133,16 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_POWER_STATE] =
+    static string const s_name[DEV_SM_NUM_POWER_STATE] =
     {
         [DEV_SM_POWER_STATE_OFF] = "off",
         [DEV_SM_POWER_STATE_ON] =  "on"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_POWER_STATE);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_POWER_STATE);
 
     /* Check state */
     if (powerState >= DEV_SM_NUM_POWER_STATE)
@@ -152,7 +152,7 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
     else
     {
         /* Return pointer to name */
-        *stateNameAddr = name[powerState];
+        *stateNameAddr = s_name[powerState];
     }
 
     /* Return status */

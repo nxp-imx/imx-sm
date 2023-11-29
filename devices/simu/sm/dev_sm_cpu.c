@@ -54,18 +54,18 @@ int32_t DEV_SM_CpuNameGet(uint32_t cpuId, string *cpuNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_POWER] =
+    static string const s_name[DEV_SM_NUM_POWER] =
     {
-        [DEV_SM_CPU_0] = "CPU0",
-        [DEV_SM_CPU_1] = "CPU1",
-        [DEV_SM_CPU_2] = "CPU2",
-        [DEV_SM_CPU_3] = "CPU3"
+        [DEV_SM_CPU_0] = "cpu0",
+        [DEV_SM_CPU_1] = "cpu1",
+        [DEV_SM_CPU_2] = "cpu2",
+        [DEV_SM_CPU_3] = "cpu3"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_CPU);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_CPU);
 
     /* Check CPU */
     if (cpuId >= DEV_SM_NUM_CPU)
@@ -75,7 +75,7 @@ int32_t DEV_SM_CpuNameGet(uint32_t cpuId, string *cpuNameAddr,
     else
     {
         /* Return pointer to name */
-        *cpuNameAddr = name[cpuId];
+        *cpuNameAddr = s_name[cpuId];
     }
 
     /* Return status */

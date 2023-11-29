@@ -164,18 +164,18 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
     string *reasonNameAddr, int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_REASON] =
+    static string const s_name[DEV_SM_NUM_REASON] =
     {
-        [DEV_SM_REASON_POR] = "POR",
-        [DEV_SM_REASON_FAULT] = "FAULT",
-        [DEV_SM_REASON_BBM] = "BBM",
-        [DEV_SM_REASON_SW] = "SW"
+        [DEV_SM_REASON_POR] =   "por",
+        [DEV_SM_REASON_FAULT] = "fault",
+        [DEV_SM_REASON_BBM] =   "bbm",
+        [DEV_SM_REASON_SW] =    "sw"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_REASON);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_REASON);
 
     /* Check reason */
     if (resetReason >= DEV_SM_NUM_REASON)
@@ -185,7 +185,7 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
     else
     {
         /* Return pointer to name */
-        *reasonNameAddr = name[resetReason];
+        *reasonNameAddr = s_name[resetReason];
     }
 
     /* Return status */

@@ -80,16 +80,16 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_PERF] =
+    static string const s_name[DEV_SM_NUM_PERF] =
     {
-        [DEV_SM_PERF_0] = "PERF0",
-        [DEV_SM_PERF_1] = "PERF1"
+        [DEV_SM_PERF_0] = "perf0",
+        [DEV_SM_PERF_1] = "perf1"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_PERF);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_PERF);
 
     /* Check domain */
     if (domainId >= DEV_SM_NUM_PERF)
@@ -99,7 +99,7 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
     else
     {
         /* Return pointer to name */
-        *perfNameAddr = name[domainId];
+        *perfNameAddr = s_name[domainId];
     }
 
     /* Return status */

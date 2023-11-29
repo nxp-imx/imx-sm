@@ -58,9 +58,9 @@ int32_t DEV_SM_ResetDomainNameGet(uint32_t domainId, string *domainNameAddr,
 
     static string const s_name[DEV_SM_NUM_RESET] =
     {
-        [DEV_SM_RST_0] = "RST0",
-        [DEV_SM_RST_1] = "RST1",
-        [DEV_SM_RST_2] = "RST2",
+        [DEV_SM_RST_0] = "rst0",
+        [DEV_SM_RST_1] = "rst1",
+        [DEV_SM_RST_2] = "rst2",
     };
 
     /* Get max string width */

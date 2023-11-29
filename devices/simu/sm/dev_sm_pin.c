@@ -62,10 +62,10 @@ int32_t DEV_SM_PinNameGet(uint32_t identifier, string *pinNameAddr,
 
     static string const s_name[DEV_SM_NUM_PIN] =
     {
-        [DEV_SM_PIN_0] = "PIN0",
-        [DEV_SM_PIN_1] = "PIN1",
-        [DEV_SM_PIN_2] = "PIN2",
-        [DEV_SM_PIN_3] = "PIN3"
+        [DEV_SM_PIN_0] = "pin0",
+        [DEV_SM_PIN_1] = "pin1",
+        [DEV_SM_PIN_2] = "pin2",
+        [DEV_SM_PIN_3] = "pin3"
     };
 
     /* Get max string width */

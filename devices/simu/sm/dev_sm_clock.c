@@ -62,10 +62,10 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
 
     static string const s_name[DEV_SM_NUM_CLOCK] =
     {
-        [DEV_SM_CLK_0] = "CLK0",
-        [DEV_SM_CLK_1] = "CLK1",
-        [DEV_SM_CLK_2] = "CLK2",
-        [DEV_SM_CLK_3] = "CLK3"
+        [DEV_SM_CLK_0] = "clk0",
+        [DEV_SM_CLK_1] = "clk1",
+        [DEV_SM_CLK_2] = "clk2",
+        [DEV_SM_CLK_3] = "clk3"
     };
 
     /* Get max string width */

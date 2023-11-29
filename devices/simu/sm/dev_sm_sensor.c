@@ -87,9 +87,9 @@ int32_t DEV_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
 
     static string const s_name[DEV_SM_NUM_SENSOR] =
     {
-        [DEV_SM_SENSOR_0] = "TEMP0",
-        [DEV_SM_SENSOR_1] = "TEMP1",
-        [DEV_SM_SENSOR_2] = "TEMP2"
+        [DEV_SM_SENSOR_0] = "temp0",
+        [DEV_SM_SENSOR_1] = "temp1",
+        [DEV_SM_SENSOR_2] = "temp2"
     };
 
     /* Get max string width */

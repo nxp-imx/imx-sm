@@ -56,21 +56,21 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_POWER] =
+    static string const s_name[DEV_SM_NUM_POWER] =
     {
-        [DEV_SM_PD_0] = "PD0",
-        [DEV_SM_PD_1] = "PD1",
-        [DEV_SM_PD_2] = "PD2",
-        [DEV_SM_PD_3] = "PD3",
-        [DEV_SM_PD_4] = "PD4",
-        [DEV_SM_PD_5] = "PD5",
-        [DEV_SM_PD_6] = "PD6"
+        [DEV_SM_PD_0] = "pd0",
+        [DEV_SM_PD_1] = "pd1",
+        [DEV_SM_PD_2] = "pd2",
+        [DEV_SM_PD_3] = "pd3",
+        [DEV_SM_PD_4] = "pd4",
+        [DEV_SM_PD_5] = "pd5",
+        [DEV_SM_PD_6] = "pd6"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_POWER);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_POWER);
 
     /* Check domain */
     if (domainId >= DEV_SM_NUM_POWER)
@@ -80,7 +80,7 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
     else
     {
         /* Return pointer to name */
-        *domainNameAddr = name[domainId];
+        *domainNameAddr = s_name[domainId];
     }
 
     /* Return status */
@@ -94,18 +94,18 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
     int32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    static int32_t maxLen = 0;
+    static int32_t s_maxLen = 0;
 
-    static string const name[DEV_SM_NUM_POWER_STATE] =
+    static string const s_name[DEV_SM_NUM_POWER_STATE] =
     {
         [DEV_SM_POWER_STATE_OFF] = "off",
-        [DEV_SM_POWER_STATE_P1] = "p1",
-        [DEV_SM_POWER_STATE_P2] = "p2",
-        [DEV_SM_POWER_STATE_ON] = "on"
+        [DEV_SM_POWER_STATE_P1] =  "p1",
+        [DEV_SM_POWER_STATE_P2] =  "p2",
+        [DEV_SM_POWER_STATE_ON] =  "on"
     };
 
     /* Get max string width */
-    DEV_SM_MaxStringGet(len, &maxLen, name, DEV_SM_NUM_POWER_STATE);
+    DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_POWER_STATE);
 
     /* Check state */
     if (powerState >= DEV_SM_NUM_POWER_STATE)
@@ -115,7 +115,7 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
     else
     {
         /* Return pointer to name */
-        *stateNameAddr = name[powerState];
+        *stateNameAddr = s_name[powerState];
     }
 
     /* Return status */

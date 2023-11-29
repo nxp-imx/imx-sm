@@ -59,9 +59,9 @@ int32_t DEV_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
 
     static string const s_name[DEV_SM_NUM_VOLT] =
     {
-        [DEV_SM_VOLT_0] = "VOLT0",
-        [DEV_SM_VOLT_1] = "VOLT1",
-        [DEV_SM_VOLT_2] = "VOLT2"
+        [DEV_SM_VOLT_0] = "volt0",
+        [DEV_SM_VOLT_1] = "volt1",
+        [DEV_SM_VOLT_2] = "volt2"
     };
 
     /* Get max string width */
@@ -93,9 +93,9 @@ int32_t DEV_SM_VoltageModeNameGet(uint32_t voltMode, string *modeNameAddr,
 
     static string const s_name[DEV_SM_NUM_VOLT_MODE] =
     {
-        [DEV_SM_VOLT_MODE_OFF] = "off",
-        [DEV_SM_VOLT_MODE_STBY] =  "stby",
-        [DEV_SM_VOLT_MODE_ON] =  "on"
+        [DEV_SM_VOLT_MODE_OFF] =  "off",
+        [DEV_SM_VOLT_MODE_STBY] = "stby",
+        [DEV_SM_VOLT_MODE_ON] =   "on"
     };
 
     /* Get max string width */

@@ -64,7 +64,7 @@ int32_t BRD_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
 
     static string const s_name[BRD_SM_NUM_RTC] =
     {
-        "PMIC"
+        "pmic"
     };
 
     /* Get max string width */
