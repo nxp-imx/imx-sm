@@ -57,6 +57,10 @@ typedef struct {
  * @{
  */
 
+#define FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK    (0x3000U)
+#define FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT   (12U)
+#define FSB_FUSE_HW_CFG0_MARKET_SEGMENT(x)      (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT)) & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
+
 #define FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK     (0x40U)
 #define FSB_FUSE_HW_CFG2_PCIE1_DISABLE_SHIFT    (6U)
 #define FSB_FUSE_HW_CFG2_PCIE1_DISABLE(x)       (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG2_PCIE1_DISABLE_SHIFT)) & FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK)
@@ -69,7 +73,13 @@ typedef struct {
  * @}
  */ /* end of group FSB_Register_Masks */
 
+#define FSB_FUSE_HW_CFG0                        17U
+#define FSB_FUSE_HW_CFG1                        18U
 #define FSB_FUSE_HW_CFG2                        19U
+#define FSB_FUSE_ANA_CFG0                       38U
+#define FSB_FUSE_ANA_CFG1                       39U
+#define FSB_FUSE_ANA_CFG2                       40U
+#define FSB_FUSE_ANA_CFG3                       41U
 
 /* FSB - Peripheral instance base addresses */
 /** Peripheral FSB base address */

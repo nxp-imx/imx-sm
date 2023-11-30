@@ -120,11 +120,11 @@ __isr_vector:
     .long   WDOG3_IRQHandler                                /* Watchdog 3 Interrupt*/
     .long   WDOG4_IRQHandler                                /* Watchdog 4 Interrupt*/
     .long   WDOG5_IRQHandler                                /* Watchdog 5 Interrupt*/
-    .long   Reserved96_IRQHandler                           /* ANAMIX TempSensor non-secure interrupt from Threshold 1*/
-    .long   Reserved97_IRQHandler                           /* ANAMIX TempSensor non-secure interrupt from Threshold 2*/
-    .long   Reserved98_IRQHandler                           /* ANAMIX TempSensor non-secure interrupt from Threshold 3*/
-    .long   Reserved99_IRQHandler                           /* CORTEXAMIX TempSensor non-secure interrupt from Threshold 1*/
-    .long   Reserved100_IRQHandler                          /* CORTEXAMIX TempSensor non-secure interrupt from Threshold 2*/
+    .long   TMPSNS_ANA_1_IRQHandler                         /* ANAMIX TempSensor non-secure interrupt from Threshold 1*/
+    .long   TMPSNS_ANA_2_IRQHandler                         /* ANAMIX TempSensor non-secure interrupt from Threshold 2*/
+    .long   Reserved98_IRQHandler                           /* ANAMIX TempSensor non-secure data ready interrupt*/
+    .long   TMPSNS_CORTEXA_1_IRQHandler                     /* CORTEXAMIX TempSensor non-secure interrupt from Threshold 1*/
+    .long   TMPSNS_CORTEXA_2_IRQHandler                     /* CORTEXAMIX TempSensor non-secure interrupt from Threshold 2*/
     .long   Reserved101_IRQHandler                          /* CORTEXAMIX TempSensor non-secure data ready interrupt*/
     .long   uSDHC1_IRQHandler                               /* ultra Secure Digital Host Controller interrupt 1*/
     .long   uSDHC2_IRQHandler                               /* ultra Secure Digital Host Controller interrupt 2*/

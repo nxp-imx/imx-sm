@@ -56,10 +56,13 @@ typedef struct
     uint8_t numThresholds;   /* Number of thresholds */
     uint8_t firstThreshold;  /* First threshold */
     uint8_t panicThreshold;  /* Panic threshold */
+    uint16_t fuseTrim1;      /* Fuse word for trim 1 */
+    uint16_t fuseTrim2;      /* Fuse word for trim 1 */
 } dev_sm_sensor_t;
 
 /* Local variables */
 
+/* Sensor configuration */
 static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
 {
     [DEV_SM_SENSOR_TEMP_ANA] =
@@ -68,7 +71,9 @@ static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
         .pd = PWR_MIX_SLICE_IDX_ANA,
         .numThresholds = 2U,
         .firstThreshold = 1U,
-        .panicThreshold = 0U
+        .panicThreshold = 0U,
+        .fuseTrim1 = FSB_FUSE_ANA_CFG0,
+        .fuseTrim2 = FSB_FUSE_ANA_CFG1
     },
     [DEV_SM_SENSOR_TEMP_A55] =
     {
@@ -76,8 +81,19 @@ static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
         .pd = PWR_MIX_SLICE_IDX_A55P,
         .numThresholds = 2U,
         .firstThreshold = 1U,
-        .panicThreshold = 0U
+        .panicThreshold = 0U,
+        .fuseTrim1 = FSB_FUSE_ANA_CFG2,
+        .fuseTrim2 = FSB_FUSE_ANA_CFG3
     }
+};
+
+/* Panic temps */
+static const int64_t s_panicTemp[4] =
+{
+     9700,  /* 00 - Consumer 0C to 95C */
+    10700,  /* 01 - Ext. Consumer -20C to 105C */
+    10700,  /* 10 - Industrial -40C to 105C */
+    12700   /* 11 - Automotive -40C to 125C */
 };
 
 static TMPSNS_Type *const s_tmpsnsBases[] = TMPSNS_BASE_PTRS;
@@ -98,17 +114,35 @@ int32_t DEV_SM_SensorInit(void)
     uint32_t sensorId = DEV_SM_SENSOR_TEMP_ANA;
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
     tmpsns_config_t config;
+    uint32_t hwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
+    uint32_t mktSeg;
 
     /* Get default confg */
     TMPSNS_GetDefaultConfig(&config);
     config.measMode = 1U;
 
+    /* Apply trim */
+    if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
+    {
+        config.trim1 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim1];
+        config.trim2 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim2];
+    }
+
     /* Init sensor */
     TMPSNS_Init(base, &config);
 
     /* Configure ANA panic */
+    mktSeg = (hwCfg0 & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
+        >> FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT;
     status = TMPSNS_ThresholdSet(sensorId,
-        s_tmpsns[sensorId].panicThreshold, 12500, DEV_SM_SENSOR_TP_HIGH);
+        s_tmpsns[sensorId].panicThreshold, s_panicTemp[mktSeg],
+        DEV_SM_SENSOR_TP_HIGH);
+
+    /* Enable interrupts */
+    NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
+    NVIC_EnableIRQ(TMPSNS_ANA_2_IRQn);
+    NVIC_EnableIRQ(TMPSNS_CORTEXA_1_IRQ);
+    NVIC_EnableIRQ(TMPSNS_CORTEXA_2_IRQ);
 
     /* Return status */
     return status;
@@ -130,6 +164,8 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
     {
         TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
         tmpsns_config_t config;
+        uint32_t hwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
+        uint32_t mktSeg;
 
         /* Get default confg */
         TMPSNS_GetDefaultConfig(&config);
@@ -137,15 +173,22 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
         /* Config for periodic one-shot */
         config.measMode = 1U;
 
+        /* Apply trim */
+        if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
+        {
+            config.trim1 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim1];
+            config.trim2 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim2];
+        }
+
         /* Init sensor */
         TMPSNS_Init(base, &config);
 
         /* Configure panic */
+        mktSeg = (hwCfg0 & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
+            >> FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT;
         status = TMPSNS_ThresholdSet(sensorId,
-            s_tmpsns[sensorId].panicThreshold, 12500,
+            s_tmpsns[sensorId].panicThreshold, s_panicTemp[mktSeg],
             DEV_SM_SENSOR_TP_HIGH);
-
-        /* TODO: Enable panic interrupt */
     }
 
     /* Return status */

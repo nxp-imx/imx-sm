@@ -147,11 +147,11 @@ typedef enum IRQn
     WDOG3_IRQn         = 77,  /**< Watchdog 3 Interrupt */
     WDOG4_IRQn         = 78,  /**< Watchdog 4 Interrupt */
     WDOG5_IRQn         = 79,  /**< Watchdog 5 Interrupt */
-    Reserved96_IRQn    = 80,  /**< ANAMIX TempSensor non-secure interrupt from Threshold 1 */
-    Reserved97_IRQn    = 81,  /**< ANAMIX TempSensor non-secure interrupt from Threshold 2 */
-    Reserved98_IRQn    = 82,  /**< ANAMIX TempSensor non-secure interrupt from Threshold 3 */
-    Reserved99_IRQn    = 83,  /**< CORTEXAMIX TempSensor non-secure interrupt from Threshold 1 */
-    Reserved100_IRQn   = 84,  /**< CORTEXAMIX TempSensor non-secure interrupt from Threshold 2 */
+    TMPSNS_ANA_1_IRQn  = 80,  /**< ANAMIX TempSensor non-secure interrupt from Threshold 1 */
+    TMPSNS_ANA_2_IRQn  = 81,  /**< ANAMIX TempSensor non-secure interrupt from Threshold 2 */
+    Reserved98_IRQn    = 82,  /**< ANAMIX TempSensor non-secure data ready interrupt */
+    TMPSNS_CORTEXA_1_IRQ = 83,  /**< CORTEXAMIX TempSensor non-secure interrupt from Threshold 1 */
+    TMPSNS_CORTEXA_2_IRQ = 84,  /**< CORTEXAMIX TempSensor non-secure interrupt from Threshold 2 */
     Reserved101_IRQn   = 85,  /**< CORTEXAMIX TempSensor non-secure data ready interrupt */
     uSDHC1_IRQn        = 86,  /**< ultra Secure Digital Host Controller interrupt 1 */
     uSDHC2_IRQn        = 87,  /**< ultra Secure Digital Host Controller interrupt 2 */
