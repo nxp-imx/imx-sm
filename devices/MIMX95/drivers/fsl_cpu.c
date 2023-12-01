@@ -30,6 +30,7 @@
 /* Includes */
 #include "sm.h"
 #include "fsl_cpu.h"
+#include "fsl_mu.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_src.h"
@@ -44,6 +45,7 @@ static bool CPU_SwWakeup(uint32_t cpuIdx);
 static bool CPU_SwMultiWakeup(uint32_t cpuIdx);
 static bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode);
 static bool CPU_WdogReset(uint32_t cpuIdx);
+static bool CPU_MuReset(uint32_t cpuIdx);
 static bool CPU_MiscCtrlSet(uint32_t cpuIdx, uint32_t mask, uint32_t val);
 static bool CPU_MiscCtrlGet(uint32_t cpuIdx, uint32_t mask, uint32_t *val);
 static bool CPU_LpmMixDependSet(uint32_t cpuIdx, uint32_t lpmSetting);
@@ -405,6 +407,36 @@ static bool CPU_WdogReset(uint32_t cpuIdx)
                 rc = SRC_MixGetResetLine(rstline, &resetType);
             }
         }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Reset CPU MU modules                                                     */
+/*--------------------------------------------------------------------------*/
+static bool CPU_MuReset(uint32_t cpuIdx)
+{
+    bool rc = false;
+
+    switch(cpuIdx)
+    {
+        case CPU_IDX_M7P:
+            MU_ResetBothSides(AON__MUI_A5__MUB);
+            rc = true;
+            break;
+
+        case CPU_IDX_A55P:
+            MU_ResetBothSides(AON__MUI_A1__MUB);
+            MU_ResetBothSides(AON__MUI_A2__MUB);
+            MU_ResetBothSides(AON__MUI_A3__MUB);
+            MU_ResetBothSides(AON__MUI_A4__MUB);
+            rc = true;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
     }
 
     return rc;
@@ -832,6 +864,12 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         while (rc && (resetType != RST_LINE_CTRL_DEASSERT))
                         {
                             rc = CPU_ResetGet(cpuIdx, &resetType);
+                        }
+
+                        /* Reset MUs associated with this CPU */
+                        if (rc)
+                        {
+                            rc = CPU_MuReset(cpuIdx);
                         }
 
                         /* Disable SM IRQs associated with this CPU */

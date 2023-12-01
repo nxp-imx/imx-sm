@@ -81,7 +81,6 @@ int32_t MB_MU_Init(uint8_t inst, uint8_t db, bool noIrq, uint32_t initCount)
         IRQn_Type irq = s_muIrqs[s_mbMuConfig[inst].mu];
 
         /* Init MU */
-        MU_ResetBothSides(base);
         MU_Init(base);
         NVIC_EnableIRQ(irq);
     }
