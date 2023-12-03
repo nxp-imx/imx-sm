@@ -126,23 +126,17 @@
  */
 /** @{ */
 /*! Clock rate change notifications support */
-#define SCMI_CLOCK_ATTR_CHANGE(x)         (((x) & 0x80000000U) >> 31U)
+#define SCMI_CLOCK_ATTR_CHANGE(x)      (((x) & 0x80000000U) >> 31U)
 /*! Clock rate change requested notifications support */
-#define SCMI_CLOCK_ATTR_CHANGE_REQ(x)     (((x) & 0x40000000U) >> 30U)
+#define SCMI_CLOCK_ATTR_CHANGE_REQ(x)  (((x) & 0x40000000U) >> 30U)
 /*! Extended Clock name */
-#define SCMI_CLOCK_ATTR_EXT_NAME(x)       (((x) & 0x20000000U) >> 29U)
+#define SCMI_CLOCK_ATTR_EXT_NAME(x)    (((x) & 0x20000000U) >> 29U)
 /*! Parent clock identifier support */
-#define SCMI_CLOCK_ATTR_PARENT(x)         (((x) & 0x10000000U) >> 28U)
-/*! Enabled/disable will be denied */
-#define SCMI_CLOCK_ATTR_ENABLE_DENIED(x)  (((x) & 0x8000U) >> 15U)
-/*! Set rate will be denied */
-#define SCMI_CLOCK_ATTR_RATE_DENIED(x)    (((x) & 0x4000U) >> 14U)
-/*! Set parent will be denied */
-#define SCMI_CLOCK_ATTR_PARENT_DENIED(x)  (((x) & 0x2000U) >> 13U)
+#define SCMI_CLOCK_ATTR_PARENT(x)      (((x) & 0x10000000U) >> 28U)
 /*! Restricted clock */
-#define SCMI_CLOCK_ATTR_RESTRICTED(x)     (((x) & 0x2U) >> 1U)
+#define SCMI_CLOCK_ATTR_RESTRICTED(x)  (((x) & 0x2U) >> 1U)
 /*! Enabled/disabled */
-#define SCMI_CLOCK_ATTR_ENABLED(x)        (((x) & 0x1U) >> 0U)
+#define SCMI_CLOCK_ATTR_ENABLED(x)     (((x) & 0x1U) >> 0U)
 /** @} */
 
 /*!
@@ -365,9 +359,6 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
  *   support
  * - ::SCMI_CLOCK_ATTR_EXT_NAME() - Extended Clock name
  * - ::SCMI_CLOCK_ATTR_PARENT() - Parent clock identifier support
- * - ::SCMI_CLOCK_ATTR_ENABLE_DENIED() - Enabled/disable will be denied
- * - ::SCMI_CLOCK_ATTR_RATE_DENIED() - Set rate will be denied
- * - ::SCMI_CLOCK_ATTR_PARENT_DENIED() - Set parent will be denied
  * - ::SCMI_CLOCK_ATTR_RESTRICTED() - Restricted clock
  * - ::SCMI_CLOCK_ATTR_ENABLED() - Enabled/disabled
  *

@@ -80,15 +80,12 @@
 #define CLOCK_PROTO_ATTR_NUM_CLOCKS(x)   (((x) & 0xFFFFU) << 0U)
 
 /* SCMI clock attributes */
-#define CLOCK_ATTR_CHANGE(x)         (((x) & 0x1U) << 31U)
-#define CLOCK_ATTR_CHANGE_REQ(x)     (((x) & 0x1U) << 30U)
-#define CLOCK_ATTR_EXT_NAME(x)       (((x) & 0x1U) << 29U)
-#define CLOCK_ATTR_PARENT(x)         (((x) & 0x1U) << 28U)
-#define CLOCK_ATTR_ENABLE_DENIED(x)  (((x) & 0x1U) << 15U)
-#define CLOCK_ATTR_RATE_DENIED(x)    (((x) & 0x1U) << 14U)
-#define CLOCK_ATTR_PARENT_DENIED(x)  (((x) & 0x1U) << 13U)
-#define CLOCK_ATTR_RESTRICTED(x)     (((x) & 0x1U) << 1U)
-#define CLOCK_ATTR_ENABLED(x)        (((x) & 0x1U) << 0U)
+#define CLOCK_ATTR_CHANGE(x)      (((x) & 0x1U) << 31U)
+#define CLOCK_ATTR_CHANGE_REQ(x)  (((x) & 0x1U) << 30U)
+#define CLOCK_ATTR_EXT_NAME(x)    (((x) & 0x1U) << 29U)
+#define CLOCK_ATTR_PARENT(x)      (((x) & 0x1U) << 28U)
+#define CLOCK_ATTR_RESTRICTED(x)  (((x) & 0x1U) << 1U)
+#define CLOCK_ATTR_ENABLED(x)     (((x) & 0x1U) << 0U)
 
 /* SCMI clock num rate flags */
 #define CLOCK_NUM_RATE_FLAGS_REMAING_RATES(x)  (((x) & 0xFFFFU) << 16U)
@@ -703,9 +700,6 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   support                                                                */
 /* - CLOCK_ATTR_EXT_NAME() - Extended Clock name                            */
 /* - CLOCK_ATTR_PARENT() - Parent clock identifier support                  */
-/* - CLOCK_ATTR_ENABLE_DENIED() - Enabled/disable will be denied            */
-/* - CLOCK_ATTR_RATE_DENIED() - Set rate will be denied                     */
-/* - CLOCK_ATTR_PARENT_DENIED() - Set parent will be denied                 */
 /* - CLOCK_ATTR_RESTRICTED() - Restricted clock                             */
 /* - CLOCK_ATTR_ENABLED() - Enabled/disabled                                */
 /*                                                                          */
@@ -764,23 +758,6 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
             &numMuxes) == SM_ERR_SUCCESS)
         {
             out->attributes |= CLOCK_ATTR_PARENT(1UL);
-        }
-
-        /* Enable? */
-        if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
-            < SM_SCMI_PERM_SET))
-        {
-            out->attributes |= CLOCK_ATTR_ENABLE_DENIED(1UL);
-        }
-
-        /* Set parent/rate? */
-        if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
-            < SM_SCMI_PERM_EXCLUSIVE))
-        {
-            out->attributes |= CLOCK_ATTR_RATE_DENIED(1UL)
-                | CLOCK_ATTR_PARENT_DENIED(1UL);
-
-            out->attributes |= CLOCK_ATTR_RESTRICTED(1UL);
         }
 
         /* Return enable status */
@@ -1516,22 +1493,26 @@ static int32_t ClockGetPermissions(const scmi_caller_t *caller,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Initial value */
-    out->permissions = 0U;
-
-    /* Enable? */
-    if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
-        >= SM_SCMI_PERM_SET))
+    /* Return results */
+    if (status == SM_ERR_SUCCESS)
     {
-        out->permissions |= CLOCK_PERM_STATE(1UL);
-    }
+        /* Initial value */
+        out->permissions = 0U;
 
-    /* Set parent/rate? */
-    if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
-        >= SM_SCMI_PERM_EXCLUSIVE))
-    {
-        out->permissions |= CLOCK_PERM_RATE(1UL)
-            | CLOCK_PERM_PARENT(1UL);
+        /* Enable? */
+        if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+            >= SM_SCMI_PERM_SET))
+        {
+            out->permissions |= CLOCK_PERM_STATE(1UL);
+        }
+
+        /* Set parent/rate? */
+        if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+            >= SM_SCMI_PERM_EXCLUSIVE))
+        {
+            out->permissions |= CLOCK_PERM_RATE(1UL)
+                | CLOCK_PERM_PARENT(1UL);
+        }
     }
 
     /* Return status */

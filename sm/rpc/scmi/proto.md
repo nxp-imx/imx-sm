@@ -62,6 +62,7 @@ and some of the optional messages are supported.
 | Clock | 0x14 | [CLOCK_POSSIBLE_PARENTS_GET](@ref SCMI_PROTO_CLOCK_CLOCK_POSSIBLE_PARENTS_GET) | 0xC |  |
 | Clock | 0x14 | [CLOCK_PARENT_SET](@ref SCMI_PROTO_CLOCK_CLOCK_PARENT_SET) | 0xD | EXCLUSIVE |
 | Clock | 0x14 | [CLOCK_PARENT_GET](@ref SCMI_PROTO_CLOCK_CLOCK_PARENT_GET) | 0xE |  |
+| Clock | 0x14 | [CLOCK_GET_PERMISSIONS](@ref SCMI_PROTO_CLOCK_CLOCK_GET_PERMISSIONS) | 0xF |  |
 | Sensor | 0x15 | [PROTOCOL_VERSION](@ref SCMI_PROTO_SENSOR_PROTOCOL_VERSION) | 0x0 |  |
 | Sensor | 0x15 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_SENSOR_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Sensor | 0x15 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_SENSOR_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -1056,6 +1057,26 @@ See SCMI_ClockParentGet() for details.
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
     | uint32         | parent_id                                                    |
+    ---------------------------------------------------------------------------------
+
+## Clock: CLOCK_GET_PERMISSIONS ## {#SCMI_PROTO_CLOCK_CLOCK_GET_PERMISSIONS}
+
+See SCMI_ClockGetPermissions() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x94/0x14, msg=0xF                     |
+    ---------------------------------------------------------------------------------
+    | uint32         | clock_id                                                     |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x94/0x14, msg=0xF                     |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | permissions                                                  |
     ---------------------------------------------------------------------------------
 
 ## Sensor: PROTOCOL_VERSION ## {#SCMI_PROTO_SENSOR_PROTOCOL_VERSION}
