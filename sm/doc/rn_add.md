@@ -21,15 +21,32 @@ Use the x86_64 Linux hosted AArch32 bare-metal target (arm-none-eabi) toolchain.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-None (initial version)
+- Final updates for SCMI version 3.2
+- Added new CLOCK_GET_PERMISSIONS; removed NXP-specific permission attributes
+
+Configuration Changes {#RN_ADD_CONFIG}
+=====================
+
+For all NXP reference configs:
+
+- Defind an ACCESS macro to indiate access only, not owning the bus master DID
+- Used ACCESS to give the M33 (SM) access to the GIC
+- Move BUTTON access to AP non-secure from AP secure
+- Give AP non-secure execute access to the ISP OCRAM
+- Clean-up of some duplicate assignments
+
+Customers will need to make similar changes to their cfg files.
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
 
-None (initial version)
+None
 
 Board Implementation Changes {#RN_ADD_BOARD_IMP}
 ============================
 
-None (initial version)
+For all NXP reference board ports:
+
+- Fixed an issue with bus expander control flag polarity
+- Changed resource text (e.g. board sensors, voltages) to lower-case
 

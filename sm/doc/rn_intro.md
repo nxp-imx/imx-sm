@@ -35,8 +35,7 @@ of functionality.
 Highlights {#RN_HIGH}
 ==========
 
-- Initial creation of the SM
-- Support for i.MX95 A0 and the i.MX95 EVK
+- Misc. improvements and bug fixes
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.
