@@ -513,6 +513,8 @@ int32_t SCMI_ClockDescribeRates(uint32_t channel, uint32_t clockId,
  *   exist.
  * - ::SCMI_ERR_INVALID_PARAMETERS: if the requested rate is not supported by
  *   the clock, or the flags parameter specifies invalid or illegal options.
+ *   Might also be returned if power/clock conditions not met to allow setting
+ *   of the rate.
  * - ::SCMI_ERR_BUSY: if there are too many asynchronous clock rate changes
  *   pending. The PROTOCOL_ATTRIBUTES function provides the maximum number of
  *   pending asynchronous clock rate changes supported by the platform.
@@ -544,6 +546,8 @@ int32_t SCMI_ClockRateSet(uint32_t channel, uint32_t clockId,
  * - ::SCMI_ERR_SUCCESS: if the current clock rate was successfully returned.
  * - ::SCMI_ERR_NOT_FOUND: if the clock identified by \a clockId does not
  *   exist.
+ * - ::SCMI_ERR_INVALID_PARAMETERS: if power/clock conditions not met to
+ *   allow getting the rate.
  */
 int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
     scmi_clock_rate_t *rate);
@@ -596,7 +600,8 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
  * - ::SCMI_ERR_NOT_FOUND: if the clock identified by \a clockId does not
  *   exist.
  * - ::SCMI_ERR_INVALID_PARAMETERS, if the input attributes flag specifies
- *   unsupported or invalid configurations.
+ *   unsupported or invalid configurations. Might also be returned if
+ *   power/clock conditions not met to allow configurating the clock.
  * - ::SCMI_ERR_DENIED: if the clock config cannot be set because of lack of
  *   permissions.
  */
@@ -641,7 +646,8 @@ int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
  * - ::SCMI_ERR_NOT_FOUND: if the clock identified by \a clockId does not
  *   exist.
  * - ::SCMI_ERR_INVALID_PARAMETERS, if the input attributes flag specifies
- *   unsupported or invalid configurations.
+ *   unsupported or invalid configurations. Might also be returned if
+ *   power/clock conditions not met to allow getting the configuration.
  */
 int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
     uint32_t flags, uint32_t *attributes, uint32_t *config,

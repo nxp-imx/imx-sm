@@ -155,6 +155,9 @@ will be disabled only if all clients with access rights to a clock have the cloc
 rates and parents are not aggregated. The setting will reflect the last setting which is why it is
 normal to give exclusive access to set these to one agent in the system.
 
+Note some clocks exist in a power domain that can be turned off. Making calls on these clocks may
+return SCMI_ERR_INVALID_PARAMETERS if the clock resource is unavailable.
+
 See section *4.6 Clock management protocol* in the [SCMI Spec](@ref DOCS).
 */
 

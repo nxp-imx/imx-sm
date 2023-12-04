@@ -937,7 +937,8 @@ static int32_t ClockDescribeRates(const scmi_caller_t *caller,
 /*   exist.                                                                 */
 /* - SM_ERR_INVALID_PARAMETERS: if the requested rate is not supported      */
 /*   by the clock, or the flags parameter specifies invalid or illegal      */
-/*   options.                                                               */
+/*   options. Might also be returned if power/clock conditions not met to   */
+/*   allow setting of the rate.                                             */
 /* - SM_ERR_BUSY: if there are too many asynchronous clock rate changes     */
 /*   pending. The PROTOCOL_ATTRIBUTES function provides the maximum number  */
 /*   of pending asynchronous clock rate changes supported by the platform.  */
@@ -1016,6 +1017,8 @@ static int32_t ClockRateSet(const scmi_caller_t *caller,
 /* - SM_ERR_SUCCESS: if the current clock rate was successfully returned.   */
 /* - SM_ERR_NOT_FOUND: if the clock identified by clockId does not          */
 /*   exist.                                                                 */
+/* - SM_ERR_INVALID_PARAMETERS: if power/clock conditions not met to        */
+/*   allow getting the rate.                                                */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t ClockRateGet(const scmi_caller_t *caller,
@@ -1089,7 +1092,8 @@ static int32_t ClockRateGet(const scmi_caller_t *caller,
 /* - SM_ERR_NOT_FOUND: if the clock identified by clockId does not          */
 /*   exist.                                                                 */
 /* - SM_ERR_INVALID_PARAMETERS, if the input attributes flag specifies      */
-/*   unsupported or invalid configurations.                                 */
+/*   unsupported or invalid configurations. Might also be returned if       */
+/*   power/clock conditions not met to allow configurating the clock.       */
 /* - SM_ERR_DENIED: if the clock config cannot be set because of lack of    */
 /*   permissions.                                                           */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
@@ -1172,7 +1176,8 @@ static int32_t ClockConfigSet(const scmi_caller_t *caller,
 /* - SM_ERR_NOT_FOUND: if the clock identified by clockId does not          */
 /*   exist.                                                                 */
 /* - SM_ERR_INVALID_PARAMETERS, if the input attributes flag specifies      */
-/*   unsupported or invalid configurations.                                 */
+/*   unsupported or invalid configurations. Might also be returned if       */
+/*   power/clock conditions not met to allow getting the configuration.     */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t ClockConfigGet(const scmi_caller_t *caller,
