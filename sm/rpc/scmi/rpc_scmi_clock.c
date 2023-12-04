@@ -760,6 +760,13 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
             out->attributes |= CLOCK_ATTR_PARENT(1UL);
         }
 
+        /* Restricted? */
+        if ((g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+            < SM_SCMI_PERM_EXCLUSIVE))
+        {
+            out->attributes |= CLOCK_ATTR_RESTRICTED(1UL);
+        }
+
         /* Return enable status */
         if (enabled)
         {
