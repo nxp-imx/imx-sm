@@ -48,7 +48,6 @@
 /* Number of voltage setpoints */
 #define DEV_SM_NUM_PERF_LVL_SOC     4U
 #define DEV_SM_NUM_PERF_LVL_ARM     5U
-#define DEV_SM_MAX_PERF_LVL_ARM     4U
 #define DEV_SM_PERF_INIT_LAST       DEV_SM_PERF_DISP
 #define DEV_SM_A55_GPR_SEL_IDX      1U
 #define DEV_SM_A55_GPR_SEL_MASK     0x7FU
@@ -99,7 +98,6 @@ typedef struct
 typedef struct
 {
     uint32_t psIdx;
-    uint32_t numLevels;
     uint32_t idStart;
     uint32_t idEnd;
     uint32_t const *dvsTable;
@@ -152,7 +150,6 @@ static uint32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
 static dev_sm_perf_ps_cfg_t const s_psCfgSoc =
 {
     .psIdx = PS_VDD_SOC,
-    .numLevels = DEV_SM_NUM_PERF_LVL_SOC,
     .idStart = DEV_SM_PERF_ELE,
     .idEnd = DEV_SM_PERF_NOC,
     .dvsTable = s_perfDvsTableSoc
@@ -172,7 +169,6 @@ static uint32_t const s_perfDvsTableArm[DEV_SM_NUM_PERF_LVL_ARM] =
 static dev_sm_perf_ps_cfg_t const s_psCfgArm =
 {
     .psIdx = PS_VDD_ARM,
-    .numLevels = DEV_SM_MAX_PERF_LVL_ARM,
     .idStart = DEV_SM_PERF_A55PER,
     .idEnd = DEV_SM_PERF_A55C5,
     .dvsTable = s_perfDvsTableArm
@@ -1500,6 +1496,9 @@ static dev_sm_perf_desc_t const s_perfDescA55C5[DEV_SM_NUM_PERF_LVL_ARM] =
     }
 };
 
+/* Max performance level */
+static uint32_t s_perfNumLevels[PS_NUM_SUPPLY];
+
 static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
 {
     [DEV_SM_PERF_ELE] =
@@ -1742,6 +1741,26 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     (void) CCM_RootSetDiv(CLOCK_ROOT_VPUAPB, 3U);
     (void) CCM_RootSetParent(CLOCK_ROOT_VPUAPB, CLOCK_SRC_SYSPLL1_PFD1_DIV2);
 
+    /* Set number of perf levels */
+    s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
+
+    /* Number of perf levels for A55 depends on speed grade fuses */
+    uint32_t fuseHwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
+    uint32_t speedGrade = (fuseHwCfg0 & FSB_FUSE_HW_CFG0_SPEEDGRADING_MASK)
+                           >> FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT;
+    switch (speedGrade)
+    {
+        case 0x1:   /* 2.2 GHz */
+        case 0x2:   /* 2.1 GHz */
+        case 0x3:   /* 2.0 GHz */
+            s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
+            break;
+
+        default:
+            s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
+            break;
+    }
+
     if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
     {
         status = SM_ERR_OUT_OF_RANGE;
@@ -1876,7 +1895,8 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
         /* Assume highest level frequency can be sustained.  Performance
          * level value is same as max sustained frequency.
          */
-        uint32_t levelIdx = s_perfCfg[domainId].psCfg->numLevels - 1U;
+        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
+        uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
         if (domainId == DEV_SM_PERF_DRAM)
         {
             if (DEV_SM_PerfDramTypeGet() == 4U)
@@ -1913,7 +1933,8 @@ int32_t DEV_SM_PerfNumLevelsGet(uint32_t domainId, uint32_t *numLevels)
     }
     else
     {
-        *numLevels =  s_perfCfg[domainId].psCfg->numLevels;
+        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
+        *numLevels =  s_perfNumLevels[psIdx];
     }
 
     /* Return status */
@@ -1935,7 +1956,8 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
     else
     {
         /* Check array bounds */
-        if (levelIndex >= s_perfCfg[domainId].psCfg->numLevels)
+        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
+        if (levelIndex >= s_perfNumLevels[psIdx])
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -1979,7 +2001,7 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
         dev_sm_perf_ps_cfg_t const *psCfg = s_perfCfg[domainId].psCfg;
 
         /* Check array bounds */
-        if (perfLevel >= psCfg->numLevels)
+        if (perfLevel >= s_perfNumLevels[psCfg->psIdx])
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -2735,7 +2757,8 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
 
         if (status == SM_ERR_SUCCESS)
         {
-            uint32_t numLevels = s_perfCfg[domainId].psCfg->numLevels;
+            uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
+            uint32_t numLevels = s_perfNumLevels[psIdx];
 
             /* Default to highest level to handle overclocking case */
             if (numLevels > 0U)
