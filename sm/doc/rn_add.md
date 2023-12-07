@@ -31,11 +31,18 @@ For all NXP reference configs:
 
 - Defind an ACCESS macro to indiate access only, not owning the bus master DID
 - Used ACCESS to give the M33 (SM) access to the GIC
-- Move BUTTON access to AP non-secure from AP secure
-- Give AP non-secure execute access to the ISP OCRAM
-- Clean-up of some duplicate assignments
+- Moved BUTTON access from AP secure to AP non-secure
+- Gave AP non-secure execute access to the ISP OCRAM
+- Cleaned up of some duplicate assignments
+- Updated BLK_CTRL names in configtool to match latest SoC RM:
+  - BLK_CTRL_C -> BLK_CTRL_CAMERAMIX
+  - BLK_CTRL_D -> BLK_CTRL_DISPLAYMIX
+  - BLK_CTRL_G -> BLK_CTRL_GPUMIX
+  - BLK_CTRL_H -> BLK_CTRL_HSIOMIX
+  - BLK_CTRL_E -> BLK_CTRL_NETCMIX
+  - BLK_CTRL_V -> BLK_CTRL_VPUMIX
 
-Customers will need to make similar changes to their cfg files.
+**Customers must make similar changes to their cfg files.**
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================

@@ -33,6 +33,7 @@ Table of Contents
 -----------------
 
 - [Getting Started](@ref START)
+- [Release Notes](@ref RN_INTRO)
 - [Architecture](@ref ARCH)
 - [Developer's Guide](@ref DEV_GUIDE)
 - [Configuration](@ref CONFIGURATION)
