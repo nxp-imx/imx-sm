@@ -127,6 +127,10 @@ static uint32_t s_perfLevelCurrent[DEV_SM_NUM_PERF] =
     [DEV_SM_PERF_NPU] = DEV_SM_PERF_LVL_PRK,
     [DEV_SM_PERF_NOC] = DEV_SM_PERF_LVL_PRK,
     [DEV_SM_PERF_A55] = DEV_SM_PERF_LVL_PRK,
+    [DEV_SM_PERF_GPU] = DEV_SM_PERF_LVL_PRK,
+    [DEV_SM_PERF_VPU] = DEV_SM_PERF_LVL_PRK,
+    [DEV_SM_PERF_CAM] = DEV_SM_PERF_LVL_PRK,
+    [DEV_SM_PERF_DISP] = DEV_SM_PERF_LVL_PRK,
     [DEV_SM_PERF_A55PER] = DEV_SM_PERF_LVL_PRK,
     [DEV_SM_PERF_A55P] = DEV_SM_PERF_LVL_PRK,
     [DEV_SM_PERF_A55C0] = DEV_SM_PERF_LVL_PRK,
@@ -151,7 +155,7 @@ static dev_sm_perf_ps_cfg_t const s_psCfgSoc =
 {
     .psIdx = PS_VDD_SOC,
     .idStart = DEV_SM_PERF_ELE,
-    .idEnd = DEV_SM_PERF_NOC,
+    .idEnd = DEV_SM_PERF_CAM,
     .dvsTable = s_perfDvsTableSoc
 };
 
@@ -2136,16 +2140,23 @@ static int32_t DEV_SM_PerfMaxScan(uint32_t domainId, uint32_t *maxPerfLevel)
     }
     else
     {
-        dev_sm_perf_ps_cfg_t const *psCfg = s_perfCfg[domainId].psCfg;
-
-        /* Scan other domains on same power supply  */
-        for (uint32_t id = psCfg->idStart; id <= psCfg->idEnd; id++)
+        /* A55 does not require scan of A55 performance subdomains */
+        if (domainId != DEV_SM_PERF_A55)
         {
-            if (id != domainId)
+            dev_sm_perf_ps_cfg_t const *psCfg = s_perfCfg[domainId].psCfg;
+
+            /* Scan other domains on same power supply  */
+            for (uint32_t id = psCfg->idStart; id <= psCfg->idEnd; id++)
             {
-                if (s_perfLevelCurrent[id] > *maxPerfLevel)
+                if (id != domainId)
                 {
-                    *maxPerfLevel = s_perfLevelCurrent[id];
+                    if (s_perfCfg[id].psCfg->psIdx == psCfg->psIdx)
+                    {
+                        if (s_perfLevelCurrent[id] > *maxPerfLevel)
+                        {
+                            *maxPerfLevel = s_perfLevelCurrent[id];
+                        }
+                    }
                 }
             }
         }
