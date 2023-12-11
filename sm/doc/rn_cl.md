@@ -17,7 +17,7 @@ Improvement {#RN_CL_IMP}
 |------------|-------------------------------|-------|---|
 | [SM-12](https://jira.sw.nxp.com/projects/SM/issues/SM-12) | Load temp sensor trim from fuses and configure panic [[detail]](@ref RN_DETAIL_SM_12) |   | Y |
 | [SM-18](https://jira.sw.nxp.com/projects/SM/issues/SM-18) | Support final SCMI 3.2 spec changes [[detail]](@ref RN_DETAIL_SM_18) |   | Y |
-| [SM-20](https://jira.sw.nxp.com/projects/SM/issues/SM-20) | Add V2X TRDC MDAC mapping and update configs |   | Y |
+| [SM-20](https://jira.sw.nxp.com/projects/SM/issues/SM-20) | Add V2X TRDC MDAC mapping and update configs [[detail]](@ref RN_DETAIL_SM_20) |   | Y |
 | [SM-22](https://jira.sw.nxp.com/projects/SM/issues/SM-22) | Add PMIC voltage ramp delay |   | Y |
 | [SM-36](https://jira.sw.nxp.com/projects/SM/issues/SM-36) | Return lower-case strings for all resource names [[detail]](@ref RN_DETAIL_SM_36) |   | Y |
 | [SM-40](https://jira.sw.nxp.com/projects/SM/issues/SM-40) | Add device controls for some AON/WAKE peripherals [[detail]](@ref RN_DETAIL_SM_40) |   | Y |
@@ -28,11 +28,12 @@ Bug {#RN_CL_BUG}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) |
 |------------|-------------------------------|-------|---|
-| [SM-34](https://jira.sw.nxp.com/projects/SM/issues/SM-34) | Cortex-A55 LM reset may leave the GIC in an unusable state |   | Y |
+| [SM-34](https://jira.sw.nxp.com/projects/SM/issues/SM-34) | Cortex-A55 LM reset may leave the GIC in an unusable state [[detail]](@ref RN_DETAIL_SM_34) |   | Y |
 | [SM-41](https://jira.sw.nxp.com/projects/SM/issues/SM-41) | Fix misc. issues with SM configurations [[detail]](@ref RN_DETAIL_SM_41) |   | Y |
 | [SM-43](https://jira.sw.nxp.com/projects/SM/issues/SM-43) | Board MISC control notification broken in the mx95evk board port [[detail]](@ref RN_DETAIL_SM_43) |   | Y |
 | [SM-44](https://jira.sw.nxp.com/projects/SM/issues/SM-44) | Returned SCMI perf levels not limited by part speed [[detail]](@ref RN_DETAIL_SM_44) |   | Y |
-| [SM-47](https://jira.sw.nxp.com/projects/SM/issues/SM-47) | Reset associated MU modules during CPU stop sequence |   | Y |
+| [SM-47](https://jira.sw.nxp.com/projects/SM/issues/SM-47) | Reset associated MU modules during CPU stop sequence [[detail]](@ref RN_DETAIL_SM_47) |   | Y |
+| [SM-51](https://jira.sw.nxp.com/projects/SM/issues/SM-51) | Incorrect scan of voltage level required for SCMI performance domains [[detail]](@ref RN_DETAIL_SM_51) |   | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -55,6 +56,22 @@ SM-18: Support final SCMI 3.2 spec changes {#RN_DETAIL_SM_18}
 ----------
 
 Updated the SCMI clock implementation to conform to the final ARM SCMI 3.2 spec. Removed extra clock attributes and added support for the CLOCK_GET_PERMISSIONS message.
+
+SM-20: Add V2X TRDC MDAC mapping and update configs {#RN_DETAIL_SM_20}
+----------
+
+Updated cfg names of V2X resources:
+ * V2X_APP1 -> V2X_SHE1
+ * V2X_SHE -> V2X_SHE0
+
+Modified cfg files to make the V2X (DID=12) owner of the V2X_FH IP. Do not assign the V2X_FH the Linux DID but still allow access (mdid=none for V2X_FH in AP-NS agent).
+
+Customers must make similar changes to their cfg files.
+
+SM-34: Cortex-A55 LM reset may leave the GIC in an unusable state {#RN_DETAIL_SM_34}
+----------
+
+The interface between GIC and the associated Cortex-A55 CPU must be quiesced prior to reset of a Cortex-A55 CPU.  During a non-cooperative shutdown/reset of a logical machine, SM cannot rely on the Cortex-A55 to leave the GIC in a quiescent state or recover the GIC interface after restart.  SM was updated to use the GICR_WAKER to quiesce interfaces between GIC and Cortex-A55 during the CPU stop operation.
 
 SM-36: Return lower-case strings for all resource names {#RN_DETAIL_SM_36}
 ----------
@@ -93,6 +110,11 @@ SM-44: Returned SCMI perf levels not limited by part speed {#RN_DETAIL_SM_44}
 
 SCMI performance levels for Cortex-A55 are limited based on speed grade fuses.   Only devices with Cortex-A55 speed grade fusing of 2.0 GHz and above will support the super-overdrive performance level for Cortex-A55.
 
+SM-47: Reset associated MU modules during CPU stop sequence {#RN_DETAIL_SM_47}
+----------
+
+The MU modules in AONMIX include connections for power state awareness of the remote side.  Subsequently, these MUs require the remote side to be powered during a soft reset of the module issued from the local side.  The SM issues a soft reset of impacted MU modules during shutdown/reset of a logical machine.  SM was updated to perform a soft reset of impacted MU modules during the CPU stop operation to ensure the remote side is powered.
+
 SM-50: Update configtool names to match latest SoC RM {#RN_DETAIL_SM_50}
 ----------
 
@@ -105,4 +127,9 @@ Updated BLK_CTRL names in configtool to match latest SoC RM:
  * BLK_CTRL_V -> BLK_CTRL_VPUMIX
 
 This requires customers to update their cfg files.
+
+SM-51: Incorrect scan of voltage level required for SCMI performance domains {#RN_DETAIL_SM_51}
+----------
+
+Updating the level of an SCMI performance domain results in SM scanning all performance domains that share the same voltage supply to determine if the respective voltage can be raised or lowered.  This scanning procedure within the SM was updated to ensure that all dependent performance domains are considered in the evaluation of the required voltage.
 

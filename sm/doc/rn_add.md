@@ -41,6 +41,10 @@ For all NXP reference configs:
   - BLK_CTRL_H -> BLK_CTRL_HSIOMIX
   - BLK_CTRL_E -> BLK_CTRL_NETCMIX
   - BLK_CTRL_V -> BLK_CTRL_VPUMIX
+- Updated V2X names:
+  - V2X_APP1 -> V2X_SHE1
+  - V2X_SHE -> V2X_SHE0
+- Updated V2X_FH ownership to V2X (DID=12) and no MDAC DID assignment for AP-NS (mdid=none)
 
 **Customers must make similar changes to their cfg files.**
 
