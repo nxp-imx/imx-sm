@@ -112,29 +112,29 @@ int32_t BRD_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags)
     int32_t status = SM_ERR_SUCCESS;
     uint8_t mask;
     uint32_t val;
-    uint32_t invFlags = ~flags;
+    uint32_t enb = (flags != 0U) ? 0U : 1U;
 
     switch (ctrlId)
     {
         case BRD_SM_CTRL_SD3_WAKE:
             mask = BIT8(PCAL6408A_INPUT_SD3_WAKE);
-            val = (invFlags & 0x1U) << PCAL6408A_INPUT_SD3_WAKE;
+            val = (enb & 0x1U) << PCAL6408A_INPUT_SD3_WAKE;
             break;
         case BRD_SM_CTRL_PCIE1_WAKE:
             mask = BIT8(PCAL6408A_INPUT_PCIE1_WAKE);
-            val = (invFlags & 0x1U) << PCAL6408A_INPUT_PCIE1_WAKE;
+            val = (enb & 0x1U) << PCAL6408A_INPUT_PCIE1_WAKE;
             break;
         case BRD_SM_CTRL_BT_WAKE:
             mask = BIT8(PCAL6408A_INPUT_BT_WAKE);
-            val = (invFlags & 0x1U) << PCAL6408A_INPUT_BT_WAKE;
+            val = (enb & 0x1U) << PCAL6408A_INPUT_BT_WAKE;
             break;
         case BRD_SM_CTRL_PCIE2_WAKE:
             mask = BIT8(PCAL6408A_INPUT_PCIE2_WAKE);
-            val = (invFlags & 0x1U) << PCAL6408A_INPUT_PCIE2_WAKE;
+            val = (enb & 0x1U) << PCAL6408A_INPUT_PCIE2_WAKE;
             break;
         case BRD_SM_CTRL_BUTTON:
             mask = BIT8(PCAL6408A_INPUT_BUTTON);
-            val = (invFlags & 0x1U) << PCAL6408A_INPUT_BUTTON;
+            val = (enb & 0x1U) << PCAL6408A_INPUT_BUTTON;
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -174,35 +174,35 @@ void BRD_SM_ControlHandler(uint8_t status, uint8_t val)
     if ((status & BIT8(PCAL6408A_INPUT_SD3_WAKE)) != 0U)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_SD3_WAKE,
-            (data >> PCAL6408A_INPUT_SD3_WAKE) & 0x1U);
+            ((data >> PCAL6408A_INPUT_SD3_WAKE) & 0x1U) + 1U);
     }
 
     /* Handle PCIe1 wake */
     if ((status & BIT8(PCAL6408A_INPUT_PCIE1_WAKE)) != 0U)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_PCIE1_WAKE,
-            (data >> PCAL6408A_INPUT_PCIE1_WAKE) & 0x1U);
+            ((data >> PCAL6408A_INPUT_PCIE1_WAKE) & 0x1U) + 1U);
     }
 
     /* Handle BT wake */
     if ((status & BIT8(PCAL6408A_INPUT_BT_WAKE)) != 0U)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_BT_WAKE,
-            (data >> PCAL6408A_INPUT_BT_WAKE) & 0x1U);
+            ((data >> PCAL6408A_INPUT_BT_WAKE) & 0x1U) + 1U);
     }
 
     /* Handle PCIe2 wake */
     if ((status & BIT8(PCAL6408A_INPUT_PCIE2_WAKE)) != 0U)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_PCIE2_WAKE,
-            (data >> PCAL6408A_INPUT_PCIE2_WAKE) & 0x1U);
+            ((data >> PCAL6408A_INPUT_PCIE2_WAKE) & 0x1U) + 1U);
     }
 
     /* Handle button */
     if ((status & BIT8(PCAL6408A_INPUT_BUTTON)) != 0U)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_BUTTON,
-            (data >> PCAL6408A_INPUT_BUTTON) & 0x1U);
+            ((data >> PCAL6408A_INPUT_BUTTON) & 0x1U) + 1U);
     }
 }
 
