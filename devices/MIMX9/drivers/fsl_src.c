@@ -62,6 +62,14 @@ bool SRC_MixInit(uint32_t srcMixIdx)
         uint32_t authenCtrl = g_pwrMixMgmtInfo[srcMixIdx].authenCtrl;
         uint64_t lpmSetting = g_pwrMixMgmtInfo[srcMixIdx].lpmSetting;
 
+        /* HW LPM control cannot be enabled when MIX is powered down */
+        if ((authenCtrl & AUTHEN_CTRL_LPM_MODE_MASK) != 0U)
+        {
+            if (!SRC_MixIsPwrSwitchOn(srcMixIdx))
+            {
+                authenCtrl &= (~AUTHEN_CTRL_LPM_MODE_MASK);
+            }
+        }
         srcMix->AUTHEN_CTRL = authenCtrl;
         srcMix->LPM_SETTING_1 = UINT64_L(lpmSetting);
         srcMix->LPM_SETTING_2 = UINT64_H(lpmSetting);
