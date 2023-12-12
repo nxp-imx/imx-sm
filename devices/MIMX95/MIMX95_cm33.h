@@ -56,6 +56,7 @@
 #include "MIMX95_M33_CACHE_MCM.h"
 #include "MIMX95_MCM.h"
 #include "MIMX95_MU.h"
+#include "MIMX95_OSC24M.h"
 #include "MIMX95_PLL.h"
 #include "MIMX95_RGPIO.h"
 #include "MIMX95_SRC_GEN.h"
