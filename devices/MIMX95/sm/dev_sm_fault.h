@@ -85,7 +85,7 @@
 #define DEV_SM_FAULT_SW0            22U  /*!< Software Generated Fault 0 (Group 0, Fault 0) */
 #define DEV_SM_FAULT_SW1            23U  /*!< Software Generated Fault 1 (Group 0, Fault 1) */
 #define DEV_SM_FAULT_SW2            24U  /*!< Software Generated Fault 2 (Group 0, Fault 2) */
-#define DEV_SM_FAULT_SW3            25U  /*!< Software Generated Fault 3 */
+#define DEV_SM_FAULT_SW3            25U  /*!< Software Generated Fault 3 (Group 0, Fault 3) */
 #define DEV_SM_FAULT_SW4            26U  /*!< Software Generated Fault 4 (Group 0, Fault 4) */
 #define DEV_SM_FAULT_SW5            27U  /*!< Software Generated Fault 5 (Group 0, Fault 5) */
 #define DEV_SM_FAULT_SW6            28U  /*!< Software Generated Fault 6 (Group 1, Fault 0) */
@@ -93,7 +93,7 @@
 #define DEV_SM_FAULT_SW8            30U  /*!< Software Generated Fault 8 (Group 1, Fault 2) */
 #define DEV_SM_FAULT_SW9            31U  /*!< Software Generated Fault 9 (Group 1, Fault 3) */
 #define DEV_SM_FAULT_SW10           32U  /*!< Software Generated Fault 10 (Group 1, Fault 4) */
-#define DEV_SM_FAULT_SW11           33U  /*!< Software Generated Fault 11 */
+#define DEV_SM_FAULT_SW11           33U  /*!< Software Generated Fault 11 (Group 1, Fault 5) */
 #define DEV_SM_FAULT_M33_LOCKUP     34U  /*!< M33 Lockup Error */
 #define DEV_SM_FAULT_M33_RESET      35U  /*!< Unintended M33 Reset assertion */
 #define DEV_SM_FAULT_M33_DEBUG      36U  /*!< Unintended M33 Debug activation */

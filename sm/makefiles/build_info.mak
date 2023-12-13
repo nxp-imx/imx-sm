@@ -35,7 +35,7 @@ SM_PREV_VER = imx_sm_2023q4_er1
 SM_SNAP = 0
 
 SM_DEVICES = i.MX95 (A0)
-SM_ELE_VER = 0.0.1
+SM_ELE_VER = 0.0.2
 
 MKIMAGE_BRANCH = master
 MKIMAGE_BUILD = Linux_IMX_Core

@@ -39,3 +39,12 @@ Bug {#RN_KN_BUG}
 |------------|-------------------------------|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes | Y |
 
+Silicon Workaround {#RN_KN_REQ}
+============
+
+These are a mix of silicon errata workarounds and recommended usage changes.
+
+| Key     | Summary                        | i.MX95<br> (A0) |
+|------------|-------------------------------|---|
+| [SM-54](https://jira.sw.nxp.com/projects/SM/issues/SM-54) | Add software workaround for ERR052127 (NOCMIX BLK_CTRL sync) | Y |
+

@@ -22,6 +22,7 @@ Improvement {#RN_CL_IMP}
 | [SM-36](https://jira.sw.nxp.com/projects/SM/issues/SM-36) | Return lower-case strings for all resource names [[detail]](@ref RN_DETAIL_SM_36) |   | Y |
 | [SM-40](https://jira.sw.nxp.com/projects/SM/issues/SM-40) | Add device controls for some AON/WAKE peripherals [[detail]](@ref RN_DETAIL_SM_40) |   | Y |
 | [SM-50](https://jira.sw.nxp.com/projects/SM/issues/SM-50) | Update configtool names to match latest SoC RM [[detail]](@ref RN_DETAIL_SM_50) |   | Y |
+| [SM-53](https://jira.sw.nxp.com/projects/SM/issues/SM-53) | Add SCMI misc function to get silicon info |   | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -34,6 +35,7 @@ Bug {#RN_CL_BUG}
 | [SM-44](https://jira.sw.nxp.com/projects/SM/issues/SM-44) | Returned SCMI perf levels not limited by part speed [[detail]](@ref RN_DETAIL_SM_44) |   | Y |
 | [SM-47](https://jira.sw.nxp.com/projects/SM/issues/SM-47) | Reset associated MU modules during CPU stop sequence [[detail]](@ref RN_DETAIL_SM_47) |   | Y |
 | [SM-51](https://jira.sw.nxp.com/projects/SM/issues/SM-51) | Incorrect scan of voltage level required for SCMI performance domains [[detail]](@ref RN_DETAIL_SM_51) |   | Y |
+| [SM-52](https://jira.sw.nxp.com/projects/SM/issues/SM-52) | Enabling hardware LPM control must consider MIX power state [[detail]](@ref RN_DETAIL_SM_52) |   | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -103,7 +105,7 @@ Changed cfg files and associated generated headers:
 SM-43: Board MISC control notification broken in the mx95evk board port {#RN_DETAIL_SM_43}
 ----------
 
-Fixed i.MX95 EVK board code to invert flag state before applying to the i2C bus expander. Customers may need to do the same if they copied the control code from an NXP reference board port.
+Fixed i.MX95 EVK board control code to support flag for control assert (bit0) and negate (bit1). Inverted state sent to the bus expander enable (enabled low). Customers may need to do the same if they copied the control code from an NXP reference board port.
 
 SM-44: Returned SCMI perf levels not limited by part speed {#RN_DETAIL_SM_44}
 ----------
@@ -132,4 +134,9 @@ SM-51: Incorrect scan of voltage level required for SCMI performance domains {#R
 ----------
 
 Updating the level of an SCMI performance domain results in SM scanning all performance domains that share the same voltage supply to determine if the respective voltage can be raised or lowered.  This scanning procedure within the SM was updated to ensure that all dependent performance domains are considered in the evaluation of the required voltage.
+
+SM-52: Enabling hardware LPM control must consider MIX power state {#RN_DETAIL_SM_52}
+----------
+
+The SRC module does not allow hardware-based power control of a MIX to be enabled when a MIX is powered down.  During SM initialization, the power status of a MIX is checked prior to updating the respective hardware-based control power control.
 
