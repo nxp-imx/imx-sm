@@ -68,6 +68,8 @@
 #define SCMI_MSG_MISC_REASON_ATTRIBUTES    0x9U
 /*! Read the reason the LM/system last booted/shutdown/reset */
 #define SCMI_MSG_MISC_RESET_REASON         0xAU
+/*! Get silicon info */
+#define SCMI_MSG_MISC_SI_INFO              0xBU
 /*! Read control notification event */
 #define SCMI_MSG_MISC_CONTROL_EVENT        0x0U
 /** @} */
@@ -82,6 +84,8 @@
 #define SCMI_MISC_MAX_BUILDTIME  16U
 /*! Max length of the returned reason name */
 #define SCMI_MISC_MAX_NAME       16U
+/*! Max length of the returned silicon name */
+#define SCMI_MISC_MAX_SINAME     16U
 /*! Max number value words */
 #define SCMI_MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
 /*! Max number return words */
@@ -474,6 +478,24 @@ int32_t SCMI_MiscReasonAttributes(uint32_t channel, uint32_t reasonId,
  */
 int32_t SCMI_MiscResetReason(uint32_t channel, uint32_t flags,
     uint32_t *bootFlags, uint32_t *shutdownFlags, uint32_t *extInfo);
+
+/*!
+ * Get silicon info.
+ *
+ * @param[in]     channel   A2P channel for comms
+ * @param[out]    deviceId  Silicon specific device ID
+ * @param[out]    siRev     Silicon specific revision
+ * @param[out]    partNum   Silicon specific part number
+ * @param[out]    siName    Silicon name/revision. Null terminated ASCII string
+ *                          of up to 16 bytes in length
+ *
+ * This function returns silicon info. The deviceId,  siRev, and partNum format
+ * are specific to the silicon.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ */
+int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
+    uint32_t *siRev, uint32_t *partNum, uint8_t *siName);
 
 /*!
  * Read control notification event.

@@ -52,6 +52,24 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
+/* Get silicon info                                                         */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
+    uint32_t *partNum, string *siNameAddr)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    static string siName = "Simulation";
+
+    /* Return initial data */
+    *deviceId = 0U;
+    *siRev = 0U;
+    *partNum = 0U;
+    *siNameAddr = siName;
+
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Get time in microseconds                                                 */
 /*--------------------------------------------------------------------------*/
 uint64_t DEV_SM_Usec64Get(void)
@@ -119,7 +137,7 @@ int32_t DEV_SM_StrLen(string str)
     const char *p = str;
     int32_t len = 0;
 
-    /* Lop over string */
+    /* Loop over string */
     while (*p != '\0')
     {
         len++;

@@ -378,10 +378,21 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     uint32_t buildNum = SM_BUILD;
     uint32_t buildCommit = SM_COMMIT;
     const rom_passover_t *passover;
+    const uint8_t *siName;
+    uint32_t deviceId;
+    uint32_t siRev;
+    uint32_t partNum;
 
     printf("SM Version    = Build %u", buildNum);
     printf(", Commit %08x\n", buildCommit);
     printf("Platform      = %s\n", SCMI_SUB_VENDOR);
+
+    /* Get the silicon info */
+    if (SM_SIINFOGET(&deviceId, &siRev, &partNum, (string*) &siName)
+        == SM_ERR_SUCCESS)
+    {
+        printf("Silicon       = %s\n", siName);
+    }
 
     /* Display ROM passover info */
     if (LMM_MiscRomPassoverGet(0U, &passover) == SM_ERR_SUCCESS)

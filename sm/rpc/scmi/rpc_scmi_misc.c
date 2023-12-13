@@ -59,12 +59,14 @@
 #define COMMAND_MISC_CONTROL_NOTIFY          0x8U
 #define COMMAND_MISC_REASON_ATTRIBUTES       0x9U
 #define COMMAND_MISC_RESET_REASON            0xAU
-#define COMMAND_SUPPORTED_MASK               0x7FFUL
+#define COMMAND_MISC_SI_INFO                 0xBU
+#define COMMAND_SUPPORTED_MASK               0xFFFUL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
 #define MISC_MAX_BUILDTIME  16U
 #define MISC_MAX_NAME       16U
+#define MISC_MAX_SINAME     16U
 #define MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_VAL        SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_ARG_T      SCMI_ARRAY(12U, uint32_t)
@@ -292,6 +294,23 @@ typedef struct
     uint32_t extInfo[MISC_MAX_EXTINFO];
 } msg_tmisc10_t;
 
+/* Response type for MiscSiInfo() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Silicon specific device ID */
+    uint32_t deviceId;
+    /* Silicon specific revision */
+    uint32_t siRev;
+    /* Silicon specific part number */
+    uint32_t partNum;
+    /* Silicon name/revision */
+    uint8_t siName[MISC_MAX_SINAME];
+} msg_tmisc11_t;
+
 /* Request type for MiscControlEvent() */
 typedef struct
 {
@@ -327,6 +346,8 @@ static int32_t MiscReasonAttributes(const scmi_caller_t *caller,
     const msg_rmisc9_t *in, msg_tmisc9_t *out);
 static int32_t MiscResetReason(const scmi_caller_t *caller,
     const msg_rmisc10_t *in, msg_tmisc10_t *out, uint32_t *len);
+static int32_t MiscSiInfo(const scmi_caller_t *caller,
+    const scmi_msg_header_t *in, msg_tmisc11_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
     lmm_rpc_trigger_t trigger);
 static int32_t MiscResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -404,6 +425,11 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tmisc10_t);
             status = MiscResetReason(caller, (const msg_rmisc10_t*) in,
                 (msg_tmisc10_t*) out, &lenOut);
+            break;
+        case COMMAND_MISC_SI_INFO:
+            lenOut = sizeof(msg_tmisc11_t);
+            status = MiscSiInfo(caller, (const scmi_msg_header_t*) in,
+                (msg_tmisc11_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -1139,6 +1165,61 @@ static int32_t MiscResetReason(const scmi_caller_t *caller,
 
         /* Update length */
         *len = (4U + extLen) * sizeof(uint32_t);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get silicon info                                                         */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - out->deviceId: Silicon specific device ID                              */
+/* - out->siRev: Silicon specific revision                                  */
+/* - out->partNum: Silicon specific part number                             */
+/* - out->siName: Silicon name/revision. Null terminated ASCII string of    */
+/*   up to 16 bytes in length                                               */
+/*                                                                          */
+/* Process the MISC_SI_INFO message. Platform handler for                   */
+/* SCMI_MiscSiInfo().                                                       */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscSiInfo(const scmi_caller_t *caller,
+    const scmi_msg_header_t *in, msg_tmisc11_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    const uint8_t *nameAddr = (const uint8_t*) "";
+    uint32_t deviceId;
+    uint32_t siRev;
+    uint32_t partNum;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Get the silicon info */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = SM_SIINFOGET(&deviceId, &siRev, &partNum,
+            (string*) &nameAddr);
+    }
+
+    /* Return results */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Return data */
+        out->deviceId = deviceId;
+        out->siRev = siRev;
+        out->partNum = partNum;
+
+        /* Copy out name */
+        RPC_SCMI_StrCpy(out->siName, nameAddr, MISC_MAX_SINAME);
     }
 
     /* Return status */

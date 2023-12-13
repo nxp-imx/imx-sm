@@ -57,6 +57,14 @@ typedef struct {
  * @{
  */
 
+#define FSB_FUSE_HW_CFG0_SI_REV_MASK            (0xFU)
+#define FSB_FUSE_HW_CFG0_SI_REV_SHIFT           (0U)
+#define FSB_FUSE_HW_CFG0_SI_REV(x)              (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_SI_REV_SHIFT)) & FSB_FUSE_HW_CFG0_SI_REV_MASK)
+
+#define FSB_FUSE_HW_CFG0_PART_NUM_MASK          (0xFF0U)
+#define FSB_FUSE_HW_CFG0_PART_NUM_SHIFT         (4U)
+#define FSB_FUSE_HW_CFG0_PART_NUM(x)            (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_PART_NUM_SHIFT)) & FSB_FUSE_HW_CFG0_PART_NUM_MASK)
+
 #define FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK    (0x3000U)
 #define FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT   (12U)
 #define FSB_FUSE_HW_CFG0_MARKET_SEGMENT(x)      (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT)) & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)

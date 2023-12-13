@@ -641,6 +641,83 @@ int32_t SCMI_MiscResetReason(uint32_t channel, uint32_t flags,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get silicon info                                                         */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
+    uint32_t *siRev, uint32_t *partNum, uint8_t *siName)
+{
+    int32_t status;
+    uint32_t header;
+    const void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t deviceId;
+        uint32_t siRev;
+        uint32_t partNum;
+        uint8_t siName[SCMI_MISC_MAX_SINAME];
+    } msg_rmiscd11_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInitC(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_MISC_SI_INFO, sizeof(header), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rmiscd11_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rmiscd11_t *msgRx = (const msg_rmiscd11_t*) msg;
+
+        /* Extract deviceId */
+        if (deviceId != NULL)
+        {
+            *deviceId = msgRx->deviceId;
+        }
+
+        /* Extract siRev */
+        if (siRev != NULL)
+        {
+            *siRev = msgRx->siRev;
+        }
+
+        /* Extract partNum */
+        if (partNum != NULL)
+        {
+            *partNum = msgRx->partNum;
+        }
+
+        /* Extract siName */
+        if (siName != NULL)
+        {
+            SCMI_StrCpy(siName, msgRx->siName, SCMI_MISC_MAX_SINAME);
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Read control notification event                                          */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_MiscControlEvent(uint32_t channel, uint32_t *ctrlId,

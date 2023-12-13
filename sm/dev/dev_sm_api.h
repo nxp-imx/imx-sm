@@ -392,17 +392,17 @@
 
 #ifndef SM_PINNAMEGET
 /*! Redirector (device/board) to get a pin name */
-#define SM_PINNAMEGET         DEV_SM_PinNameGet
+#define SM_PINNAMEGET           DEV_SM_PinNameGet
 #endif
 
 #ifndef SM_PINCONFIGSET
 /*! Redirector (device/board) to get a pin name */
-#define SM_PINCONFIGSET       DEV_SM_PinConfigSet
+#define SM_PINCONFIGSET         DEV_SM_PinConfigSet
 #endif
 
 #ifndef SM_PINCONFIGGET
 /*! Redirector (device/board) to get a pin name */
-#define SM_PINCONFIGGET       DEV_SM_PinConfigGet
+#define SM_PINCONFIGGET         DEV_SM_PinConfigGet
 #endif
 
 #ifndef SM_BBMGETBOOTSTATUS
@@ -563,6 +563,11 @@
 #ifndef SM_RDCACCESSSET
 /*! Redirector (device/board) to set device access */
 #define SM_RDCACCESSSET         DEV_SM_RdcAccessSet
+#endif
+
+#ifndef SM_SIINFOGET
+/*! Redirector (device/board) to get silicon info */
+#define SM_SIINFOGET            DEV_SM_SiInfoGet
 #endif
 
 /** @} */

@@ -58,6 +58,19 @@
 /* Functions */
 
 /*!
+ * Get silicon info.
+ *
+ * @param[out]    deviceId    Pointer to return device ID
+ * @param[out]    siRev       Pointer to return silicon revision
+ * @param[out]    partNum     Pointer to return part number
+ * @param[out]    siNameAddr  Pointer to return silicon name
+ *
+ * Return errors (see @ref STATUS "SM error codes").
+ */
+int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
+    uint32_t *partNum, string *siNameAddr);
+
+/*!
  * Get 64-bit timestamp in microseconds.
  *
  * @return Returns the time in uS.
