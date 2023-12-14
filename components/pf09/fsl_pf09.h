@@ -69,8 +69,8 @@ typedef struct
  * @name PF09 voltage state
  */
 /** @{ */
-#define PF09_STATE_VRUN   0U  /*!< RUN voltage of regulator */
-#define PF09_STATE_VSTBY  1U  /*!< STBY voltage of regulator */
+#define PF09_STATE_VRUN   0U  /*!< RUN voltage */
+#define PF09_STATE_VSTBY  1U  /*!< STBY voltage */
 /** @} */
 
 /*! Number of mask words */
@@ -92,6 +92,14 @@ typedef struct
 #define PF09_MASK_IDX_LDO_OV    9U   /*!< LDO over volt mask */
 #define PF09_MASK_IDX_PWRON     10U  /*!< Power on mask */
 #define PF09_MASK_IDX_IO        11U  /*!< I/O mask */
+/** @} */
+
+/*!
+ * @name PF09 voltage monitors
+ */
+/** @{ */
+#define PF09_VMON1     1U  /*!< VMON1 monitor */
+#define PF09_VMON2     2U  /*!< VMON2 monitor */
 /** @} */
 
 /*******************************************************************************
@@ -306,6 +314,30 @@ bool PF09_WdogEnable(const PF09_Type *dev, bool wdogEn);
  * @return True if successful.
  */
 bool PF09_WdogService(const PF09_Type *dev, uint8_t wdogMode);
+
+/*!
+ * Set the monitor voltage in microVolts
+ *
+ * @param[in]     dev        Device info.
+ * @param[in]     monitor    Monitor name.
+ * @param[in]     state      RUN or STBY voltage.
+ * @param[in]     microVolt  Regulator microVolts.
+ *
+ * @return True if successful.
+ */
+bool PF09_MonitorSet(const PF09_Type *dev, uint8_t monitor, uint8_t state,
+    uint32_t microVolt);
+
+/*!
+ * Enable/disable the monitor
+ *
+ * @param[in]     dev        Device info.
+ * @param[in]     monitor    Monitor name.
+ * @param[in]     monEn      Enable or Disable voltage monitoring.
+ *
+ * @return True if successful.
+ */
+bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn);
 
 #if defined(__cplusplus)
 }

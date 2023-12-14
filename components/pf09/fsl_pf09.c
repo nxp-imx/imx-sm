@@ -95,7 +95,14 @@
 #define PF09_REG_WD_CNT2        0x53U
 #define PF09_REG_FAULT_CFG      0x54U
 #define PF09_REG_FAULT_CNT      0x55U
-
+#define PF09_REG_DFS_CNT        0x56U
+#define PF09_REG_AMUX_CFG       0x57U
+#define PF09_REG_VMON1_RUN_CFG  0x58U
+#define PF09_REG_VMON1_STBY_CFG 0x59U
+#define PF09_REG_VMON1_CTRL     0x5AU
+#define PF09_REG_VMON2_RUN_CFG  0x5BU
+#define PF09_REG_VMON2_STBY_CFG 0x5CU
+#define PF09_REG_VMON2_CTRL     0x5DU
 #define PF09_REG_SW1_VRUN       0x5EU
 #define PF09_REG_SW1_VSTBY      0x5FU
 #define PF09_REG_SW1_MODE       0x60U
@@ -905,6 +912,87 @@ bool PF09_WdogService(const PF09_Type *dev, uint8_t wdogMode)
 
     /* Return status */
     return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set monitor run/standby voltage in micro volts                           */
+/*--------------------------------------------------------------------------*/
+bool PF09_MonitorSet(const PF09_Type *dev, uint8_t monitor, uint8_t state,
+    uint32_t microVolt)
+{
+    bool rc = true;
+    uint32_t code = 0U;
+
+    /* Check regulator index */
+    if ((monitor >= PF09_VMON1) && (monitor <= PF09_VMON2))
+    {
+        /* Convert microvolts to code */
+        /* Micro volts between 0.5V and 1.2750V */
+        if ((microVolt >= 500000U) && (microVolt <= 1275000U))
+        {
+            code = (((microVolt - 500000U) / 25000U)) & 0x1FU;
+        }
+        else
+        {
+            rc = false;
+        }
+    }
+
+    if (rc == true)
+    {
+        switch (monitor)
+        {
+            case PF09_VMON1:
+                {
+                    /* Write 8-bits */
+                    rc = PF09_PmicWrite(dev, PF09_REG_VMON1_RUN_CFG + state,
+                        (uint8_t) code, 0x1FU);
+                }
+                break;
+            case PF09_VMON2:
+                {
+                    /* Write 8-bits */
+                    rc = PF09_PmicWrite(dev, PF09_REG_VMON2_RUN_CFG + state,
+                        (uint8_t) code, 0x1FU);
+                }
+                break;
+            default:
+                rc = false;
+                break;
+        }
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enable/Disable the monitor                                               */
+/*--------------------------------------------------------------------------*/
+bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn)
+{
+    bool rc = true;
+    uint8_t code = 0U;
+
+    /* Set Enable bit */
+    if (monEn == true)
+    {
+        code = 0x80U;
+    }
+
+    /* Check regulator index */
+    if ((monitor >= PF09_VMON1) && (monitor <= PF09_VMON2))
+    {
+        /* Write 8-bits */
+        rc = PF09_PmicWrite(dev,
+            PF09_REG_VMON1_RUN_CFG + ((monitor-PF09_VMON1) * 3U),
+            code,
+            0x80U);
+    }
+
+    /* Return status */
+    return rc;
+
 }
 
 /*==========================================================================*/
