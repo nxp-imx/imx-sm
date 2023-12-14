@@ -111,6 +111,21 @@ int32_t BRD_SM_SerialDevicesInit(void)
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
+        else
+        {
+            /* Disable voltage monitors 1 & 2 */
+            if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON1, false))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+            else
+            {
+                if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON2, false))
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
+            }
+        }
 
         /* Handle any already pending PF09 interrupts */
         if (status == SM_ERR_SUCCESS)
