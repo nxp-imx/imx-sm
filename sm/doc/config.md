@@ -34,6 +34,12 @@ The configuration directory contains the following files:
 
 Each of these files is associated with an [SM module](@ref ARCH_FW).
 
+Note when configuring the SM LM0 is always the SM itself. Many resources need to be
+exclusively owned by the SM. The @ref PHY_ARCH section lists which IP the SM uses. Some
+additional resources such as most bus clocks, AON/WAKE/NOC power domains, etc. are also
+used by the SM. Some (e.g. BBNSM GPR0-3, I2C1 or 2, UART 1 or 2, GPIO1, etc.) are often
+used by [NXP reference board ports](@ref PORT_MX95_EVK).
+
 SM Configuration Structure {#CONFIG_STRUCT}
 --------------------------
 

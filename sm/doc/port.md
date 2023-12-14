@@ -220,6 +220,10 @@ Board interrupt support is implementd in [brd_sm_handlers.h/c](@ref mcimx95evk/s
 makes used of GPIO1 signal 10 to get an interrupt from a PCAL6408A. This gets wakeup signals as well as an
 interrupt from the PF09.
 
+The BRD_SM_ShutdownRecordLoad() and BRD_SM_ShutdownRecordSave() functions record information in the BBNSM
+persistent storage. They makes use of GPR0-3. Access to these should not be granted to other agents in the
+configuration files.
+
 The default configuration for this board is [mx95evk](@ref CONFIG_MX95EVK). It defines the following boot
 mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
 
@@ -391,6 +395,12 @@ complex board ports.
 
   Note the supply functions only apply to SoC supplies. To manage other voltages the board port needs to
   redirect the DEV_SM_Voltage*() functions found in dev_sm_voltage_api.h.
+
+  The BRD_SM_ShutdownRecordLoad() and BRD_SM_ShutdownRecordSave() functions should save/load shutdown
+  information in persistent storage. This is often GPR0-3 in the BBNSM. Access to these GPR should not be
+  granted to other agents in the cfg file. Using these GPR for other things requires changing the
+  implementation of these functions. Note these could save nothing or save only the first word and set
+  extLen to 0 on load.
 
 -#  Implement desire redirection functions:
   - Normally done by adding brd_sm_*.h/c files. Some can be copied from other board ports to start.
