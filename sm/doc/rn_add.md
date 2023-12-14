@@ -29,7 +29,7 @@ Configuration Changes {#RN_ADD_CONFIG}
 
 For all NXP reference configs:
 
-- Defind an ACCESS macro to indiate access only, not owning the bus master DID
+- Defined an ACCESS macro to indicate access only, not owning the bus master DID
 - Used ACCESS to give the M33 (SM) access to the GIC
 - Moved BUTTON access from AP secure to AP non-secure
 - Gave AP non-secure execute access to the ISP OCRAM
@@ -60,4 +60,5 @@ For all NXP reference board ports:
 
 - Fixed an issue with bus expander control flag polarity
 - Changed resource text (e.g. board sensors, voltages) to lower-case
+- Disabled the PF09 monitoring of the PF53 voltages.
 

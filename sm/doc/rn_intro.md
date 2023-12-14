@@ -9,7 +9,7 @@ This document contains release notes for the i.MX9 System Manager (SM). This inc
 - [Additional info](@ref RN_ADD)
 
 It is **critical** customers review the [Additional Info](@ref RN_ADD) section for changes
-requierd to board ports and agent APIs.
+required to board ports and agent APIs.
 
 The table below lists the release information:
 
