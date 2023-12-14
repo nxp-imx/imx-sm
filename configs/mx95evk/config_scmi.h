@@ -313,7 +313,6 @@
         .clkPerms[DEV_SM_CLK_VIDEOPLL1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VIDEOPLL1_VCO] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VPUDSP] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_VPUJPEG] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_XSPISLVROOT] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_BT_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_BUTTON] = SM_SCMI_PERM_NOTIFY, \

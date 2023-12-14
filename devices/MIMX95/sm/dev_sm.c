@@ -214,6 +214,7 @@ void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList)
         DEV_SM_CLK_TSTMR1,
         DEV_SM_CLK_VPU,
         DEV_SM_CLK_VPUAPB,
+        DEV_SM_CLK_VPUJPEG,
         DEV_SM_CLK_WAKEUPAXI
     };
 

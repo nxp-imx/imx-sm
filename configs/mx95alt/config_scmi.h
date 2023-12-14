@@ -184,7 +184,6 @@
         .clkPerms[DEV_SM_CLK_VIDEOPLL1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VIDEOPLL1_VCO] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VPUDSP] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_VPUJPEG] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_XSPISLVROOT] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_A55C0] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_A55C1] = SM_SCMI_PERM_ALL, \
