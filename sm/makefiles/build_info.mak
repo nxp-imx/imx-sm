@@ -34,7 +34,7 @@ SM_VERSION = imx_sm_2023q4_er2
 SM_PREV_VER = imx_sm_2023q4_er1
 SM_SNAP = 0
 
-SM_DEVICES = i.MX95 (A0)
+SM_DEVICES = i.MX95 (A0), i.MX95 (A1)
 SM_ELE_VER = 0.0.2
 
 MKIMAGE_BRANCH = master

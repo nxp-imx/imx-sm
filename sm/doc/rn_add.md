@@ -14,7 +14,7 @@ done without the debug monitor (M=0). The default is monitor enabled (M=1). For 
 
 Turning off the debug monitor will eliminate the linking of the standard C library.
 
-The tool chain used with this SM is Arm GNU Toolchain Version 12.3.Rel1 obtained from 
+The tool chain used with this SM is Arm GNU Toolchain Version **12.3.Rel1** obtained from 
 [Arm GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 Use the x86_64 Linux hosted AArch32 bare-metal target (arm-none-eabi) toolchain.
 
@@ -61,4 +61,6 @@ For all NXP reference board ports:
 - Fixed an issue with bus expander control flag polarity
 - Changed resource text (e.g. board sensors, voltages) to lower-case
 - Disabled the PF09 monitoring of the PF53 voltages.
+
+**Customers should make similar changes to their board port.**
 

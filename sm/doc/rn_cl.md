@@ -13,44 +13,44 @@ Below is a list of changes between the previous release (imx_sm_2023q4_er1) and 
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) |
-|------------|-------------------------------|-------|---|
-| [SM-55](https://jira.sw.nxp.com/projects/SM/issues/SM-55) | Add PF09 voltage monitor functions [[detail]](@ref RN_DETAIL_SM_55) |   | Y |
+| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|-------|---|---|
+| [SM-55](https://jira.sw.nxp.com/projects/SM/issues/SM-55) | Add PF09 voltage monitor functions [[detail]](@ref RN_DETAIL_SM_55) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) |
-|------------|-------------------------------|-------|---|
-| [SM-12](https://jira.sw.nxp.com/projects/SM/issues/SM-12) | Load temp sensor trim from fuses and configure panic [[detail]](@ref RN_DETAIL_SM_12) |   | Y |
-| [SM-18](https://jira.sw.nxp.com/projects/SM/issues/SM-18) | Support final SCMI 3.2 spec changes [[detail]](@ref RN_DETAIL_SM_18) |   | Y |
-| [SM-20](https://jira.sw.nxp.com/projects/SM/issues/SM-20) | Add V2X TRDC MDAC mapping and update configs [[detail]](@ref RN_DETAIL_SM_20) |   | Y |
-| [SM-22](https://jira.sw.nxp.com/projects/SM/issues/SM-22) | Add PMIC voltage ramp delay [[detail]](@ref RN_DETAIL_SM_22) |   | Y |
-| [SM-36](https://jira.sw.nxp.com/projects/SM/issues/SM-36) | Return lower-case strings for all resource names [[detail]](@ref RN_DETAIL_SM_36) |   | Y |
-| [SM-40](https://jira.sw.nxp.com/projects/SM/issues/SM-40) | Add device controls for some AON/WAKE peripherals [[detail]](@ref RN_DETAIL_SM_40) |   | Y |
-| [SM-50](https://jira.sw.nxp.com/projects/SM/issues/SM-50) | Update configtool names to match latest SoC RM [[detail]](@ref RN_DETAIL_SM_50) |   | Y |
-| [SM-53](https://jira.sw.nxp.com/projects/SM/issues/SM-53) | Add SCMI misc function to get silicon info [[detail]](@ref RN_DETAIL_SM_53) |   | Y |
+| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|-------|---|---|
+| [SM-12](https://jira.sw.nxp.com/projects/SM/issues/SM-12) | Load temp sensor trim from fuses and configure panic [[detail]](@ref RN_DETAIL_SM_12) |   | Y | Y |
+| [SM-18](https://jira.sw.nxp.com/projects/SM/issues/SM-18) | Support final SCMI 3.2 spec changes [[detail]](@ref RN_DETAIL_SM_18) |   | Y | Y |
+| [SM-20](https://jira.sw.nxp.com/projects/SM/issues/SM-20) | Add V2X TRDC MDAC mapping and update configs [[detail]](@ref RN_DETAIL_SM_20) |   | Y | Y |
+| [SM-22](https://jira.sw.nxp.com/projects/SM/issues/SM-22) | Add PMIC voltage ramp delay [[detail]](@ref RN_DETAIL_SM_22) |   | Y | Y |
+| [SM-36](https://jira.sw.nxp.com/projects/SM/issues/SM-36) | Return lower-case strings for all resource names [[detail]](@ref RN_DETAIL_SM_36) |   | Y | Y |
+| [SM-40](https://jira.sw.nxp.com/projects/SM/issues/SM-40) | Add device controls for some AON/WAKE peripherals [[detail]](@ref RN_DETAIL_SM_40) |   | Y | Y |
+| [SM-50](https://jira.sw.nxp.com/projects/SM/issues/SM-50) | Update configtool names to match latest SoC RM [[detail]](@ref RN_DETAIL_SM_50) |   | Y | Y |
+| [SM-53](https://jira.sw.nxp.com/projects/SM/issues/SM-53) | Add SCMI misc function to get silicon info [[detail]](@ref RN_DETAIL_SM_53) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) |
-|------------|-------------------------------|-------|---|
-| [SM-34](https://jira.sw.nxp.com/projects/SM/issues/SM-34) | Cortex-A55 LM reset may leave the GIC in an unusable state [[detail]](@ref RN_DETAIL_SM_34) |   | Y |
-| [SM-41](https://jira.sw.nxp.com/projects/SM/issues/SM-41) | Fix various issues with SM configurations [[detail]](@ref RN_DETAIL_SM_41) |   | Y |
-| [SM-43](https://jira.sw.nxp.com/projects/SM/issues/SM-43) | Board MISC control notification broken in the mx95evk board port [[detail]](@ref RN_DETAIL_SM_43) |   | Y |
-| [SM-44](https://jira.sw.nxp.com/projects/SM/issues/SM-44) | Returned SCMI perf levels not limited by part speed [[detail]](@ref RN_DETAIL_SM_44) |   | Y |
-| [SM-47](https://jira.sw.nxp.com/projects/SM/issues/SM-47) | Reset associated MU modules during CPU stop sequence [[detail]](@ref RN_DETAIL_SM_47) |   | Y |
-| [SM-51](https://jira.sw.nxp.com/projects/SM/issues/SM-51) | Incorrect scan of voltage level required for SCMI performance domains [[detail]](@ref RN_DETAIL_SM_51) |   | Y |
-| [SM-52](https://jira.sw.nxp.com/projects/SM/issues/SM-52) | Enabling hardware LPM control must consider MIX power state [[detail]](@ref RN_DETAIL_SM_52) |   | Y |
-| [SM-56](https://jira.sw.nxp.com/projects/SM/issues/SM-56) | Move VPUJPEG clock ownership to SM [[detail]](@ref RN_DETAIL_SM_56) |   | Y |
+| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|-------|---|---|
+| [SM-34](https://jira.sw.nxp.com/projects/SM/issues/SM-34) | Cortex-A55 LM reset may leave the GIC in an unusable state [[detail]](@ref RN_DETAIL_SM_34) |   | Y | Y |
+| [SM-41](https://jira.sw.nxp.com/projects/SM/issues/SM-41) | Fix various issues with SM configurations [[detail]](@ref RN_DETAIL_SM_41) |   | Y | Y |
+| [SM-43](https://jira.sw.nxp.com/projects/SM/issues/SM-43) | Board MISC control notification broken in the mx95evk board port [[detail]](@ref RN_DETAIL_SM_43) |   | Y | Y |
+| [SM-44](https://jira.sw.nxp.com/projects/SM/issues/SM-44) | Returned SCMI perf levels not limited by part speed [[detail]](@ref RN_DETAIL_SM_44) |   | Y | Y |
+| [SM-47](https://jira.sw.nxp.com/projects/SM/issues/SM-47) | Reset associated MU modules during CPU stop sequence [[detail]](@ref RN_DETAIL_SM_47) |   | Y | Y |
+| [SM-51](https://jira.sw.nxp.com/projects/SM/issues/SM-51) | Incorrect scan of voltage level required for SCMI performance domains [[detail]](@ref RN_DETAIL_SM_51) |   | Y | Y |
+| [SM-52](https://jira.sw.nxp.com/projects/SM/issues/SM-52) | Enabling hardware LPM control must consider MIX power state [[detail]](@ref RN_DETAIL_SM_52) |   | Y | Y |
+| [SM-56](https://jira.sw.nxp.com/projects/SM/issues/SM-56) | Move VPUJPEG clock ownership to SM [[detail]](@ref RN_DETAIL_SM_56) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) |
-|------------|-------------------------------|-------|---|
-| [SM-42](https://jira.sw.nxp.com/projects/SM/issues/SM-42) | SM 2023Q4 ER2 documentation updates |   | Y |
+| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|-------|---|---|
+| [SM-42](https://jira.sw.nxp.com/projects/SM/issues/SM-42) | SM 2023Q4 ER2 documentation updates |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======
