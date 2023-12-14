@@ -318,6 +318,9 @@ bool PF53_SwModeSet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
 
             rc = PF53_PmicWrite(dev, PF53_REG_SW1_CTRL1,
                 modeVal, modeMask);
+
+            /* Wait for write to latch and voltage to ramp */
+            SystemTimeDelay(100U);
         }
     }
 
@@ -380,6 +383,9 @@ bool PF53_VoltageSet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
             /* Write 8-bits */
             rc = PF53_PmicWrite(dev, PF53_REG_SW1_VOLT + state,
                 voltCode, 0xFFU);
+
+            /* Wait for write to latch and voltage to ramp */
+            SystemTimeDelay(100U);
         }
         else
         {
