@@ -234,7 +234,9 @@ void Reserved110_IRQHandler(void)
 void ELE_Group1_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
-    ExceptionHandler(ELE_Group1_IRQn, sp, 0U, 0U);
+    ExceptionHandler(ELE_Group1_IRQn, sp,
+        BLK_CTRL_S_AONMIX->SENTINEL_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->SENTINEL_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -243,7 +245,9 @@ void ELE_Group1_IRQHandler(const uint32_t *sp)
 void ELE_Group2_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
-    ExceptionHandler(ELE_Group2_IRQn, sp, 0U, 0U);
+    ExceptionHandler(ELE_Group2_IRQn, sp,
+        BLK_CTRL_S_AONMIX->SENTINEL_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->SENTINEL_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -252,7 +256,9 @@ void ELE_Group2_IRQHandler(const uint32_t *sp)
 void ELE_Group3_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
-    ExceptionHandler(ELE_Group3_IRQn, sp, 0U, 0U);
+    ExceptionHandler(ELE_Group3_IRQn, sp,
+        BLK_CTRL_S_AONMIX->SENTINEL_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->SENTINEL_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/
