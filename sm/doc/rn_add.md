@@ -21,32 +21,12 @@ Use the x86_64 Linux hosted AArch32 bare-metal target (arm-none-eabi) toolchain.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-- Final updates for SCMI version 3.2
-- Added new CLOCK_GET_PERMISSIONS; removed NXP-specific permission attributes
+None
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
-For all NXP reference configs:
-
-- Defined an ACCESS macro to indicate access only, not owning the bus master DID
-- Used ACCESS to give the M33 (SM) access to the GIC
-- Moved BUTTON access from AP secure to AP non-secure
-- Gave AP non-secure execute access to the ISP OCRAM
-- Cleaned up of some duplicate assignments
-- Updated BLK_CTRL names in configtool to match latest SoC RM:
-  - BLK_CTRL_C -> BLK_CTRL_CAMERAMIX
-  - BLK_CTRL_D -> BLK_CTRL_DISPLAYMIX
-  - BLK_CTRL_G -> BLK_CTRL_GPUMIX
-  - BLK_CTRL_H -> BLK_CTRL_HSIOMIX
-  - BLK_CTRL_E -> BLK_CTRL_NETCMIX
-  - BLK_CTRL_V -> BLK_CTRL_VPUMIX
-- Updated V2X names:
-  - V2X_APP1 -> V2X_SHE1
-  - V2X_SHE -> V2X_SHE0
-- Updated V2X_FH ownership to V2X (DID=12) and no MDAC DID assignment for AP-NS (mdid=none)
-
-**Customers must make similar changes to their cfg files.**
+None
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
@@ -56,11 +36,5 @@ None
 Board Implementation Changes {#RN_ADD_BOARD_IMP}
 ============================
 
-For all NXP reference board ports:
-
-- Fixed an issue with bus expander control flag polarity
-- Changed resource text (e.g. board sensors, voltages) to lower-case
-- Disabled the PF09 monitoring of the PF53 voltages.
-
-**Customers should make similar changes to their board port.**
+None
 

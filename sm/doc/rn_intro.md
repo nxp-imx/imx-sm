@@ -29,8 +29,7 @@ The table below lists the release information:
 \htmlonly
 <font color="red">\endhtmlonly
 
-This is an engineering release (ER)! It is not production quality and has no guarantee
-of functionality.
+This is an alpha release! It is not production quality.
 
 \htmlonly
 </font>\endhtmlonly

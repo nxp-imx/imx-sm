@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2024 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -3380,7 +3380,7 @@ sub copyright
     $rtn .= '/*' . "\n";
     $rtn .= '** ###################################################################' . "\n";
     $rtn .= '**' . "\n";
-    $rtn .= '** Copyright 2023 NXP' . "\n";
+    $rtn .= '** Copyright 2023-2024 NXP' . "\n";
     $rtn .= '**' . "\n";
     $rtn .= '** Redistribution and use in source and binary forms, with or without modification,' . "\n";
     $rtn .= '** are permitted provided that the following conditions are met:' . "\n";
