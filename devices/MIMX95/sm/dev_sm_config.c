@@ -43,6 +43,7 @@
 #include "dev_sm.h"
 #include "config_dev.h"
 #include "config_bctrl.h"
+#include "fsl_fract_pll.h"
 
 /* Local defines */
 
@@ -50,6 +51,10 @@
 
 /* Local variables */
 static bool s_tempSensorA55Enabled = false;
+static fracpll_context_t s_pllContextHsio;
+static fracpll_context_t s_pllContextLdb;
+static bool s_pllContextValidHsio = false;
+static bool s_pllContextValidLdb = false;
 
 /* Local functions */
 
@@ -301,6 +306,18 @@ int32_t DEV_SM_DisplayConfigLoad(void)
     }
 #endif
 
+    /* Restore PLL context */
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (s_pllContextValidLdb)
+        {
+            if (!FRACTPLL_SetContext(CLOCK_PLL_LDB, &s_pllContextLdb))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+    }
+
     /* Return status */
     return status;
 }
@@ -358,6 +375,18 @@ int32_t DEV_SM_HsioTopConfigLoad(void)
         status = SM_HSIO_TOP_CONFIG_FUNC();
     }
 #endif
+
+    /* Restore PLL context */
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (s_pllContextValidHsio)
+        {
+            if (!FRACTPLL_SetContext(CLOCK_PLL_HSIO, &s_pllContextHsio))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+    }
 
     /* Return status */
     return status;
@@ -700,3 +729,44 @@ int32_t DEV_SM_A55pPowerDownPre(void)
     return DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
 }
 
+/*--------------------------------------------------------------------------*/
+/* Display power domain power down configuration                            */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_DisplayPowerDownPre(void)
+{
+    int32_t status;
+
+    if (FRACTPLL_GetContext(CLOCK_PLL_LDB, &s_pllContextLdb))
+    {
+        s_pllContextValidLdb = true;
+        status = SM_ERR_SUCCESS;
+    }
+    else
+    {
+        s_pllContextValidLdb = false;
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* HSIO TOP power domain power down configuration                           */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_HsioTopPowerDownPre(void)
+{
+    int32_t status;
+
+    if (FRACTPLL_GetContext(CLOCK_PLL_HSIO, &s_pllContextHsio))
+    {
+        s_pllContextValidHsio = true;
+        status = SM_ERR_SUCCESS;
+    }
+    else
+    {
+        s_pllContextValidHsio = false;
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+
+    return status;
+}

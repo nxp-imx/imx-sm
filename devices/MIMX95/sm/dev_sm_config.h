@@ -225,6 +225,20 @@ int32_t DEV_SM_CcmsrcgpcConfigLoad(void);
  */
 int32_t DEV_SM_A55pPowerDownPre(void);
 
+/*!
+ * Configure the display domain for power down.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_DisplayPowerDownPre(void);
+
+/*!
+ * Configure the HSIO TOP domain for power down.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_HsioTopPowerDownPre(void);
+
 #endif /* DEV_SM_CONFIG_H */
 
 /** @} */
