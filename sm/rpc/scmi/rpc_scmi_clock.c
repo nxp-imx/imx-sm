@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x20001U
+#define PROTOCOL_VERSION  0x30000U
 
 /* SCMI clock protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -61,7 +61,8 @@
 #define COMMAND_CLOCK_PARENT_SET             0xDU
 #define COMMAND_CLOCK_PARENT_GET             0xEU
 #define COMMAND_CLOCK_GET_PERMISSIONS        0xFU
-#define COMMAND_SUPPORTED_MASK               0xF8FFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x1F8FFUL
 
 /* SCMI max clock argument lengths */
 #define CLOCK_MAX_NAME     16U
@@ -84,6 +85,7 @@
 #define CLOCK_ATTR_CHANGE_REQ(x)  (((x) & 0x1U) << 30U)
 #define CLOCK_ATTR_EXT_NAME(x)    (((x) & 0x1U) << 29U)
 #define CLOCK_ATTR_PARENT(x)      (((x) & 0x1U) << 28U)
+#define CLOCK_ATTR_EXT_CONFIG(x)  (((x) & 0x1U) << 27U)
 #define CLOCK_ATTR_RESTRICTED(x)  (((x) & 0x1U) << 1U)
 #define CLOCK_ATTR_ENABLED(x)     (((x) & 0x1U) << 0U)
 
@@ -98,11 +100,11 @@
 #define CLOCK_RATE_FLAGS_ASYNC(x)    (((x) & 0x1U) >> 0U)
 
 /* SCMI clock config attributes */
-#define CLOCK_CONFIG_SET_OEM(x)     (((x) & 0xFF0000U) >> 16U)
-#define CLOCK_CONFIG_SET_ENABLE(x)  (((x) & 0x3U) >> 0U)
+#define CLOCK_CONFIG_SET_EXT_CONFIG(x)  (((x) & 0xFF0000U) >> 16U)
+#define CLOCK_CONFIG_SET_ENABLE(x)      (((x) & 0x3U) >> 0U)
 
 /* SCMI clock config get flags */
-#define CLOCK_CONFIG_FLAGS_OEM(x)  (((x) & 0xFFU) >> 0U)
+#define CLOCK_CONFIG_FLAGS_EXT_CONFIG(x)  (((x) & 0xFFU) >> 0U)
 
 /* SCMI clock config */
 #define CLOCK_CONFIG_GET_ENABLE(x)  (((x) & 0x1U) << 0U)
@@ -257,8 +259,8 @@ typedef struct
     uint32_t clockId;
     /* Config attributes */
     uint32_t attributes;
-    /* OEM specified configuration value */
-    uint32_t oemConfigVal;
+    /* Extended config value */
+    uint32_t extendedConfigVal;
 } msg_rclock7_t;
 
 /* Request type for ClockConfigGet() */
@@ -283,8 +285,8 @@ typedef struct
     uint32_t attributes;
     /* Config */
     uint32_t config;
-    /* OEM specified configuration value */
-    uint32_t oemConfigVal;
+    /* Extended config value */
+    uint32_t extendedConfigVal;
 } msg_tclock11_t;
 
 /* Request type for ClockPossibleParentsGet() */
@@ -362,6 +364,15 @@ typedef struct
     uint32_t permissions;
 } msg_tclock15_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rclock16_t;
+
 /* Local functions */
 
 static int32_t ClockProtocolVersion(const scmi_caller_t *caller,
@@ -390,6 +401,8 @@ static int32_t ClockParentGet(const scmi_caller_t *caller,
     const msg_rclock14_t *in, msg_tclock14_t *out);
 static int32_t ClockGetPermissions(const scmi_caller_t *caller,
     const msg_rclock15_t *in, msg_tclock15_t *out);
+static int32_t ClockNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rclock16_t *in, const scmi_msg_status_t *out);
 static int32_t ClockResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -476,6 +489,11 @@ int32_t RPC_SCMI_ClockDispatchCommand(scmi_caller_t *caller,
             status = ClockGetPermissions(caller, (const msg_rclock15_t*) in,
                 (msg_tclock15_t*) out);
             break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = ClockNegotiateProtocolVersion(caller,
+                (const msg_rclock16_t*) in, (const scmi_msg_status_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -521,7 +539,7 @@ static int32_t ClockConfigUpdate(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x20001                              */
+/*   specification, this value must be 0x30000                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_ClockProtocolVersion(). See section 4.6.2.1 in the SCMI spec.       */
@@ -563,7 +581,7 @@ static int32_t ClockProtocolVersion(const scmi_caller_t *caller,
 /*   Bits[15:0] Number of clocks                                            */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_ClockProtocolAttributes(). See section 4.6.2.2 in the SCMI spec.    */
+/* SCMI_ClockProtocolAttributes(). See section 4.6.2.3 in the SCMI spec.    */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_PROTO_ATTR_MAX_PENDING() - Maximum number of pending             */
@@ -608,7 +626,7 @@ static int32_t ClockProtocolAttributes(const scmi_caller_t *caller,
 /*   For all functions in this protocol, this parameter has a value of 0    */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_ClockProtocolMessageAttributes(). See section 4.6.2.3 in the SCMI   */
+/* SCMI_ClockProtocolMessageAttributes(). See section 4.6.2.4 in the SCMI   */
 /* spec.                                                                    */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -673,7 +691,12 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   Set to 1 if parent clock identifiers are advertised for this clock.    */
 /*   Set to 0 if parent clock identifiers are not advertised for this       */
 /*   clock.                                                                 */
-/*   Bits[27:2] Reserved, must be zero.                                     */
+/*   Bit[27] Extended configuration support.                                */
+/*   Set to 1 if extended configurations are supported for this clock.      */
+/*   Extended configurations can be accessed using the                      */
+/*   SCMI_ClockConfigSet() and the SCMI_ClockConfigSet() functions.         */
+/*   Set to 0 if extended configurations are not supported for this clock.  */
+/*   Bits[26:2] Reserved, must be zero.                                     */
 /*   Bit[1] Restricted clock.                                               */
 /*   Set to 1 if the clock has restrictions on changing some of its         */
 /*   configuration or settings, and the CLOCK_GET_PERMISSIONS command, as   */
@@ -692,7 +715,7 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   contains the lower 15 bytes of the NULL terminated clock name          */
 /*                                                                          */
 /* Process the CLOCK_ATTRIBUTES message. Platform handler for               */
-/* SCMI_ClockAttributes(). See section 4.6.2.4 in the SCMI spec.            */
+/* SCMI_ClockAttributes(). See section 4.6.2.5 in the SCMI spec.            */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_ATTR_CHANGE() - Clock rate change notifications support          */
@@ -700,6 +723,7 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   support                                                                */
 /* - CLOCK_ATTR_EXT_NAME() - Extended Clock name                            */
 /* - CLOCK_ATTR_PARENT() - Parent clock identifier support                  */
+/* - CLOCK_ATTR_EXT_CONFIG() - Extended configuration support               */
 /* - CLOCK_ATTR_RESTRICTED() - Restricted clock                             */
 /* - CLOCK_ATTR_ENABLED() - Enabled/disabled                                */
 /*                                                                          */
@@ -751,7 +775,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
         out->attributes
             = CLOCK_ATTR_CHANGE(0UL)
             | CLOCK_ATTR_CHANGE_REQ(0UL)
-            | CLOCK_ATTR_EXT_NAME(0UL);
+            | CLOCK_ATTR_EXT_NAME(0UL)
+            | CLOCK_ATTR_EXT_CONFIG(0UL);
 
         /* Parents? */
         if (LMM_ClockMuxGet(caller->lmId, in->clockId, 0U, &mux,
@@ -818,7 +843,7 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the CLOCK_DESCRIBE_RATES message. Platform handler for           */
-/* SCMI_ClockDescribeRates(). See section 4.6.2.5 in the SCMI spec.         */
+/* SCMI_ClockDescribeRates(). See section 4.6.2.6 in the SCMI spec.         */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_NUM_RATE_FLAGS_REMAING_RATES() - Number of remaining rates       */
@@ -922,7 +947,7 @@ static int32_t ClockDescribeRates(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the CLOCK_RATE_SET message. Platform handler for                 */
 /* SCMI_ClockRateSet(). Requires access greater than or equal to            */
-/* EXCLUSIVE. See section 4.6.2.6 in the SCMI spec.                         */
+/* EXCLUSIVE. See section 4.6.2.7 in the SCMI spec.                         */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_RATE_FLAGS_ROUND() - Round up/down                               */
@@ -1011,7 +1036,7 @@ static int32_t ClockRateSet(const scmi_caller_t *caller,
 /*   Upper word: Upper 32 bits of the physical rate in Hertz                */
 /*                                                                          */
 /* Process the CLOCK_RATE_GET message. Platform handler for                 */
-/* SCMI_ClockRateGet(). See section 4.6.2.7 in the SCMI spec.               */
+/* SCMI_ClockRateGet(). See section 4.6.2.8 in the SCMI spec.               */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the current clock rate was successfully returned.   */
@@ -1061,9 +1086,7 @@ static int32_t ClockRateGet(const scmi_caller_t *caller,
 /* - in->clockId: Identifier for the clock device                           */
 /* - in->attributes: Config attributes:                                     */
 /*   Bits[31:24] Reserved, must be zero.                                    */
-/*   Bits[23:16] OEM specified config type.                                 */
-/*   The possible values of this field are out of the scope of this         */
-/*   specification and are defined by the OEM.                              */
+/*   Bits[23:16] Extended config type.                                      */
 /*   A value of 0 indicates that this field is unused.                      */
 /*   Bits[15:2] Reserved, must be zero.                                     */
 /*   Bits[1:0] Enable/Disable:                                              */
@@ -1072,19 +1095,19 @@ static int32_t ClockRateGet(const scmi_caller_t *caller,
 /*   The value of 2 is reserved for future use.                             */
 /*   If set to 1, the clock device is to be enabled.                        */
 /*   If set to 0, the clock device is to be disabled                        */
-/* - in->oemConfigVal: OEM specified configuration value: ccorresponding    */
-/*   to the OEM specified configuration type specified by Bits[23:16] of    */
-/*   attributes field.                                                      */
-/*   This field is used to set implementation defined configurations of     */
-/*   the clock device. It can be ignored if OEM specified config type       */
-/*   specified by Bits[23:16] of attributes field is set to 0               */
+/* - in->extendedConfigVal: Extended config value:  corresponds to the      */
+/*   extended configuration type specified by Bits[23:16] of attributes     */
+/*   field.                                                                 */
+/*   This field is used to set extended configuration of the clock device.  */
+/*   It can be ignored if extended config type specified by Bits[23:16] of  */
+/*   the attributes field is set to 0                                       */
 /*                                                                          */
 /* Process the CLOCK_CONFIG_SET message. Platform handler for               */
 /* SCMI_ClockConfigSet(). Requires access greater than or equal to SET.     */
-/* See section 4.6.2.8 in the SCMI spec.                                    */
+/* See section 4.6.2.9 in the SCMI spec.                                    */
 /*                                                                          */
 /*  Access macros:                                                          */
-/* - CLOCK_CONFIG_SET_OEM() - OEM specified config type                     */
+/* - CLOCK_CONFIG_SET_EXT_CONFIG() - Extended config type                   */
 /* - CLOCK_CONFIG_SET_ENABLE() - Enable/Disable                             */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -1103,6 +1126,7 @@ static int32_t ClockConfigSet(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t agentId = caller->agentId;
+    uint32_t ext = CLOCK_CONFIG_SET_EXT_CONFIG(in->attributes);
     uint32_t enable = CLOCK_CONFIG_SET_ENABLE(in->attributes);
 
     /* Check request length */
@@ -1117,7 +1141,13 @@ static int32_t ClockConfigSet(const scmi_caller_t *caller,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Check OEM update */
+    /* Check extended config */
+    if ((status == SM_ERR_SUCCESS) && (ext != 0U))
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Check extended update */
     if ((status == SM_ERR_SUCCESS) && (enable > 1U))
     {
         status = SM_ERR_INVALID_PARAMETERS;
@@ -1150,24 +1180,24 @@ static int32_t ClockConfigSet(const scmi_caller_t *caller,
 /* - in->clockId: Identifier for the clock device                           */
 /* - in->flags: Config flags:                                               */
 /*   Bits[31:8] Reserved, must be zero.                                     */
-/*   Bits[7:0] OEM specified config type.                                   */
+/*   Bits[7:0] Extended config type.                                        */
 /*   Value of 0 indicates that this field is unused                         */
 /* - out->attributes: Reserved, must be zero                                */
 /* - out->config: Config:                                                   */
 /*   Bits[31:1] Reserved, must be zero.                                     */
 /*   Bit[0] Enable/Disable If set to 1, the clock device is enabled.        */
 /*   If set to 0, the clock device is disabled                              */
-/* - out->oemConfigVal: OEM specified configuration value: corresponding    */
-/*   to the OEM specified configuration type specified by Bits[7:0] of      */
-/*   attributes field of the function.                                      */
-/*   This field is ignored if OEM specified config type field specified by  */
-/*   Bits[7:0] of attributes field of the function is set to 0              */
+/* - out->extendedConfigVal: Extended config value: corresponds to the      */
+/*   extended configuration type specified by Bits[7:0] of the attributes   */
+/*   field of the command.                                                  */
+/*   This field is ignored if the extended config type field specified by   */
+/*   Bits[7:0] of the attributes field of the command is set to 0           */
 /*                                                                          */
 /* Process the CLOCK_CONFIG_GET message. Platform handler for               */
-/* SCMI_ClockConfigGet(). See section 4.6.2.9 in the SCMI spec.             */
+/* SCMI_ClockConfigGet(). See section 4.6.2.10 in the SCMI spec.            */
 /*                                                                          */
 /*  Access macros:                                                          */
-/* - CLOCK_CONFIG_FLAGS_OEM() - OEM specified config type                   */
+/* - CLOCK_CONFIG_FLAGS_EXT_CONFIG() - Extended  config type                */
 /* - CLOCK_CONFIG_GET_ENABLE() - Enable/Disable                             */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -1184,7 +1214,7 @@ static int32_t ClockConfigGet(const scmi_caller_t *caller,
     const msg_rclock11_t *in, msg_tclock11_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t oem = CLOCK_CONFIG_FLAGS_OEM(in->flags);
+    uint32_t ext = CLOCK_CONFIG_FLAGS_EXT_CONFIG(in->flags);
     bool enabled;
 
     /* Check request length */
@@ -1199,8 +1229,8 @@ static int32_t ClockConfigGet(const scmi_caller_t *caller,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Check OEM */
-    if ((status == SM_ERR_SUCCESS) && (oem != 0U))
+    /* Check extended config */
+    if ((status == SM_ERR_SUCCESS) && (ext != 0U))
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
@@ -1218,7 +1248,7 @@ static int32_t ClockConfigGet(const scmi_caller_t *caller,
 
         out->attributes = 0U;
         out->config = CLOCK_CONFIG_GET_ENABLE(getEnabled);
-        out->oemConfigVal = 0U;
+        out->extendedConfigVal = 0U;
     }
 
     /* Return status */
@@ -1243,7 +1273,7 @@ static int32_t ClockConfigGet(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the CLOCK_POSSIBLE_PARENTS_GET message. Platform handler for     */
-/* SCMI_ClockPossibleParentsGet(). See section 4.6.2.13 in the SCMI spec.   */
+/* SCMI_ClockPossibleParentsGet(). See section 4.6.2.14 in the SCMI spec.   */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS() - Number of remaining         */
@@ -1351,7 +1381,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the CLOCK_PARENT_SET message. Platform handler for               */
 /* SCMI_ClockParentSet(). Requires access greater than or equal to          */
-/* EXCLUSIVE. See section 4.6.2.14 in the SCMI spec.                        */
+/* EXCLUSIVE. See section 4.6.2.15 in the SCMI spec.                        */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the clock parent has been set successfully.         */
@@ -1412,7 +1442,7 @@ static int32_t ClockParentSet(const scmi_caller_t *caller,
 /*   the parent of the clock specified by clockId                           */
 /*                                                                          */
 /* Process the CLOCK_PARENT_GET message. Platform handler for               */
-/* SCMI_ClockParentGet(). See section 4.6.2.15 in the SCMI spec.            */
+/* SCMI_ClockParentGet(). See section 4.6.2.16 in the SCMI spec.            */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the clock parent has been successfully returned.    */
@@ -1474,7 +1504,7 @@ static int32_t ClockParentGet(const scmi_caller_t *caller,
 /*    Bits[28:0] Reserved, must be zero                                     */
 /*                                                                          */
 /* Process the CLOCK_GET_PERMISSIONS message. Platform handler for          */
-/* SCMI_ClockGetPermissions(). See section 4.6.2.16 in the SCMI spec.       */
+/* SCMI_ClockGetPermissions(). See section 4.6.2.17 in the SCMI spec.       */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_PERM_STATE() - Clock state control                               */
@@ -1525,6 +1555,55 @@ static int32_t ClockGetPermissions(const scmi_caller_t *caller,
             out->permissions |= CLOCK_PERM_RATE(1UL)
                 | CLOCK_PERM_PARENT(1UL);
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_ClockNegotiateProtocolVersion(). See section 4.6.2.2 in the SCMI    */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t ClockNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rclock16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

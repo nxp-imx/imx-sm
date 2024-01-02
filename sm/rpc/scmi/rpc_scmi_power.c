@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x30000U
+#define PROTOCOL_VERSION  0x30001U
 
 /* SCMI power protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -54,7 +54,8 @@
 #define COMMAND_POWER_DOMAIN_ATTRIBUTES      0x3U
 #define COMMAND_POWER_STATE_SET              0x4U
 #define COMMAND_POWER_STATE_GET              0x5U
-#define COMMAND_SUPPORTED_MASK               0x3FUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x1003FUL
 
 /* SCMI max power argument lengths */
 #define POWER_MAX_NAME  16U
@@ -183,6 +184,15 @@ typedef struct
     uint32_t powerState;
 } msg_tpower5_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rpower16_t;
+
 /* Local functions */
 
 static int32_t PowerProtocolVersion(const scmi_caller_t *caller,
@@ -197,6 +207,8 @@ static int32_t PowerStateSet(const scmi_caller_t *caller,
     const msg_rpower4_t *in, const scmi_msg_status_t *out);
 static int32_t PowerStateGet(const scmi_caller_t *caller,
     const msg_rpower5_t *in, msg_tpower5_t *out);
+static int32_t PowerNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rpower16_t *in, const scmi_msg_status_t *out);
 static int32_t PowerResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -248,6 +260,11 @@ int32_t RPC_SCMI_PowerDispatchCommand(scmi_caller_t *caller,
             status = PowerStateGet(caller, (const msg_rpower5_t*) in,
                 (msg_tpower5_t*) out);
             break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = PowerNegotiateProtocolVersion(caller,
+                (const msg_rpower16_t*) in, (const scmi_msg_status_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -293,7 +310,7 @@ static int32_t PowerStateUpdate(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x30000                              */
+/*   specification, this value must be 0x30001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_PowerProtocolVersion(). See section 4.3.2.1 in the SCMI spec.       */
@@ -340,7 +357,7 @@ static int32_t PowerProtocolVersion(const scmi_caller_t *caller,
 /*   does not support the statistics shared memory region                   */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_PowerProtocolAttributes(). See section 4.3.2.2 in the SCMI spec.    */
+/* SCMI_PowerProtocolAttributes(). See section 4.3.2.3 in the SCMI spec.    */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - POWER_PROTO_ATTR_NUM_DOMAINS() - Number of power domains               */
@@ -386,7 +403,7 @@ static int32_t PowerProtocolAttributes(const scmi_caller_t *caller,
 /*   In the current version of the specification, this value is always 0    */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_PowerProtocolMessageAttributes(). See section 4.3.2.3 in the SCMI   */
+/* SCMI_PowerProtocolMessageAttributes(). See section 4.3.2.4 in the SCMI   */
 /* spec.                                                                    */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -461,7 +478,7 @@ static int32_t PowerProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   the power domain name                                                  */
 /*                                                                          */
 /* Process the POWER_DOMAIN_ATTRIBUTES message. Platform handler for        */
-/* SCMI_PowerDomainAttributes(). See section 4.3.2.4 in the SCMI spec.      */
+/* SCMI_PowerDomainAttributes(). See section 4.3.2.5 in the SCMI spec.      */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - POWER_ATTR_CHANGE() - Power state change notifications support         */
@@ -544,7 +561,7 @@ static int32_t PowerDomainAttributes(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the POWER_STATE_SET message. Platform handler for                */
 /* SCMI_PowerStateSet(). Requires access greater than or equal to SET. See  */
-/* section 4.3.2.5 in the SCMI spec.                                        */
+/* section 4.3.2.6 in the SCMI spec.                                        */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - POWER_FLAGS_ASYNC() - Async flag                                       */
@@ -637,7 +654,7 @@ static int32_t PowerStateSet(const scmi_caller_t *caller,
 /*   Note platform-specific                                                 */
 /*                                                                          */
 /* Process the POWER_STATE_GET message. Platform handler for                */
-/* SCMI_PowerStateGet(). See section 4.3.2.6 in the SCMI spec.              */
+/* SCMI_PowerStateGet(). See section 4.3.2.7 in the SCMI spec.              */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the current power state is returned successfully.   */
@@ -684,6 +701,55 @@ static int32_t PowerStateGet(const scmi_caller_t *caller,
                 out->powerState = state;
                 break;
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_PowerNegotiateProtocolVersion(). See section 4.3.2.2 in the SCMI    */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t PowerNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rpower16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

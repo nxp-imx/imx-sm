@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -270,11 +270,11 @@ typedef struct
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x30000
+ *                         specification, this value must be 0x30001
  *
  * On success, this function returns the version of this protocol. For this
- * version of the specification, the return value must be 0x30000, which
- * corresponds to version 3.0. See section 4.7.2.1 PROTOCOL_VERSION in the
+ * version of the specification, the return value must be 0x30001, which
+ * corresponds to version 3.1. See section 4.7.2.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -316,7 +316,7 @@ int32_t SCMI_SensorProtocolVersion(uint32_t channel, uint32_t *version);
  *                                      implement the sensor shared memory
  *
  * This function returns the implementation details associated with this
- * protocol. See section 4.7.2.2 PROTOCOL_ATTRIBUTES in the
+ * protocol. See section 4.7.2.3 PROTOCOL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -348,7 +348,7 @@ int32_t SCMI_SensorProtocolAttributes(uint32_t channel,
  * function returns a SCMI_ERR_NOT_FOUND status code. This allows calling
  * agents to comprehend which functions are supported on a platform and
  * configure themselves accordingly. An example message ID is
- * ::SCMI_MSG_SENSOR_DESCRIPTION_GET. See section 4.7.2.3
+ * ::SCMI_MSG_SENSOR_DESCRIPTION_GET. See section 4.7.2.4
  * PROTOCOL_MESSAGE_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -380,7 +380,7 @@ int32_t SCMI_SensorProtocolMessageAttributes(uint32_t channel,
  * ::SCMI_SENSOR_MAX_DESC. The sensor descriptor structure describes the sensor
  * properties, such as the unique identifier for the sensor, its name, number
  * of axes, reading types and other characteristics. The max name length is
- * ::SCMI_SENSOR_MAX_NAME. See section 4.7.2.4 SENSOR_DESCRIPTION_GET in the
+ * ::SCMI_SENSOR_MAX_NAME. See section 4.7.2.5 SENSOR_DESCRIPTION_GET in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -419,7 +419,7 @@ int32_t SCMI_SensorDescriptionGet(uint32_t channel, uint32_t descIndex,
  * This function is used by the agent to globally control generation of
  * notifications on cross-over events for the trip-points that have been
  * configured using the SCMI_SensorTripPointConfig() function. See section
- * 4.7.2.7 SENSOR_TRIP_POINT_NOTIFY in the [SCMI Spec](@ref DOCS).
+ * 4.7.2.8 SENSOR_TRIP_POINT_NOTIFY in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_SENSOR_EV_CTRL_ENABLE() - Controls generation of notifications on
@@ -484,7 +484,7 @@ int32_t SCMI_SensorTripPointNotify(uint32_t channel, uint32_t sensorId,
  * for trip-points globally using the SCMI_SensorTripPointNotify() function.
  *
  * Only one setting exists per sensor trip point. Nothing is aggregated across
- * agents or LM. See section 4.7.2.8 SENSOR_TRIP_POINT_CONFIG in the
+ * agents or LM. See section 4.7.2.9 SENSOR_TRIP_POINT_CONFIG in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -534,7 +534,7 @@ int32_t SCMI_SensorTripPointConfig(uint32_t channel, uint32_t sensorId,
  * or its associated logic or circuitry, it returns the
  * ::SCMI_ERR_HARDWARE_ERROR status. The sensor reading structure provides the
  * sensor readings and the timestamp when they were collected. The max number
- * of readings is ::SCMI_SENSOR_MAX_READINGS. See section 4.7.2.11
+ * of readings is ::SCMI_SENSOR_MAX_READINGS. See section 4.7.2.12
  * SENSOR_READING_GET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -585,7 +585,7 @@ int32_t SCMI_SensorReadingGet(uint32_t channel, uint32_t sensorId,
  *
  * This function is used to read the sensor configuration. It returns the
  * configured sensor update interval, the sensor state and if timestamping is
- * enabled. See section 4.7.2.9 SENSOR_CONFIG_GET in the
+ * enabled. See section 4.7.2.10 SENSOR_CONFIG_GET in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -651,7 +651,7 @@ int32_t SCMI_SensorConfigGet(uint32_t channel, uint32_t sensorId,
  *
  * If the sensor has been enabled, sensor values can be read using the
  * SCMI_SensorReadingGet() function or notified by the platform through
- * notifications. Sensor is enabled if any agent enables. See section 4.7.2.10
+ * notifications. Sensor is enabled if any agent enables. See section 4.7.2.11
  * SENSOR_CONFIG_SET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -677,6 +677,34 @@ int32_t SCMI_SensorConfigGet(uint32_t channel, uint32_t sensorId,
  */
 int32_t SCMI_SensorConfigSet(uint32_t channel, uint32_t sensorId,
     uint32_t sensorConfig);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.7.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_SensorNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 /*!
  * Read sensor event.

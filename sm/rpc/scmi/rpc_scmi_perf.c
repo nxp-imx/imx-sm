@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -57,7 +57,8 @@
 #define COMMAND_PERFORMANCE_LIMITS_GET         0x6U
 #define COMMAND_PERFORMANCE_LEVEL_SET          0x7U
 #define COMMAND_PERFORMANCE_LEVEL_GET          0x8U
-#define COMMAND_SUPPORTED_MASK                 0x1FFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION     0x10U
+#define COMMAND_SUPPORTED_MASK                 0x101FFUL
 
 /* SCMI max performance domain argument lengths */
 #define PERF_MAX_NAME        16U
@@ -279,6 +280,15 @@ typedef struct
     uint32_t performanceLevel;
 } msg_tperf8_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rperf16_t;
+
 /* Local functions */
 
 static int32_t PerfProtocolVersion(const scmi_caller_t *caller,
@@ -299,6 +309,8 @@ static int32_t PerformanceLevelSet(const scmi_caller_t *caller,
     const msg_rperf7_t *in, const scmi_msg_status_t *out);
 static int32_t PerformanceLevelGet(const scmi_caller_t *caller,
     const msg_rperf8_t *in, msg_tperf8_t *out);
+static int32_t PerfNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rperf16_t *in, const scmi_msg_status_t *out);
 static int32_t PerfResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -364,6 +376,11 @@ int32_t RPC_SCMI_PerfDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tperf8_t);
             status = PerformanceLevelGet(caller, (const msg_rperf8_t*) in,
                 (msg_tperf8_t*) out);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = PerfNegotiateProtocolVersion(caller,
+                (const msg_rperf16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -462,7 +479,7 @@ static int32_t PerfProtocolVersion(const scmi_caller_t *caller,
 /*   support the statistics shared memory region                            */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_PerfProtocolAttributes(). See section 4.5.3.2 in the SCMI spec.     */
+/* SCMI_PerfProtocolAttributes(). See section 4.5.3.3 in the SCMI spec.     */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PERF_PROTO_ATTR_POWER_UNIT() - Power Unit                              */
@@ -518,7 +535,7 @@ static int32_t PerfProtocolAttributes(const scmi_caller_t *caller,
 /*   Set to 0 if this there are no FastChannels available this message      */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_PerfProtocolMessageAttributes(). See section 4.5.3.3 in the SCMI    */
+/* SCMI_PerfProtocolMessageAttributes(). See section 4.5.3.4 in the SCMI    */
 /* spec.                                                                    */
 /*                                                                          */
 /*  Access macros:                                                          */
@@ -621,7 +638,7 @@ static int32_t PerfProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   performance domain name                                                */
 /*                                                                          */
 /* Process the PERFORMANCE_DOMAIN_ATTRIBUTES message. Platform handler for  */
-/* SCMI_PerformanceDomainAttributes(). See section 4.5.3.4 in the SCMI      */
+/* SCMI_PerformanceDomainAttributes(). See section 4.5.3.5 in the SCMI      */
 /* spec.                                                                    */
 /*                                                                          */
 /*  Access macros:                                                          */
@@ -744,7 +761,7 @@ static int32_t PerformanceDomainAttributes(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the PERFORMANCE_DESCRIBE_LEVELS message. Platform handler for    */
-/* SCMI_PerformanceDescribeLevels(). See section 4.5.3.5 in the SCMI spec.  */
+/* SCMI_PerformanceDescribeLevels(). See section 4.5.3.6 in the SCMI spec.  */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PERF_NUM_LEVELS_REMAING_LEVELS() - Number of remaining performance     */
@@ -855,7 +872,7 @@ static int32_t PerformanceDescribeLevels(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the PERFORMANCE_LIMITS_SET message. Platform handler for         */
 /* SCMI_PerformanceLimitsSet(). Requires access greater than or equal to    */
-/* SET. See section 4.5.3.6 in the SCMI spec.                               */
+/* SET. See section 4.5.3.7 in the SCMI spec.                               */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the function successfully set the limits of         */
@@ -919,7 +936,7 @@ static int32_t PerformanceLimitsSet(const scmi_caller_t *caller,
 /* - out->rangeMin: Minimum allowed performance level, or level index       */
 /*                                                                          */
 /* Process the PERFORMANCE_LIMITS_GET message. Platform handler for         */
-/* SCMI_PerformanceLimitsGet(). See section 4.5.3.7 in the SCMI spec.       */
+/* SCMI_PerformanceLimitsGet(). See section 4.5.3.8 in the SCMI spec.       */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the performance limits are returned successfully.   */
@@ -1003,7 +1020,7 @@ static int32_t PerformanceLimitsGet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the PERFORMANCE_LEVEL_SET message. Platform handler for          */
 /* SCMI_PerformanceLevelSet(). Requires access greater than or equal to     */
-/* PRIV. See section 4.5.3.8 in the SCMI spec.                              */
+/* PRIV. See section 4.5.3.9 in the SCMI spec.                              */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the platform has accepted the function and          */
@@ -1063,7 +1080,7 @@ static int32_t PerformanceLevelSet(const scmi_caller_t *caller,
 /*   the domain                                                             */
 /*                                                                          */
 /* Process the PERFORMANCE_LEVEL_GET message. Platform handler for          */
-/* SCMI_PerformanceLevelGet(). See section 4.5.3.9 in the SCMI spec.        */
+/* SCMI_PerformanceLevelGet(). See section 4.5.3.10 in the SCMI spec.       */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the performance level is returned successfully      */
@@ -1093,6 +1110,55 @@ static int32_t PerformanceLevelGet(const scmi_caller_t *caller,
     {
         status = LMM_PerfLevelGet(caller->lmId, in->domainId,
             &(out->performanceLevel));
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_PerfNegotiateProtocolVersion(). See section 4.5.3.2 in the SCMI     */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t PerfNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rperf16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

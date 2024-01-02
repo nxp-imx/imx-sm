@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -537,6 +537,55 @@ int32_t SCMI_ProtocolMessageAttributes(uint32_t channel,
                 *attributes = msgRx->attributes;
             }
         }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_NegotiateProtocolVersion(uint32_t channel, uint32_t protocolId,
+    uint32_t version)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t version;
+        } msg_td16_t;
+        msg_td16_t *msgTx = (msg_td16_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->version = version;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, protocolId,
+            SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION, sizeof(msg_td16_t),
+            &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_status_t), header);
     }
 
     /* Release lock */

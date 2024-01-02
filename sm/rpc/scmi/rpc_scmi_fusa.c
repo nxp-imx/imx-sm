@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -62,7 +62,8 @@
 #define COMMAND_FUSA_SCHECK_EVNTRIG          0xBU
 #define COMMAND_FUSA_CRC_CALCULATE           0xCU
 #define COMMAND_FUSA_CRC_RESULT_GET          0xDU
-#define COMMAND_SUPPORTED_MASK               0x3FFFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x13FFFUL
 
 /* SCMI FuSa F-EENV states */
 #define FUSA_FEENV_STATE_INIT            0U
@@ -303,6 +304,15 @@ typedef struct
     uint32_t crcResult;
 } msg_tfusa13_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rfusa16_t;
+
 /* Request type for FusaFeenvStateEvent() */
 typedef struct
 {
@@ -364,6 +374,8 @@ static int32_t FusaCrcCalculate(const scmi_caller_t *caller,
     const msg_rfusa12_t *in, const scmi_msg_status_t *out);
 static int32_t FusaCrcResultGet(const scmi_caller_t *caller,
     const msg_rfusa13_t *in, msg_tfusa13_t *out);
+static int32_t FusaNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rfusa16_t *in, const scmi_msg_status_t *out);
 static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
     lmm_rpc_trigger_t trigger);
 static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
@@ -460,6 +472,11 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tfusa13_t);
             status = FusaCrcResultGet(caller, (const msg_rfusa13_t*) in,
                 (msg_tfusa13_t*) out);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = FusaNegotiateProtocolVersion(caller,
+                (const msg_rfusa16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -1434,6 +1451,54 @@ static int32_t FusaCrcResultGet(const scmi_caller_t *caller,
         out->memStartHigh = SM_UINT64_H(memStart);
         out->memStartLow = SM_UINT64_L(memStart);
     }
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_FusaNegotiateProtocolVersion().                                     */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t FusaNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rfusa16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+
     /* Return status */
     return status;
 }

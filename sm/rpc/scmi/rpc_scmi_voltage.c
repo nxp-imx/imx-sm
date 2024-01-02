@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x20000U
+#define PROTOCOL_VERSION  0x20001U
 
 /* SCMI voltage protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -57,7 +57,8 @@
 #define COMMAND_VOLTAGE_CONFIG_GET           0x6U
 #define COMMAND_VOLTAGE_LEVEL_SET            0x7U
 #define COMMAND_VOLTAGE_LEVEL_GET            0x8U
-#define COMMAND_SUPPORTED_MASK               0x1FFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x101FFUL
 
 /* SCMI max voltage argument lengths */
 #define VOLTAGE_MAX_NAME     16U
@@ -244,6 +245,15 @@ typedef struct
     int32_t voltageLevel;
 } msg_tvoltage8_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rvoltage16_t;
+
 /* Local functions */
 
 static int32_t VoltageProtocolVersion(const scmi_caller_t *caller,
@@ -264,6 +274,8 @@ static int32_t VoltageLevelSet(const scmi_caller_t *caller,
     const msg_rvoltage7_t *in, const scmi_msg_status_t *out);
 static int32_t VoltageLevelGet(const scmi_caller_t *caller,
     const msg_rvoltage8_t *in, msg_tvoltage8_t *out);
+static int32_t VoltageNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rvoltage16_t *in, const scmi_msg_status_t *out);
 static int32_t VoltageResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -331,6 +343,12 @@ int32_t RPC_SCMI_VoltageDispatchCommand(scmi_caller_t *caller,
             status = VoltageLevelGet(caller, (const msg_rvoltage8_t*) in,
                 (msg_tvoltage8_t*) out);
             break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = VoltageNegotiateProtocolVersion(caller,
+                (const msg_rvoltage16_t*) in,
+                (const scmi_msg_status_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -376,7 +394,7 @@ static int32_t VoltageConfigUpdate(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x20000                              */
+/*   specification, this value must be 0x20001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_VoltageProtocolVersion(). See section 4.9.2.1 in the SCMI spec.     */
@@ -416,7 +434,7 @@ static int32_t VoltageProtocolVersion(const scmi_caller_t *caller,
 /*   Bits[15:0] Number of voltage domains                                   */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_VoltageProtocolAttributes(). See section 4.9.2.2 in the SCMI spec.  */
+/* SCMI_VoltageProtocolAttributes(). See section 4.9.2.3 in the SCMI spec.  */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - VOLTAGE_PROTO_ATTR_NUM_VOLTS() - Number of voltage domains             */
@@ -457,7 +475,7 @@ static int32_t VoltageProtocolAttributes(const scmi_caller_t *caller,
 /*   In the current version of the specification, this value is always 0    */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_VoltageProtocolMessageAttributes(). See section 4.9.2.3 in the      */
+/* SCMI_VoltageProtocolMessageAttributes(). See section 4.9.2.4 in the      */
 /* SCMI spec.                                                               */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -522,7 +540,7 @@ static int32_t VoltageProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   terminated voltage domain name                                         */
 /*                                                                          */
 /* Process the VOLTAGE_DOMAIN_ATTRIBUTES message. Platform handler for      */
-/* SCMI_VoltageDomainAttributes(). See section 4.9.2.4 in the SCMI spec.    */
+/* SCMI_VoltageDomainAttributes(). See section 4.9.2.5 in the SCMI spec.    */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - VOLTAGE_ATTR_ASYNC() - Asynchronous voltage level set support          */
@@ -608,7 +626,7 @@ static int32_t VoltageDomainAttributes(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the VOLTAGE_DESCRIBE_LEVELS message. Platform handler for        */
-/* SCMI_VoltageDescribeLevels(). See section 4.9.2.5 in the SCMI spec.      */
+/* SCMI_VoltageDescribeLevels(). See section 4.9.2.6 in the SCMI spec.      */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - VOLTAGE_FLAGS_REMAINING_LEVELS() - Number of remaining voltage levels  */
@@ -686,7 +704,7 @@ static int32_t VoltageDescribeLevels(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the VOLTAGE_CONFIG_SET message. Platform handler for             */
 /* SCMI_VoltageConfigSet(). Requires access greater than or equal to SET.   */
-/* See section 4.9.2.6 in the SCMI spec.                                    */
+/* See section 4.9.2.7 in the SCMI spec.                                    */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - VOLTAGE_CONFIG_SET_MODE() - Voltage mode                               */
@@ -775,7 +793,7 @@ static int32_t VoltageConfigSet(const scmi_caller_t *caller,
 /*   described in Table 21                                                  */
 /*                                                                          */
 /* Process the VOLTAGE_CONFIG_GET message. Platform handler for             */
-/* SCMI_VoltageConfigGet(). See section 4.9.2.7 in the SCMI spec.           */
+/* SCMI_VoltageConfigGet(). See section 4.9.2.8 in the SCMI spec.           */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - VOLTAGE_CONFIG_GET_MODE() - Voltage mode                               */
@@ -853,7 +871,7 @@ static int32_t VoltageConfigGet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the VOLTAGE_LEVEL_SET message. Platform handler for              */
 /* SCMI_VoltageLevelSet(). Requires access greater than or equal to         */
-/* EXCLUSIVE. See section 4.9.2.8 in the SCMI spec.                         */
+/* EXCLUSIVE. See section 4.9.2.9 in the SCMI spec.                         */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - VOLTAGE_SET_FLAGS_ASYNC() - Async flag                                 */
@@ -924,7 +942,7 @@ static int32_t VoltageLevelSet(const scmi_caller_t *caller,
 /*   domain is set to                                                       */
 /*                                                                          */
 /* Process the VOLTAGE_LEVEL_GET message. Platform handler for              */
-/* SCMI_VoltageLevelGet(). See section 4.9.2.9 in the SCMI spec.            */
+/* SCMI_VoltageLevelGet(). See section 4.9.2.10 in the SCMI spec.           */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the voltage level of the domain was returned        */
@@ -956,6 +974,55 @@ static int32_t VoltageLevelGet(const scmi_caller_t *caller,
     {
         status = LMM_VoltageLevelGet(caller->lmId, in->domainId,
             &(out->voltageLevel));
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_VoltageNegotiateProtocolVersion(). See section 4.9.2.2 in the SCMI  */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t VoltageNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rvoltage16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

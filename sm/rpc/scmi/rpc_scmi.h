@@ -91,6 +91,16 @@
 /** @} */
 
 /*!
+ * @name SCMI version access
+ */
+/** @{ */
+/*! Extract SCMI major version */
+#define SCMI_VER_MAJOR(x)  (((x) & 0xFFFF0000U) >> 16U)
+/*!  Extract SCMI minor version */
+#define SCMI_VER_MINOR(x)  (((x) & 0xFFFFU) >> 0U)
+/** @} */
+
+/*!
  * @name Queue IDs
  */
 /** @{ */

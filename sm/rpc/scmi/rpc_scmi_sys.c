@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x20000U
+#define PROTOCOL_VERSION  0x20001U
 
 /* SCMI sys protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -53,7 +53,8 @@
 #define COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES  0x2U
 #define COMMAND_SYSTEM_POWER_STATE_SET       0x3U
 #define COMMAND_SYSTEM_POWER_STATE_NOTIFY    0x5U
-#define COMMAND_SUPPORTED_MASK               0x2FUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x1002FUL
 
 /* SCMI system power states */
 #define SYS_STATE_SHUTDOWN       0x00000000U
@@ -147,6 +148,15 @@ typedef struct
     uint32_t notifyEnable;
 } msg_rsys5_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rsys16_t;
+
 /* Request type for SystemPowerStateNotifier() */
 typedef struct
 {
@@ -174,6 +184,8 @@ static int32_t SystemPowerStateSet(const scmi_caller_t *caller,
     const msg_rsys3_t *in, const scmi_msg_status_t *out, uint32_t *len);
 static int32_t SystemPowerStateNotify(const scmi_caller_t *caller,
     const msg_rsys5_t *in, const scmi_msg_status_t *out);
+static int32_t SysNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rsys16_t *in, const scmi_msg_status_t *out);
 static int32_t SystemPowerStateNotifier(scmi_msg_id_t msgId,
     lmm_rpc_trigger_t trigger);
 static int32_t SysResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -221,6 +233,11 @@ int32_t RPC_SCMI_SysDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(const scmi_msg_status_t);
             status = SystemPowerStateNotify(caller, (const msg_rsys5_t*) in,
                 (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = SysNegotiateProtocolVersion(caller,
+                (const msg_rsys16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -297,7 +314,7 @@ static int32_t SystemPowerMode(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x20000                              */
+/*   specification, this value must be 0x20001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_SysProtocolVersion(). See section 4.4.2.1 in the SCMI spec.         */
@@ -336,7 +353,7 @@ static int32_t SysProtocolVersion(const scmi_caller_t *caller,
 /*   Bits[31:0] Reserved, must be zero                                      */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_SysProtocolAttributes(). See section 4.4.2.2 in the SCMI spec.      */
+/* SCMI_SysProtocolAttributes(). See section 4.4.2.3 in the SCMI spec.      */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
@@ -383,7 +400,7 @@ static int32_t SysProtocolAttributes(const scmi_caller_t *caller,
 /*   For all values of message ID, this value is zero                       */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_SysProtocolMessageAttributes(). See section 4.4.2.3 in the SCMI     */
+/* SCMI_SysProtocolMessageAttributes(). See section 4.4.2.4 in the SCMI     */
 /* spec.                                                                    */
 /*                                                                          */
 /*  Access macros:                                                          */
@@ -484,7 +501,7 @@ static int32_t SysProtocolMessageAttributes(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the SYSTEM_POWER_STATE_SET message. Platform handler for         */
 /* SCMI_SystemPowerStateSet(). Requires access greater than or equal to     */
-/* SET/PRIV/EXCLUSIVE. See section 4.4.2.4 in the SCMI spec.                */
+/* SET/PRIV/EXCLUSIVE. See section 4.4.2.5 in the SCMI spec.                */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SYS_FLAGS_GRACEFUL() - Graceful request                                */
@@ -586,7 +603,7 @@ static int32_t SystemPowerStateSet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the SYSTEM_POWER_STATE_NOTIFY message. Platform handler for      */
 /* SCMI_SystemPowerStateNotify(). Requires access greater than or equal to  */
-/* NOTIFY. See section 4.4.2.6 in the SCMI spec.                            */
+/* NOTIFY. See section 4.4.2.7 in the SCMI spec.                            */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SYS_NOTIFY_ENABLE() - Notify enable                                    */
@@ -623,6 +640,55 @@ static int32_t SystemPowerStateNotify(const scmi_caller_t *caller,
     {
         s_sysNotify[caller->agentId]
             = (SYS_NOTIFY_ENABLE(in->notifyEnable) != 0U);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_SysNegotiateProtocolVersion(). See section 4.4.2.2 in the SCMI      */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t SysNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rsys16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

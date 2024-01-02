@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,7 +60,8 @@
 #define COMMAND_MISC_REASON_ATTRIBUTES       0x9U
 #define COMMAND_MISC_RESET_REASON            0xAU
 #define COMMAND_MISC_SI_INFO                 0xBU
-#define COMMAND_SUPPORTED_MASK               0xFFFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x10FFFUL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
@@ -311,6 +312,15 @@ typedef struct
     uint8_t siName[MISC_MAX_SINAME];
 } msg_tmisc11_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rmisc16_t;
+
 /* Request type for MiscControlEvent() */
 typedef struct
 {
@@ -348,6 +358,8 @@ static int32_t MiscResetReason(const scmi_caller_t *caller,
     const msg_rmisc10_t *in, msg_tmisc10_t *out, uint32_t *len);
 static int32_t MiscSiInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc11_t *out);
+static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rmisc16_t *in, const scmi_msg_status_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
     lmm_rpc_trigger_t trigger);
 static int32_t MiscResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -430,6 +442,11 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tmisc11_t);
             status = MiscSiInfo(caller, (const scmi_msg_header_t*) in,
                 (msg_tmisc11_t*) out);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = MiscNegotiateProtocolVersion(caller,
+                (const msg_rmisc16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -1220,6 +1237,54 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
 
         /* Copy out name */
         RPC_SCMI_StrCpy(out->siName, nameAddr, MISC_MAX_SINAME);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_MiscNegotiateProtocolVersion().                                     */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rmisc16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

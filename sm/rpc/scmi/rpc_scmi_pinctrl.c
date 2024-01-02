@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -57,7 +57,8 @@
 #define COMMAND_PINCTRL_FUNCTION_SELECT      0x7U
 #define COMMAND_PINCTRL_REQUEST              0x8U
 #define COMMAND_PINCTRL_RELEASE              0x9U
-#define COMMAND_SUPPORTED_MASK               0x3EFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x103EFUL
 
 /* SCMI max pin control argument lengths */
 #define PINCTRL_MAX_NAME       16U
@@ -255,6 +256,15 @@ typedef struct
     uint32_t flags;
 } msg_rpinctrl9_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rpinctrl16_t;
+
 /* Local functions */
 
 static int32_t PinctrlProtocolVersion(const scmi_caller_t *caller,
@@ -275,6 +285,8 @@ static int32_t PinctrlRequest(const scmi_caller_t *caller,
     const msg_rpinctrl8_t *in, const scmi_msg_status_t *out);
 static int32_t PinctrlRelease(const scmi_caller_t *caller,
     const msg_rpinctrl9_t *in, const scmi_msg_status_t *out);
+static int32_t PinctrlNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rpinctrl16_t *in, const scmi_msg_status_t *out);
 static int32_t PinctrlResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -339,6 +351,12 @@ int32_t RPC_SCMI_PinctrlDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PINCTRL_RELEASE:
             lenOut = sizeof(const scmi_msg_status_t);
             status = PinctrlRelease(caller, (const msg_rpinctrl9_t*) in,
+                (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = PinctrlNegotiateProtocolVersion(caller,
+                (const msg_rpinctrl16_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
         default:
@@ -420,7 +438,7 @@ static int32_t PinctrlProtocolVersion(const scmi_caller_t *caller,
 /*   Bits[15:0] Number of functions                                         */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_PinctrlProtocolAttributes(). See section 4.11.2.2 in the SCMI       */
+/* SCMI_PinctrlProtocolAttributes(). See section 4.11.2.3 in the SCMI       */
 /* spec.                                                                    */
 /*                                                                          */
 /*  Access macros:                                                          */
@@ -469,7 +487,7 @@ static int32_t PinctrlProtocolAttributes(const scmi_caller_t *caller,
 /*   In the current version of the specification, this value is always 0    */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_PinctrlProtocolMessageAttributes(). See section 4.11.2.3 in the     */
+/* SCMI_PinctrlProtocolMessageAttributes(). See section 4.11.2.4 in the     */
 /* SCMI spec.                                                               */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -544,7 +562,7 @@ static int32_t PinctrlProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   of the NULL terminated name                                            */
 /*                                                                          */
 /* Process the PINCTRL_ATTRIBUTES message. Platform handler for             */
-/* SCMI_PinctrlAttributes(). See section 4.11.2.4 in the SCMI spec.         */
+/* SCMI_PinctrlAttributes(). See section 4.11.2.6 in the SCMI spec.         */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_FLAGS_SELECTOR() - Selector                                    */
@@ -646,7 +664,7 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the PINCTRL_CONFIG_GET message. Platform handler for             */
-/* SCMI_PinctrlConfigGet(). See section 4.11.2.6 in the SCMI spec.          */
+/* SCMI_PinctrlConfigGet(). See section 4.11.2.7 in the SCMI spec.          */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_GET_ATTR_GET_ALL() - Get all configs                           */
@@ -799,7 +817,7 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the PINCTRL_CONFIG_SET message. Platform handler for             */
 /* SCMI_PinctrlConfigSet(). Requires access greater than or equal to        */
-/* EXCLUSIVE. See section 4.11.2.7 in the SCMI spec.                        */
+/* EXCLUSIVE. See section 4.11.2.8 in the SCMI spec.                        */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_SET_ATTR_NUM_CONFIGS() - Number of configurations to set       */
@@ -923,7 +941,7 @@ static int32_t PinctrlConfigSet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the PINCTRL_FUNCTION_SELECT message. Platform handler for        */
 /* SCMI_PinctrlFunctionSelect(). Requires access greater than or equal to   */
-/* EXCLUSIVE. See section 4.11.2.8 in the SCMI spec.                        */
+/* EXCLUSIVE. See section 4.11.2.9 in the SCMI spec.                        */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_FLAGS_SELECTOR() - Selector                                    */
@@ -976,7 +994,7 @@ static int32_t PinctrlFunctionSelect(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the PINCTRL_REQUEST message. Platform handler for                */
 /* SCMI_PinctrlRequest(). Requires access greater than or equal to          */
-/* EXCLUSIVE. See section 4.11.2.9 in the SCMI spec.                        */
+/* EXCLUSIVE. See section 4.11.2.10 in the SCMI spec.                       */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_FLAGS_SELECTOR() - Selector                                    */
@@ -1042,7 +1060,7 @@ static int32_t PinctrlRequest(const scmi_caller_t *caller,
 /*   All other values are reserved for future use                           */
 /*                                                                          */
 /* Process the PINCTRL_RELEASE message. Platform handler for                */
-/* SCMI_PinctrlRelease(). See section 4.11.2.10 in the SCMI spec.           */
+/* SCMI_PinctrlRelease(). See section 4.11.2.11 in the SCMI spec.           */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if exclusive control of the pin or group was           */
@@ -1083,6 +1101,55 @@ static int32_t PinctrlRelease(const scmi_caller_t *caller,
         < SM_SCMI_PERM_EXCLUSIVE))
     {
         status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_PinctrlNegotiateProtocolVersion(). See section 4.11.2.2 in the      */
+/* SCMI spec.                                                               */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t PinctrlNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rpinctrl16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

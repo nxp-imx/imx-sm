@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -131,11 +131,11 @@
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x20000
+ *                         specification, this value must be 0x20001
  *
  * This function returns the version of this protocol. For this version of the
- * specification, the value that is returned must be 0x20000, which corresponds
- * to version 2.0. See section 4.2.2.1 PROTOCOL_VERSION in the
+ * specification, the value that is returned must be 0x20001, which corresponds
+ * to version 2.1. See section 4.2.2.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -155,7 +155,7 @@ int32_t SCMI_BaseProtocolVersion(uint32_t channel, uint32_t *version);
  * This function returns the implementation details that are associated with
  * this protocol. If the platform does not support agent discovery, then it
  * reports the number of agents in the system as zero, and all notifications
- * carry a zero in the \a agentId field. See section 4.2.2.2
+ * carry a zero in the \a agentId field. See section 4.2.2.3
  * PROTOCOL_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -179,7 +179,7 @@ int32_t SCMI_BaseProtocolAttributes(uint32_t channel, uint32_t *attributes);
  *
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol.  An example message ID is
- * ::SCMI_MSG_BASE_DISCOVER_VENDOR. See section 4.2.2.3
+ * ::SCMI_MSG_BASE_DISCOVER_VENDOR. See section 4.2.2.4
  * PROTOCOL_MESSAGE_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -201,7 +201,7 @@ int32_t SCMI_BaseProtocolMessageAttributes(uint32_t channel,
  *                                  bytes with a vendor name
  *
  * This function provides a vendor identifier ASCII string. Max string length
- * is ::SCMI_BASE_MAX_VENDORIDENTIFIER. See section 4.2.2.4
+ * is ::SCMI_BASE_MAX_VENDORIDENTIFIER. See section 4.2.2.5
  * BASE_DISCOVER_VENDOR in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -218,7 +218,7 @@ int32_t SCMI_BaseDiscoverVendor(uint32_t channel,
  *
  * On success, this optional function provides a sub vendor identifier ASCII
  * string. Max string length is ::SCMI_BASE_MAX_VENDORIDENTIFIER. See section
- * 4.2.2.5 BASE_DISCOVER_SUB_VENDOR in the [SCMI Spec](@ref DOCS).
+ * 4.2.2.6 BASE_DISCOVER_SUB_VENDOR in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  */
@@ -234,7 +234,7 @@ int32_t SCMI_BaseDiscoverSubVendor(uint32_t channel,
  * This function provides a vendor-specific 32-bit implementation version. The
  * format of the version number is vendor-specific, but version numbers must be
  * strictly increasing so that a higher number indicates a more recent
- * implementation. See section 4.2.2.6 BASE_DISCOVER_IMPLEMENTATION_VERSION in
+ * implementation. See section 4.2.2.7 BASE_DISCOVER_IMPLEMENTATION_VERSION in
  * the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -257,7 +257,7 @@ int32_t SCMI_BaseDiscoverImplementationVersion(uint32_t channel,
  * This function allows the agent to discover which protocols it is allowed to
  * access. The protocol list returned by this call should be in numeric
  * ascending order. Max number of protocol **words** is
- * ::SCMI_BASE_MAX_PROTOCOLS. See section 4.2.2.7 BASE_DISCOVER_LIST_PROTOCOLS
+ * ::SCMI_BASE_MAX_PROTOCOLS. See section 4.2.2.8 BASE_DISCOVER_LIST_PROTOCOLS
  * in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -306,7 +306,7 @@ int32_t SCMI_BaseDiscoverListProtocols(uint32_t channel, uint32_t skip,
  *
  * An agent can discover its own agent ID and name by passing \a agentId of
  * ::SCMI_BASE_ID_DISCOVER. In this case, the function returns the agent ID and
- * name of the calling agent. See section 4.2.2.8 BASE_DISCOVER_AGENT in the
+ * name of the calling agent. See section 4.2.2.10 BASE_DISCOVER_AGENT in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -350,7 +350,7 @@ int32_t SCMI_BaseDiscoverAgent(uint32_t channel, uint32_t *agentId,
  * SCMI_BaseProtocolMessageAttributes() function and passing the messageId of
  * this function. If the function is implemented,
  * SCMI_BaseProtocolMessageAttributes()  returns SCMI_ERR_SUCCESS. See section
- * 4.2.2.10 BASE_SET_DEVICE_PERMISSIONS in the [SCMI Spec](@ref DOCS).
+ * 4.2.2.12 BASE_SET_DEVICE_PERMISSIONS in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_BASE_PERM_FLAGS_ACCESS_TYPE() - Access Type
@@ -421,7 +421,7 @@ int32_t SCMI_BaseSetDevicePermissions(uint32_t channel, uint32_t agentId,
  * SCMI_BaseProtocolMessageAttributes() function and passing the messageId of
  * this function. If the function is implemented,
  * SCMI_BaseProtocolMessageAttributes() returns SCMI_ERR_SUCCESS. See section
- * 4.2.2.12 BASE_RESET_AGENT_CONFIGURATION in the [SCMI Spec](@ref DOCS).
+ * 4.2.2.13 BASE_RESET_AGENT_CONFIGURATION in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_BASE_FLAGS_PERMISSIONS() - Permissions Reset
@@ -436,6 +436,34 @@ int32_t SCMI_BaseSetDevicePermissions(uint32_t channel, uint32_t agentId,
  */
 int32_t SCMI_BaseResetAgentConfiguration(uint32_t channel, uint32_t agentId,
     uint32_t flags);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.2.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_BaseNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 #endif /* SCMI_BASE_H */
 

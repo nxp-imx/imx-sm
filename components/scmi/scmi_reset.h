@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -123,11 +123,11 @@
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x30000
+ *                         specification, this value must be 0x30001
  *
  * On success, this function returns the version of this protocol. For this
- * version of the specification, the value returned must be 0x30000, which
- * corresponds to version 3.0. See section 4.8.2.1 PROTOCOL_VERSION in the
+ * version of the specification, the value returned must be 0x30001, which
+ * corresponds to version 3.1. See section 4.8.2.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -143,7 +143,7 @@ int32_t SCMI_ResetProtocolVersion(uint32_t channel, uint32_t *version);
  *                            Bits[15:0] Number of reset domains
  *
  * This function returns the implementation details associated with this
- * protocol. See section 4.8.2.2 PROTOCOL_ATTRIBUTES in the
+ * protocol. See section 4.8.2.3 PROTOCOL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -166,7 +166,7 @@ int32_t SCMI_ResetProtocolAttributes(uint32_t channel,
  *
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol. An example message ID is
- * ::SCMI_MSG_RESET_DOMAIN_ATTRIBUTES. See section 4.8.2.3
+ * ::SCMI_MSG_RESET_DOMAIN_ATTRIBUTES. See section 4.8.2.4
  * PROTOCOL_MESSAGE_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -212,7 +212,7 @@ int32_t SCMI_ResetProtocolMessageAttributes(uint32_t channel,
  *                            terminated reset domain name
  *
  * This function returns attributes of the reset domain specified in the
- * function. The max name length is ::SCMI_MSG_RESET. See section 4.8.2.4
+ * function. The max name length is ::SCMI_MSG_RESET. See section 4.8.2.5
  * RESET_DOMAIN_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -262,7 +262,7 @@ int32_t SCMI_ResetDomainAttributes(uint32_t channel, uint32_t domainId,
  * only support synchronous reset requests. The platform might need to ensure
  * that the domain and all dependent logic have reached a state of quiescence
  * before performing the actual reset, although this is not mandatory. See
- * section 4.8.2.5 RESET in the [SCMI Spec](@ref DOCS).
+ * section 4.8.2.6 RESET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_RESET_FLAGS_ASYNC() - Async flag
@@ -284,6 +284,34 @@ int32_t SCMI_ResetDomainAttributes(uint32_t channel, uint32_t domainId,
  */
 int32_t SCMI_Reset(uint32_t channel, uint32_t domainId, uint32_t flags,
     uint32_t resetState);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.8.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_ResetNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 #endif /* SCMI_RESET_H */
 

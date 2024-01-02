@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,7 +60,8 @@
 #define COMMAND_CPU_NON_IRQ_WAKE_SET         0x9U
 #define COMMAND_CPU_PD_LPM_CONFIG_SET        0xAU
 #define COMMAND_CPU_CLK_LPM_CONFIG_SET       0xBU
-#define COMMAND_SUPPORTED_MASK               0xFFFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x10FFFUL
 
 /* SCMI max cpu argument lengths */
 #define CPU_MAX_NAME          16U
@@ -283,6 +284,15 @@ typedef struct
     clk_lpm_config_t clkConfigs[CPU_MAX_CLKCONFIGS_T];
 } msg_rcpu11_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rcpu16_t;
+
 /* Local functions */
 
 static int32_t CpuProtocolVersion(const scmi_caller_t *caller,
@@ -309,6 +319,8 @@ static int32_t CpuPdLpmConfigSet(const scmi_caller_t *caller,
     const msg_rcpu10_t *in, const scmi_msg_status_t *out);
 static int32_t CpuClkLpmConfigSet(const scmi_caller_t *caller,
     const msg_rcpu11_t *in, const scmi_msg_status_t *out);
+static int32_t CpuNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rcpu16_t *in, const scmi_msg_status_t *out);
 static int32_t CpuResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -389,6 +401,11 @@ int32_t RPC_SCMI_CpuDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(const scmi_msg_status_t);
             status = CpuClkLpmConfigSet(caller, (const msg_rcpu11_t*) in,
                 (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = CpuNegotiateProtocolVersion(caller,
+                (const msg_rcpu16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -1155,6 +1172,54 @@ static int32_t CpuClkLpmConfigSet(const scmi_caller_t *caller,
         /* Set config */
         status = LMM_CpuClkLpmConfigSet(caller->lmId, in->cpuId,
             config->clockId, config->lpmSetting);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_CpuNegotiateProtocolVersion().                                      */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t CpuNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rcpu16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

@@ -29,17 +29,20 @@ and some of the optional messages are supported.
 | Base | 0x10 | [BASE_DISCOVER_AGENT](@ref SCMI_PROTO_BASE_BASE_DISCOVER_AGENT) | 0x7 |  |
 | Base | 0x10 | [BASE_SET_DEVICE_PERMISSIONS](@ref SCMI_PROTO_BASE_BASE_SET_DEVICE_PERMISSIONS) | 0x9 | PRIV |
 | Base | 0x10 | [BASE_RESET_AGENT_CONFIGURATION](@ref SCMI_PROTO_BASE_BASE_RESET_AGENT_CONFIGURATION) | 0xB | PRIV |
+| Base | 0x10 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_BASE_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Power | 0x11 | [PROTOCOL_VERSION](@ref SCMI_PROTO_POWER_PROTOCOL_VERSION) | 0x0 |  |
 | Power | 0x11 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_POWER_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Power | 0x11 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_POWER_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
 | Power | 0x11 | [POWER_DOMAIN_ATTRIBUTES](@ref SCMI_PROTO_POWER_POWER_DOMAIN_ATTRIBUTES) | 0x3 |  |
 | Power | 0x11 | [POWER_STATE_SET](@ref SCMI_PROTO_POWER_POWER_STATE_SET) | 0x4 | SET |
 | Power | 0x11 | [POWER_STATE_GET](@ref SCMI_PROTO_POWER_POWER_STATE_GET) | 0x5 |  |
+| Power | 0x11 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_POWER_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Sys | 0x12 | [PROTOCOL_VERSION](@ref SCMI_PROTO_SYS_PROTOCOL_VERSION) | 0x0 |  |
 | Sys | 0x12 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_SYS_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Sys | 0x12 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_SYS_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
 | Sys | 0x12 | [SYSTEM_POWER_STATE_SET](@ref SCMI_PROTO_SYS_SYSTEM_POWER_STATE_SET) | 0x3 | SET<BR>PRIV<BR>EXCLUSIVE |
 | Sys | 0x12 | [SYSTEM_POWER_STATE_NOTIFY](@ref SCMI_PROTO_SYS_SYSTEM_POWER_STATE_NOTIFY) | 0x5 | NOTIFY |
+| Sys | 0x12 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_SYS_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Sys\n(notification) | 0x12 | [SYSTEM_POWER_STATE_NOTIFIER](@ref SCMI_PROTO_SYS_SYSTEM_POWER_STATE_NOTIFIER) | 0x0 |  |
 | Perf | 0x13 | [PROTOCOL_VERSION](@ref SCMI_PROTO_PERF_PROTOCOL_VERSION) | 0x0 |  |
 | Perf | 0x13 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_PERF_PROTOCOL_ATTRIBUTES) | 0x1 |  |
@@ -50,6 +53,7 @@ and some of the optional messages are supported.
 | Perf | 0x13 | [PERFORMANCE_LIMITS_GET](@ref SCMI_PROTO_PERF_PERFORMANCE_LIMITS_GET) | 0x6 |  |
 | Perf | 0x13 | [PERFORMANCE_LEVEL_SET](@ref SCMI_PROTO_PERF_PERFORMANCE_LEVEL_SET) | 0x7 | PRIV |
 | Perf | 0x13 | [PERFORMANCE_LEVEL_GET](@ref SCMI_PROTO_PERF_PERFORMANCE_LEVEL_GET) | 0x8 |  |
+| Perf | 0x13 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_PERF_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Clock | 0x14 | [PROTOCOL_VERSION](@ref SCMI_PROTO_CLOCK_PROTOCOL_VERSION) | 0x0 |  |
 | Clock | 0x14 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_CLOCK_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Clock | 0x14 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_CLOCK_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -63,6 +67,7 @@ and some of the optional messages are supported.
 | Clock | 0x14 | [CLOCK_PARENT_SET](@ref SCMI_PROTO_CLOCK_CLOCK_PARENT_SET) | 0xD | EXCLUSIVE |
 | Clock | 0x14 | [CLOCK_PARENT_GET](@ref SCMI_PROTO_CLOCK_CLOCK_PARENT_GET) | 0xE |  |
 | Clock | 0x14 | [CLOCK_GET_PERMISSIONS](@ref SCMI_PROTO_CLOCK_CLOCK_GET_PERMISSIONS) | 0xF |  |
+| Clock | 0x14 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_CLOCK_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Sensor | 0x15 | [PROTOCOL_VERSION](@ref SCMI_PROTO_SENSOR_PROTOCOL_VERSION) | 0x0 |  |
 | Sensor | 0x15 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_SENSOR_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Sensor | 0x15 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_SENSOR_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -72,12 +77,14 @@ and some of the optional messages are supported.
 | Sensor | 0x15 | [SENSOR_READING_GET](@ref SCMI_PROTO_SENSOR_SENSOR_READING_GET) | 0x6 |  |
 | Sensor | 0x15 | [SENSOR_CONFIG_GET](@ref SCMI_PROTO_SENSOR_SENSOR_CONFIG_GET) | 0x9 |  |
 | Sensor | 0x15 | [SENSOR_CONFIG_SET](@ref SCMI_PROTO_SENSOR_SENSOR_CONFIG_SET) | 0xA | SET |
+| Sensor | 0x15 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_SENSOR_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Sensor\n(notification) | 0x15 | [SENSOR_TRIP_POINT_EVENT](@ref SCMI_PROTO_SENSOR_SENSOR_TRIP_POINT_EVENT) | 0x0 |  |
 | Reset | 0x16 | [PROTOCOL_VERSION](@ref SCMI_PROTO_RESET_PROTOCOL_VERSION) | 0x0 |  |
 | Reset | 0x16 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_RESET_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Reset | 0x16 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_RESET_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
 | Reset | 0x16 | [RESET_DOMAIN_ATTRIBUTES](@ref SCMI_PROTO_RESET_RESET_DOMAIN_ATTRIBUTES) | 0x3 |  |
 | Reset | 0x16 | [RESET](@ref SCMI_PROTO_RESET_RESET) | 0x4 | EXCLUSIVE |
+| Reset | 0x16 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_RESET_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Voltage | 0x17 | [PROTOCOL_VERSION](@ref SCMI_PROTO_VOLTAGE_PROTOCOL_VERSION) | 0x0 |  |
 | Voltage | 0x17 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_VOLTAGE_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Voltage | 0x17 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_VOLTAGE_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -87,6 +94,7 @@ and some of the optional messages are supported.
 | Voltage | 0x17 | [VOLTAGE_CONFIG_GET](@ref SCMI_PROTO_VOLTAGE_VOLTAGE_CONFIG_GET) | 0x6 |  |
 | Voltage | 0x17 | [VOLTAGE_LEVEL_SET](@ref SCMI_PROTO_VOLTAGE_VOLTAGE_LEVEL_SET) | 0x7 | EXCLUSIVE |
 | Voltage | 0x17 | [VOLTAGE_LEVEL_GET](@ref SCMI_PROTO_VOLTAGE_VOLTAGE_LEVEL_GET) | 0x8 |  |
+| Voltage | 0x17 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_VOLTAGE_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Pinctrl | 0x19 | [PROTOCOL_VERSION](@ref SCMI_PROTO_PINCTRL_PROTOCOL_VERSION) | 0x0 |  |
 | Pinctrl | 0x19 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_PINCTRL_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Pinctrl | 0x19 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_PINCTRL_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -96,6 +104,7 @@ and some of the optional messages are supported.
 | Pinctrl | 0x19 | [PINCTRL_FUNCTION_SELECT](@ref SCMI_PROTO_PINCTRL_PINCTRL_FUNCTION_SELECT) | 0x7 | EXCLUSIVE |
 | Pinctrl | 0x19 | [PINCTRL_REQUEST](@ref SCMI_PROTO_PINCTRL_PINCTRL_REQUEST) | 0x8 | EXCLUSIVE |
 | Pinctrl | 0x19 | [PINCTRL_RELEASE](@ref SCMI_PROTO_PINCTRL_PINCTRL_RELEASE) | 0x9 |  |
+| Pinctrl | 0x19 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_PINCTRL_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Lmm | 0x80 | [PROTOCOL_VERSION](@ref SCMI_PROTO_LMM_PROTOCOL_VERSION) | 0x0 |  |
 | Lmm | 0x80 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_LMM_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Lmm | 0x80 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_LMM_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -107,6 +116,7 @@ and some of the optional messages are supported.
 | Lmm | 0x80 | [LMM_SUSPEND](@ref SCMI_PROTO_LMM_LMM_SUSPEND) | 0x8 | PRIV |
 | Lmm | 0x80 | [LMM_NOTIFY](@ref SCMI_PROTO_LMM_LMM_NOTIFY) | 0x9 | NOTIFY |
 | Lmm | 0x80 | [LMM_RESET_REASON](@ref SCMI_PROTO_LMM_LMM_RESET_REASON) | 0xA | GET |
+| Lmm | 0x80 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_LMM_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Lmm\n(notification) | 0x80 | [LMM_EVENT](@ref SCMI_PROTO_LMM_LMM_EVENT) | 0x0 |  |
 | Bbm | 0x81 | [PROTOCOL_VERSION](@ref SCMI_PROTO_BBM_PROTOCOL_VERSION) | 0x0 |  |
 | Bbm | 0x81 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_BBM_PROTOCOL_ATTRIBUTES) | 0x1 |  |
@@ -120,6 +130,7 @@ and some of the optional messages are supported.
 | Bbm | 0x81 | [BBM_BUTTON_GET](@ref SCMI_PROTO_BBM_BBM_BUTTON_GET) | 0x9 |  |
 | Bbm | 0x81 | [BBM_RTC_NOTIFY](@ref SCMI_PROTO_BBM_BBM_RTC_NOTIFY) | 0xA | NOTIFY |
 | Bbm | 0x81 | [BBM_BUTTON_NOTIFY](@ref SCMI_PROTO_BBM_BBM_BUTTON_NOTIFY) | 0xB | NOTIFY |
+| Bbm | 0x81 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_BBM_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Bbm\n(notification) | 0x81 | [BBM_RTC_EVENT](@ref SCMI_PROTO_BBM_BBM_RTC_EVENT) | 0x0 |  |
 | Bbm\n(notification) | 0x81 | [BBM_BUTTON_EVENT](@ref SCMI_PROTO_BBM_BBM_BUTTON_EVENT) | 0x1 |  |
 | Cpu | 0x82 | [PROTOCOL_VERSION](@ref SCMI_PROTO_CPU_PROTOCOL_VERSION) | 0x0 |  |
@@ -134,6 +145,7 @@ and some of the optional messages are supported.
 | Cpu | 0x82 | [CPU_NON_IRQ_WAKE_SET](@ref SCMI_PROTO_CPU_CPU_NON_IRQ_WAKE_SET) | 0x9 | EXCLUSIVE |
 | Cpu | 0x82 | [CPU_PD_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_PD_LPM_CONFIG_SET) | 0xA | EXCLUSIVE |
 | Cpu | 0x82 | [CPU_CLK_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_CLK_LPM_CONFIG_SET) | 0xB | EXCLUSIVE |
+| Cpu | 0x82 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_CPU_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Fusa | 0x83 | [PROTOCOL_VERSION](@ref SCMI_PROTO_FUSA_PROTOCOL_VERSION) | 0x0 |  |
 | Fusa | 0x83 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_FUSA_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Fusa | 0x83 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_FUSA_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
@@ -148,6 +160,7 @@ and some of the optional messages are supported.
 | Fusa | 0x83 | [FUSA_SCHECK_EVNTRIG](@ref SCMI_PROTO_FUSA_FUSA_SCHECK_EVNTRIG) | 0xB |  |
 | Fusa | 0x83 | [FUSA_CRC_CALCULATE](@ref SCMI_PROTO_FUSA_FUSA_CRC_CALCULATE) | 0xC | SET |
 | Fusa | 0x83 | [FUSA_CRC_RESULT_GET](@ref SCMI_PROTO_FUSA_FUSA_CRC_RESULT_GET) | 0xD | SET |
+| Fusa | 0x83 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_FUSA_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Fusa\n(notification) | 0x83 | [FUSA_FEENV_STATE_EVENT](@ref SCMI_PROTO_FUSA_FUSA_FEENV_STATE_EVENT) | 0x0 |  |
 | Fusa\n(notification) | 0x83 | [FUSA_SEENV_STATE_REQ_EVENT](@ref SCMI_PROTO_FUSA_FUSA_SEENV_STATE_REQ_EVENT) | 0x1 |  |
 | Fusa\n(notification) | 0x83 | [FUSA_FAULT_EVENT](@ref SCMI_PROTO_FUSA_FUSA_FAULT_EVENT) | 0x2 |  |
@@ -163,6 +176,7 @@ and some of the optional messages are supported.
 | Misc | 0x84 | [MISC_REASON_ATTRIBUTES](@ref SCMI_PROTO_MISC_MISC_REASON_ATTRIBUTES) | 0x9 |  |
 | Misc | 0x84 | [MISC_RESET_REASON](@ref SCMI_PROTO_MISC_MISC_RESET_REASON) | 0xA |  |
 | Misc | 0x84 | [MISC_SI_INFO](@ref SCMI_PROTO_MISC_MISC_SI_INFO) | 0xB |  |
+| Misc | 0x84 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Misc\n(notification) | 0x84 | [MISC_CONTROL_EVENT](@ref SCMI_PROTO_MISC_MISC_CONTROL_EVENT) | 0x0 |  |
 
 SCMI Payloads {#SCMI_PAYLOADS}
@@ -364,6 +378,24 @@ See SCMI_BaseResetAgentConfiguration() for details.
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
+## Base: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_BASE_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_BaseNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x90/0x10, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x90/0x10, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
 ## Power: PROTOCOL_VERSION ## {#SCMI_PROTO_POWER_PROTOCOL_VERSION}
 
 See SCMI_PowerProtocolVersion() for details.
@@ -490,6 +522,24 @@ See SCMI_PowerStateGet() for details.
     | uint32         | power_state                                                  |
     ---------------------------------------------------------------------------------
 
+## Power: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_POWER_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_PowerNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x91/0x11, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x91/0x11, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
 ## Sys: PROTOCOL_VERSION ## {#SCMI_PROTO_SYS_PROTOCOL_VERSION}
 
 See SCMI_SysProtocolVersion() for details.
@@ -580,6 +630,24 @@ See SCMI_SystemPowerStateNotify() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x92/0x12, msg=0x5                     |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Sys: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_SYS_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_SysNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x92/0x12, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x92/0x12, msg=0x10                    |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -802,6 +870,24 @@ See SCMI_PerformanceLevelGet() for details.
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
     | uint32         | performance_level                                            |
+    ---------------------------------------------------------------------------------
+
+## Perf: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_PERF_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_PerfNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x93/0x13, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x93/0x13, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
 ## Clock: PROTOCOL_VERSION ## {#SCMI_PROTO_CLOCK_PROTOCOL_VERSION}
@@ -1080,6 +1166,24 @@ See SCMI_ClockGetPermissions() for details.
     | uint32         | permissions                                                  |
     ---------------------------------------------------------------------------------
 
+## Clock: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_CLOCK_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_ClockNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x94/0x14, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x94/0x14, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
 ## Sensor: PROTOCOL_VERSION ## {#SCMI_PROTO_SENSOR_PROTOCOL_VERSION}
 
 See SCMI_SensorProtocolVersion() for details.
@@ -1270,6 +1374,24 @@ See SCMI_SensorConfigSet() for details.
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
+## Sensor: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_SENSOR_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_SensorNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x95/0x15, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x95/0x15, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
 ## Sensor: SENSOR_TRIP_POINT_EVENT ## {#SCMI_PROTO_SENSOR_SENSOR_TRIP_POINT_EVENT}
 
 See SCMI_SensorTripPointEvent() for details.
@@ -1388,6 +1510,24 @@ See SCMI_Reset() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x96/0x16, msg=0x4                     |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Reset: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_RESET_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_ResetNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x96/0x16, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x96/0x16, msg=0x10                    |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -1576,6 +1716,24 @@ See SCMI_VoltageLevelGet() for details.
     | int32          | voltage_level                                                |
     ---------------------------------------------------------------------------------
 
+## Voltage: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_VOLTAGE_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_VoltageNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x97/0x17, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x97/0x17, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
 ## Pinctrl: PROTOCOL_VERSION ## {#SCMI_PROTO_PINCTRL_PROTOCOL_VERSION}
 
 See SCMI_PinctrlProtocolVersion() for details.
@@ -1762,6 +1920,24 @@ See SCMI_PinctrlRelease() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x99/0x19, msg=0x9                     |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Pinctrl: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_PINCTRL_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_PinctrlNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x99/0x19, msg=0x10                    |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x99/0x19, msg=0x10                    |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -1986,6 +2162,24 @@ See SCMI_LmmResetReason() for details.
     | uint32         | shutdown_flags                                               |
     ---------------------------------------------------------------------------------
     | uint32         | ext_info[N]                                                  |
+    ---------------------------------------------------------------------------------
+
+## Lmm: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_LMM_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_LmmNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x80, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x80, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
 ## Lmm: LMM_EVENT ## {#SCMI_PROTO_LMM_LMM_EVENT}
@@ -2244,6 +2438,24 @@ See SCMI_BbmButtonNotify() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x81, msg=0xB                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Bbm: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_BBM_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_BbmNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x81, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x81, msg=0x10                         |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -2528,6 +2740,24 @@ See SCMI_CpuClkLpmConfigSet() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x82, msg=0xB                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Cpu: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_CPU_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_CpuNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x82, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x82, msg=0x10                         |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -2820,6 +3050,24 @@ See SCMI_FusaCrcResultGet() for details.
     | uint32         | mem_size                                                     |
     ---------------------------------------------------------------------------------
     | uint32         | crc_result                                                   |
+    ---------------------------------------------------------------------------------
+
+## Fusa: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_FUSA_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_FusaNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x83, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x83, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
 ## Fusa: FUSA_FEENV_STATE_EVENT ## {#SCMI_PROTO_FUSA_FUSA_FEENV_STATE_EVENT}
@@ -3134,6 +3382,24 @@ See SCMI_MiscSiInfo() for details.
     | uint32         | part_num                                                     |
     ---------------------------------------------------------------------------------
     | uint8          | si_name[16]                                                  |
+    ---------------------------------------------------------------------------------
+
+## Misc: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION}
+
+See SCMI_MiscNegotiateProtocolVersion() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | uint32         | version                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0x10                         |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
 ## Misc: MISC_CONTROL_EVENT ## {#SCMI_PROTO_MISC_MISC_CONTROL_EVENT}

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -351,7 +351,7 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
 /* Set clock configuration                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
-    uint32_t attributes, uint32_t oemConfigVal)
+    uint32_t attributes, uint32_t extendedConfigVal)
 {
     int32_t status;
     uint32_t header;
@@ -372,14 +372,14 @@ int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
             uint32_t header;
             uint32_t clockId;
             uint32_t attributes;
-            uint32_t oemConfigVal;
+            uint32_t extendedConfigVal;
         } msg_tclockd7_t;
         msg_tclockd7_t *msgTx = (msg_tclockd7_t*) msg;
 
         /* Fill in parameters */
         msgTx->clockId = clockId;
         msgTx->attributes = attributes;
-        msgTx->oemConfigVal = oemConfigVal;
+        msgTx->extendedConfigVal = extendedConfigVal;
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
@@ -404,7 +404,7 @@ int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
     uint32_t flags, uint32_t *attributes, uint32_t *config,
-    uint32_t *oemConfigVal)
+    uint32_t *extendedConfigVal)
 {
     int32_t status;
     uint32_t header;
@@ -417,7 +417,7 @@ int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
         int32_t status;
         uint32_t attributes;
         uint32_t config;
-        uint32_t oemConfigVal;
+        uint32_t extendedConfigVal;
     } msg_rclockd11_t;
 
     /* Acquire lock */
@@ -470,10 +470,10 @@ int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
             *config = msgRx->config;
         }
 
-        /* Extract oemConfigVal */
-        if (oemConfigVal != NULL)
+        /* Extract extendedConfigVal */
+        if (extendedConfigVal != NULL)
         {
-            *oemConfigVal = msgRx->oemConfigVal;
+            *extendedConfigVal = msgRx->extendedConfigVal;
         }
     }
 
@@ -749,5 +749,15 @@ int32_t SCMI_ClockGetPermissions(uint32_t channel, uint32_t clockId,
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_ClockNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version)
+{
+    /* Negotiate protocol version */
+    return SCMI_NegotiateProtocolVersion(channel, COMMAND_PROTOCOL, version);
 }
 

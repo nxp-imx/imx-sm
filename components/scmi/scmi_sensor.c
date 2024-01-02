@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -512,6 +512,16 @@ int32_t SCMI_SensorConfigSet(uint32_t channel, uint32_t sensorId,
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_SensorNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version)
+{
+    /* Negotiate protocol version */
+    return SCMI_NegotiateProtocolVersion(channel, COMMAND_PROTOCOL, version);
 }
 
 /*--------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -227,7 +227,7 @@ int32_t SCMI_PinctrlProtocolVersion(uint32_t channel, uint32_t *version);
  *                                Bits[15:0] Number of functions
  *
  * This function returns the implementation details associated with this
- * protocol. See section 4.11.2.2 PROTOCOL_ATTRIBUTES in the
+ * protocol. See section 4.11.2.3 PROTOCOL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -253,7 +253,7 @@ int32_t SCMI_PinctrlProtocolAttributes(uint32_t channel,
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol. An example message ID is
  * ::SCMI_MSG_PINCTRL_ATTRIBUTES. The max name length is
- * ::SCMI_PINCTRL_MAX_NAME. See section 4.11.2.3 PROTOCOL_MESSAGE_ATTRIBUTES in
+ * ::SCMI_PINCTRL_MAX_NAME. See section 4.11.2.4 PROTOCOL_MESSAGE_ATTRIBUTES in
  * the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -309,7 +309,7 @@ int32_t SCMI_PinctrlProtocolMessageAttributes(uint32_t channel,
  *                            NULL terminated name
  *
  * This function returns the attributes associated with a specific function,
- * pin, or a group of pins. See section 4.11.2.4 PINCTRL_ATTRIBUTES in the
+ * pin, or a group of pins. See section 4.11.2.6 PINCTRL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -374,7 +374,7 @@ int32_t SCMI_PinctrlAttributes(uint32_t channel, uint32_t identifier,
  *                            containing the type and value
  *
  * This function can be used by an agent to get the pin or group configuration.
- * The max number of config is ::SCMI_PINCTRL_MAX_CONFIGS. See section 4.11.2.6
+ * The max number of config is ::SCMI_PINCTRL_MAX_CONFIGS. See section 4.11.2.7
  * PINCTRL_CONFIG_GET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -427,7 +427,7 @@ int32_t SCMI_PinctrlConfigGet(uint32_t channel, uint32_t identifier,
  *
  * This function can be used by an agent to set the pin or group configuration.
  * The max number of configs is ::SCMI_PINCTRL_MAX_CONFIGS_T. See section
- * 4.11.2.7 PINCTRL_CONFIG_SET in the [SCMI Spec](@ref DOCS).
+ * 4.11.2.8 PINCTRL_CONFIG_SET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS() - Number of configurations to set
@@ -465,7 +465,7 @@ int32_t SCMI_PinctrlConfigSet(uint32_t channel, uint32_t identifier,
  *                            All other values are reserved for future use
  *
  * This function can be used by an agent to select a function for a pin or
- * group. See section 4.11.2.8 PINCTRL_FUNCTION_SELECT in the
+ * group. See section 4.11.2.9 PINCTRL_FUNCTION_SELECT in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -504,7 +504,7 @@ int32_t SCMI_PinctrlFunctionSelect(uint32_t channel, uint32_t identifier,
  * until SCMI_PinctrlRelease() has been called by the controlling agent.
  *
  * For the SM, this function is not required as pin access controls are static
- * and cannot be changed dynamically. See section 4.11.2.9 PINCTRL_REQUEST in
+ * and cannot be changed dynamically. See section 4.11.2.10 PINCTRL_REQUEST in
  * the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -538,7 +538,7 @@ int32_t SCMI_PinctrlRequest(uint32_t channel, uint32_t identifier,
  *                            All other values are reserved for future use
  *
  * This function is used by an agent to release exclusive control of a pin or
- * group. See section 4.11.2.10 PINCTRL_RELEASE in the [SCMI Spec](@ref DOCS).
+ * group. See section 4.11.2.11 PINCTRL_RELEASE in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -551,6 +551,34 @@ int32_t SCMI_PinctrlRequest(uint32_t channel, uint32_t identifier,
  */
 int32_t SCMI_PinctrlRelease(uint32_t channel, uint32_t identifier,
     uint32_t flags);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.11.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_PinctrlNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 #endif /* SCMI_PINCTRL_H */
 

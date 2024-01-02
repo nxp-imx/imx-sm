@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -294,16 +294,16 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         uint32_t attributesConfigGet = 0U;
         uint32_t flagConfigGet = 0U;
         uint32_t config = 0U;
-        uint32_t oemConfigVal = 0U;
+        uint32_t extendedConfigVal = 0U;
 
         printf("SCMI_ClockConfigGet(%u, %u)\n", channel, clockId);
         CHECK(SCMI_ClockConfigGet(channel, clockId, flagConfigGet,
-            &attributesConfigGet, &config, &oemConfigVal));
+            &attributesConfigGet, &config, &extendedConfigVal));
 
         printf("  enabled=%u\n",
             SCMI_CLOCK_CONFIG_GET_ENABLE(config));
-        printf("  OEM=%u\n",
-            SCMI_CLOCK_CONFIG_FLAGS_OEM(oemConfigVal));
+        printf("  ext=%u\n",
+            SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG(extendedConfigVal));
 
         CHECK(SCMI_ClockConfigGet(channel, clockId, flagConfigGet,
             NULL, NULL, NULL));
@@ -311,8 +311,8 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         /* Invalid parameter check for ConfigGet*/
         printf("SCMI_ClockConfigGet(%u, %u)\n", channel, clockId);
         NECHECK(SCMI_ClockConfigGet(channel, clockId,
-            SCMI_CLOCK_CONFIG_FLAGS_OEM(2U),
-            &attributesConfigGet, &config, &oemConfigVal),
+            SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG(2U),
+            &attributesConfigGet, &config, &extendedConfigVal),
             SCMI_ERR_INVALID_PARAMETERS);
     }
 

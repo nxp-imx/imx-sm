@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x30000U
+#define PROTOCOL_VERSION  0x30001U
 
 /* SCMI reset protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -53,7 +53,8 @@
 #define COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES  0x2U
 #define COMMAND_RESET_DOMAIN_ATTRIBUTES      0x3U
 #define COMMAND_RESET                        0x4U
-#define COMMAND_SUPPORTED_MASK               0x1FUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x1001FUL
 
 /* SCMI max reset argument lengths */
 #define RESET_MAX_NAME  16U
@@ -160,6 +161,15 @@ typedef struct
     uint32_t resetState;
 } msg_rreset4_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rreset16_t;
+
 /* Local functions */
 
 static int32_t ResetProtocolVersion(const scmi_caller_t *caller,
@@ -172,6 +182,8 @@ static int32_t ResetDomainAttributes(const scmi_caller_t *caller,
     const msg_rreset3_t *in, msg_treset3_t *out);
 static int32_t Reset(const scmi_caller_t *caller, const msg_rreset4_t *in,
     const scmi_msg_status_t *out);
+static int32_t ResetNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rreset16_t *in, const scmi_msg_status_t *out);
 static int32_t ResetResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -218,6 +230,11 @@ int32_t RPC_SCMI_ResetDispatchCommand(scmi_caller_t *caller,
             status = Reset(caller, (const msg_rreset4_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = ResetNegotiateProtocolVersion(caller,
+                (const msg_rreset16_t*) in, (const scmi_msg_status_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -254,7 +271,7 @@ int32_t RPC_SCMI_ResetDispatchReset(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x30000                              */
+/*   specification, this value must be 0x30001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_ResetProtocolVersion(). See section 4.8.2.1 in the SCMI spec.       */
@@ -294,7 +311,7 @@ static int32_t ResetProtocolVersion(const scmi_caller_t *caller,
 /*   Bits[15:0] Number of reset domains                                     */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_ResetProtocolAttributes(). See section 4.8.2.2 in the SCMI spec.    */
+/* SCMI_ResetProtocolAttributes(). See section 4.8.2.3 in the SCMI spec.    */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - RESET_PROTO_ATTR_NUM_RESETS() - Number of reset domains                */
@@ -336,7 +353,7 @@ static int32_t ResetProtocolAttributes(const scmi_caller_t *caller,
 /*   For all functions in this protocol, this parameter has a value of 0    */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_ResetProtocolMessageAttributes(). See section 4.8.2.3 in the SCMI   */
+/* SCMI_ResetProtocolMessageAttributes(). See section 4.8.2.4 in the SCMI   */
 /* spec.                                                                    */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -402,7 +419,7 @@ static int32_t ResetProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   terminated reset domain name                                           */
 /*                                                                          */
 /* Process the RESET_DOMAIN_ATTRIBUTES message. Platform handler for        */
-/* SCMI_ResetDomainAttributes(). See section 4.8.2.4 in the SCMI spec.      */
+/* SCMI_ResetDomainAttributes(). See section 4.8.2.5 in the SCMI spec.      */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - RESET_ATTR_ASYNC() - Asynchronous reset support                        */
@@ -483,7 +500,7 @@ static int32_t ResetDomainAttributes(const scmi_caller_t *caller,
 /*   parameter is specified in Table 19                                     */
 /*                                                                          */
 /* Process the RESET message. Platform handler for SCMI_Reset(). Requires   */
-/* access greater than or equal to EXCLUSIVE. See section 4.8.2.5 in the    */
+/* access greater than or equal to EXCLUSIVE. See section 4.8.2.6 in the    */
 /* SCMI spec.                                                               */
 /*                                                                          */
 /*  Access macros:                                                          */
@@ -571,6 +588,55 @@ static int32_t Reset(const scmi_caller_t *caller, const msg_rreset4_t *in,
 
         status = LMM_ResetDomain(caller->lmId, in->domainId, lmmState,
             autonomous, assertNegate);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_ResetNegotiateProtocolVersion(). See section 4.8.2.2 in the SCMI    */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t ResetNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rreset16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -133,6 +133,8 @@
 #define SCMI_CLOCK_ATTR_EXT_NAME(x)    (((x) & 0x20000000U) >> 29U)
 /*! Parent clock identifier support */
 #define SCMI_CLOCK_ATTR_PARENT(x)      (((x) & 0x10000000U) >> 28U)
+/*! Extended configuration support */
+#define SCMI_CLOCK_ATTR_EXT_CONFIG(x)  (((x) & 0x8000000U) >> 27U)
 /*! Restricted clock */
 #define SCMI_CLOCK_ATTR_RESTRICTED(x)  (((x) & 0x2U) >> 1U)
 /*! Enabled/disabled */
@@ -167,18 +169,18 @@
  * @name SCMI clock config attributes
  */
 /** @{ */
-/*! OEM specified config type */
-#define SCMI_CLOCK_CONFIG_SET_OEM(x)     (((x) & 0xFFU) << 16U)
+/*! Extended config type */
+#define SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(x)  (((x) & 0xFFU) << 16U)
 /*! Enable/Disable */
-#define SCMI_CLOCK_CONFIG_SET_ENABLE(x)  (((x) & 0x3U) << 0U)
+#define SCMI_CLOCK_CONFIG_SET_ENABLE(x)      (((x) & 0x3U) << 0U)
 /** @} */
 
 /*!
  * @name SCMI clock config get flags
  */
 /** @{ */
-/*! OEM specified config type */
-#define SCMI_CLOCK_CONFIG_FLAGS_OEM(x)  (((x) & 0xFFU) << 0U)
+/*! Extended  config type */
+#define SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG(x)  (((x) & 0xFFU) << 0U)
 /** @} */
 
 /*!
@@ -231,11 +233,11 @@ typedef struct
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x20001
+ *                         specification, this value must be 0x30000
  *
  * On success, this function returns the version of this protocol. For this
- * version of the specification, the return value must be 0x20000, which
- * corresponds to version 2.0. See section 4.6.2.1 PROTOCOL_VERSION in the
+ * version of the specification, the return value must be 0x30000, which
+ * corresponds to version 3.0. See section 4.6.2.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -254,7 +256,7 @@ int32_t SCMI_ClockProtocolVersion(uint32_t channel, uint32_t *version);
  *                            Bits[15:0] Number of clocks
  *
  * This function returns the implementation details associated with this
- * protocol. See section 4.6.2.2 PROTOCOL_ATTRIBUTES in the
+ * protocol. See section 4.6.2.3 PROTOCOL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -279,7 +281,7 @@ int32_t SCMI_ClockProtocolAttributes(uint32_t channel,
  *
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol. An example message ID is
- * ::SCMI_MSG_CLOCK_ATTRIBUTES. See section 4.6.2.3 PROTOCOL_MESSAGE_ATTRIBUTES
+ * ::SCMI_MSG_CLOCK_ATTRIBUTES. See section 4.6.2.4 PROTOCOL_MESSAGE_ATTRIBUTES
  * in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -322,7 +324,14 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
  *                            advertised for this clock.<BR>
  *                            Set to 0 if parent clock identifiers are not
  *                            advertised for this clock.<BR>
- *                            Bits[27:2] Reserved, must be zero.<BR>
+ *                            Bit[27] Extended configuration support.<BR>
+ *                            Set to 1 if extended configurations are supported
+ *                            for this clock. Extended configurations can be
+ *                            accessed using the SCMI_ClockConfigSet() and the
+ *                            SCMI_ClockConfigSet() functions.<BR>
+ *                            Set to 0 if extended configurations are not
+ *                            supported for this clock.<BR>
+ *                            Bits[26:2] Reserved, must be zero.<BR>
  *                            Bit[1] Restricted clock.<BR>
  *                            Set to 1 if the clock has restrictions on
  *                            changing some of its configuration or settings,
@@ -350,7 +359,7 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
  * clock. An agent might be allowed access to only a subset of the clocks
  * available in the system. The platform must thus guarantee that clocks that
  * an agent cannot access are not visible to it. The max name length is
- * ::SCMI_CLOCK_MAX_NAME. See section 4.6.2.4 CLOCK_ATTRIBUTES in the
+ * ::SCMI_CLOCK_MAX_NAME. See section 4.6.2.5 CLOCK_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -359,6 +368,7 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
  *   support
  * - ::SCMI_CLOCK_ATTR_EXT_NAME() - Extended Clock name
  * - ::SCMI_CLOCK_ATTR_PARENT() - Parent clock identifier support
+ * - ::SCMI_CLOCK_ATTR_EXT_CONFIG() - Extended configuration support
  * - ::SCMI_CLOCK_ATTR_RESTRICTED() - Restricted clock
  * - ::SCMI_CLOCK_ATTR_ENABLED() - Enabled/disabled
  *
@@ -431,7 +441,7 @@ int32_t SCMI_ClockAttributes(uint32_t channel, uint32_t clockId,
  * physical rates that the clock device can synthesize.
  *
  * The clock rates returned by this call should be in numeric ascending order.
- * See section 4.6.2.5 CLOCK_DESCRIBE_RATES in the [SCMI Spec](@ref DOCS).
+ * See section 4.6.2.6 CLOCK_DESCRIBE_RATES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_CLOCK_NUM_RATE_FLAGS_REMAING_RATES() - Number of remaining rates
@@ -496,7 +506,7 @@ int32_t SCMI_ClockDescribeRates(uint32_t channel, uint32_t clockId,
  * The function returns when the clock rate has been changed. If a clock is in
  * disabled state, the new rate takes effect when the clock has been
  * re-enabled. An example rounding value is ::SCMI_CLOCK_ROUND_DOWN. See
- * section 4.6.2.6 CLOCK_RATE_SET in the [SCMI Spec](@ref DOCS).
+ * section 4.6.2.7 CLOCK_RATE_SET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_CLOCK_RATE_FLAGS_ROUND() - Round up/down
@@ -538,7 +548,7 @@ int32_t SCMI_ClockRateSet(uint32_t channel, uint32_t clockId,
  * This function allows the calling agent to request the current clock rate. If
  * the clock is in disabled state, this function returns the rate at which the
  * clock device would be subsequently running when it has been re-enabled. See
- * section 4.6.2.7 CLOCK_RATE_GET in the [SCMI Spec](@ref DOCS).
+ * section 4.6.2.8 CLOCK_RATE_GET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -555,42 +565,40 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
 /*!
  * Set clock configuration.
  *
- * @param[in]     channel       A2P channel for comms
- * @param[in]     clockId       Identifier for the clock device
- * @param[in]     attributes    Config attributes:<BR>
- *                              Bits[31:24] Reserved, must be zero.<BR>
- *                              Bits[23:16] OEM specified config type.<BR>
- *                              The possible values of this field are out of
- *                              the scope of this specification and are defined
- *                              by the OEM.<BR>
- *                              A value of 0 indicates that this field is
- *                              unused.<BR>
- *                              Bits[15:2] Reserved, must be zero.<BR>
- *                              Bits[1:0] Enable/Disable:<BR>
- *                              If set to 3, the state of the clock device is
- *                              unchanged. It is invalid to use this value if
- *                              Bits[23:16] is set to 0.<BR>
- *                              The value of 2 is reserved for future use.<BR>
- *                              If set to 1, the clock device is to be
- *                              enabled.<BR>
- *                              If set to 0, the clock device is to be disabled
- * @param[in]     oemConfigVal  OEM specified configuration value:
- *                              ccorresponding to the OEM specified
- *                              configuration type specified by Bits[23:16] of
- *                              attributes field.<BR>
- *                              This field is used to set implementation
- *                              defined configurations of the clock device. It
- *                              can be ignored if OEM specified config type
- *                              specified by Bits[23:16] of attributes field is
- *                              set to 0
+ * @param[in]     channel            A2P channel for comms
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[in]     attributes         Config attributes:<BR>
+ *                                   Bits[31:24] Reserved, must be zero.<BR>
+ *                                   Bits[23:16] Extended config type.<BR>
+ *                                   A value of 0 indicates that this field is
+ *                                   unused.<BR>
+ *                                   Bits[15:2] Reserved, must be zero.<BR>
+ *                                   Bits[1:0] Enable/Disable:<BR>
+ *                                   If set to 3, the state of the clock device
+ *                                   is unchanged. It is invalid to use this
+ *                                   value if Bits[23:16] is set to 0.<BR>
+ *                                   The value of 2 is reserved for future
+ *                                   use.<BR>
+ *                                   If set to 1, the clock device is to be
+ *                                   enabled.<BR>
+ *                                   If set to 0, the clock device is to be
+ *                                   disabled
+ * @param[in]     extendedConfigVal  Extended config value:  corresponds to the
+ *                                   extended configuration type specified by
+ *                                   Bits[23:16] of attributes field.<BR>
+ *                                   This field is used to set extended
+ *                                   configuration of the clock device. It can
+ *                                   be ignored if extended config type
+ *                                   specified by Bits[23:16] of the attributes
+ *                                   field is set to 0
  *
  * This function allows the calling agent to configure a clock device.
  * Enable/disable is aggregated so each agent can set. Clock is enabled if any
- * agents request it be enabled. See section 4.6.2.8 CLOCK_CONFIG_SET in the
+ * agents request it be enabled. See section 4.6.2.9 CLOCK_CONFIG_SET in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
- * - ::SCMI_CLOCK_CONFIG_SET_OEM() - OEM specified config type
+ * - ::SCMI_CLOCK_CONFIG_SET_EXT_CONFIG() - Extended config type
  * - ::SCMI_CLOCK_CONFIG_SET_ENABLE() - Enable/Disable
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -606,36 +614,38 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
  *   permissions.
  */
 int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
-    uint32_t attributes, uint32_t oemConfigVal);
+    uint32_t attributes, uint32_t extendedConfigVal);
 
 /*!
  * Get clock configuration.
  *
- * @param[in]     channel       A2P channel for comms
- * @param[in]     clockId       Identifier for the clock device
- * @param[in]     flags         Config flags:<BR>
- *                              Bits[31:8] Reserved, must be zero.<BR>
- *                              Bits[7:0] OEM specified config type.<BR>
- *                              Value of 0 indicates that this field is unused
- * @param[out]    attributes    Reserved, must be zero
- * @param[out]    config        Config:<BR>
- *                              Bits[31:1] Reserved, must be zero.<BR>
- *                              Bit[0] Enable/Disable If set to 1, the clock
- *                              device is enabled.<BR>
- *                              If set to 0, the clock device is disabled
- * @param[out]    oemConfigVal  OEM specified configuration value:
- *                              corresponding to the OEM specified
- *                              configuration type specified by Bits[7:0] of
- *                              attributes field of the function.<BR>
- *                              This field is ignored if OEM specified config
- *                              type field specified by Bits[7:0] of attributes
- *                              field of the function is set to 0
+ * @param[in]     channel            A2P channel for comms
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[in]     flags              Config flags:<BR>
+ *                                   Bits[31:8] Reserved, must be zero.<BR>
+ *                                   Bits[7:0] Extended config type.<BR>
+ *                                   Value of 0 indicates that this field is
+ *                                   unused
+ * @param[out]    attributes         Reserved, must be zero
+ * @param[out]    config             Config:<BR>
+ *                                   Bits[31:1] Reserved, must be zero.<BR>
+ *                                   Bit[0] Enable/Disable If set to 1, the
+ *                                   clock device is enabled.<BR>
+ *                                   If set to 0, the clock device is disabled
+ * @param[out]    extendedConfigVal  Extended config value: corresponds to the
+ *                                   extended configuration type specified by
+ *                                   Bits[7:0] of the attributes field of the
+ *                                   command.<BR>
+ *                                   This field is ignored if the extended
+ *                                   config type field specified by Bits[7:0]
+ *                                   of the attributes field of the command is
+ *                                   set to 0
  *
  * This function allows the calling agent to get the configuration of a clock
- * device. See section 4.6.2.9 CLOCK_CONFIG_GET in the [SCMI Spec](@ref DOCS).
+ * device. See section 4.6.2.10 CLOCK_CONFIG_GET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
- * - ::SCMI_CLOCK_CONFIG_FLAGS_OEM() - OEM specified config type
+ * - ::SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG() - Extended  config type
  * - ::SCMI_CLOCK_CONFIG_GET_ENABLE() - Enable/Disable
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -651,7 +661,7 @@ int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
  */
 int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
     uint32_t flags, uint32_t *attributes, uint32_t *config,
-    uint32_t *oemConfigVal);
+    uint32_t *extendedConfigVal);
 
 /*!
  * Get all possible parents.
@@ -673,7 +683,7 @@ int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
  * clock device. This function is useful in constructing a clock topology when
  * changing the parent clock of a clock device is sometimes required due to
  * implementation defined considerations like jitter, power, or other factors.
- * The max number of parents is ::SCMI_CLOCK_MAX_PARENTS. See section 4.6.2.13
+ * The max number of parents is ::SCMI_CLOCK_MAX_PARENTS. See section 4.6.2.14
  * CLOCK_POSSIBLE_PARENTS_GET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -712,7 +722,7 @@ int32_t SCMI_ClockPossibleParentsGet(uint32_t channel, uint32_t clockId,
  * the same parent. In these cases, it is recommended that all children clock
  * devices affected by this change should be explicitly disabled by the agent
  * and configured to the expected properties that the new parent supports,
- * before sending this function. See section 4.6.2.14 CLOCK_PARENT_SET in the
+ * before sending this function. See section 4.6.2.15 CLOCK_PARENT_SET in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -741,7 +751,7 @@ int32_t SCMI_ClockParentSet(uint32_t channel, uint32_t clockId,
  *                          as the parent of the clock specified by \a clockId
  *
  * This function allows the calling agent to get the current parent of a clock
- * device. See section 4.6.2.15 CLOCK_PARENT_GET in the [SCMI Spec](@ref DOCS).
+ * device. See section 4.6.2.16 CLOCK_PARENT_GET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -784,7 +794,7 @@ int32_t SCMI_ClockParentGet(uint32_t channel, uint32_t clockId,
  *
  * An agent might be restricted from changing certain configuration or settings
  * of a clock. This function returns the restrictions that are associated with
- * a specific clock. See section 4.6.2.16 CLOCK_GET_PERMISSIONS in the
+ * a specific clock. See section 4.6.2.17 CLOCK_GET_PERMISSIONS in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -802,6 +812,34 @@ int32_t SCMI_ClockParentGet(uint32_t channel, uint32_t clockId,
  */
 int32_t SCMI_ClockGetPermissions(uint32_t channel, uint32_t clockId,
     uint32_t *permissions);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.6.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_ClockNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 #endif /* SCMI_CLOCK_H */
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x20000U
+#define PROTOCOL_VERSION  0x20001U
 
 /* SCMI base protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION                      0x0U
@@ -58,7 +58,8 @@
 #define COMMAND_BASE_DISCOVER_AGENT                   0x7U
 #define COMMAND_BASE_SET_DEVICE_PERMISSIONS           0x9U
 #define COMMAND_BASE_RESET_AGENT_CONFIGURATION        0xBU
-#define COMMAND_SUPPORTED_MASK                        0xAFFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION            0x10U
+#define COMMAND_SUPPORTED_MASK                        0x10AFFUL
 
 /* SCMI max base argument lengths */
 #define BASE_MAX_NAME              16U
@@ -225,6 +226,15 @@ typedef struct
     uint32_t flags;
 } msg_rbase11_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rbase16_t;
+
 /* Local functions */
 
 static int32_t BaseProtocolVersion(const scmi_caller_t *caller,
@@ -247,6 +257,8 @@ static int32_t BaseSetDevicePermissions(const scmi_caller_t *caller,
     const msg_rbase9_t *in, const scmi_msg_status_t *out);
 static int32_t BaseResetAgentConfiguration(const scmi_caller_t *caller,
     const msg_rbase11_t *in, const scmi_msg_status_t *out);
+static int32_t BaseNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rbase16_t *in, const scmi_msg_status_t *out);
 static int32_t BaseResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -318,6 +330,11 @@ int32_t RPC_SCMI_BaseDispatchCommand(scmi_caller_t *caller,
             status = BaseResetAgentConfiguration(caller,
                 (const msg_rbase11_t*) in, (const scmi_msg_status_t*) out);
             break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = BaseNegotiateProtocolVersion(caller,
+                (const msg_rbase16_t*) in, (const scmi_msg_status_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -354,7 +371,7 @@ int32_t RPC_SCMI_BaseDispatchReset(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x20000                              */
+/*   specification, this value must be 0x20001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_BaseProtocolVersion(). See section 4.2.2.1 in the SCMI spec.        */
@@ -396,7 +413,7 @@ static int32_t BaseProtocolVersion(const scmi_caller_t *caller,
 /*   Base protocol                                                          */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_BaseProtocolAttributes(). See section 4.2.2.2 in the SCMI spec.     */
+/* SCMI_BaseProtocolAttributes(). See section 4.2.2.3 in the SCMI spec.     */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - BASE_PROTO_ATTR_NUM_AGENTS() - Number of agents in the system          */
@@ -443,7 +460,7 @@ static int32_t BaseProtocolAttributes(const scmi_caller_t *caller,
 /*   For all functions in this protocol, this parameter has a value of 0    */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_BaseProtocolMessageAttributes(). See section 4.2.2.3 in the SCMI    */
+/* SCMI_BaseProtocolMessageAttributes(). See section 4.2.2.4 in the SCMI    */
 /* spec.                                                                    */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -493,7 +510,7 @@ static int32_t BaseProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   with a vendor name                                                     */
 /*                                                                          */
 /* Process the BASE_DISCOVER_VENDOR message. Platform handler for           */
-/* SCMI_BaseDiscoverVendor(). See section 4.2.2.4 in the SCMI spec.         */
+/* SCMI_BaseDiscoverVendor(). See section 4.2.2.5 in the SCMI spec.         */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
@@ -530,7 +547,7 @@ static int32_t BaseDiscoverVendor(const scmi_caller_t *caller,
 /*   with a sub-vendor name                                                 */
 /*                                                                          */
 /* Process the BASE_DISCOVER_SUB_VENDOR message. Platform handler for       */
-/* SCMI_BaseDiscoverSubVendor(). See section 4.2.2.5 in the SCMI spec.      */
+/* SCMI_BaseDiscoverSubVendor(). See section 4.2.2.6 in the SCMI spec.      */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
@@ -567,7 +584,7 @@ static int32_t BaseDiscoverSubVendor(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the BASE_DISCOVER_IMPLEMENTATION_VERSION message. Platform       */
 /* handler for SCMI_BaseDiscoverImplementationVersion(). See section        */
-/* 4.2.2.6 in the SCMI spec.                                                */
+/* 4.2.2.7 in the SCMI spec.                                                */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
@@ -606,7 +623,7 @@ static int32_t BaseDiscoverImplementationVersion(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the BASE_DISCOVER_LIST_PROTOCOLS message. Platform handler for   */
-/* SCMI_BaseDiscoverListProtocols(). See section 4.2.2.7 in the SCMI spec.  */
+/* SCMI_BaseDiscoverListProtocols(). See section 4.2.2.8 in the SCMI spec.  */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if a valid list of protocols is found.                 */
@@ -666,7 +683,7 @@ static int32_t BaseDiscoverListProtocols(const scmi_caller_t *caller,
 /* - out->name: Null terminated ASCII string of up to 16 bytes in length    */
 /*                                                                          */
 /* Process the BASE_DISCOVER_AGENT message. Platform handler for            */
-/* SCMI_BaseDiscoverAgent(). See section 4.2.2.8 in the SCMI spec.          */
+/* SCMI_BaseDiscoverAgent(). See section 4.2.2.10 in the SCMI spec.         */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: If a valid agent identifier is found.                  */
@@ -744,7 +761,7 @@ static int32_t BaseDiscoverAgent(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the BASE_SET_DEVICE_PERMISSIONS message. Platform handler for    */
 /* SCMI_BaseSetDevicePermissions(). Requires access greater than or equal   */
-/* to PRIV. See section 4.2.2.10 in the SCMI spec.                          */
+/* to PRIV. See section 4.2.2.12 in the SCMI spec.                          */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - BASE_PERM_FLAGS_ACCESS_TYPE() - Access Type                            */
@@ -840,7 +857,7 @@ static int32_t BaseSetDevicePermissions(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the BASE_RESET_AGENT_CONFIGURATION message. Platform handler     */
 /* for SCMI_BaseResetAgentConfiguration(). Requires access greater than or  */
-/* equal to PRIV. See section 4.2.2.12 in the SCMI spec.                    */
+/* equal to PRIV. See section 4.2.2.13 in the SCMI spec.                    */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - BASE_FLAGS_PERMISSIONS() - Permissions Reset                           */
@@ -894,6 +911,55 @@ static int32_t BaseResetAgentConfiguration(const scmi_caller_t *caller,
                     permissionsReset);
             }
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_BaseNegotiateProtocolVersion(). See section 4.2.2.2 in the SCMI     */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t BaseNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rbase16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

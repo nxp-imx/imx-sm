@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x30000U
+#define PROTOCOL_VERSION  0x30001U
 
 /* SCMI sensor protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -57,7 +57,8 @@
 #define COMMAND_SENSOR_READING_GET           0x6U
 #define COMMAND_SENSOR_CONFIG_GET            0x9U
 #define COMMAND_SENSOR_CONFIG_SET            0xAU
-#define COMMAND_SUPPORTED_MASK               0x67FUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x1067FUL
 
 /* SCMI max sensor argument lengths */
 #define SENSOR_MAX_NAME      16U
@@ -300,6 +301,15 @@ typedef struct
     uint32_t sensorConfig;
 } msg_rsensor10_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rsensor16_t;
+
 /* Request type for SensorTripPointEvent() */
 typedef struct
 {
@@ -333,6 +343,8 @@ static int32_t SensorConfigGet(const scmi_caller_t *caller,
     const msg_rsensor9_t *in, msg_tsensor9_t *out);
 static int32_t SensorConfigSet(const scmi_caller_t *caller,
     const msg_rsensor10_t *in, const scmi_msg_status_t *out);
+static int32_t SensorNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rsensor16_t *in, const scmi_msg_status_t *out);
 static int32_t SensorTripPointEvent(scmi_msg_id_t msgId,
     lmm_rpc_trigger_t trigger);
 static int32_t SensorResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -401,6 +413,11 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
             status = SensorConfigSet(caller, (const msg_rsensor10_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = SensorNegotiateProtocolVersion(caller,
+                (const msg_rsensor16_t*) in, (const scmi_msg_status_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -468,7 +485,7 @@ static uint32_t s_sensorNotify[SM_SCMI_NUM_AGNT];
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x30000                              */
+/*   specification, this value must be 0x30001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_SensorProtocolVersion(). See section 4.7.2.1 in the SCMI spec.      */
@@ -525,7 +542,7 @@ static int32_t SensorProtocolVersion(const scmi_caller_t *caller,
 /*   memory                                                                 */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
-/* SCMI_SensorProtocolAttributes(). See section 4.7.2.2 in the SCMI spec.   */
+/* SCMI_SensorProtocolAttributes(). See section 4.7.2.3 in the SCMI spec.   */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_PROTO_ATTR_MAX_PENDING() - Maximum number of outstanding        */
@@ -576,7 +593,7 @@ static int32_t SensorProtocolAttributes(const scmi_caller_t *caller,
 /*   field returns the value of 0                                           */
 /*                                                                          */
 /* Process the PROTOCOL_MESSAGE_ATTRIBUTES message. Platform handler for    */
-/* SCMI_SensorProtocolMessageAttributes(). See section 4.7.2.3 in the SCMI  */
+/* SCMI_SensorProtocolMessageAttributes(). See section 4.7.2.4 in the SCMI  */
 /* spec.                                                                    */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -632,7 +649,7 @@ static int32_t SensorProtocolMessageAttributes(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the SENSOR_DESCRIPTION_GET message. Platform handler for         */
-/* SCMI_SensorDescriptionGet(). See section 4.7.2.4 in the SCMI spec.       */
+/* SCMI_SensorDescriptionGet(). See section 4.7.2.5 in the SCMI spec.       */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_NUM_SENSOR_FLAGS_REMAINING_DESCS() - Number of remaining        */
@@ -760,7 +777,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the SENSOR_TRIP_POINT_NOTIFY message. Platform handler for       */
 /* SCMI_SensorTripPointNotify(). Requires access greater than or equal to   */
-/* NOTIFY. See section 4.7.2.7 in the SCMI spec.                            */
+/* NOTIFY. See section 4.7.2.8 in the SCMI spec.                            */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_EV_CTRL_ENABLE() - Controls generation of notifications on      */
@@ -849,7 +866,7 @@ static int32_t SensorTripPointNotify(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the SENSOR_TRIP_POINT_CONFIG message. Platform handler for       */
 /* SCMI_SensorTripPointConfig(). Requires access greater than or equal to   */
-/* EXCLUSIVE. See section 4.7.2.8 in the SCMI spec.                         */
+/* EXCLUSIVE. See section 4.7.2.9 in the SCMI spec.                         */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_TP_EV_CTRL_TRIP_ID() - Trip point ID                            */
@@ -928,7 +945,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the SENSOR_READING_GET message. Platform handler for             */
-/* SCMI_SensorReadingGet(). See section 4.7.2.11 in the SCMI spec.          */
+/* SCMI_SensorReadingGet(). See section 4.7.2.12 in the SCMI spec.          */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_READ_FLAGS_ASYNC() - Async flag                                 */
@@ -1035,7 +1052,7 @@ static int32_t SensorReadingGet(const scmi_caller_t *caller,
 /*   Set to 0 if the sensor is disabled                                     */
 /*                                                                          */
 /* Process the SENSOR_CONFIG_GET message. Platform handler for              */
-/* SCMI_SensorConfigGet(). See section 4.7.2.9 in the SCMI spec.            */
+/* SCMI_SensorConfigGet(). See section 4.7.2.10 in the SCMI spec.           */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_CONFIG_GET_UPDATE_INTV_SEC() - Seconds                          */
@@ -1135,7 +1152,7 @@ static int32_t SensorConfigGet(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the SENSOR_CONFIG_SET message. Platform handler for              */
 /* SCMI_SensorConfigSet(). Requires access greater than or equal to SET.    */
-/* See section 4.7.2.10 in the SCMI spec.                                   */
+/* See section 4.7.2.11 in the SCMI spec.                                   */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - SENSOR_CONFIG_SET_UPDATE_INTV_SEC() - Seconds                          */
@@ -1189,6 +1206,55 @@ static int32_t SensorConfigSet(const scmi_caller_t *caller,
     {
         status = LMM_SensorEnable(caller->lmId, in->sensorId, enable,
             timestampReporting);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_SensorNegotiateProtocolVersion(). See section 4.7.2.2 in the SCMI   */
+/* spec.                                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t SensorNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rsensor16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */

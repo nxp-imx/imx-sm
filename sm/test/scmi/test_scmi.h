@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -58,21 +58,21 @@
 /* Defines */
 
 /*! SCMI base protocol version */
-#define SCMI_BASE_PROT_VER      0x20000U
+#define SCMI_BASE_PROT_VER      0x20001U
 /*! SCMI power protocol version */
-#define SCMI_POWER_PROT_VER     0x30000U
+#define SCMI_POWER_PROT_VER     0x30001U
 /*! SCMI system protocol version */
-#define SCMI_SYSTEM_PROT_VER    0x20000U
+#define SCMI_SYSTEM_PROT_VER    0x20001U
 /*! SCMI performance protocol version */
 #define SCMI_PERF_PROT_VER      0x40000U
 /*! SCMI clock protocol version */
-#define SCMI_CLOCK_PROT_VER     0x20001U
+#define SCMI_CLOCK_PROT_VER     0x30000U
 /*! SCMI sensor protocol version */
-#define SCMI_SENSOR_PROT_VER    0x30000U
+#define SCMI_SENSOR_PROT_VER    0x30001U
 /*! SCMI reset protocol version */
-#define SCMI_RESET_PROT_VER     0x30000U
+#define SCMI_RESET_PROT_VER     0x30001U
 /*! SCMI voltage protocol version */
-#define SCMI_VOLT_PROT_VER      0x20000U
+#define SCMI_VOLT_PROT_VER      0x20001U
 /*! SCMI pin control protocol version */
 #define SCMI_PINCTRL_PROT_VER   0x10000U
 /*! SCMI LMM protocol version */

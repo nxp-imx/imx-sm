@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -131,11 +131,11 @@
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x20000
+ *                         specification, this value must be 0x20001
  *
  * On success, this function returns the version of this protocol. For this
- * version of the specification, the value returned must be 0x20000, which
- * corresponds to version 2.0. See section 4.4.2.1 PROTOCOL_VERSION in the
+ * version of the specification, the value returned must be 0x20001, which
+ * corresponds to version 2.1. See section 4.4.2.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -150,7 +150,7 @@ int32_t SCMI_SysProtocolVersion(uint32_t channel, uint32_t *version);
  *                            Bits[31:0] Reserved, must be zero
  *
  * This function returns the implementation details associated with this
- * protocol. See section 4.4.2.2 PROTOCOL_ATTRIBUTES in the
+ * protocol. See section 4.4.2.3 PROTOCOL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -178,7 +178,7 @@ int32_t SCMI_SysProtocolAttributes(uint32_t channel, uint32_t *attributes);
  *
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol. An example message ID is
- * ::SCMI_MSG_SYSTEM_POWER_STATE_SET. See section 4.4.2.3
+ * ::SCMI_MSG_SYSTEM_POWER_STATE_SET. See section 4.4.2.4
  * PROTOCOL_MESSAGE_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -240,7 +240,7 @@ int32_t SCMI_SysProtocolMessageAttributes(uint32_t channel,
  *
  * System power-up must only be available to agents other than a PSCI
  * implementation on systems that implement OSPM system view. Access depends on
- * if graceful, LM, or system state request. See section 4.4.2.4
+ * if graceful, LM, or system state request. See section 4.4.2.5
  * SYSTEM_POWER_STATE_SET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -282,7 +282,7 @@ int32_t SCMI_SystemPowerStateSet(uint32_t channel, uint32_t flags,
  * requested a forceful transition.
  *
  * On initial boot of an agent, these notifications must be disabled by default
- * to that agent. See section 4.4.2.6 SYSTEM_POWER_STATE_NOTIFY in the
+ * to that agent. See section 4.4.2.7 SYSTEM_POWER_STATE_NOTIFY in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -299,6 +299,34 @@ int32_t SCMI_SystemPowerStateSet(uint32_t channel, uint32_t flags,
  */
 int32_t SCMI_SystemPowerStateNotify(uint32_t channel,
     uint32_t notifyEnable);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.4.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_SysNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 /*!
  * Read system state notification event.

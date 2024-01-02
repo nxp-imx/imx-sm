@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -194,8 +194,8 @@ typedef struct
  *                         specification, this value must be 0x40000
  *
  * On success, this function returns the version of this protocol. For this
- * version of the specification, the value returned must be 0x30000, which
- * corresponds to version 3.0. See section 4.5.3.1 PROTOCOL_VERSION in the
+ * version of the specification, the value returned must be 0x40000, which
+ * corresponds to version 4.0. See section 4.5.3.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -245,7 +245,7 @@ int32_t SCMI_PerfProtocolVersion(uint32_t channel, uint32_t *version);
  *                                       memory region
  *
  * This function returns the attributes associated with this protocol. See
- * section 4.5.3.2 PROTOCOL_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
+ * section 4.5.3.3 PROTOCOL_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
  * - ::SCMI_PERF_PROTO_ATTR_POWER_UNIT() - Power Unit
@@ -273,7 +273,7 @@ int32_t SCMI_PerfProtocolAttributes(uint32_t channel, uint32_t *attributes,
  *
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol. An example message ID is
- * ::SCMI_MSG_PERFORMANCE_DOMAIN_ATTRIBUTES. See section 4.5.3.3
+ * ::SCMI_MSG_PERFORMANCE_DOMAIN_ATTRIBUTES. See section 4.5.3.4
  * PROTOCOL_MESSAGE_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -372,7 +372,7 @@ int32_t SCMI_PerfProtocolMessageAttributes(uint32_t channel,
  *                                    domain name
  *
  * This function returns attributes that are specific to a given domain. The
- * max name length is ::SCMI_PERF_MAX_NAME. See section 4.5.3.4
+ * max name length is ::SCMI_PERF_MAX_NAME. See section 4.5.3.5
  * PERFORMANCE_DOMAIN_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -446,7 +446,7 @@ int32_t SCMI_PerformanceDomainAttributes(uint32_t channel,
  * possible to return information for all performance levels with just one
  * call. To solve this problem, the interface allows multiple calls, with a \a
  * skipIndex used to skip over performance levels which were returned by
- * previous calls. See section 4.5.3.5 PERFORMANCE_DESCRIBE_LEVELS in the
+ * previous calls. See section 4.5.3.6 PERFORMANCE_DESCRIBE_LEVELS in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -487,7 +487,7 @@ int32_t SCMI_PerformanceDescribeLevels(uint32_t channel, uint32_t domainId,
  * domain. Each agent can set a limit and the results are aggregated. Limits
  * will be set to the minimum range to satisfy all settings. If Level Indexing
  * Mode is used by the platform, the limits must be specified in level index
- * instead of the corresponding performance level. See section 4.5.3.6
+ * instead of the corresponding performance level. See section 4.5.3.7
  * PERFORMANCE_LIMITS_SET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -526,7 +526,7 @@ int32_t SCMI_PerformanceLimitsSet(uint32_t channel, uint32_t domainId,
  * On success, the range return value provides the minimum and maximum allowed
  * performance level, or level index. One level is supported per LM. Results
  * are minimum performance to meet the requirements of all LM. See section
- * 4.5.3.7 PERFORMANCE_LIMITS_GET in the [SCMI Spec](@ref DOCS).
+ * 4.5.3.8 PERFORMANCE_LIMITS_GET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -549,7 +549,7 @@ int32_t SCMI_PerformanceLimitsGet(uint32_t channel, uint32_t domainId,
  * instead of the corresponding performance level. This function can return
  * before the domain has transitioned to the required performance level. The
  * platform simply has to acknowledge that it has received the function. See
- * section 4.5.3.8 PERFORMANCE_LEVEL_SET in the [SCMI Spec](@ref DOCS).
+ * section 4.5.3.9 PERFORMANCE_LEVEL_SET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -579,7 +579,7 @@ int32_t SCMI_PerformanceLevelSet(uint32_t channel, uint32_t domainId,
  * or level index when Level Indexing Mode is used by the platform. Note the
  * performance level value that is returned by this function might be stale by
  * the time the function completes, as a subsequent performance change might
- * have been initiated in the meantime. See section 4.5.3.9
+ * have been initiated in the meantime. See section 4.5.3.10
  * PERFORMANCE_LEVEL_GET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -590,6 +590,34 @@ int32_t SCMI_PerformanceLevelSet(uint32_t channel, uint32_t domainId,
  */
 int32_t SCMI_PerformanceLevelGet(uint32_t channel, uint32_t domainId,
     uint32_t *performanceLevel);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.5.3.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_PerfNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 #endif /* SCMI_PERF_H */
 

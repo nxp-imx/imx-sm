@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -119,11 +119,11 @@
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x30000
+ *                         specification, this value must be 0x30001
  *
  * On success, this function returns the Protocol version. For this version of
- * the specification, the return value must be 0x30000, which corresponds to
- * version 3.0. See section 4.3.2.1 PROTOCOL_VERSION in the
+ * the specification, the return value must be 0x30001, which corresponds to
+ * version 3.1. See section 4.3.2.1 PROTOCOL_VERSION in the
  * [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -151,7 +151,7 @@ int32_t SCMI_PowerProtocolVersion(uint32_t channel, uint32_t *version);
  *                                       memory region
  *
  * This function returns the implementation details associated with this
- * protocol. See section 4.3.2.2 PROTOCOL_ATTRIBUTES in the
+ * protocol. See section 4.3.2.3 PROTOCOL_ATTRIBUTES in the
  * [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -175,7 +175,7 @@ int32_t SCMI_PowerProtocolAttributes(uint32_t channel, uint32_t *attributes,
  *
  * On success, this function returns the implementation details associated with
  * a specific message in this protocol. An example message ID is
- * ::SCMI_MSG_POWER_DOMAIN_ATTRIBUTES. See section 4.3.2.3
+ * ::SCMI_MSG_POWER_DOMAIN_ATTRIBUTES. See section 4.3.2.4
  * PROTOCOL_MESSAGE_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
@@ -232,7 +232,7 @@ int32_t SCMI_PowerProtocolMessageAttributes(uint32_t channel,
  *                            of the power domain name
  *
  * This function returns the attribute flags associated with a specific power
- * domain. Max name length is ::SCMI_POWER_MAX_NAME. See section 4.3.2.4
+ * domain. Max name length is ::SCMI_POWER_MAX_NAME. See section 4.3.2.5
  * POWER_DOMAIN_ATTRIBUTES in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -275,7 +275,7 @@ int32_t SCMI_PowerDomainAttributes(uint32_t channel, uint32_t domainId,
  * are aggregated. Domain will be set to the minimum to satisfy all settings.
  * An example power state is ::SCMI_POWER_DOMAIN_STATE_ON. Note that if a power
  * domain contains CPUs, the reset vectors for those are latched on power up
- * and must be set first using SCMI_CpuResetVectorSet(). See section 4.3.2.5
+ * and must be set first using SCMI_CpuResetVectorSet(). See section 4.3.2.6
  * POWER_STATE_SET in the [SCMI Spec](@ref DOCS).
  *
  * Access macros:
@@ -312,7 +312,7 @@ int32_t SCMI_PowerStateSet(uint32_t channel, uint32_t domainId,
  *
  * This function allows the calling agent to request the current power state of
  * a power domain. An example power state is ::SCMI_POWER_DOMAIN_STATE_OFF. See
- * section 4.3.2.6 POWER_STATE_GET in the [SCMI Spec](@ref DOCS).
+ * section 4.3.2.7 POWER_STATE_GET in the [SCMI Spec](@ref DOCS).
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -323,6 +323,34 @@ int32_t SCMI_PowerStateSet(uint32_t channel, uint32_t domainId,
  */
 int32_t SCMI_PowerStateGet(uint32_t channel, uint32_t domainId,
     uint32_t *powerState);
+
+/*!
+ * Negotiate the protocol version.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     version  The negotiated protocol version the agent intends to
+ *                         use
+ *
+ * This command is used to negotiate the protocol version that the agent
+ * intends to use, if it does not support the version returned by the
+ * SCMI_ProtocolVersion() function. There is no limit on the number of
+ * negotiations which can be attempted by the agent. All commands, responses,
+ * and notifications must comply with the protocol version which was last
+ * negotiated successfully. Using protocol versions different from the version
+ * returned by SCMI_ProtocolVersion() without successful negotiation is
+ * considered best effort, and functionality is not guaranteed. See section
+ * 4.3.2.2 NEGOTIATE_PROTOCOL_VERSION in the [SCMI Spec](@ref DOCS).
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the negotiated protocol version is supported by the
+ *   platform. All commands, responses, and notifications post successful
+ *   return of this command must comply with the negotiated version.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the protocol version is not supported.
+ */
+int32_t SCMI_PowerNegotiateProtocolVersion(uint32_t channel,
+    uint32_t version);
 
 #endif /* SCMI_POWER_H */
 

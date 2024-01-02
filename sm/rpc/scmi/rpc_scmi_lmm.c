@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -59,7 +59,8 @@
 #define COMMAND_LMM_SUSPEND                  0x8U
 #define COMMAND_LMM_NOTIFY                   0x9U
 #define COMMAND_LMM_RESET_REASON             0xAU
-#define COMMAND_SUPPORTED_MASK               0x7FFUL
+#define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
+#define COMMAND_SUPPORTED_MASK               0x107FFUL
 
 /* SCMI LMM max argument lengths */
 #define LMM_MAX_NAME     16U
@@ -266,6 +267,15 @@ typedef struct
     uint32_t extInfo[LMM_MAX_EXTINFO];
 } msg_tlmm10_t;
 
+/* Request type for NegotiateProtocolVersion() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* The negotiated protocol version the agent intends to use */
+    uint32_t version;
+} msg_rlmm16_t;
+
 /* Request type for LmmEvent() */
 typedef struct
 {
@@ -303,6 +313,8 @@ static int32_t LmmNotify(const scmi_caller_t *caller, const msg_rlmm9_t *in,
     const scmi_msg_status_t *out);
 static int32_t LmmResetReason(const scmi_caller_t *caller,
     const msg_rlmm10_t *in, msg_tlmm10_t *out, uint32_t *len);
+static int32_t LmmNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rlmm16_t *in, const scmi_msg_status_t *out);
 static int32_t LmmEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger);
 static int32_t LmmResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
@@ -379,6 +391,11 @@ int32_t RPC_SCMI_LmmDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tlmm10_t);
             status = LmmResetReason(caller, (const msg_rlmm10_t*) in,
                 (msg_tlmm10_t*) out, &lenOut);
+            break;
+        case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = LmmNegotiateProtocolVersion(caller,
+                (const msg_rlmm16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -1191,6 +1208,54 @@ static int32_t LmmResetReason(const scmi_caller_t *caller,
 
         /* Update length */
         *len = (4U + extLen) * sizeof(uint32_t);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Negotiate the protocol version                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->version: The negotiated protocol version the agent intends to use  */
+/*                                                                          */
+/* Process the NEGOTIATE_PROTOCOL_VERSION message. Platform handler for     */
+/* SCMI_LmmNegotiateProtocolVersion().                                      */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the negotiated protocol version is supported by     */
+/*   the platform. All commands, responses, and notifications post          */
+/*   successful return of this command must comply with the negotiated      */
+/*   version.                                                               */
+/* - SM_ERR_NOT_SUPPORTED: if the protocol version is not supported.        */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t LmmNegotiateProtocolVersion(const scmi_caller_t *caller,
+    const msg_rlmm16_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check major version */
+    if ((status == SM_ERR_SUCCESS) && (SCMI_VER_MAJOR(in->version)
+        == SCMI_VER_MAJOR(PROTOCOL_VERSION)))
+    {
+        /* Check minor version */
+        if (SCMI_VER_MINOR(in->version) > SCMI_VER_MINOR(PROTOCOL_VERSION))
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_SUPPORTED;
     }
 
     /* Return status */
