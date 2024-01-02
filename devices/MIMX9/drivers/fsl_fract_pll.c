@@ -81,7 +81,7 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
         {
 #if (defined(FSL_FEATURE_FRAC_PLL_HAS_ERRATA_628654) && FSL_FEATURE_FRAC_PLL_HAS_ERRATA_628654)
             /* If fractional PLL, rewrite MFN (not retained during PLL disable) */
-            if (((enMask & PLL_CTRL_POWERUP_MASK) != 0) &&
+            if (((enMask & PLL_CTRL_POWERUP_MASK) != 0U) &&
                 (g_pllAttrs[pllIdx].isFrac))
             {
                 uint32_t pllNum = pll->NUMERATOR.RW;
@@ -91,7 +91,7 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
             pll->CTRL.SET = enMask;
 
             /* If powering up, wait for lock */
-            if ((enMask & PLL_CTRL_POWERUP_MASK) != 0)
+            if ((enMask & PLL_CTRL_POWERUP_MASK) != 0U)
             {
                 while ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U)
                 {
@@ -100,7 +100,7 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
             }
 
             /* If enabling PLL output, disable bypass */
-            if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0)
+            if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0U)
             {
                 pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
             }
@@ -108,7 +108,7 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
         else
         {
             /* If disabling PLL output, enable bypass */
-            if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0)
+            if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0U)
             {
                 pll->CTRL.SET = PLL_CTRL_CLKMUX_BYPASS_MASK;
             }
@@ -537,7 +537,7 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
 /*--------------------------------------------------------------------------*/
 /* Set PLL context                                                          */
 /*--------------------------------------------------------------------------*/
-bool FRACTPLL_SetContext(uint32_t pllIdx, fracpll_context_t *pllContext)
+bool FRACTPLL_SetContext(uint32_t pllIdx, const fracpll_context_t *pllContext)
 {
     bool rc = false;
 

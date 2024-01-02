@@ -65,7 +65,7 @@ uint64_t FRACTPLL_GetDfsRate(uint32_t pllIdx, uint8_t dfsIdx, bool div2);
 bool FRACTPLL_UpdateDfsRate(uint32_t pllIdx, uint8_t dfsIdx, uint32_t mfi,
     uint32_t mfn);
 bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx, uint64_t rate);
-bool FRACTPLL_SetContext(uint32_t pllIdx, fracpll_context_t *pllContext);
+bool FRACTPLL_SetContext(uint32_t pllIdx, const fracpll_context_t *pllContext);
 bool FRACTPLL_GetContext(uint32_t pllIdx, fracpll_context_t *pllContext);
 
 /* Externs */
