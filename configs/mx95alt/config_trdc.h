@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -105,7 +105,7 @@
         SM_CFG_Z1(0x00010254U), \
         SM_CFG_W1(0x00010264U), 0x00000900U, \
         SM_CFG_W1(0x00010380U), 0x000000C0U, \
-        SM_CFG_W1(0x00010450U), 0x30003330U, \
+        SM_CFG_W1(0x00010450U), 0x33003330U, \
         SM_CFG_W1(0x00010454U), 0x03333033U, \
         SM_CFG_W1(0x00010458U), 0x00030000U, \
         SM_CFG_W1(0x0001045cU), 0x33330030U, \
