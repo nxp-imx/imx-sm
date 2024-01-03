@@ -6,7 +6,7 @@
 **         CMSIS Peripheral Access Layer for MIMX9592_cm33
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2023 NXP
+**     Copyright 2016-2024 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -280,9 +280,9 @@ typedef enum IRQn
     MU7_B_IRQn           = 207, /**< WAKEUPMIX MU Ored of all (tx,rx,gp,core,murip) interrupt to MUB */
     MU8_B_IRQn           = 208, /**< WAKEUPMIX MU Ored of all (tx,rx,gp,core,murip) interrupt to MUB */
     Reserved225_IRQn     = 209, /**< WAKEUPMIX XSPI Responder */
-    Reserved226_IRQn     = 210, /**< AONMIX FCCU Interrupt Reaction 0 */
-    Reserved227_IRQn     = 211, /**< AONMIX FCCU Interrupt Reaction 1 */
-    Reserved228_IRQn     = 212, /**< AONMIX FCCU Interrupt Reaction 2 */
+    FCCU0_IRQn           = 210, /**< AONMIX FCCU Interrupt Reaction 0 */
+    FCCU1_IRQn           = 211, /**< AONMIX FCCU Interrupt Reaction 1 */
+    FCCU2_IRQn           = 212, /**< AONMIX FCCU Interrupt Reaction 2 */
     Reserved229_IRQn     = 213, /**< AONMIX STCU Selftest end Interrupt */
     DISP_IRQSTEER0_IRQn  = 214, /**< DISPLAYMIX IRQSTEER 0 */
     DISP_IRQSTEER1_IRQn  = 215, /**< DISPLAYMIX IRQSTEER 1 */

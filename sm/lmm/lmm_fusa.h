@@ -93,16 +93,76 @@ int32_t LMM_FusaSeenvStateGet(uint32_t lmId, uint32_t *seenvState);
 int32_t LMM_FusaSeenvStateSet(uint32_t lmId, uint32_t seenvState,
     uint32_t pingCookie, uint32_t scstSignature);
 
+/*!
+ * Get the state of a fault.
+ *
+ * @param[in]     lmId          LM requesting
+ * @param[in]     faultId       Fault ID
+ * @param[out]    state         State, true if asserted
+ *
+ * Gets the state of a fault.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - others returned by LMM_FaultGet()
+ */
 int32_t LMM_FusaFaultGet(uint32_t lmId, uint32_t faultId,
     bool *state);
 
+/*!
+ * Set the state of a fault.
+ *
+ * @param[in]     lmId          LM requesting
+ * @param[in]     faultId       Fault ID
+ * @param[in]     set           True to set, false to clear
+ *
+ * Sets the state of a fault. If \a set is true, will assert the fault
+ * if possible. This is the case for SCP SW faults. May be true for
+ * faults that can be triggered with fault injection. If \a set is false,
+ * will deassert the fault if manually set. Will clear a fault if the
+ * state is latched.
+ *
+ * Sends fault notifications on fault clear.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - others returned by LMM_FaultSet()
+ */
 int32_t LMM_FusaFaultSet(uint32_t lmId, uint32_t faultId, bool set);
 
 int32_t LMM_FusaScheckEvntrig(uint32_t lmId);
 
+/*!
+ * Report a fault was set (asserted) to FuSa.
+ *
+ * @param[in]     faultId       Fault ID
+ * @param[in,out] reaction      Pointer to reaction
+ * @param[in,out] lm            Pointer to LM
+ *
+ * Sends fault notifications indicating a fault was set. Allows
+ * FuSa to override the fault reaction and LM. These default to
+ * the the reaction specified in the SM config.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
 int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
     uint32_t *lm);
 
+/*!
+ * Report a fault was cleared (deasserted) to FuSa.
+ *
+ * @param[in]     faultId       Fault ID
+ *
+ * Sends fault notifications indicating a fault was cleared.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
 void LMM_FusaFaultCleared(uint32_t faultId);
 
 int32_t LMM_FusaCrcCalculate(uint32_t lmId, uint32_t crcChannel,

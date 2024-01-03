@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -252,6 +252,21 @@ void MU6_A_IRQHandler(void);
  * MU6 side B interrupt handler.
  */
 void MU6_B_IRQHandler(void);
+
+/*!
+ * FCCU Interrupt Reaction 0 IRQ handler.
+ */
+void FCCU0_IRQHandler(void);
+
+/*!
+ * FCCU Interrupt Reaction 1 IRQ handler.
+ */
+void FCCU1_IRQHandler(void);
+
+/*!
+ * FCCU Interrupt Reaction 2 IRQ handler.
+ */
+void FCCU2_IRQHandler(void);
 
 /*!
  * GPC SM Request IRQ handler.

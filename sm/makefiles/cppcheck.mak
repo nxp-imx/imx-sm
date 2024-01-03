@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2024 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -46,6 +46,7 @@ CPPCHECK_RULES += --suppress=unusedStructMember
 CPPCHECK_RULES += --suppress=redundantAssignment
 CPPCHECK_RULES += --suppress=nullPointerRedundantCheck
 CPPCHECK_RULES += --suppress=knownConditionTrueFalse
+CPPCHECK_RULES += --suppress=preprocessorErrorDirective
 
 cppcheck :
 	@echo "Checking ...."

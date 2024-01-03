@@ -43,6 +43,7 @@
 #define BOARD_WDOG_MODE_IRQ      2U  /*!< Wdog generate IRQ only */
 #define BOARD_WDOG_MODE_OFF      3U  /*!< Wdog disabled */
 #define BOARD_WDOG_MODE_TRIGGER  4U  /*!< Trigger wdog */
+#define BOARD_WDOG_MODE_FCCU     5U  /*!< Wdog generate FCCU fault */
 /** @} */
 
 /*******************************************************************************

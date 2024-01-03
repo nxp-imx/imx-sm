@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -43,6 +43,7 @@
 #include "mb_mu.h"
 #include "config_mb_mu.h"
 #include "lmm.h"
+#include "eMcem.h"
 
 /* Local defines */
 
@@ -63,7 +64,25 @@ static void FaultHandler(uint32_t faultId);
 /*--------------------------------------------------------------------------*/
 void NMI_Handler(const uint32_t *sp)
 {
-    ExceptionHandler(NonMaskableInt_IRQn, sp, 0U, 0U);
+    dev_sm_rst_rec_t resetRec =
+    {
+        .reason = DEV_SM_REASON_FCCU,
+        .errId = DEV_SM_FAULT_WDOG2,
+        .validErr = true,
+        .extInfo[0] = sp[6],
+        .extLen = 1U,
+        .reset = true,
+        .valid = true
+    };
+
+    /* Save reset reason info */
+    DEV_SM_SystemShutdownRecSet(resetRec);
+
+    /* Wait for delayed FCCU reaction (PMIC reset) */
+    while (true)
+    {
+        ; /* Intentional empty while */
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -395,6 +414,30 @@ void MU6_B_IRQHandler(void)
 #ifdef SM_MB_MU11_CONFIG
     MB_MU_Handler(11U);
 #endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* FCCU Interrupt Reaction 0 IRQ handler                                    */
+/*--------------------------------------------------------------------------*/
+void FCCU0_IRQHandler(void)
+{
+    VFCCU_ALARM_ISR();
+}
+
+/*--------------------------------------------------------------------------*/
+/* FCCU Interrupt Reaction 1 IRQ handler                                    */
+/*--------------------------------------------------------------------------*/
+void FCCU1_IRQHandler(void)
+{
+    VFCCU_ALARM_ISR();
+}
+
+/*--------------------------------------------------------------------------*/
+/* FCCU Interrupt Reaction 2 IRQ handler                                    */
+/*--------------------------------------------------------------------------*/
+void FCCU2_IRQHandler(void)
+{
+    VFCCU_ALARM_ISR();
 }
 
 /*--------------------------------------------------------------------------*/

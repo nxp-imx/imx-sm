@@ -61,14 +61,14 @@ static uint32_t s_cpuWakeMixDependMask;
 static cpu_wdog_info_t const s_cpuWdogInfoM7P =
 {
     .secIrq = NotAvail_IRQn,
-    .nonsecIrq = WDOG5_IRQn,
+    .nonsecIrq = NotAvail_IRQn,
     .rstLine = RST_LINE_WAKEUPMIX_WDOG_5
 };
 
 static cpu_wdog_info_t const s_cpuWdogInfoA55 =
 {
-    .secIrq = WDOG3_IRQn,
-    .nonsecIrq = WDOG4_IRQn,
+    .secIrq = NotAvail_IRQn,
+    .nonsecIrq = NotAvail_IRQn,
     .rstLine = RST_LINE_WAKEUPMIX_WDOG_3_4
 };
 

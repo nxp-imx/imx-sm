@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -41,6 +41,7 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
+#include "eMcem.h"
 
 /* Local defines */
 
@@ -55,7 +56,11 @@ int32_t DEV_SM_FaultInit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* TODO: Init FCCU */
+    /* Init FCCU */
+    if (eMcem_Init(&eMcem_Config) != (Std_ReturnType) E_OK)
+    {
+        status = SM_ERR_HARDWARE_ERROR;
+    }
 
     /* Return status */
     return status;
@@ -66,7 +71,23 @@ int32_t DEV_SM_FaultInit(void)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
 {
-    return SM_FAULTCOMPLETE(resetRec);
+    int32_t status;
+
+    /* Call handler */
+    status = SM_FAULTCOMPLETE(resetRec);
+
+    /* Stop taking faults on error */
+    if (status != SM_ERR_SUCCESS)
+    {
+        /* Disable FCCU interrupts if not recovered - allows
+           delayed recovery via clear with DEV_SM_FaultSet() */
+        NVIC_DisableIRQ(FCCU0_IRQn);
+        NVIC_DisableIRQ(FCCU1_IRQn);
+        NVIC_DisableIRQ(FCCU2_IRQn);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -83,10 +104,25 @@ int32_t DEV_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
 {
+    int32_t status = SM_ERR_SUCCESS;
+    eMcem_FaultContainerType errorContainer = {};
+
+    /* Get fault errors */
+    if (eMcem_GetErrorsStatus(&errorContainer) != (Std_ReturnType) E_OK)
+    {
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+    else
+    {
+        /* Get fault status */
+        *state = (eMcem_FaultPending(&errorContainer,
+            (eMcem_FaultType) faultId) != 0U);
+    }
+
     /* Not asserted */
     *state = false;
 
-    return SM_ERR_SUCCESS;
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -95,8 +131,6 @@ int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
 int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
 {
     int32_t status = SM_ERR_SUCCESS;
-
-    /* TODO: Trigger via FCCU */
 
     /* Check fault */
     if (faultId >= DEV_SM_NUM_FAULT)
@@ -107,29 +141,51 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
     {
         if (set)
         {
-            dev_sm_rst_rec_t resetRec =
+            /* Skip M7 SW faults as can't access */
+            if ((faultId < DEV_SM_FAULT_SW6)
+                || (faultId > DEV_SM_FAULT_SW11))
             {
-                .valid = true,
-                .reason = DEV_SM_REASON_FCCU,
-                .errId = faultId,
-                .validErr = true
-            };
-
-            /* Update record */
-            if (lmId != 0U)
+                /* Assert fault */
+                if (eMcem_AssertSWFault((eMcem_FaultType) faultId)
+                    != (Std_ReturnType) E_OK)
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
+            }
+            else
             {
-                resetRec.origin = lmId;
-                resetRec.validOrigin = true;
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+        }
+        else
+        {
+            /* Skip M7 SW faults as can't access */
+            if ((faultId < DEV_SM_FAULT_SW6)
+                || (faultId > DEV_SM_FAULT_SW11))
+            {
+                /* Negate fault */
+                if (eMcem_DeassertSWFault((eMcem_FaultType) faultId)
+                    != (Std_ReturnType) E_OK)
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
             }
 
-            /* Finalize fault flow */
-            status = DEV_SM_FaultComplete(resetRec);
-
-            /* Reset if fault handling failed */
-            if (status != SM_ERR_SUCCESS)
+            if (status == SM_ERR_SUCCESS)
             {
-                /* Finalize system reset flow */
-                DEV_SM_SystemRstComp(resetRec);
+                /* Clear latched fault condition */
+                if (eMcem_ClearFaults((eMcem_FaultType) faultId)
+                    != (Std_ReturnType) E_OK)
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
+                else
+                {
+                    /* Re-enable FCCU interrupts */
+                    NVIC_EnableIRQ(FCCU0_IRQn);
+                    NVIC_EnableIRQ(FCCU1_IRQn);
+                    NVIC_EnableIRQ(FCCU2_IRQn);
+                }
             }
         }
     }

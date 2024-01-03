@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -930,7 +930,8 @@ static int32_t MONITOR_CmdWdog(int32_t argc, const char * const argv[])
         "cold",
         "irq",
         "off",
-        "trigger"
+        "trigger",
+        "fccu"
     };
 
     /* Parse argument */
@@ -956,6 +957,11 @@ static int32_t MONITOR_CmdWdog(int32_t argc, const char * const argv[])
             case 4:  /* trigger */
                 BOARD_WdogModeSet(BOARD_WDOG_MODE_TRIGGER);
                 break;
+#ifdef BOARD_WDOG_MODE_FCCU
+            case 5:  /* fccu */
+                BOARD_WdogModeSet(BOARD_WDOG_MODE_FCCU);
+                break;
+#endif
             default:
                 status = SM_ERR_INVALID_PARAMETERS;
                 break;

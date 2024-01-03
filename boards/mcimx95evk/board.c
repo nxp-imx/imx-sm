@@ -16,6 +16,7 @@
 #include "fsl_systick.h"
 #include "fsl_wdog32.h"
 #include "fsl_cache.h"
+#include "fsl_iomuxc.h"
 
 /*******************************************************************************
  * Definitions
@@ -29,14 +30,14 @@
 #define BOARD_SYSTICK_CLK_ROOT  CLOCK_ROOT_M33SYSTICK   /* Dedicated CCM root */
 
 /* SM WDOG */
-#define BOARD_WDOG_BASE_PTR         WDOG1
-#define BOARD_WDOG_IRQn             WDOG1_IRQn
+#define BOARD_WDOG_BASE_PTR         WDOG2
+#define BOARD_WDOG_IRQn             WDOG2_IRQn
 #define BOARD_WDOG_CLK_SRC          kWDOG32_ClockSource1  /* lpo_clk @ 32K */
 #define BOARD_WDOG_TIMEOUT          0xFFFFU  /* 65535 ticks @ 32K = 2 sec */
-#define BOARD_WDOG_SRMASK           (1UL << RST_REASON_WDOG1)
-#define BOARD_WDOG_ANY_INIT         ~(BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG1_MASK)
-#define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG1_MASK
-#define BOARD_WDOG_IPG_DEBUG        BLK_CTRL_NS_AONMIX_IPG_DEBUG_CM33_WDOG1_MASK
+#define BOARD_WDOG_SRMASK           (1UL << RST_REASON_WDOG2)
+#define BOARD_WDOG_ANY_INIT         ~(BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK)
+#define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK
+#define BOARD_WDOG_IPG_DEBUG        BLK_CTRL_NS_AONMIX_IPG_DEBUG_CM33_WDOG2_MASK
 
 /* SM handlers configuration */
 #define BOARD_HANDLER_PRIO_PREEMPT_CRITICAL         0U    // Highest premptive
@@ -313,6 +314,11 @@ void BOARD_InitHandlers(void)
     NVIC_EnableIRQ(ELE_Group2_IRQn);
     NVIC_EnableIRQ(ELE_Group3_IRQn);
 
+    /* Enable FCCU handler */
+    NVIC_EnableIRQ(FCCU0_IRQn);
+    NVIC_EnableIRQ(FCCU1_IRQn);
+    NVIC_EnableIRQ(FCCU2_IRQn);
+
     /* Enable GPIO1 handler */
     NVIC_EnableIRQ(GPIO1_0_IRQn);
 }
@@ -346,10 +352,12 @@ void BOARD_InitTimers(void)
     wdogConfig.enableInterrupt = true;
     WDOG32_Init(BOARD_WDOG_BASE_PTR, &wdogConfig);
     NVIC_SetPriority(BOARD_WDOG_IRQn, BOARD_HANDLER_PRIO_PREEMPT_CRITICAL);
-    NVIC_EnableIRQ(BOARD_WDOG_IRQn);
 
     /* Configure to just non-FCCU SM watchdogs */
     BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = BOARD_WDOG_ANY_INIT;
+
+    /* Switch WDOG to COLD mode */
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_COLD);
 
     /* Halt SM WDOG on M33 debug entry */
     BLK_CTRL_NS_AONMIX->IPG_DEBUG_CM33 = (BOARD_WDOG_IPG_DEBUG);
@@ -370,28 +378,56 @@ void BOARD_WdogModeSet(uint32_t mode)
             /* Allow WDOG to generate internal warm reset */
             SRC_GEN->SRMASK &= (~BOARD_WDOG_SRMASK);
 
+            /* Enable WDOG interrupt */
+            NVIC_EnableIRQ(BOARD_WDOG_IRQn);
+
             /* Disable WDOG_ANY */
             BLK_CTRL_S_AONMIX->WDOG_ANY_MASK |= BOARD_WDOG_ANY_MASK;
+
+            /* Drive WDOG_ANY from WDOG */
+            IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__WDOG_ANY, 0U);
             break;
         case BOARD_WDOG_MODE_COLD: /* cold */
             /* Allow WDOG to generate internal warm reset */
             SRC_GEN->SRMASK &= (~BOARD_WDOG_SRMASK);
 
+            /* Enable WDOG interrupt */
+            NVIC_EnableIRQ(BOARD_WDOG_IRQn);
+
             /* Enable WDOG_ANY */
             BLK_CTRL_S_AONMIX->WDOG_ANY_MASK &= ~BOARD_WDOG_ANY_MASK;
+
+            /* Drive WDOG_ANY from WDOG */
+            IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__WDOG_ANY, 0U);
             break;
         case BOARD_WDOG_MODE_IRQ: /* irq */
+            /* Enable WDOG interrupt */
+            NVIC_EnableIRQ(BOARD_WDOG_IRQn);
+
             /* Disallow WDOG to generate internal warm reset */
             SRC_GEN->SRMASK |= BOARD_WDOG_SRMASK;
 
             /* Disable WDOG_ANY */
             BLK_CTRL_S_AONMIX->WDOG_ANY_MASK |= BOARD_WDOG_ANY_MASK;
+
+            /* Drive WDOG_ANY from WDOG */
+            IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__WDOG_ANY, 0U);
             break;
         case BOARD_WDOG_MODE_OFF:  /* off */
             WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
             break;
         case BOARD_WDOG_MODE_TRIGGER: /* trigger */
             BOARD_WDOG_BASE_PTR->CNT = 0U;
+            break;
+        case BOARD_WDOG_MODE_FCCU: /* fccu */
+            /* Drive WDOG_ANY from FCCU */
+            IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__FCCU_EOUT1, 0U);
+
+            /* Disallow WDOG to generate internal warm reset */
+            SRC_GEN->SRMASK |= BOARD_WDOG_SRMASK;
+
+            /* Disable WDOG interrupt */
+            NVIC_DisableIRQ(BOARD_WDOG_IRQn);
             break;
         default:
             ; /* Intentional empty default */

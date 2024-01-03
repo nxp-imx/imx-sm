@@ -1,0 +1,14 @@
+
+/*!
+ * @addtogroup components
+ * @{
+ */
+
+/*!
+@defgroup EMCEM_COMPONENT eMcem Driver
+@brief Component driver for the FCCU
+@details Component driver for the FCCU.
+*/
+
+/** @} */
+

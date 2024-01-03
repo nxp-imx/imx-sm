@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -90,7 +90,8 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
                 status = BRD_SM_CustomFault(resetRec, lm);
                 break;
             case LMM_REACT_FUSA:
-                ; /* Intentional empty as handled by FuSa */
+                /* Return error to cause FCCU to leave pending */
+                status = SM_ERR_GENERIC_ERROR;
                 break;
             case LMM_REACT_NONE:
                 ; /* Intentional empty case */
@@ -101,7 +102,7 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
         }
     }
 
-    /* Let Fusa know cleared */
+    /* Let FuSa know cleared */
     if ((status == SM_ERR_SUCCESS) && (reaction != LMM_REACT_FUSA))
     {
         LMM_FusaFaultCleared(resetRec.errId);
