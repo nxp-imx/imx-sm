@@ -111,19 +111,36 @@ int32_t BRD_SM_SerialDevicesInit(void)
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
-        else
+
+        /* Disable voltage monitor 1 */
+        if (status == SM_ERR_SUCCESS)
         {
-            /* Disable voltage monitors 1 & 2 */
             if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON1, false))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
-            else
+        }
+
+        /* Disable voltage monitor 2 */
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON2, false))
             {
-                if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON2, false))
-                {
-                    status = SM_ERR_HARDWARE_ERROR;
-                }
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        /* Disable the PWRUP interrupt */
+        if (status == SM_ERR_SUCCESS)
+        {
+            uint8_t mask[PF09_MASK_LEN] =
+            {
+                [PF09_MASK_IDX_STATUS1] = 0x08U
+            };
+
+            if (!PF09_IntEnable(&pf09Dev, mask, false))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
             }
         }
 
