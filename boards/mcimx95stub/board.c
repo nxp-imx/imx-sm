@@ -33,6 +33,7 @@
 #define BOARD_WDOG_CLK_SRC          kWDOG32_ClockSource1  /* lpo_clk @ 32K */
 #define BOARD_WDOG_TIMEOUT          0xFFFFU  /* 65535 ticks @ 32K = 2 sec */
 #define BOARD_WDOG_SRMASK           (1UL << RST_REASON_WDOG1)
+#define BOARD_WDOG_ANY_INIT         ~(BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG1_MASK)
 #define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG1_MASK
 #define BOARD_WDOG_IPG_DEBUG        BLK_CTRL_NS_AONMIX_IPG_DEBUG_CM33_WDOG1_MASK
 
@@ -347,7 +348,7 @@ void BOARD_InitTimers(void)
     NVIC_EnableIRQ(BOARD_WDOG_IRQn);
 
     /* Configure to just non-FCCU SM watchdogs */
-    BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = BOARD_WDOG_ANY_MASK;
+    BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = ~BOARD_WDOG_ANY_INIT;
 
     /* Halt SM WDOG on M33 debug entry */
     BLK_CTRL_NS_AONMIX->IPG_DEBUG_CM33 = (BOARD_WDOG_IPG_DEBUG);
@@ -369,21 +370,21 @@ void BOARD_WdogModeSet(uint32_t mode)
             SRC_GEN->SRMASK &= (~BOARD_WDOG_SRMASK);
 
             /* Disable WDOG_ANY */
-            BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = 0U;
+            BLK_CTRL_S_AONMIX->WDOG_ANY_MASK |= BOARD_WDOG_ANY_MASK;
             break;
         case BOARD_WDOG_MODE_COLD: /* cold */
             /* Allow WDOG to generate internal warm reset */
             SRC_GEN->SRMASK &= (~BOARD_WDOG_SRMASK);
 
             /* Enable WDOG_ANY */
-            BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = BOARD_WDOG_ANY_MASK;
+            BLK_CTRL_S_AONMIX->WDOG_ANY_MASK &= ~BOARD_WDOG_ANY_MASK;
             break;
         case BOARD_WDOG_MODE_IRQ: /* irq */
             /* Disallow WDOG to generate internal warm reset */
             SRC_GEN->SRMASK |= BOARD_WDOG_SRMASK;
 
             /* Disable WDOG_ANY */
-            BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = 0U;
+            BLK_CTRL_S_AONMIX->WDOG_ANY_MASK |= BOARD_WDOG_ANY_MASK;
             break;
         case BOARD_WDOG_MODE_OFF:  /* off */
             WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
