@@ -348,7 +348,7 @@ void BOARD_InitTimers(void)
     NVIC_EnableIRQ(BOARD_WDOG_IRQn);
 
     /* Configure to just non-FCCU SM watchdogs */
-    BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = ~BOARD_WDOG_ANY_INIT;
+    BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = BOARD_WDOG_ANY_INIT;
 
     /* Halt SM WDOG on M33 debug entry */
     BLK_CTRL_NS_AONMIX->IPG_DEBUG_CM33 = (BOARD_WDOG_IPG_DEBUG);
