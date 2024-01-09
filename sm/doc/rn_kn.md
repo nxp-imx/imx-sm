@@ -27,6 +27,7 @@ Improvement {#RN_KN_IMP}
 | [SM-19](https://jira.sw.nxp.com/projects/SM/issues/SM-19) | Optimize boot time | Y | Y |
 | [SM-23](https://jira.sw.nxp.com/projects/SM/issues/SM-23) | Vet PD and CLK parameters in CPU LP protocol | Y | Y |
 | [SM-24](https://jira.sw.nxp.com/projects/SM/issues/SM-24) | Align reset toggle delay with SoC specification | Y | Y |
+| [SM-65](https://jira.sw.nxp.com/projects/SM/issues/SM-65) | Support configuring the NXP board ports to not use a debug UART | Y | Y |
 
 Bug {#RN_KN_BUG}
 ============

@@ -65,7 +65,7 @@
  * @param[out]    partNum     Pointer to return part number
  * @param[out]    siNameAddr  Pointer to return silicon name
  *
- * Return errors (see @ref STATUS "SM error codes").
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     uint32_t *partNum, string *siNameAddr);
