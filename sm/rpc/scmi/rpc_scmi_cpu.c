@@ -93,9 +93,6 @@
 #define CPU_VEC_FLAGS_BOOT(x)    (((x) & 0x20000000U) >> 29U)
 #define CPU_VEC_FLAGS_TABLE(x)   (((x) & 0x1U) >> 0U)
 
-/* SCMI CPU sleep mode flags */
-#define CPU_FLAGS_IRQ_MUX(x)  (((x) & 0x1U) >> 0U)
-
 /* Local types */
 
 /* SCMI CPU PD LPM configuration */
@@ -836,9 +833,6 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
 /* SCMI_CpuSleepModeSet(). Requires access greater than or equal to         */
 /* EXCLUSIVE.                                                               */
 /*                                                                          */
-/*  Access macros:                                                          */
-/* - CPU_FLAGS_IRQ_MUX() - IRQ Mux                                          */
-/*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the CPU is started successfully.                    */
 /* - SM_ERR_NOT_FOUND: if cpuId does not point to a valid CPU.              */
@@ -899,11 +893,9 @@ static int32_t CpuSleepModeSet(const scmi_caller_t *caller,
     /* Set CPU sleep mode */
     if (status == SM_ERR_SUCCESS)
     {
-        bool irqMuxGic = CPU_FLAGS_IRQ_MUX(in->flags) != 0U;
-
         /* Set sleep mode */
         status = LMM_CpuSleepModeSet(caller->lmId, in->cpuId, sleepMode,
-            irqMuxGic);
+            in->flags);
     }
 
     /* Return status */

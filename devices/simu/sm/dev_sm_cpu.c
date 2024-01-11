@@ -189,7 +189,7 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
 /* Set CPU sleep mode                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
-    bool irqMuxGic)
+    uint32_t sleepFlags)
 {
     int32_t status = SM_ERR_SUCCESS;
 

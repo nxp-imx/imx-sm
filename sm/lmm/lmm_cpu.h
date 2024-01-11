@@ -201,7 +201,7 @@ int32_t LMM_CpuResetVectorReset(uint32_t lmId, uint32_t cpuId);
  * @param[in]     lmId       LM call is for
  * @param[in]     cpuId      Identifier for the CPU
  * @param[in]     sleepMode  Target sleep mode
- * @param[in]     irqMuxGic  True if GIC wakeup source
+ * @param[in]     sleepFlags Sleep mode flags
  *
  * This function sets the sleep mode of a CPU. The CPU will transition to
  * this mode on its next WFI.
@@ -213,7 +213,7 @@ int32_t LMM_CpuResetVectorReset(uint32_t lmId, uint32_t cpuId);
  * - others returned by ::SM_CPUSLEEPMODESET
  */
 int32_t LMM_CpuSleepModeSet(uint32_t lmId, uint32_t cpuId,
-    uint32_t sleepMode, bool irqMuxGic);
+    uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
  * Set a CPU IRQ wake mask.

@@ -116,6 +116,27 @@ int32_t DEV_SM_A55pConfigLoad(void)
         s_tempSensorA55Enabled = true;
     }
 
+    /* Query A55 CPU wake list */
+    uint32_t cpuWakeListA55;
+    if (DEV_SM_CpuWakeListGet(DEV_SM_CPU_A55P, &cpuWakeListA55)
+        == SM_ERR_SUCCESS)
+    {
+        /* Wake A55 CPUs recorded during sleep mode entry */
+        while (cpuWakeListA55 != 0U)
+        {
+            /* Convert mask into index */
+            uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
+
+            (void) CPU_RunModeSet(cpuIdx, CPU_RUN_MODE_START);
+
+            /* Clear wake list mask to mark done */
+            cpuWakeListA55 &= (~(1UL << (cpuIdx)));
+        }
+    }
+
+    /* Clear A55 wake list */
+    DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, 0U);
+
     /* Return status */
     return status;
 }

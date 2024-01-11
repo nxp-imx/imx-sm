@@ -89,6 +89,15 @@
 #define DEV_SM_CPU_SLEEP_MODE_SUSPEND    CPU_SLEEP_MODE_SUSPEND
 /** @} */
 
+/*!
+ * @name CPU sleep flags
+ *
+ */
+/** @{ */
+#define DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX   0x1U
+#define DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE 0x2U
+/** @} */
+
 /* Types */
 
 /* Functions */

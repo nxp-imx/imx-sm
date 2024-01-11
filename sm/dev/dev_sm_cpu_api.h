@@ -199,7 +199,7 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector);
  *
  * @param[in]     cpuId      Identifier for the CPU
  * @param[in]     sleepMode  Target sleep mode
- * @param[in]     irqMuxGic  True if GIC wakeup source
+ * @param[in]     sleepFlags Sleep mode flags
  *
  * This function sets the sleep mode of a CPU. The CPU will transition to
  * this mode on its next WFI.
@@ -211,7 +211,7 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector);
  * - ::SM_ERR_INVALID_PARAMETERS: if \a sleepMode is invalid.
  */
 int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
-    bool irqMuxGic);
+    uint32_t sleepFlags);
 
 /*!
  * Set a CPU IRQ wake mask.
@@ -292,6 +292,36 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
  */
 int32_t DEV_SM_CpuClkLpmConfigSet(uint32_t cpuId, uint32_t clockId,
     uint32_t lpmSetting);
+
+/*!
+ * Get the wake list for a CPU.
+ *
+ * @param[in]     cpuId        CPU name to get
+ * @param[out]    cpuWakeList  Return pointer to CPU wake list
+ *
+ * This function allows the caller to get the wake list for a CPU.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if \a cpuId is invalid.
+ */
+int32_t DEV_SM_CpuWakeListGet(uint32_t cpuId, uint32_t *cpuWakeList);
+
+/*!
+ * Set the wake list for a CPU.
+ *
+ * @param[in]     cpuId        CPU name to get
+ * @param[in]     cpuWakeList  CPU wake list
+ *
+ * This function allows the caller to set the wake list for a CPU.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if \a cpuId is invalid.
+ */
+int32_t DEV_SM_CpuWakeListSet(uint32_t cpuId, uint32_t cpuWakeList);
 
 #endif /* DEV_SM_CPU_API_H */
 

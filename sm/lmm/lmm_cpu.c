@@ -255,9 +255,9 @@ int32_t LMM_CpuResetVectorReset(uint32_t lmId, uint32_t cpuId)
 /* Set CPU sleep mode                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_CpuSleepModeSet(uint32_t lmId, uint32_t cpuId,
-    uint32_t sleepMode, bool irqMuxGic)
+    uint32_t sleepMode, uint32_t sleepFlags)
 {
-    return SM_CPUSLEEPMODESET(cpuId, sleepMode, irqMuxGic);
+    return SM_CPUSLEEPMODESET(cpuId, sleepMode, sleepFlags);
 }
 
 /*--------------------------------------------------------------------------*/
