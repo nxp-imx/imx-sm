@@ -255,7 +255,7 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
         {
             if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
             {
-                s_cpuWakeListA55 |= (1U << cpuId);
+                s_cpuWakeListA55 |= (1UL << cpuId);
             }
         }
     }

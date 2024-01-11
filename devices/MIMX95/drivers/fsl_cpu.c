@@ -41,7 +41,6 @@
 /* Local Types */
 
 /* Local Functions */
-static bool CPU_SwWakeup(uint32_t cpuIdx);
 static bool CPU_SwMultiWakeup(uint32_t cpuIdx);
 static bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode);
 static bool CPU_WdogReset(uint32_t cpuIdx);
@@ -316,7 +315,7 @@ bool CPU_WaitGet(uint32_t cpuIdx, bool *cpuWait)
 /*--------------------------------------------------------------------------*/
 /* Generate SW_WAKEUP event                                                 */
 /*--------------------------------------------------------------------------*/
-static bool CPU_SwWakeup(uint32_t cpuIdx)
+bool CPU_SwWakeup(uint32_t cpuIdx)
 {
     bool rc = false;
 

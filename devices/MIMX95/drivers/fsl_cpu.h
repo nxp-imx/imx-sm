@@ -117,6 +117,7 @@ typedef struct
 bool CPU_Init(uint32_t cpuIdx);
 bool CPU_WaitSet(uint32_t cpuIdx, bool enableCpuWait);
 bool CPU_WaitGet(uint32_t cpuIdx, bool *cpuWait);
+bool CPU_SwWakeup(uint32_t cpuIdx);
 bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq);
 bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake);
 bool CPU_FsmStateGet(uint32_t cpuIdx, uint32_t *fsmState);

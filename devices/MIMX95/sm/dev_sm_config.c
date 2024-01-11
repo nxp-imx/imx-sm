@@ -127,7 +127,7 @@ int32_t DEV_SM_A55pConfigLoad(void)
             /* Convert mask into index */
             uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
 
-            (void) CPU_RunModeSet(cpuIdx, CPU_RUN_MODE_START);
+            (void) CPU_SwWakeup(cpuIdx);
 
             /* Clear wake list mask to mark done */
             cpuWakeListA55 &= (~(1UL << (cpuIdx)));
