@@ -510,9 +510,9 @@
 #define SM_CPUPDLPMCONFIGSET    DEV_SM_CpuPdLpmConfigSet
 #endif
 
-#ifndef SM_CPUCLKLPMCONFIGSET
-/*! Redirector (device/board) to set a CPU clock config */
-#define SM_CPUCLKLPMCONFIGSET  DEV_SM_CpuClkLpmConfigSet
+#ifndef SM_CPUPERLPMCONFIGSET
+/*! Redirector (device/board) to set a CPU peripheral config */
+#define SM_CPUPERLPMCONFIGSET  DEV_SM_CpuPerLpmConfigSet
 #endif
 
 #ifndef SM_CONTROLSET

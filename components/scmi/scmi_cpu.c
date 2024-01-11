@@ -515,10 +515,10 @@ int32_t SCMI_CpuPdLpmConfigSet(uint32_t channel, uint32_t cpuId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Configure a list of clock LPM configs                                    */
+/* Configure a list of peripheral LPM configs                               */
 /*--------------------------------------------------------------------------*/
-int32_t SCMI_CpuClkLpmConfigSet(uint32_t channel, uint32_t cpuId,
-    uint32_t numConfigs, const scmi_clk_lpm_config_t *clkConfigs)
+int32_t SCMI_CpuPerLpmConfigSet(uint32_t channel, uint32_t cpuId,
+    uint32_t numConfigs, const scmi_per_lpm_config_t *perConfigs)
 {
     int32_t status;
     uint32_t header;
@@ -539,7 +539,7 @@ int32_t SCMI_CpuClkLpmConfigSet(uint32_t channel, uint32_t cpuId,
             uint32_t header;
             uint32_t cpuId;
             uint32_t numConfigs;
-            scmi_clk_lpm_config_t clkConfigs[SCMI_CPU_MAX_CLKCONFIGS_T];
+            scmi_per_lpm_config_t perConfigs[SCMI_CPU_MAX_PERCONFIGS_T];
         } msg_tcpud11_t;
         msg_tcpud11_t *msgTx = (msg_tcpud11_t*) msg;
 
@@ -547,13 +547,13 @@ int32_t SCMI_CpuClkLpmConfigSet(uint32_t channel, uint32_t cpuId,
         msgTx->cpuId = cpuId;
         msgTx->numConfigs = numConfigs;
 
-        SCMI_MemCpy((uint8_t*) &msgTx->clkConfigs,
-            (const uint8_t*) clkConfigs,
-            (SCMI_CPU_NUM_CLKCONFIGS_T * sizeof(scmi_clk_lpm_config_t)));
+        SCMI_MemCpy((uint8_t*) &msgTx->perConfigs,
+            (const uint8_t*) perConfigs,
+            (SCMI_CPU_NUM_PERCONFIGS_T * sizeof(scmi_per_lpm_config_t)));
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_CPU_CLK_LPM_CONFIG_SET, sizeof(msg_tcpud11_t),
+            SCMI_MSG_CPU_PER_LPM_CONFIG_SET, sizeof(msg_tcpud11_t),
             &header);
     }
 

@@ -144,7 +144,7 @@ and some of the optional messages are supported.
 | Cpu | 0x82 | [CPU_IRQ_WAKE_SET](@ref SCMI_PROTO_CPU_CPU_IRQ_WAKE_SET) | 0x8 | EXCLUSIVE |
 | Cpu | 0x82 | [CPU_NON_IRQ_WAKE_SET](@ref SCMI_PROTO_CPU_CPU_NON_IRQ_WAKE_SET) | 0x9 | EXCLUSIVE |
 | Cpu | 0x82 | [CPU_PD_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_PD_LPM_CONFIG_SET) | 0xA | EXCLUSIVE |
-| Cpu | 0x82 | [CPU_CLK_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_CLK_LPM_CONFIG_SET) | 0xB | EXCLUSIVE |
+| Cpu | 0x82 | [CPU_PER_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_PER_LPM_CONFIG_SET) | 0xB | EXCLUSIVE |
 | Cpu | 0x82 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_CPU_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Fusa | 0x83 | [PROTOCOL_VERSION](@ref SCMI_PROTO_FUSA_PROTOCOL_VERSION) | 0x0 |  |
 | Fusa | 0x83 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_FUSA_PROTOCOL_ATTRIBUTES) | 0x1 |  |
@@ -1046,7 +1046,7 @@ See SCMI_ClockConfigSet() for details.
     ---------------------------------------------------------------------------------
     | uint32         | attributes                                                   |
     ---------------------------------------------------------------------------------
-    | uint32         | oem_config_val                                               |
+    | uint32         | extended_config_val                                          |
     ---------------------------------------------------------------------------------
 
     Receive
@@ -1079,7 +1079,7 @@ See SCMI_ClockConfigGet() for details.
     ---------------------------------------------------------------------------------
     | uint32         | config                                                       |
     ---------------------------------------------------------------------------------
-    | uint32         | oem_config_val                                               |
+    | uint32         | extended_config_val                                          |
     ---------------------------------------------------------------------------------
 
 ## Clock: CLOCK_POSSIBLE_PARENTS_GET ## {#SCMI_PROTO_CLOCK_CLOCK_POSSIBLE_PARENTS_GET}
@@ -2722,9 +2722,9 @@ See SCMI_CpuPdLpmConfigSet() for details.
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
-## Cpu: CPU_CLK_LPM_CONFIG_SET ## {#SCMI_PROTO_CPU_CPU_CLK_LPM_CONFIG_SET}
+## Cpu: CPU_PER_LPM_CONFIG_SET ## {#SCMI_PROTO_CPU_CPU_PER_LPM_CONFIG_SET}
 
-See SCMI_CpuClkLpmConfigSet() for details.
+See SCMI_CpuPerLpmConfigSet() for details.
 
     Send
     ---------------------------------------------------------------------------------
@@ -2734,7 +2734,7 @@ See SCMI_CpuClkLpmConfigSet() for details.
     ---------------------------------------------------------------------------------
     | uint32         | num_configs                                                  |
     ---------------------------------------------------------------------------------
-    | CLK_LPM_CONFIG | clkConfigs[N]                                                |
+    | PER_LPM_CONFIG | perConfigs[N]                                                |
     ---------------------------------------------------------------------------------
 
     Receive

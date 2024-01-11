@@ -290,7 +290,7 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a cpuId or \a clockId do not exist.
  */
-int32_t DEV_SM_CpuClkLpmConfigSet(uint32_t cpuId, uint32_t clockId,
+int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t clockId,
     uint32_t lpmSetting);
 
 /*!

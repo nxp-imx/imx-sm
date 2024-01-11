@@ -68,8 +68,8 @@
 #define SCMI_MSG_CPU_NON_IRQ_WAKE_SET    0x9U
 /*! Configure a list of power domain LPM configs */
 #define SCMI_MSG_CPU_PD_LPM_CONFIG_SET   0xAU
-/*! Configure a list of clock LPM configs */
-#define SCMI_MSG_CPU_CLK_LPM_CONFIG_SET  0xBU
+/*! Configure a list of peripheral LPM configs */
+#define SCMI_MSG_CPU_PER_LPM_CONFIG_SET  0xBU
 /** @} */
 
 /*!
@@ -83,7 +83,7 @@
 /*! Max number of configs sent in one call */
 #define SCMI_CPU_MAX_PDCONFIGS_T   SCMI_ARRAY(8U, scmi_pd_lpm_config_t)
 /*! Max number of configs sent in one call */
-#define SCMI_CPU_MAX_CLKCONFIGS_T  SCMI_ARRAY(8U, scmi_clk_lpm_config_t)
+#define SCMI_CPU_MAX_PERCONFIGS_T  SCMI_ARRAY(8U, scmi_per_lpm_config_t)
 /** @} */
 
 /*!
@@ -95,7 +95,7 @@
 /*! Actual number of configs sent */
 #define SCMI_CPU_NUM_PDCONFIGS_T   numConfigs
 /*! Actual number of configs sent */
-#define SCMI_CPU_NUM_CLKCONFIGS_T  numConfigs
+#define SCMI_CPU_NUM_PERCONFIGS_T  numConfigs
 /** @} */
 
 /*!
@@ -178,15 +178,15 @@ typedef struct
 } scmi_pd_lpm_config_t;
 
 /*!
- * SCMI CPU clock LPM configuration
+ * SCMI CPU peripheral LPM configuration
  */
 typedef struct
 {
-    /*! Clock ID */
-    uint32_t clockId;
+    /*! Peripheral ID */
+    uint32_t perId;
     /*! LPM setting */
     uint32_t lpmSetting;
-} scmi_clk_lpm_config_t;
+} scmi_per_lpm_config_t;
 
 /* Functions */
 
@@ -486,32 +486,33 @@ int32_t SCMI_CpuPdLpmConfigSet(uint32_t channel, uint32_t cpuId,
     uint32_t numConfigs, const scmi_pd_lpm_config_t *pdConfigs);
 
 /*!
- * Configure a list of clock LPM configs.
+ * Configure a list of peripheral LPM configs.
  *
  * @param[in]     channel     A2P channel for comms
  * @param[in]     cpuId       Identifier for the CPU
- * @param[in]     numConfigs  Number of power domains to configure
- * @param[in]     clkConfigs  LPM configuration data array
+ * @param[in]     numConfigs  Number of peripherals to configure
+ * @param[in]     perConfigs  LPM configuration data array
  *
- * This function configures the LPM setting for an array of clocks applied when
- * a CPU enters a sleep mode. The LPM setting determines which range of CPU
- * sleep modes will affect a clock. An example LPM setting is
+ * This function configures the LPM setting for an array of peripherals applied
+ * when a CPU enters a sleep mode. The LPM setting determines which range of
+ * CPU sleep modes will affect a peripheral's low-power handshake signals (e.g.
+ * IPG_STOP, Q_CHN) . An example LPM setting is
  * ::SCMI_CPU_LPM_SETTING_ON_NEVER. Note each CPU can have different settings
- * and the hardware aggregates these settings to determine the clock state. The
- * max number of configs is ::SCMI_CPU_MAX_CLKCONFIGS_T.
+ * and the hardware aggregates these settings to determine the pierpheral
+ * low-power state. The max number of configs is ::SCMI_CPU_MAX_PERCONFIGS_T.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
  * - ::SCMI_ERR_SUCCESS: if the CPU is started successfully.
- * - ::SCMI_ERR_NOT_FOUND: if \a cpuId or a power domain does not exist.
+ * - ::SCMI_ERR_NOT_FOUND: if \a cpuId or a pereipheral ID does not exist.
  * - ::SCMI_ERR_INVALID_PARAMETERS: if \a numConfigs or an LPM setting is
  *   invalid.
  * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to configure this
  *   CPU.
  */
-int32_t SCMI_CpuClkLpmConfigSet(uint32_t channel, uint32_t cpuId,
-    uint32_t numConfigs, const scmi_clk_lpm_config_t *clkConfigs);
+int32_t SCMI_CpuPerLpmConfigSet(uint32_t channel, uint32_t cpuId,
+    uint32_t numConfigs, const scmi_per_lpm_config_t *perConfigs);
 
 /*!
  * Negotiate the protocol version.

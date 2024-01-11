@@ -331,12 +331,18 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set CPU clock LPM config                                                 */
+/* Set CPU peripheral LPM config                                            */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_CpuClkLpmConfigSet(uint32_t cpuId, uint32_t clockId,
+int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
     uint32_t lpmSetting)
 {
     int32_t status = SM_ERR_SUCCESS;
+
+    /* Check CPU */
+    if (cpuId >= DEV_SM_NUM_CPU)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
 
     /* Return status */
     return status;

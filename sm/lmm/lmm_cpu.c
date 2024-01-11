@@ -329,11 +329,11 @@ int32_t LMM_CpuPdLpmConfigSet(uint32_t lmId, uint32_t cpuId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set CPU clock LPM config                                                 */
+/* Set CPU peripheral LPM config                                            */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_CpuClkLpmConfigSet(uint32_t lmId, uint32_t cpuId,
-    uint32_t clockId, uint32_t lpmSetting)
+int32_t LMM_CpuPerLpmConfigSet(uint32_t lmId, uint32_t cpuId,
+    uint32_t perId, uint32_t lpmSetting)
 {
-    return SM_CPUCLKLPMCONFIGSET(cpuId, clockId, lpmSetting);
+    return SM_CPUPERLPMCONFIGSET(cpuId, perId, lpmSetting);
 }
 
