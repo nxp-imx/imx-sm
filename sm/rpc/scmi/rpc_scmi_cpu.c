@@ -93,6 +93,10 @@
 #define CPU_VEC_FLAGS_BOOT(x)    (((x) & 0x20000000U) >> 29U)
 #define CPU_VEC_FLAGS_TABLE(x)   (((x) & 0x1U) >> 0U)
 
+/* SCMI CPU sleep mode flags */
+#define CPU_FLAGS_IRQ_MUX(x)    (((x) & 0x1U) >> 0U)
+#define CPU_FLAGS_PLAT_WAKE(x)  (((x) & 0x2U) >> 1U)
+
 /* Local types */
 
 /* SCMI CPU PD LPM configuration */
@@ -833,10 +837,14 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
 /* SCMI_CpuSleepModeSet(). Requires access greater than or equal to         */
 /* EXCLUSIVE.                                                               */
 /*                                                                          */
+/*  Access macros:                                                          */
+/* - CPU_FLAGS_IRQ_MUX() - IRQ mux                                          */
+/* - CPU_FLAGS_PLAT_WAKE() - Platform wake                                  */
+/*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the CPU is started successfully.                    */
 /* - SM_ERR_NOT_FOUND: if cpuId does not point to a valid CPU.              */
-/* - SM_ERR_INVALID_PARAMETERS: if sleepMode is invalid.                    */
+/* - SM_ERR_INVALID_PARAMETERS: if sleepMode or flags is invalid.           */
 /* - SM_ERR_DENIED: if the calling agent is not allowed to configure        */
 /*   this CPU.                                                              */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */

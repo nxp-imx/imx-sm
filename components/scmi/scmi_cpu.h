@@ -156,8 +156,10 @@
  * @name SCMI CPU sleep mode flags
  */
 /** @{ */
-/*! IRQ Mux */
-#define SCMI_CPU_FLAGS_IRQ_MUX(x)  (((x) & 0x1U) << 0U)
+/*! IRQ mux */
+#define SCMI_CPU_FLAGS_IRQ_MUX(x)    (((x) & 0x1U) << 0U)
+/*! Platform wake */
+#define SCMI_CPU_FLAGS_PLAT_WAKE(x)  (((x) & 0x1U) << 1U)
 /** @} */
 
 /* Types */
@@ -390,14 +392,15 @@ int32_t SCMI_CpuResetVectorSet(uint32_t channel, uint32_t cpuId,
  * ::SCMI_CPU_SLEEP_RUN.
  *
  * Access macros:
- * - ::SCMI_CPU_FLAGS_IRQ_MUX() - IRQ Mux
+ * - ::SCMI_CPU_FLAGS_IRQ_MUX() - IRQ mux
+ * - ::SCMI_CPU_FLAGS_PLAT_WAKE() - Platform wake
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
  * - ::SCMI_ERR_SUCCESS: if the CPU is started successfully.
  * - ::SCMI_ERR_NOT_FOUND: if \a cpuId does not point to a valid CPU.
- * - ::SCMI_ERR_INVALID_PARAMETERS: if \a sleepMode is invalid.
+ * - ::SCMI_ERR_INVALID_PARAMETERS: if \a sleepMode or \a flags is invalid.
  * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to configure this
  *   CPU.
  */
