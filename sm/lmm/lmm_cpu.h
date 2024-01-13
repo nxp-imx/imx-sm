@@ -283,7 +283,7 @@ int32_t LMM_CpuPdLpmConfigSet(uint32_t lmId, uint32_t cpuId,
  *
  * @param[in]     lmId        LM call is for
  * @param[in]     cpuId       Identifier for the CPU
- * @param[in]     clockId     clock ID
+ * @param[in]     perId       peripheral ID
  * @param[in]     lpmSetting  LPM setting
  *
  * This function configures the LPM setting for a peripheral applied when

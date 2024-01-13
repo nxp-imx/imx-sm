@@ -273,24 +273,24 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
     uint32_t lpmSetting, uint32_t retMask);
 
 /*!
- * Set a CPU LPM config for a clock.
+ * Set a CPU LPM config for a peripheral.
  *
  * @param[in]     cpuId       Identifier for the CPU
- * @param[in]     clockId     clock ID
+ * @param[in]     perId       peripheral ID
  * @param[in]     lpmSetting  LPM setting
  *
- * This function configures the LPM setting a clock applied when a CPU
- * enters a sleep mode. The LPM setting determines which range of CPU
- * sleep modes will leave the clock on. Note each CPU can have different
+ * This function configures the LPM setting for a peripheral applied when
+ * a CPU enters a sleep mode. The LPM setting determines which range of CPU
+ * sleep modes will leave the peripheral on. Note each CPU can have different
  * settings and the hardware aggregates these settings to determine the
- * domain state.
+ * peripheral state.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_NOT_FOUND: if \a cpuId or \a clockId do not exist.
+ * - ::SM_ERR_NOT_FOUND: if \a cpuId or \a perId do not exist.
  */
-int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t clockId,
+int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
     uint32_t lpmSetting);
 
 /*!
