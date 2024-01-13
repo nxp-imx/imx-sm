@@ -133,7 +133,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
         /* Disable the PWRUP interrupt */
         if (status == SM_ERR_SUCCESS)
         {
-            uint8_t mask[PF09_MASK_LEN] =
+            const uint8_t mask[PF09_MASK_LEN] =
             {
                 [PF09_MASK_IDX_STATUS1] = 0x08U
             };
