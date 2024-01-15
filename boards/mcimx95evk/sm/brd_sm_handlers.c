@@ -180,11 +180,10 @@ int32_t BRD_SM_SerialDevicesInit(void)
 
     if (status == SM_ERR_SUCCESS)
     {
-
         rgpio_pin_config_t gpioConfig =
         {
             kRGPIO_DigitalInput,
-            0
+            0U
         };
 
         /* Init GPIO1-10 */

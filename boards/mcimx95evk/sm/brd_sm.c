@@ -44,6 +44,8 @@
 #include "lmm.h"
 #include "fsl_lpi2c.h"
 #include "fsl_bbnsm.h"
+#include "fsl_rgpio.h"
+#include "fsl_iomuxc.h"
 
 /* Local defines */
 
@@ -388,6 +390,32 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
     {
         BRD_SM_ResetRecordPrint("\nShutdown request:", shutdownRec);
     }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Reset board                                                              */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_SystemReset(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    rgpio_pin_config_t gpioConfig =
+    {
+        kRGPIO_DigitalOutput,
+        0U
+    };
+    
+    /* Drive WDOG_ANY to reset PMIC */
+    RGPIO_PinInit(GPIO1, 15U, &gpioConfig);
+    IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__GPIO1_IO_BIT15, 0U);
+
+    /* Wait for PMIC to react */
+    SystemTimeDelay(1000U);
+
+    /* Fall back to warm reset of the device */
+    status = DEV_SM_SystemReset();
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

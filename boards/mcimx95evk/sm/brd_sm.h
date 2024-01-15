@@ -62,11 +62,30 @@
 /*! Vendor string */
 #define SCMI_SUB_VENDOR  "i.MX95 EVK"
 
+/*!
+ * @name Board redirection defines
+ * @{
+ */
+#define SM_SYSTEMRESET  BRD_SM_SystemReset       /*!< Reset */
+/** @} */
+
 /* Types */
 
 /* External variables */
 
 /* Functions */
+
+/*!
+ * Reset the system.
+ *
+ * Redirect to just spin.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS
+ */
+int32_t BRD_SM_SystemReset(void);
 
 /** @} */
 

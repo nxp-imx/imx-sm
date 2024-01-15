@@ -102,7 +102,7 @@ int32_t DEV_SM_SystemReset(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Request reset */
+    /* Request warm reset */
     RST_SystemRequestReset();
 
     /* Return status */
@@ -127,8 +127,7 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
 
     if (status == SM_ERR_SUCCESS)
     {
-        /* TODO: Need to do a warm reset */
-        /* Request reset */
+        /* Request warm reset */
         RST_SystemRequestReset();
     }
 
