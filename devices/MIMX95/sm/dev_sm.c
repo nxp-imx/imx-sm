@@ -317,20 +317,24 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    switch (domainId)
+    /* Call power-down preable if domain is currently powered */
+    if (SRC_MixIsPwrReady(domainId))
     {
-        case DEV_SM_PD_A55P:
-            status = DEV_SM_A55pPowerDownPre();
-            break;
-        case DEV_SM_PD_DISPLAY:
-            status = DEV_SM_DisplayPowerDownPre();
-            break;
-        case DEV_SM_PD_HSIO_TOP:
-            status = DEV_SM_HsioTopPowerDownPre();
-            break;
-        default:
-            status = SM_ERR_NOT_FOUND;
-            break;
+        switch (domainId)
+        {
+            case DEV_SM_PD_A55P:
+                status = DEV_SM_A55pPowerDownPre();
+                break;
+            case DEV_SM_PD_DISPLAY:
+                status = DEV_SM_DisplayPowerDownPre();
+                break;
+            case DEV_SM_PD_HSIO_TOP:
+                status = DEV_SM_HsioTopPowerDownPre();
+                break;
+            default:
+                status = SM_ERR_NOT_FOUND;
+                break;
+        }
     }
 
     /* Return status */
