@@ -94,8 +94,10 @@
  *
  */
 /** @{ */
-#define DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX   0x1U
-#define DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE 0x2U
+/*! Select between GPC or GIC for wakeup */
+#define DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX    0x1U
+/*! Wake A55 CPU during A55 platform wakeup */
+#define DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE  0x2U
 /** @} */
 
 /* Types */

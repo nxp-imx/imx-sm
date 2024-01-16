@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -403,7 +403,7 @@ int32_t BRD_SM_SystemReset(void)
         kRGPIO_DigitalOutput,
         0U
     };
-    
+
     /* Drive WDOG_ANY to reset PMIC */
     RGPIO_PinInit(GPIO1, 15U, &gpioConfig);
     IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__GPIO1_IO_BIT15, 0U);
