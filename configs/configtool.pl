@@ -1670,6 +1670,12 @@ sub generate_board
 		print $out sprintf("#define %*s %sU\n", -$w,
 			'BOARD_DEBUG_UART_INSTANCE', $def);
 	}
+	else
+	{
+		print $out '/*! Config for UART instance */' . "\n";
+		print $out sprintf("#define %*s %sU\n", -$w,
+			'BOARD_DEBUG_UART_INSTANCE', 0);
+	}
 
     # UART baudrate
 	if (my $def = &get_define('DEBUG_UART_BAUDRATE', $cfgRef))
@@ -1677,6 +1683,12 @@ sub generate_board
 		print $out '/*! Config for UART baudrate */' . "\n";
 		print $out sprintf("#define %*s %sU\n", -$w,
 			'BOARD_DEBUG_UART_BAUDRATE', $def);
+	}
+	else
+	{
+		print $out '/*! Config for UART baudrate */' . "\n";
+		print $out sprintf("#define %*s %sU\n", -$w,
+			'BOARD_DEBUG_UART_BAUDRATE', 115200);
 	}
 
 	print $out "\n";
@@ -1688,6 +1700,12 @@ sub generate_board
 		print $out sprintf("#define %*s %sU\n", -$w,
 			'BOARD_I2C_INSTANCE', $def);
 	}
+	else
+	{
+		print $out '/*! Config for PMIC I2C instance */' . "\n";
+		print $out sprintf("#define %*s %sU\n", -$w,
+			'BOARD_I2C_INSTANCE', 0);
+	}
 
     # I2C baudrate
 	if (my $def = &get_define('PMIC_I2C_BAUDRATE', $cfgRef))
@@ -1695,6 +1713,12 @@ sub generate_board
 		print $out '/*! Config for PMIC I2C baudrate */' . "\n";
 		print $out sprintf("#define %*s %sU\n", -$w,
 			'BOARD_I2C_BAUDRATE', $def);
+	}
+	else
+	{
+		print $out '/*! Config for PMIC I2C baudrate */' . "\n";
+		print $out sprintf("#define %*s %sU\n", -$w,
+			'BOARD_I2C_BAUDRATE', 100000);
 	}
 
     # Output footer

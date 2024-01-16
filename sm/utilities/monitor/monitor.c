@@ -316,12 +316,12 @@ bool MONITOR_CharPending(void)
 #if defined(SIMU)
     return false;
 #else
-    LPUART_Type *uart = BOARD_GetDebugUart(NULL, NULL, NULL);
+    const board_uart_config_t *uartConfig = BOARD_GetDebugUart();
     bool rtn = false;
 
-    if (uart != NULL)
+    if (uartConfig->base != NULL)
     {
-        uint32_t status = LPUART_GetStatusFlags(uart);
+        uint32_t status = LPUART_GetStatusFlags(uartConfig->base);
 
         if ((status & ((uint32_t) kLPUART_RxFifoEmptyFlag)) == 0U)
         {
@@ -402,17 +402,17 @@ static int32_t MONITOR_CharGet(char *buf, uint32_t len, bool echo)
 
     return 1;
 #else
-    LPUART_Type *uart = BOARD_GetDebugUart(NULL, NULL, NULL);
+    const board_uart_config_t *uartConfig = BOARD_GetDebugUart();
     int32_t rtn;
 
-    if (uart != NULL)
+    if (uartConfig->base != NULL)
     {
-        LPUART_ReadBlocking(uart, (uint8_t*) buf, len);
+        LPUART_ReadBlocking(uartConfig->base, (uint8_t*) buf, len);
 
         if ((*buf != ESC) && echo)
         {
             // Echo received characters
-            LPUART_WriteBlocking(uart, (uint8_t*) buf, len);
+            LPUART_WriteBlocking(uartConfig->base, (uint8_t*) buf, len);
         }
 
         for (uint32_t i = 0U; i < len; i++)

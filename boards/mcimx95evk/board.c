@@ -73,6 +73,36 @@
  * Variables
  ******************************************************************************/
 
+/* Debug UART base pointer list */
+static LPUART_Type *const s_uartBases[] = LPUART_BASE_PTRS;
+
+/* Debug UART base pointer list */
+static IRQn_Type const s_uartIrqs[] = LPUART_RX_TX_IRQS;
+
+/* Debug UART clock list */
+static uint32_t const s_uartClks[] =
+{
+    0U,
+    CLOCK_ROOT_LPUART1,
+    CLOCK_ROOT_LPUART2,
+    CLOCK_ROOT_LPUART3,
+    CLOCK_ROOT_LPUART4,
+    CLOCK_ROOT_LPUART5,
+    CLOCK_ROOT_LPUART6,
+    CLOCK_ROOT_LPUART7,
+    CLOCK_ROOT_LPUART8
+};
+
+/* Debug UART configuration info */
+static board_uart_config_t const s_uartConfig =
+{
+    .base = s_uartBases[BOARD_DEBUG_UART_INSTANCE],
+    .irq = s_uartIrqs[BOARD_DEBUG_UART_INSTANCE],
+    .clock = s_uartClks[BOARD_DEBUG_UART_INSTANCE],
+    .baud = BOARD_DEBUG_UART_BAUDRATE,
+    .inst = BOARD_DEBUG_UART_INSTANCE
+};
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -223,38 +253,9 @@ void BOARD_InitClocks(void)
 /*--------------------------------------------------------------------------*/
 /* Return the debug UART info                                               */
 /*--------------------------------------------------------------------------*/
-LPUART_Type *BOARD_GetDebugUart(uint8_t *inst, uint32_t *baud,
-    uint32_t *clockId)
+const board_uart_config_t *BOARD_GetDebugUart(void)
 {
-    static LPUART_Type *const s_uartBases[] = LPUART_BASE_PTRS;
-    static uint32_t const s_uartClks[] =
-    {
-        0U,
-        CLOCK_ROOT_LPUART1,
-        CLOCK_ROOT_LPUART2,
-        CLOCK_ROOT_LPUART3,
-        CLOCK_ROOT_LPUART4,
-        CLOCK_ROOT_LPUART5,
-        CLOCK_ROOT_LPUART6,
-        CLOCK_ROOT_LPUART7,
-        CLOCK_ROOT_LPUART8
-    };
-
-    /* Return data */
-    if (inst != NULL)
-    {
-        *inst = BOARD_DEBUG_UART_INSTANCE;
-    }
-    if (baud != NULL)
-    {
-        *baud = BOARD_DEBUG_UART_BAUDRATE;
-    }
-    if (clockId != NULL)
-    {
-        *clockId = s_uartClks[BOARD_DEBUG_UART_INSTANCE];
-    }
-
-    return s_uartBases[BOARD_DEBUG_UART_INSTANCE];
+    return &s_uartConfig;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -262,23 +263,23 @@ LPUART_Type *BOARD_GetDebugUart(uint8_t *inst, uint32_t *baud,
 /*--------------------------------------------------------------------------*/
 void BOARD_InitDebugConsole(void)
 {
-    uint32_t baud;
-    uint32_t clockId;
-    LPUART_Type *base = BOARD_GetDebugUart(NULL, &baud, &clockId);
-    uint64_t rate = CCM_RootGetRate(clockId);
+    if (s_uartConfig.base != NULL)
+    {
+        uint64_t rate = CCM_RootGetRate(s_uartConfig.clock);
 
-    /* Configure debug UART */
-    lpuart_config_t lpuart_config;
-    LPUART_GetDefaultConfig(&lpuart_config);
-    lpuart_config.baudRate_Bps = baud;
-    lpuart_config.rxFifoWatermark = ((uint8_t)
-        FSL_FEATURE_LPUART_FIFO_SIZEn(base)) - 1U;
-    lpuart_config.txFifoWatermark = ((uint8_t)
-        FSL_FEATURE_LPUART_FIFO_SIZEn(base)) - 1U;
-    lpuart_config.enableTx = true;
-    lpuart_config.enableRx = true;
-    (void) LPUART_Init(base, &lpuart_config,
-        (uint32_t) rate & 0xFFFFFFFFU);
+        /* Configure debug UART */
+        lpuart_config_t lpuart_config;
+        LPUART_GetDefaultConfig(&lpuart_config);
+        lpuart_config.baudRate_Bps = s_uartConfig.baud;
+        lpuart_config.rxFifoWatermark = ((uint8_t)
+            FSL_FEATURE_LPUART_FIFO_SIZEn(s_uartConfig.base)) - 1U;
+        lpuart_config.txFifoWatermark = ((uint8_t)
+            FSL_FEATURE_LPUART_FIFO_SIZEn(s_uartConfig.base)) - 1U;
+        lpuart_config.enableTx = true;
+        lpuart_config.enableRx = true;
+        (void) LPUART_Init(s_uartConfig.base, &lpuart_config,
+            (uint32_t) rate & 0xFFFFFFFFU);
+    }
 }
 
 /*--------------------------------------------------------------------------*/

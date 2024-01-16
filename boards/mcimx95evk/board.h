@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -47,6 +47,22 @@
 #define BOARD_WDOG_MODE_TRIGGER  4U  /*!< Trigger wdog */
 /** @} */
 
+/*******************************************************************************
+ * Types
+ ******************************************************************************/
+
+/*!
+ * Debug UART configuration info
+ */
+typedef struct
+{
+    LPUART_Type *const base;  /*!< LPUART base pointer */
+    IRQn_Type irq;            /*!< Interrupt number */
+    uint32_t clock;           /*!< Clock ID */
+    uint32_t baud;            /*!< Baud rate */
+    uint8_t inst;             /*!< Instance number */
+} board_uart_config_t;
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
@@ -67,17 +83,12 @@ void BOARD_InitClocks(void);
 /*!
  * Get a device clock debug UART info.
  *
- * @param inst Return SDK LPUART instance
- * @param baud Return baud rate in Hz
- * @param clockId Return clockId for the UART
- *
  * This function returns the UART info for the UART used for SM
- * debug..
+ * debug.
  *
- * @return Returns the LPUART base type pointer.
+ * @return Returns the debug UART config info.
  */
-LPUART_Type *BOARD_GetDebugUart(uint8_t *inst, uint32_t *baud,
-    uint32_t *clockId);
+const board_uart_config_t *BOARD_GetDebugUart(void);
 
 /*! Init the debug UART */
 void BOARD_InitDebugConsole(void);
