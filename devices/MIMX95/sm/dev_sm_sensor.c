@@ -448,6 +448,9 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[idx].idx];
     uint8_t tripPoint = threshold - s_tmpsns[idx].firstThreshold;
 
+    /* Workaround ERR052128 */
+    SystemTimeDelay(1U);
+
     /* Clear interrupt */
     TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
             << threshold);
