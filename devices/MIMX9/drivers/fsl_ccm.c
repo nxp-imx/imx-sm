@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -32,6 +32,7 @@
 #include "fsl_clock.h"
 #include "fsl_ccm.h"
 #include "fsl_device_registers.h"
+#include "fsl_power.h"
 
 /* Local Defines */
 
@@ -561,3 +562,52 @@ bool CCM_GprValSet(uint32_t gprIdx, uint32_t gprMask, uint32_t gprVal)
 
     return rc;
 }
+
+/*--------------------------------------------------------------------------*/
+/* Set CCM LPCG low-power mode setting for specified CPU                    */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t cpuLpmSetting)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint64_t lpmSetting = ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1)
+            << 32U) | ((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM0));
+
+        /* Insert new LPM_SETTING for this CPU */
+        lpmSetting &= (~(LPMSETTING_MASK(cpuIdx)));
+        lpmSetting |= LPMSETTING_DOM(cpuIdx, cpuLpmSetting);
+
+        CCM_CTRL->LPCG[lpcgIdx].LPM0 = UINT64_L(lpmSetting);
+        CCM_CTRL->LPCG[lpcgIdx].LPM1 = UINT64_H(lpmSetting);
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get CCM LPCG low-power mode setting for specified CPU                    */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint64_t lpmSetting =
+            ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1) << 32U) |
+              ((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM0));
+
+        /* Extract LPM_SETTING for this CPU */
+        *cpuLpmSetting = (uint32_t) (LPMSETTING_VAL(cpuIdx, lpmSetting)
+            & 0xFFFFFFFFU);
+
+        rc = true;
+    }
+
+    return rc;
+}
+

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -90,6 +90,38 @@
 #define CPU_FSM_STATE_WAKEUP_SYSMAN     0x17U
 #define CPU_FSM_STATE_WAKEUP_A55_HDSK   0x18U
 
+#define CPU_NUM_PER_LPI_IDX             21U
+
+#define CPU_PER_LPI_IDX_GPIO1           0U
+#define CPU_PER_LPI_IDX_GPIO2           1U
+#define CPU_PER_LPI_IDX_GPIO3           2U
+#define CPU_PER_LPI_IDX_GPIO4           3U
+#define CPU_PER_LPI_IDX_GPIO5           4U
+#define CPU_PER_LPI_IDX_CAN1            5U
+#define CPU_PER_LPI_IDX_CAN2            6U
+#define CPU_PER_LPI_IDX_CAN3            7U
+#define CPU_PER_LPI_IDX_CAN4            8U
+#define CPU_PER_LPI_IDX_CAN5            9U
+#define CPU_PER_LPI_IDX_LPUART1         10U
+#define CPU_PER_LPI_IDX_LPUART2         11U
+#define CPU_PER_LPI_IDX_LPUART3         12U
+#define CPU_PER_LPI_IDX_LPUART4         13U
+#define CPU_PER_LPI_IDX_LPUART5         14U
+#define CPU_PER_LPI_IDX_LPUART6         15U
+#define CPU_PER_LPI_IDX_LPUART7         16U
+#define CPU_PER_LPI_IDX_LPUART8         17U
+#define CPU_PER_LPI_IDX_WDOG3           18U
+#define CPU_PER_LPI_IDX_WDOG4           19U
+#define CPU_PER_LPI_IDX_WDOG5           20U
+
+#define CPU_PER_LPI_LPCG_OFFSET         128U
+
+#define CPU_PER_LPI_ON_NEVER            0U
+#define CPU_PER_LPI_ON_RUN              1U
+#define CPU_PER_LPI_ON_RUN_WAIT         2U
+#define CPU_PER_LPI_ON_RUN_WAIT_STOP    3U
+#define CPU_PER_LPI_ON_ALWAYS           4U
+
 /* Types */
 typedef struct
 {
@@ -112,6 +144,14 @@ typedef struct
     uint32_t cmcSysSleepCtrl;
     uint32_t cmcMisc;
 } cpu_mgmt_info_t;
+
+typedef struct
+{
+    __IO uint32_t *reqReg;
+    uint32_t reqMask;
+    uint32_t reqVal;
+    uint32_t lpcgIdx;
+} cpu_per_lpi_info_t;
 
 /* Functions */
 bool CPU_Init(uint32_t cpuIdx);
@@ -141,6 +181,12 @@ bool CPU_LpmConfigSet(uint32_t cpuIdx, uint32_t srcMixIdx,
     uint32_t lpmSetting, uint32_t retMask);
 bool CPU_LpmConfigInit(uint32_t cpuIdx);
 bool CPU_LpmConfigDeInit(uint32_t cpuIdx, uint32_t lpmSetting);
+bool CPU_PerLpiConfigSet(uint32_t cpuIdx, uint32_t perLpiIdx,
+    uint32_t lpmSetting);
+bool CPU_PerLpiConfigGet(uint32_t cpuIdx, uint32_t perLpiIdx,
+    uint32_t *lpmSetting);
+bool CPU_PerLpiConfigInit(uint32_t cpuIdx);
+bool CPU_PerLpiProcess(uint32_t cpuIdx, uint32_t sleepMode);
 void CPU_MixPowerUpNotify(uint32_t srcMixIdx);
 void CPU_MixPowerDownNotify(uint32_t srcMixIdx);
 bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector);

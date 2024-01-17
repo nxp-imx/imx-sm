@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -238,6 +238,13 @@ int32_t DEV_SM_DisplayPowerDownPre(void);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_HsioTopPowerDownPre(void);
+
+/*!
+ * Configure the M7 domain for power down.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_M7PowerDownPre(void);
 
 #endif /* DEV_SM_CONFIG_H */
 

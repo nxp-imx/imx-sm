@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -65,6 +65,8 @@ bool CCM_GprSelMuxInputGet(uint32_t gprSelIdx, uint32_t muxIdx,
 bool CCM_GprSelGetParent(uint32_t gprSelIdx, uint32_t *clkIdx);
 bool CCM_GprSelSetParent(uint32_t gprSelIdx, uint32_t clkIdx);
 bool CCM_GprValSet(uint32_t gprIdx, uint32_t gprMask, uint32_t gprVal);
+bool CCM_LpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t cpuLpmSetting);
+bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting);
 
 /* Externs */
 

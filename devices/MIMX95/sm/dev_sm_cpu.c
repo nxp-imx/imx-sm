@@ -338,8 +338,8 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    /* Configure CPU LPM response for the peripheral low-power interface */
+    if (!CPU_PerLpiConfigSet(cpuId, perId, lpmSetting))
     {
         status = SM_ERR_NOT_FOUND;
     }

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -136,6 +136,9 @@ int32_t DEV_SM_A55pConfigLoad(void)
 
     /* Clear A55 wake list */
     DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, 0U);
+
+    /* Process perpheral low-power interfaces */
+    CPU_PerLpiProcess(DEV_SM_CPU_A55P, CPU_SLEEP_MODE_RUN);
 
     /* Return status */
     return status;
@@ -455,6 +458,9 @@ int32_t DEV_SM_M7ConfigLoad(void)
     }
 #endif
 
+    /* Process perpheral low-power interfaces */
+    CPU_PerLpiProcess(DEV_SM_CPU_M7P, CPU_SLEEP_MODE_RUN);
+
     /* Return status */
     return status;
 }
@@ -746,6 +752,13 @@ int32_t DEV_SM_A55pPowerDownPre(void)
     /* Reflect that A55 temp sensor is going down */
     s_tempSensorA55Enabled = false;
 
+    /* Process perpheral low-power interfaces */
+    uint32_t sleepMode;
+    if (CPU_SleepModeGet(DEV_SM_CPU_A55P, &sleepMode))
+    {
+        CPU_PerLpiProcess(DEV_SM_CPU_A55P, sleepMode);
+    }
+
     /* Move A55 perf level to a setpoint that does not require ARM_PLL */
     return DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
 }
@@ -791,3 +804,21 @@ int32_t DEV_SM_HsioTopPowerDownPre(void)
 
     return status;
 }
+
+/*--------------------------------------------------------------------------*/
+/* M7 power domain power down configuration                                 */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_M7PowerDownPre(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Process perpheral low-power interfaces */
+    uint32_t sleepMode;
+    if (CPU_SleepModeGet(DEV_SM_CPU_M7P, &sleepMode))
+    {
+        CPU_PerLpiProcess(DEV_SM_CPU_M7P, sleepMode);
+    }
+
+    return status;
+}
+

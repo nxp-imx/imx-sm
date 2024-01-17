@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -330,6 +330,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
                 break;
             case DEV_SM_PD_HSIO_TOP:
                 status = DEV_SM_HsioTopPowerDownPre();
+                break;
+            case DEV_SM_PD_M7:
+                status = DEV_SM_M7PowerDownPre();
                 break;
             default:
                 status = SM_ERR_NOT_FOUND;
