@@ -7,8 +7,8 @@ changes in patch releases.
 General {#RN_ADD_GEN}
 =======
 
-When the SM is compiled for release into production devices, it is critical that this is
-done without the debug monitor (M=0). The default is monitor enabled (M=1). For example:
+When the SM is compiled for release into production devices, it is **critical** that this
+is done without the debug monitor (M=0). The default is monitor enabled (M=1). For example:
 
 	make config=mx95evk M=0
 
@@ -21,20 +21,38 @@ Use the x86_64 Linux hosted AArch32 bare-metal target (arm-none-eabi) toolchain.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-None
+- Updated to SCMI 3.2 BETA3
+- Added a CPU peripheral low-power interface configuration message
+- Added a platform wake flag to the CPU sleep mode flags 
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
-None
+- Updated mx95alt to allow M33 access to the SEMA41
+
+Customers should not require this change.
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
 
-None
+These are changes to the board interface:
+
+- Defined a debug UART config structure
+- Changed the BOARD_GetDebugUart() prototype
+
+Customers will require similar changes to their ports.
 
 Board Implementation Changes {#RN_ADD_BOARD_IMP}
 ============================
 
-None
+These are changes to the NXP reference ports:
+
+- Added BRD_SM_SystemReset() overload to reset system instead of just the SoC
+- Disabled PF09 voltage monitors
+- Disabled the PF09 PWRUP interrupt
+- Fixed polarity of the WDOG_ANY flags
+- Refactored the debug UART configuration
+- Supported disable of the debug UART from the cfg file
+
+Customers will require similar changes to their ports.
 

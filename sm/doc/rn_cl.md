@@ -15,10 +15,8 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-10](https://jira.sw.nxp.com/projects/SM/issues/SM-10) | Add eMCEM driver to support FCCU |   | Y | Y |
-| [SM-27](https://jira.sw.nxp.com/projects/SM/issues/SM-27) | Add low-power mode entry during SM idle |   | Y | Y |
-| [SM-28](https://jira.sw.nxp.com/projects/SM/issues/SM-28) | Add support for DRAM retention |   | Y | Y |
-| [SM-30](https://jira.sw.nxp.com/projects/SM/issues/SM-30) | Support management of peripheral low-power interfaces (STOP/QCHAN) |   | Y | Y |
+| [SM-10](https://jira.sw.nxp.com/projects/SM/issues/SM-10) | Add eMcem driver to support FCCU |   | Y | Y |
+| [SM-30](https://jira.sw.nxp.com/projects/SM/issues/SM-30) | Support management of peripheral low-power interfaces |   | Y | Y |
 | [SM-66](https://jira.sw.nxp.com/projects/SM/issues/SM-66) | Support designation of A55 CPUs to wake during A55P wakeup [[detail]](@ref RN_DETAIL_SM_66) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
@@ -27,11 +25,12 @@ Improvement {#RN_CL_IMP}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-14](https://jira.sw.nxp.com/projects/SM/issues/SM-14) | Include ELE status in reset record [[detail]](@ref RN_DETAIL_SM_14) |   | Y | Y |
-| [SM-23](https://jira.sw.nxp.com/projects/SM/issues/SM-23) | Vet peripheral ID in CPU LP protocol |   | Y | Y |
+| [SM-23](https://jira.sw.nxp.com/projects/SM/issues/SM-23) | Vet the peripheral ID parameter in CPU LP protocol |   | Y | Y |
 | [SM-59](https://jira.sw.nxp.com/projects/SM/issues/SM-59) | Support latest SCMI 3.2 BETA3 spec changes [[detail]](@ref RN_DETAIL_SM_59) |   | Y | Y |
-| [SM-61](https://jira.sw.nxp.com/projects/SM/issues/SM-61) | Save/restore PLL registers impacted during MIX power gating |   | Y | Y |
-| [SM-62](https://jira.sw.nxp.com/projects/SM/issues/SM-62) | Update SM configurations |   | Y | Y |
+| [SM-61](https://jira.sw.nxp.com/projects/SM/issues/SM-61) | Save/restore PLL registers impacted during MIX power gating [[detail]](@ref RN_DETAIL_SM_61) |   | Y | Y |
+| [SM-62](https://jira.sw.nxp.com/projects/SM/issues/SM-62) | Update SM configurations [[detail]](@ref RN_DETAIL_SM_62) |   | Y | Y |
 | [SM-64](https://jira.sw.nxp.com/projects/SM/issues/SM-64) | Disable PF09 PWRUP interrupt [[detail]](@ref RN_DETAIL_SM_64) |   | Y | Y |
+| [SM-65](https://jira.sw.nxp.com/projects/SM/issues/SM-65) | Support configuring the NXP board ports to not use a debug UART [[detail]](@ref RN_DETAIL_SM_65) |   | Y | Y |
 | [SM-67](https://jira.sw.nxp.com/projects/SM/issues/SM-67) | Update i.MX95 EVK port to reset board on system reset [[detail]](@ref RN_DETAIL_SM_67) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
@@ -49,7 +48,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-54](https://jira.sw.nxp.com/projects/SM/issues/SM-54) | Add software workaround for ERR052127 (NOCMIX BLK_CTRL sync) |   | Y | Y |
-| [SM-58](https://jira.sw.nxp.com/projects/SM/issues/SM-58) | Add software workaround for ERR052128 (TMPSNS wait time) |   | Y | Y |
+| [SM-58](https://jira.sw.nxp.com/projects/SM/issues/SM-58) | Add software workaround for ERR052128 (TMPSNS wait time) [[detail]](@ref RN_DETAIL_SM_58) |   | Y | Y |
 | [SM-68](https://jira.sw.nxp.com/projects/SM/issues/SM-68) | Update low/nominal drive voltages per latest datasheet |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
@@ -74,10 +73,25 @@ Updated the extended reset data for the ELE group 1-3 (interrupt 160-162) to cap
       0x00200020 <- ELE_RST_REQ_STAT
       0x00000020 <- ELE_IRQ_REQ_STAT
 
+SM-58: Add software workaround for ERR052128 (TMPSNS wait time) {#RN_DETAIL_SM_58}
+----------
+
+The workaround for ERR052128 calls for a 250ns delay before clearing temperature sensor interrupts. Added such a delay in the sensor interrupt handler. Delay is 1us, the minimum supported by the system delay function.
+
 SM-59: Support latest SCMI 3.2 BETA3 spec changes {#RN_DETAIL_SM_59}
 ----------
 
 Updated to the BETA3 version of the SCMI 3.2 spec. Added NEGOTIATE_PROTOCOL_VERSION messages for all protocols. Will return NOT_SUPPORTED if the requested version is not the same major version and less than or equal to the supported minor version.
+
+SM-61: Save/restore PLL registers impacted during MIX power gating {#RN_DETAIL_SM_61}
+----------
+
+Power domains that include PLLs will experience the loss of PLL configuration when the domain is powered down.  Some agents do not have the ability to track this dependency and restore the PLL configuration after power is restored.  Support in SM was added to save/restore the context of the HSIO PLL (HSIO_TOP power domain) and the LDB PLL (display power domain) when the respective power domain is powered down/up.   Agents are still responsible for enabling the clock domains associated with these PLLs after power is restored.
+
+SM-62: Update SM configurations {#RN_DETAIL_SM_62}
+----------
+
+Minor change to the mx95alt config to give the M33 access to the SEMA41 module. This is only to allow testing.
 
 SM-63: Fix polarity of WDOG ANY mask {#RN_DETAIL_SM_63}
 ----------
@@ -91,10 +105,17 @@ SM-64: Disable PF09 PWRUP interrupt {#RN_DETAIL_SM_64}
 
 Added code in the board BRD_SM_SerialDevicesInit() function to disable the PF09 PWRUP interrupt. Customers should do the same if not using this interrupt for some additional PMIC management.
 
+SM-65: Support configuring the NXP board ports to not use a debug UART {#RN_DETAIL_SM_65}
+----------
+
+Supported NXP board ports disabling UART usage by setting BOARD_DEBUG_UART_INSTANCE to 0. This can be accomplished by setting DEBUG_UART_INSTANCE to 0 in the cfg file. Note access control still applies and configuring the SM to not use a UART doesn't make it accessible to other agents. However, BOARD_DEBUG_UART_INSTANCE must be set to 0 if no UART will be made available to the SM.
+
+Note this required changes in the board.c file. This code was also restructured to allow other suspend/resume functions to enable/disable the UART wakeup interrupt.
+
 SM-66: Support designation of A55 CPUs to wake during A55P wakeup {#RN_DETAIL_SM_66}
 ----------
 
-If all Cortex-A55 wake sources have been aggregated to the A55 platform (A55 cluster), the SM needs a way for the agents to indicate the list of A55 CPUs to be automatically awakened when the A55 platform wakes.  The SCMI_CpuSleepModeSet was updated to take a flags parameter that can be used to specify if the respective A55 CPU should be added to the wake list.  During the resume of the A55 platform, the SM will automatically wake all A55 CPUs specified in wake list.
+If all Cortex-A55 wake sources have been aggregated to the A55 platform (A55 cluster), the SM needs a way for the agents to indicate the list of A55 CPUs to be automatically awakened when the A55 platform wakes.  The SCMI_CpuSleepModeSet() function was updated to take a flags parameter that can be used to specify if the respective A55 CPU should be added to the wake list.  During the resume of the A55 platform, the SM will automatically wake all A55 CPUs specified in wake list.
 
 SM-67: Update i.MX95 EVK port to reset board on system reset {#RN_DETAIL_SM_67}
 ----------
