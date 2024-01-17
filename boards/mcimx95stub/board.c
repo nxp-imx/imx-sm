@@ -97,7 +97,7 @@ static board_uart_config_t const s_uartConfig =
 {
     .base = s_uartBases[BOARD_DEBUG_UART_INSTANCE],
     .irq = s_uartIrqs[BOARD_DEBUG_UART_INSTANCE],
-    .clock = s_uartClks[BOARD_DEBUG_UART_INSTANCE],
+    .clockId = s_uartClks[BOARD_DEBUG_UART_INSTANCE],
     .baud = BOARD_DEBUG_UART_BAUDRATE,
     .inst = BOARD_DEBUG_UART_INSTANCE
 };
@@ -268,7 +268,7 @@ void BOARD_InitDebugConsole(void)
 {
     if (s_uartConfig.base != NULL)
     {
-        uint64_t rate = CCM_RootGetRate(s_uartConfig.clock);
+        uint64_t rate = CCM_RootGetRate(s_uartConfig.clockId);
 
         /* Configure debug UART */
         lpuart_config_t lpuart_config;

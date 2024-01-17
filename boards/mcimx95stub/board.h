@@ -56,7 +56,7 @@ typedef struct
 {
     LPUART_Type *const base;  /*!< LPUART base pointer */
     IRQn_Type irq;            /*!< Interrupt number */
-    uint32_t clock;           /*!< Clock ID */
+    uint32_t clockId;         /*!< Clock ID */
     uint32_t baud;            /*!< Baud rate */
     uint8_t inst;             /*!< Instance number */
 } board_uart_config_t;
