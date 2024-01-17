@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -120,6 +120,7 @@ typedef struct
     uint8_t rtcPerms[SM_NUM_RTC];        /*!< BBM protocol RTC permissions */
     uint8_t buttonPerms[SM_NUM_BUTTON];  /*!< BBM protocol button permissions */
     uint8_t cpuPerms[SM_NUM_CPU];        /*!< CPU protocol permissions */
+    uint8_t perlpiPerms[SM_NUM_PERLPI];  /*!< CPU protocol peripheral permissions */
     uint8_t pinPerms[SM_NUM_PIN];        /*!< Pin control protocol permissions */
     uint8_t daisyPerms[SM_NUM_DAISY];    /*!< Pin control protocol daisy permissions */
     uint8_t ctrlPerms[SM_NUM_CTRL];      /*!< Control protocol permissions */

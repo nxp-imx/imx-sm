@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -56,6 +56,9 @@
 /*! Number of device CPUs */
 #define DEV_SM_NUM_CPU  4U
 
+/*! Number of device peripheral LPIs */
+#define DEV_SM_NUM_PERLPI   1U
+
 /*!
  * @name Device CPU indexes
  */
@@ -78,6 +81,13 @@
 #define DEV_SM_CPU_SLEEP_MODE_STOP       2U
 /*! Suspend mode */
 #define DEV_SM_CPU_SLEEP_MODE_SUSPEND    3U
+/** @} */
+
+/*!
+ * @name Device peripheral LPI indexes
+ */
+/** @{ */
+#define DEV_SM_PERLPI_RESV      0U   /*!< 0: Test */
 /** @} */
 
 /* Types */

@@ -136,8 +136,13 @@
 #endif
 
 #ifndef SM_NUM_CPU
-/*! Redirector (device/board) for the number of CPUs */
+/*! Redirector (device/board) for the number of peripheral LPIs */
 #define SM_NUM_CPU              DEV_SM_NUM_CPU
+#endif
+
+#ifndef SM_NUM_PERLPI
+/*! Redirector (device/board) for the number of CPUs */
+#define SM_NUM_PERLPI           DEV_SM_NUM_PERLPI
 #endif
 
 #ifndef SM_NUM_PIN

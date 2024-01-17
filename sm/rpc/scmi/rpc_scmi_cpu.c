@@ -1169,9 +1169,26 @@ static int32_t CpuPerLpmConfigSet(const scmi_caller_t *caller,
             break;
         }
 
+        /* Check peripheral LPI */
+        if (config->perId >= SM_NUM_PERLPI)
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
+
+        /* Check permissions */
+        if ((status == SM_ERR_SUCCESS)
+            && (g_scmiAgentConfig[caller->agentId].perlpiPerms[config->perId]
+            < SM_SCMI_PERM_EXCLUSIVE))
+        {
+            status = SM_ERR_DENIED;
+        }
+
         /* Set config */
-        status = LMM_CpuPerLpmConfigSet(caller->lmId, in->cpuId,
-            config->perId, config->lpmSetting);
+        if (status == SM_ERR_SUCCESS)
+        {
+            status = LMM_CpuPerLpmConfigSet(caller->lmId, in->cpuId,
+                config->perId, config->lpmSetting);
+        }
     }
 
     /* Return status */

@@ -188,6 +188,7 @@ Configures the SCMI RPC. The defines in this file are as follows:
   - *rtcPerms[]* - array of BBM protocol RTC permissions, one per RTC
   - *buttonPerms[]* - array of BBM protocol button permissions, one per button
   - *cpuPerms[]* - array of CPU protocol permissions, one per CPU
+  - *perlpiPerms[]* - array of CPU protocol permissions, one per peripheral
   - *pinPerms[]* - array of pin control protocol permissions, one per pin
   - *daisyPerms[]* - array of pin control protocol daisy permissions, one per daisy register
   - *ctrlPerms[]* - array of control protocol permissions, one per control
@@ -718,7 +719,8 @@ files for a list of each resource type):
 - **GPR_n** - Device/board GPR *n*
 - **RTC_a** - Device/board RTC *a*
 - **BUTTON_n** - Device button *n*
-- **CPU_a** - Device CPU *a* (e.g. CPU_A55C0)
+- **CPU_a** - Device peripheral LPI *a* (e.g. CPU_A55C0)
+- **PERLPI_a** - Device CPU *a* (e.g. PERLPI_GPIO1)
 - **PIN_a** - Device pin control *a* (e.g. PIN_SD2_DATA0)
 - **DAISY_a** - Device pin daisy *a* (e.g. DAISY_CAN3_RX)
 - **CTRL_a** - Device/board control *a*

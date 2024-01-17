@@ -76,11 +76,12 @@
 #define TEST_RTC     10U  /*!< Test using BBM RTC protocol */
 #define TEST_BUTTON  11U  /*!< Test using BBM button protocol */
 #define TEST_CPU     12U  /*!< Test using CPU protocol */
-#define TEST_PIN     13U  /*!< Test using pin control protocol */
-#define TEST_DAISY   14U  /*!< Test using pin daisy protocol */
-#define TEST_CTRL    15U  /*!< Test using control protocol */
-#define TEST_FUSA    16U  /*!< Test using FuSa EENV protocol */
-#define TEST_FAULT   17U  /*!< Test using FuSa fault protocol */
+#define TEST_PERLPI  13U  /*!< Test using CPU protocol peripheral LPI */
+#define TEST_PIN     14U  /*!< Test using pin control protocol */
+#define TEST_DAISY   15U  /*!< Test using pin daisy protocol */
+#define TEST_CTRL    16U  /*!< Test using control protocol */
+#define TEST_FUSA    17U  /*!< Test using FuSa EENV protocol */
+#define TEST_FAULT   18U  /*!< Test using FuSa fault protocol */
 /** @} */
 
 /* Types */

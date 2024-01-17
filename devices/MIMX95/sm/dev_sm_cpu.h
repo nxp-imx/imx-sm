@@ -57,6 +57,9 @@
 /*! Number of device CPUs */
 #define DEV_SM_NUM_CPU      CPU_NUM_IDX
 
+/*! Number of device peripheral LPIs */
+#define DEV_SM_NUM_PERLPI   CPU_NUM_PER_LPI_IDX
+
 /*!
  * @name Device CPU indexes
  *
@@ -98,6 +101,33 @@
 #define DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX    0x1U
 /*! Wake A55 CPU during A55 platform wakeup */
 #define DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE  0x2U
+/** @} */
+
+/*!
+ * @name Device peripheral LPI indexes
+ */
+/** @{ */
+#define DEV_SM_PERLPI_GPIO1    CPU_PER_LPI_IDX_GPIO1    /*!< 0: GPIO1 */
+#define DEV_SM_PERLPI_GPIO2    CPU_PER_LPI_IDX_GPIO2    /*!< 1: GPIO2 */
+#define DEV_SM_PERLPI_GPIO3    CPU_PER_LPI_IDX_GPIO3    /*!< 2: GPIO3 */
+#define DEV_SM_PERLPI_GPIO4    CPU_PER_LPI_IDX_GPIO4    /*!< 3: GPIO4 */
+#define DEV_SM_PERLPI_GPIO5    CPU_PER_LPI_IDX_GPIO5    /*!< 4: GPIO5 */
+#define DEV_SM_PERLPI_CAN1     CPU_PER_LPI_IDX_CAN1     /*!< 5: CAN1 */
+#define DEV_SM_PERLPI_CAN2     CPU_PER_LPI_IDX_CAN2     /*!< 6: CAN2 */
+#define DEV_SM_PERLPI_CAN3     CPU_PER_LPI_IDX_CAN3     /*!< 7: CAN3 */
+#define DEV_SM_PERLPI_CAN4     CPU_PER_LPI_IDX_CAN4     /*!< 8: CAN4 */
+#define DEV_SM_PERLPI_CAN5     CPU_PER_LPI_IDX_CAN5     /*!< 9: CAN5 */
+#define DEV_SM_PERLPI_LPUART1  CPU_PER_LPI_IDX_LPUART1  /*!< 10: LPUART1 */
+#define DEV_SM_PERLPI_LPUART2  CPU_PER_LPI_IDX_LPUART2  /*!< 11: LPUART2 */
+#define DEV_SM_PERLPI_LPUART3  CPU_PER_LPI_IDX_LPUART3  /*!< 12: LPUART3*/
+#define DEV_SM_PERLPI_LPUART4  CPU_PER_LPI_IDX_LPUART4  /*!< 13: LPUART4 */
+#define DEV_SM_PERLPI_LPUART5  CPU_PER_LPI_IDX_LPUART5  /*!< 14: LPUART5 */
+#define DEV_SM_PERLPI_LPUART6  CPU_PER_LPI_IDX_LPUART6  /*!< 15: LPUART6 */
+#define DEV_SM_PERLPI_LPUART7  CPU_PER_LPI_IDX_LPUART7  /*!< 16: LPUART7 */
+#define DEV_SM_PERLPI_LPUART8  CPU_PER_LPI_IDX_LPUART8  /*!< 17: LPUART8 */
+#define DEV_SM_PERLPI_WDOG3    CPU_PER_LPI_IDX_WDOG3    /*!< 18: WDOG3 */
+#define DEV_SM_PERLPI_WDOG4    CPU_PER_LPI_IDX_WDOG4    /*!< 19: WDOG4 */
+#define DEV_SM_PERLPI_WDOG5    CPU_PER_LPI_IDX_WDOG5    /*!< 20: WDOG5 */
 /** @} */
 
 /* Types */

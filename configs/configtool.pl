@@ -73,8 +73,8 @@ sub error_line;
 sub get_define;
 
 my @protocols = ('base', 'pd', 'sys', 'perf', 'clk', 'sensor',
-    'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'pin',
-    'daisy', 'ctrl', 'fault', 'crc', 'fusa');
+    'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'perlpi',
+    'pin', 'daisy', 'ctrl', 'fault', 'crc', 'fusa');
 my @mbTypes = ('MU', 'LOOPBACK');
 my @xportTypes = ('SMT');
 	my @permTypes = ('none', 'get', 'notify', 'set', 'priv',
