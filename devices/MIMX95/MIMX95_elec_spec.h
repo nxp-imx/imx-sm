@@ -98,12 +98,12 @@
 
 /* Supply voltage setpoints */
 #define ES_SUSPEND_UV_VDD_SOC       650000U
-#define ES_LOW_UV_VDD_SOC           750000U
-#define ES_NOM_UV_VDD_SOC           800000U
+#define ES_LOW_UV_VDD_SOC           800000U
+#define ES_NOM_UV_VDD_SOC           850000U
 #define ES_ODV_UV_VDD_SOC           900000U
 
-#define ES_LOW_UV_VDD_ARM           750000U
-#define ES_NOM_UV_VDD_ARM           800000U
+#define ES_LOW_UV_VDD_ARM           800000U
+#define ES_NOM_UV_VDD_ARM           850000U
 #define ES_ODV_UV_VDD_ARM           900000U
 #define ES_SOD_UV_VDD_ARM           1000000U
 
