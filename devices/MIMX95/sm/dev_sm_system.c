@@ -75,6 +75,11 @@ int32_t DEV_SM_SystemInit(void)
         s_shutdownRecord.valid = true;
     }
 
+    /* Default to keep M7 clocks running during sleep modes */
+    BLK_CTRL_S_AONMIX->M7_CFG |=
+        (BLK_CTRL_S_AONMIX_M7_CFG_CORECLK_FORCE_ON_MASK |
+        BLK_CTRL_S_AONMIX_M7_CFG_HCLK_FORCE_ON_MASK);
+
     /* Return status */
     return status;
 }

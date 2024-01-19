@@ -1172,10 +1172,28 @@ bool CPU_SleepModeSet(uint32_t cpuIdx, uint32_t sleepMode)
 
     if ((cpuIdx < CPU_NUM_IDX) && (sleepMode <= CPU_NUM_SLEEP_MODES))
     {
+        /* Set targeted sleep mode */
         uint32_t cmcModeCtrl = s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_CTRL;
         cmcModeCtrl &= (~GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET_MASK);
         cmcModeCtrl |= GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET(sleepMode);
         s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_CTRL = cmcModeCtrl;
+
+        /* Configure sleep-hold interface */
+        if ((s_cpuMgmtInfo[cpuIdx].cmcMisc &
+            GPC_CPU_CTRL_CMC_MISC_SLEEP_HOLD_EN_MASK) != 0U)
+        {
+            /* Enable sleep-hold interface unless sleep mode is RUN */
+            uint32_t cmcMisc = s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MISC;
+            if (sleepMode == CPU_SLEEP_MODE_RUN)
+            {
+                 cmcMisc &= ~GPC_CPU_CTRL_CMC_MISC_SLEEP_HOLD_EN_MASK;
+            }
+            else
+            {
+                cmcMisc |= GPC_CPU_CTRL_CMC_MISC_SLEEP_HOLD_EN_MASK;
+            }
+            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MISC = cmcMisc;
+        }
 
         /* All targeted sleep modes other than RUN need GPC-controlled LPM */
         uint32_t srcMixIdx = s_cpuMgmtInfo[cpuIdx].srcMixIdx;
