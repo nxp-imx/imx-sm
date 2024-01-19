@@ -567,7 +567,7 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
     bool rom = true;
     uint32_t commit = 0U;
     bool dirty = false;
-    ele_info_t info = {};
+    ele_info_t info = { 0 };
 
     ELE_FwStatusGet(&stat);
 
@@ -2294,7 +2294,7 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                 {
                     uint32_t ctrl;
                     uint32_t numVal = 0U;
-                    uint32_t val[24] = {};
+                    uint32_t val[24] = { 0 };
 
                     status = MONITOR_ConvU32(argv[0], &ctrl);
 

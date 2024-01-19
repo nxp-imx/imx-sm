@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -283,7 +283,7 @@ void TEST_ScmiSensor(void)
             .protocolId = 0xFFU,
             .messageId = 0xFFU
         };
-        lmm_rpc_trigger_t trigger = {};
+        lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_SensorDispatchNotification()\n");
         RPC_SCMI_SensorDispatchNotification(msgId, trigger);
@@ -405,7 +405,7 @@ static void TEST_ScmiSensorSet(bool pass, uint32_t channel,
     {
         uint32_t flags = SCMI_SENSOR_READ_FLAGS_ASYNC(0U);
         scmi_sensor_reading_t readings[SCMI_SENSOR_MAX_READINGS]
-            = {};
+            = { 0 };
 
         printf("SCMI_SensorReadingGet(%u, %u)\n", channel, sensorId);
         CHECK(SCMI_SensorReadingGet(channel, sensorId,
@@ -434,7 +434,7 @@ static void TEST_ScmiSensorSet(bool pass, uint32_t channel,
     /* Test for error for an async call in SensorReadingGet */
     {
         scmi_sensor_reading_t readings[SCMI_SENSOR_MAX_READINGS]
-            = {};
+            = { 0 };
         uint32_t flags = SCMI_SENSOR_READ_FLAGS_ASYNC(1U);
 
         printf("SCMI_SensorReadingGet(%u, %u)\n",
@@ -454,7 +454,7 @@ static void TEST_ScmiSensorSet(bool pass, uint32_t channel,
         {
             uint32_t flags = SCMI_SENSOR_READ_FLAGS_ASYNC(0U);
             scmi_sensor_reading_t readings[SCMI_SENSOR_MAX_READINGS]
-                = {};
+                = { 0 };
             printf("SCMI_SensorReadingGet(%u, %u)\n", channel, sensorId);
             NECHECK(SCMI_SensorReadingGet(channel, sensorId,
                 flags, readings), SCMI_ERR_PROTOCOL_ERROR);

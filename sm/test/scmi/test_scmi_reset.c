@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -111,7 +111,7 @@ void TEST_ScmiReset(void)
     {
         uint32_t attributes = 0U;
         uint32_t latency = 0U;
-        uint8_t name[SCMI_RESET_MAX_NAME] = {};
+        uint8_t name[SCMI_RESET_MAX_NAME] = { 0 };
 
         printf("SCMI_ResetDomainAttributes(%u, %u)\n", SM_TEST_DEFAULT_CHN,
             numDomains);
@@ -175,7 +175,7 @@ static void TEST_ScmiResetNone(uint32_t channel, uint32_t domainId)
     {
         uint32_t attributes = 0U;
         uint32_t latency = 0U;
-        uint8_t name[SCMI_RESET_MAX_NAME] = {};
+        uint8_t name[SCMI_RESET_MAX_NAME] = { 0 };
 
         printf("SCMI_ResetDomainAttributes(%u, %u)\n", channel, domainId);
         CHECK(SCMI_ResetDomainAttributes(channel, domainId,

@@ -105,7 +105,7 @@ int32_t DEV_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
 int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
 {
     int32_t status = SM_ERR_SUCCESS;
-    eMcem_FaultContainerType errorContainer = {};
+    eMcem_FaultContainerType errorContainer = { 0 };
 
     /* Get fault errors */
     if (eMcem_GetErrorsStatus(&errorContainer) != (Std_ReturnType) E_OK)

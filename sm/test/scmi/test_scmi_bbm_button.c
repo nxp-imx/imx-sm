@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -109,7 +109,7 @@ void TEST_ScmiBbmButton(void)
             .protocolId = 0xFFU,
             .messageId = 0xFFU
         };
-        lmm_rpc_trigger_t trigger = {};
+        lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_BbmDispatchNotification()\n");
         RPC_SCMI_BbmDispatchNotification(msgId, trigger);

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -188,7 +188,7 @@ void TEST_ScmiCpu(void)
 static void TEST_ScmiCpuNone(uint32_t channel, uint32_t domainId)
 {
     uint32_t attributes = 0U;
-    uint8_t name[SCMI_CPU_MAX_NAME] = {};
+    uint8_t name[SCMI_CPU_MAX_NAME] = { 0 };
 
     printf("SCMI_CpuAttributes(%u, %u)\n", channel, domainId);
     name[0] = 0U;

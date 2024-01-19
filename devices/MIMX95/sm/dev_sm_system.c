@@ -51,7 +51,7 @@
 /* Local variables */
 
 static uint32_t s_powerMode = 0U;
-static dev_sm_rst_rec_t s_shutdownRecord = {};
+static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */

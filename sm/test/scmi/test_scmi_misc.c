@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -136,7 +136,7 @@ void TEST_ScmiMisc(void)
     /* Test ROM data */
     {
         uint32_t numPassover = 0U;
-        uint32_t passoverBuffer[SCMI_MISC_MAX_PASSOVER] = {};
+        uint32_t passoverBuffer[SCMI_MISC_MAX_PASSOVER] = { 0 };
         const rom_passover_t *passover
             = (const rom_passover_t*) passoverBuffer;
 
@@ -267,7 +267,7 @@ void TEST_ScmiMisc(void)
             .protocolId = 0xFFU,
             .messageId = 0xFFU
         };
-        lmm_rpc_trigger_t trigger = {};
+        lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_MiscDispatchNotification()\n");
         RPC_SCMI_MiscDispatchNotification(msgId, trigger);

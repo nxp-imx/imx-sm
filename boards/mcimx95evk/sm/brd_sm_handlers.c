@@ -240,7 +240,7 @@ void BRD_SM_Gpio1Handler(void)
 /*--------------------------------------------------------------------------*/
 static void BRD_SM_Pf09Handler(void)
 {
-    uint8_t stat[PF09_MASK_LEN] = {};
+    uint8_t stat[PF09_MASK_LEN] = { 0 };
 
     /* Read status of interrupts */
     (void) PF09_IntStatus(&pf09Dev, stat);

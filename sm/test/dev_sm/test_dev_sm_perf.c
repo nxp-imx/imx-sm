@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -79,7 +79,7 @@ void TEST_DevSmPerf(void)
         CHECK(DEV_SM_PerfNumLevelsGet(0U, &numLevels));
         printf("   numLevels=%u", numLevels);
 
-        dev_sm_perf_desc_t desc = {};
+        dev_sm_perf_desc_t desc = { 0 };
 
         /* Test all performance levels */
         for (uint32_t perfLevel = 0U; perfLevel < numLevels; perfLevel++)
@@ -120,7 +120,7 @@ void TEST_DevSmPerf(void)
         CHECK(DEV_SM_PerfNumLevelsGet(0U, &numLevels));
         printf("   numLevels=%u", numLevels);
 
-        dev_sm_perf_desc_t desc = {};
+        dev_sm_perf_desc_t desc = { 0 };
 
         printf("DEV_SM_PerfDescribe(%u)\n", 0U);
         NECHECK(DEV_SM_PerfDescribe(0U, numLevels, &desc),

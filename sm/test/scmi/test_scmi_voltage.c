@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -116,7 +116,7 @@ void TEST_ScmiVoltage(void)
     /* Domain Attributes -- Invalid domainId  */
     {
         uint32_t attributes = 0U;
-        uint8_t name[SCMI_VOLTAGE_MAX_NAME] = {};
+        uint8_t name[SCMI_VOLTAGE_MAX_NAME] = { 0 };
 
         /* Ensure proper error code is returned */
         NECHECK(SCMI_VoltageDomainAttributes(SM_TEST_DEFAULT_CHN,
@@ -183,7 +183,7 @@ void TEST_ScmiVoltage(void)
     {
         uint32_t levelIndex = 0U;
         uint32_t flags = 0U;
-        int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = {};
+        int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = { 0 };
 
         NECHECK(SCMI_VoltageDescribeLevels(SM_TEST_DEFAULT_CHN,
             numDomains, levelIndex, &flags, voltage), SCMI_ERR_NOT_FOUND);
@@ -241,7 +241,7 @@ static void TEST_ScmiVoltageNone(uint32_t channel, uint32_t domainId)
         /* WHILE : More voltages to send           */
         do
         {
-            int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = {};
+            int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = { 0 };
 
             printf("SCMI_VoltageDescribeLevels(%u, %u)\n",
                 channel, domainId);
@@ -272,7 +272,7 @@ static void TEST_ScmiVoltageNone(uint32_t channel, uint32_t domainId)
     /* Describe Level -- Invalid levelIndex */
     {
         uint32_t flags = 0U;
-        int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = {};
+        int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = { 0 };
 
         NECHECK(SCMI_VoltageDescribeLevels(channel,
             domainId, maxLevel, &flags, voltage),
@@ -282,7 +282,7 @@ static void TEST_ScmiVoltageNone(uint32_t channel, uint32_t domainId)
     /* Domain Attributes */
     {
         uint32_t attributes = 0U;
-        uint8_t name[SCMI_VOLTAGE_MAX_NAME] = {};
+        uint8_t name[SCMI_VOLTAGE_MAX_NAME] = { 0 };
 
         printf("SCMI_VoltageDomainAttributes(%u, %u)\n", channel, domainId);
         CHECK(SCMI_VoltageDomainAttributes(channel, domainId,
@@ -397,7 +397,7 @@ static void TEST_ScmiVoltageExclusive(bool pass, uint32_t channel,
     uint32_t domainId)
 {
     uint32_t flags = 0U;
-    int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = {};
+    int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = { 0 };
 
     /* Adequate Set Permissions */
     if(pass)

@@ -103,7 +103,7 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
     }
 
     /* Let FuSa know cleared */
-    if ((status == SM_ERR_SUCCESS) && (reaction != LMM_REACT_FUSA))
+    if (status == SM_ERR_SUCCESS)
     {
         LMM_FusaFaultCleared(resetRec.errId);
     }

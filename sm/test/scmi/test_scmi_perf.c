@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -290,7 +290,7 @@ static void TEST_ScmiPerfNone(uint8_t perm, uint32_t channel,
         uint32_t rateLimit = 0U;
         uint32_t sustainedFreq = 0U;
         uint32_t sustainedPerfLevel = 0U;
-        uint8_t name[SCMI_PERF_MAX_NAME] = {};
+        uint8_t name[SCMI_PERF_MAX_NAME] = { 0 };
         name[0] = 0U;
 
         printf("SCMI_PerformanceDomainAttributes(%u, %u)\n", channel,

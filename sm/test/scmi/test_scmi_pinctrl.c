@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -234,7 +234,7 @@ void TEST_ScmiPinctrl(void)
     {
         uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = {};
+        scmi_pin_config_t configs[10] = { 0 };
 
         /* NOT FOUND */
         NECHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, SM_NUM_PIN,
@@ -276,7 +276,7 @@ void TEST_ScmiPinctrl(void)
     {
         uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = {};
+        scmi_pin_config_t configs[10] = { 0 };
 
         CHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, 0U, attributes,
             &numConfigs, configs));
@@ -353,7 +353,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         /* WHILE : More configs to send            */
         do
         {
-            scmi_pin_config_t configs[10] = {};
+            scmi_pin_config_t configs[10] = { 0 };
 
             printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
                 identifier, attributes);
@@ -389,7 +389,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         /* WHILE : More configs to send            */
         do
         {
-            scmi_pin_config_t configs[10] = {};
+            scmi_pin_config_t configs[10] = { 0 };
 
             printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
                 identifier, attributes);
@@ -419,7 +419,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         /* RETURN TYPE  ----------------------------------------- */
         attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(0UL) |
             SCMI_PINCTRL_GET_ATTR_CONFIG_TYPE(SCMI_PINCTRL_TYPE_MUX);
-        scmi_pin_config_t configs[1] = {};
+        scmi_pin_config_t configs[1] = { 0 };
 
         printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
             identifier, attributes);
@@ -445,7 +445,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         /* Get the current Config */
         uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = {};
+        scmi_pin_config_t configs[10] = { 0 };
 
         printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
             identifier, attributes);
@@ -503,7 +503,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
     {
         uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = {};
+        scmi_pin_config_t configs[10] = { 0 };
 
         printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
             identifier, attributes);

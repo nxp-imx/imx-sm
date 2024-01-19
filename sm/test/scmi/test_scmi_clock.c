@@ -249,7 +249,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
     uint32_t attributes = 0U;
     uint8_t name[SCMI_CLOCK_MAX_NAME];
     uint32_t numRatesFlags = 0U;
-    scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES] = {};
+    scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES] = { 0 };
 
     printf("SCMI_ClockAttributes(%u, %u)\n", channel, clockId);
     name[0] = 0U;
@@ -320,7 +320,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         uint32_t skipParents = 0U;
         uint32_t numParentsFlags = 0U;
         uint32_t attributesParent = 0U;
-        uint32_t parents[SCMI_CLOCK_MAX_PARENTS] = {};
+        uint32_t parents[SCMI_CLOCK_MAX_PARENTS] = { 0 };
 
         CHECK(SCMI_ClockAttributes(channel, clockId, &attributesParent,
             name));

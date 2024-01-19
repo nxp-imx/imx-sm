@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -84,7 +84,7 @@ void TEST_ScmiBbmRtc(void)
     /* Attributes -- invalid RTC and invalid channel*/
     {
         uint32_t attributes = 0U;
-        uint8_t name[SCMI_BBM_MAX_NAME] = {};
+        uint8_t name[SCMI_BBM_MAX_NAME] = { 0 };
 
         NECHECK(SCMI_BbmRtcAttributes(SM_TEST_DEFAULT_CHN,
             numRtc, &attributes, name), SCMI_ERR_NOT_FOUND);
@@ -213,7 +213,7 @@ static void TEST_ScmiRtcNone(uint32_t channel, uint32_t resource)
     /* RTC Attributes  */
     {
         uint32_t attributes = 0U;
-        uint8_t name[SCMI_BBM_MAX_NAME] = {};
+        uint8_t name[SCMI_BBM_MAX_NAME] = { 0 };
 
         printf("SCMI_BbmRtcAttributes(%u)\n",
             SM_TEST_DEFAULT_CHN);
