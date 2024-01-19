@@ -318,7 +318,7 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Call power-down preable if domain is currently powered */
-    if (SRC_MixIsPwrReady(domainId))
+    if (SRC_MixIsPwrSwitchOn(domainId))
     {
         switch (domainId)
         {
