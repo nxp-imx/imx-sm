@@ -16,7 +16,7 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2012-2016 Freescale
-*   Copyright 2016-2023 NXP
+*   Copyright 2016-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -60,14 +60,30 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/* Defines */
+/*!
+ * @name EMCEM config software version
+ */
+/** @{ */
+
+/*!
+* @brief    eMCEM SW major version
+*/
 #define EMCEM_SW_MAJOR_VERSION             0
+/*!
+* @brief   eMCEM SW minor version.
+*/
 #define EMCEM_SW_MINOR_VERSION             4
+/*!
+* @brief    eMCEM SW patch version.
+*/
 #define EMCEM_SW_PATCH_VERSION             0
+/** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
+/*!< Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -94,11 +110,10 @@ extern "C"{
 * @retval           ==0       The given fault is not asserted or the ID is not valid.
 * @retval           !=0       The given fault is asserted.
 *
-* @api        The object is an API and must be documented in the user manual.
-*
 * @implements DD_eMcem_FAULT_PENDING
 *
 */
+/* @api        The object is an API and must be documented in the user manual. */
 #define EMCEM_FAULT_PENDING( pErrorContainer, nFaultId ) (eMcem_FaultPending( pErrorContainer, nFaultId ))
 
 /**
@@ -111,11 +126,10 @@ extern "C"{
 * @retval           E_OK               No fault is pending.
 * @retval           E_FAULT_DETECTED   There is at least one logged fault.
 *
-* @api        The object is an API and must be documented in the user manual.
-*
 * @implements DD_eMcem_GETERRORS_STATUS
 *
 */
+/* @api        The object is an API and must be documented in the user manual. */
 #define EMCEM_GETERRORS_STATUS( pErrorContainer )    (eMcem_GetErrorsStatus( pErrorContainer ))
 
 /*==================================================================================================
@@ -131,6 +145,9 @@ extern "C"{
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
+/**
+* @brief    eMCEM start sec variable zero init.
+*/
 #define EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED
 /* @violates @ref eMcem_h_REF_0410 */
 #include "eMcem_MemMap.h"
@@ -140,7 +157,9 @@ extern "C"{
 * @details        The eMCEM driver changes state during start-up or runtime from EMCEM_S_UINIT to EMCEM_S_INITIALIZED.
 */
 extern eMcem_StateType eMcem_DriverState;
-
+/**
+* @brief    eMCEM stop sec variable zero init.
+*/
 #define EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
 /* @violates @ref eMcem_h_REF_0410 */
 #include "eMcem_MemMap.h"
@@ -148,6 +167,9 @@ extern eMcem_StateType eMcem_DriverState;
 /*==================================================================================================
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
+/**
+* @brief    eMCEM start sec code.
+*/
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_h_REF_0410 */
 #include "eMcem_MemMap.h"
@@ -247,6 +269,10 @@ Std_ReturnType eMcem_ClearFaults( eMcem_FaultType nFaultId );
 /**
 * @brief      Assert FCCU software fault.
 * @details    Set SW_NCF register bit to trigger a software fault into FCCU.
+*             Note: When interacting with SW fault NCFs other than for CM33 in AONMIX, 
+*             please make sure that FCCU_SW_FAULTS register of the relevant
+*             MIX is accessible (e.g. write access allowed by TRDC configuration, MIX being powered-up and clocked, etc.)
+*             and that potential race conditions are avoided by application.
 *
 * @param[in]  nFaultId        ID of the SW fault that shall be asserted.
 *
@@ -260,6 +286,10 @@ Std_ReturnType eMcem_AssertSWFault( eMcem_FaultType nFaultId );
 * @brief      Deassert FCCU software fault.
 * @details    Clear SW_NCF register bit to stop the triggering of software fault
 *             into FCCU.
+*             Note: When interacting with SW fault NCFs other than for CM33 in AONMIX, 
+*             please make sure that FCCU_SW_FAULTS register of the relevant
+*             MIX is accessible (e.g. write access allowed by TRDC configuration, MIX being powered-up and clocked, etc.)
+*             and that potential race conditions are avoided by application.
 *
 * @param[in]  nFaultId        ID of the SW fault that shall be deasserted.
 *
@@ -278,16 +308,16 @@ Std_ReturnType eMcem_DeassertSWFault( eMcem_FaultType nFaultId );
 *
 * @pre        pExtDiagData pointer shall not be null.
 *
-* @api        The object is an API and must be documented in the user manual.
-*
 * @implements DD_eMcem_GetExtDiagData
 *
-* @violates @ref eMcem_c_REF_0807
-*
 */
+/* @api        The object is an API and must be documented in the user manual.*/
+/* @violates @ref eMcem_c_REF_0807 */
 void eMcem_GetExtDiagData( eMcem_ExtDiagDataType *pExtDiagData );
 #endif
-
+/**
+* @brief    eMCEM stop sec code.
+*/
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_h_REF_0410 */
 #include "eMcem_MemMap.h"
