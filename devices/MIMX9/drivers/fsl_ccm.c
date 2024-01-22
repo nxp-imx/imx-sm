@@ -599,7 +599,7 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting)
     {
         uint64_t lpmSetting =
             ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1) << 32U) |
-              ((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM0));
+            ((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM0));
 
         /* Extract LPM_SETTING for this CPU */
         *cpuLpmSetting = (uint32_t) (LPMSETTING_VAL(cpuIdx, lpmSetting)

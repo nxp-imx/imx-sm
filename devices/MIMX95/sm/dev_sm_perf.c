@@ -1751,7 +1751,7 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Number of perf levels for A55 depends on speed grade fuses */
     uint32_t fuseHwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
     uint32_t speedGrade = (fuseHwCfg0 & FSB_FUSE_HW_CFG0_SPEEDGRADING_MASK)
-                           >> FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT;
+        >> FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT;
     switch (speedGrade)
     {
         case 0x1:   /* 2.2 GHz */

@@ -229,7 +229,7 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
             newResetRec.validOrigin = true;
             newResetRec.errId = agentId;
             newResetRec.validErr = true;
-         }
+        }
 
         /* Save reason */
         newResetRec.reset = true;

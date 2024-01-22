@@ -90,7 +90,7 @@ static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
 /* Panic temps */
 static const int64_t s_panicTemp[4] =
 {
-     9700,  /* 00 - Consumer 0C to 95C */
+    9700,   /* 00 - Consumer 0C to 95C */
     10700,  /* 01 - Ext. Consumer -20C to 105C */
     10700,  /* 10 - Industrial -40C to 105C */
     12700   /* 11 - Automotive -40C to 125C */
