@@ -16,7 +16,7 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2017-2023 NXP
-*   Detailed license terms of software usage can be found in the license.txt 
+*   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
 
@@ -109,12 +109,12 @@ extern "C"{
 /**
 * @brief Define to specify the ARM architecture
 */
-#define SAFETY_BASE_PLATFORM_ARM            (SAFETY_BASE_ARMV8_MARCH) 
+#define SAFETY_BASE_PLATFORM_ARM            (SAFETY_BASE_ARMV8_MARCH)
 
 /**
 * @brief           Processor type
 */
-#define SAFETY_BASE_CPU_TYPE                (CPU_TYPE_32)      
+#define SAFETY_BASE_CPU_TYPE                (CPU_TYPE_32)
 
 /**
  * @brief          Specifies availability of the HSE wrapper interface

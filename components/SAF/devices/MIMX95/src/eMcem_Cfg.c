@@ -6,7 +6,7 @@
 *   @details This file implements eMcem configuration.
 *
 *   @addtogroup EMCEM_COMPONENT
-*   @{	
+*   @{
 */
 /*==================================================================================================
 *   Project              : MIMX_SAF
@@ -16,8 +16,8 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2023-2024 NXP
-*   Detailed license terms of software usage can be found in the license.txt 
-*   file located in the root folder of this package. 
+*   Detailed license terms of software usage can be found in the license.txt
+*   file located in the root folder of this package.
 ==================================================================================================*/
 
 #ifdef __cplusplus
@@ -31,8 +31,8 @@ extern "C"{
 * Violates MISRA 2012 Advisory Rule 4.9, Function-like macros for shifting of configuration values.
 *
 * @section eMcem_Cfg_c_REF_0410
-* Violates MISRA 2012 Required Rule 4.10, This is not a violation since all header files are protected 
-* against multiple inclusions. 
+* Violates MISRA 2012 Required Rule 4.10, This is not a violation since all header files are protected
+* against multiple inclusions.
 *
 * @section eMcem_Cfg_c_REF_2001
 * Violates MISRA 2012 Advisory Rule 20.1, #include statements are not preceded only by
@@ -115,22 +115,22 @@ const uint32 eMcem_au32StaticFaultMasks[3U] =
 /* @violates @ref eMcem_Cfg_c_REF_2001 */
 #include "eMcem_MemMap.h"
 
-const eMcem_CVfccuInstanceCfgType CVfccuCfg = 
+const eMcem_CVfccuInstanceCfgType CVfccuCfg =
 {
     FALSE, /* bDebugEnabled */
     TRUE, /* bConfigEnabled */
     14000000UL, /* u32GlobalReactionTimerPeriod */
     42000000UL, /* u32MinEoutDuration */
-    { /* EOUT Cfg */        
-        (uint32)3UL, /* EoutTimerDisable */    
+    { /* EOUT Cfg */
+        (uint32)3UL, /* EoutTimerDisable */
         { /* EOUT Pin Regs */
             (uint32)0x00000000UL,
             (uint32)0x00000001UL
-        },     
+        },
         { /* EOUT Operating Mode Regs */
             (uint32)0x00000000UL,
             (uint32)0x00000009UL
-        },    
+        },
     },
     /* Fault Lines Cfg */
     /* Fault Recovery cfg */
@@ -154,7 +154,7 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
             (uint32)0x000UL,    /* None */
             (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
         },
-        
+
         { /* DelReactionRegs */
             (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
             (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
@@ -275,7 +275,7 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
             &eMcemCVfccuAlarmHandler,
             &eMcemCVfccuAlarmHandler
         }
-    }   
+    }
 };
 
 const eMcem_ConfigType eMcem_Config =

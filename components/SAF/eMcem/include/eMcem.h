@@ -269,7 +269,7 @@ Std_ReturnType eMcem_ClearFaults( eMcem_FaultType nFaultId );
 /**
 * @brief      Assert FCCU software fault.
 * @details    Set SW_NCF register bit to trigger a software fault into FCCU.
-*             Note: When interacting with SW fault NCFs other than for CM33 in AONMIX, 
+*             Note: When interacting with SW fault NCFs other than for CM33 in AONMIX,
 *             please make sure that FCCU_SW_FAULTS register of the relevant
 *             MIX is accessible (e.g. write access allowed by TRDC configuration, MIX being powered-up and clocked, etc.)
 *             and that potential race conditions are avoided by application.
@@ -286,7 +286,7 @@ Std_ReturnType eMcem_AssertSWFault( eMcem_FaultType nFaultId );
 * @brief      Deassert FCCU software fault.
 * @details    Clear SW_NCF register bit to stop the triggering of software fault
 *             into FCCU.
-*             Note: When interacting with SW fault NCFs other than for CM33 in AONMIX, 
+*             Note: When interacting with SW fault NCFs other than for CM33 in AONMIX,
 *             please make sure that FCCU_SW_FAULTS register of the relevant
 *             MIX is accessible (e.g. write access allowed by TRDC configuration, MIX being powered-up and clocked, etc.)
 *             and that potential race conditions are avoided by application.

@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
-*   Copyright 2022-2023 NXP
+*   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -44,14 +44,30 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/* Defines */
+/*!
+ * @name EMCEM config software version
+ */
+/** @{ */
+
+/*!
+* @brief    eMCEM VFCCU TYPES SW major version
+*/
 #define EMCEM_VFCCU_TYPES_SW_MAJOR_VERSION             0
+/*!
+* @brief    eMCEM VFCCU TYPES SW minor version
+*/
 #define EMCEM_VFCCU_TYPES_SW_MINOR_VERSION             4
+/*!
+* @brief    eMCEM VFCCU TYPES SW patch version
+*/
 #define EMCEM_VFCCU_TYPES_SW_PATCH_VERSION             0
+/** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
+/*!< Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_VFCCU_TYPES_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_VFCCU_TYPES_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_VFCCU_TYPES_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -70,7 +86,7 @@ extern "C"{
 /*==================================================================================================
 *                                             ENUMS
 ==================================================================================================*/
-/**
+/*!
 * @brief      Fault Status type
 * @details    VFCCU Fault status
 */
@@ -84,13 +100,13 @@ typedef enum
 /*==================================================================================================
 *                                STRUCTURES AND OTHER TYPEDEFS
 ==================================================================================================*/
-/**
+/*!
 * @brief      eMCEM Fault type.
 * @details    eMCEM Fault type.
 */
 typedef uint16 eMcem_FaultType;
 
-/**
+/*!
 * @brief      eMCEM VFCCU Error Recovery State Enum.
 * @details    Enumeration covering possible VFCCU error recovery states.
 */
@@ -100,7 +116,7 @@ typedef enum
     EMCEM_ERR_NOT_RECOVERED = 1     /**< @brief VFCCU error has not been recovered. */
 } eMcem_ErrRecoveryType;
 
-/**
+/*!
 * @brief      eMCEM FCCU EOUT Signal Enum.
 * @details    Enumeration covering possible FCCU EOUT Signals to control.
 */
@@ -110,7 +126,7 @@ typedef enum
     EMCEM_FCCU_EOUT1 = 1,   /**< @brief FCCU EOUT1 Signal. */
 } eMcem_ErrorOutputType;
 
-/**
+/*!
 * @brief      eMCEM FCCU EOUT Pin Mode Enum.
 * @details    Enumeration covering possible FCCU EOUT Pin Modes.
 */
@@ -124,7 +140,7 @@ typedef enum
     EMCEM_FCCU_EOUT_FAULT_TOGGLE        = 5    /**< @brief FCCU EOUT Fault-Toggle Pin Mode. */
 } eMcem_EOUTPinModeType;
 
-/**
+/*!
 * @brief      eMCEM FCCU EOUT Signaling State Enum.
 * @details    Enumeration covering possible signaling states of FCCU EOUT pins.
 */
@@ -134,7 +150,7 @@ typedef enum
     EMCEM_FCCU_EOUT_ACTIVATE   = 1    /**< @brief FCCU EOUT signals active. */
 } eMcem_EOUTStateType;
 
-/**
+/*!
 * @brief      eMCEM FCCU EOUT Controlling Mode Enum.
 * @details    Enumeration covering possible controlling modes of FCCU EOUT pins.
 */
@@ -145,7 +161,7 @@ typedef enum
     EMCEM_FCCU_EOUT_HIGH = 3    /**< @brief Signals high until a fault occurs; thereafter controlled by FSM. */
 } eMcem_EOUTModeType;
 
-/**
+/*!
 * @brief      eMCEM VFCCU FSM States
 * @details    Enumeration covering possible FSM states
 */
@@ -156,14 +172,14 @@ typedef enum
     EMCEM_VFCCU_FSM_DELAYED_REACTION    = 2,    /**< @brief Fault state - Delayed reaction of FSM */
 } eMcem_FsmStateType;
 
-/**
+/*!
 * @brief     Prototype of VFCCU fault alarm handler function
 * @details   Function takes one argument which is ID of fault that is being handled and returns eMcem_ErrRecoveryType telling the result of fault recovery.
 *
 */
 typedef eMcem_ErrRecoveryType (*eMcem_FccuHandlerType)( eMcem_FaultType nFaultId );
 
-/**
+/*!
 * @brief     Prototype of VFCCU Successful Recovery notification function
 * @details   Function takes one argument which is ID of fault that is being handled.
 *

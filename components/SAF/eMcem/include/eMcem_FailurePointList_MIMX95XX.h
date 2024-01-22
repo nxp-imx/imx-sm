@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
-*   Copyright 2023 NXP
+*   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -50,6 +50,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
+/* Includes */
 #include "MIMX_SAF_Version.h"
 #include "Std_Types.h"
 #include "eMcem_Cfg.h"
@@ -61,22 +62,31 @@ extern "C"{
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0502 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0505 */
+/*!
+* @brief    eMCEM failure point list software major version.
+*/
 #define EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MAJOR_VERSION             0
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0501 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0502 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0505 */
+/*!
+* @brief    eMCEM failure point list software minor version.
+*/
 #define EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MINOR_VERSION             4
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0501 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0502 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0505 */
+/*!
+* @brief    eMCEM failure point list software patch version.
+*/
 #define EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_PATCH_VERSION             0
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
+/*!< Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -98,37 +108,37 @@ extern "C"{
 /*==================================================================================================
 *                                             ENUMS
 ==================================================================================================*/
-/**
+/*!
 * @brief          eMCEM Driver Extended Diagnostics Failure Point Enum.
 * @details        List of failure points within driver where the execution can fail.
 */
 typedef enum
 {
-    EMCEM_FP_EMPTY = 0U,
-    EMCEM_FP_INIT,
-    EMCEM_FP_INJECT_FAULT,
-    EMCEM_FP_GET_ERRORS,
-    EMCEM_FP_CLEAR_FAULTS,
-    EMCEM_FP_ASSERT_SW_FAULT,
-    EMCEM_FP_DEASSERT_SW_FAULT,
-    EMCEM_FP_SET_EOUT_SIGNALING,
-    EMCEM_FP_SET_EOUT_CONTROL_MODE,
-    EMCEM_FP_SETUP_INJECTION_CHANNEL,
-    EMCEM_FP_VALIDATE_INIT_PTR,
-    EMCEM_FP_VALIDATE_ERROR_PTR,
-    EMCEM_FP_VALIDATE_FAULT_ID_1,
-    EMCEM_FP_VALIDATE_FAULT_ID_2,
-    EMCEM_FP_CHECK_STATE,
+    EMCEM_FP_EMPTY = 0U, /*!< Failure point empty */
+    EMCEM_FP_INIT, /*!< Failure point init */
+    EMCEM_FP_INJECT_FAULT, /*!< Inject fault */
+    EMCEM_FP_GET_ERRORS, /*!< Get Failure points errors */
+    EMCEM_FP_CLEAR_FAULTS, /*!< Clear Failure points errors */
+    EMCEM_FP_ASSERT_SW_FAULT, /*!< Assert SW faults */
+    EMCEM_FP_DEASSERT_SW_FAULT, /*!< Dessert  SW faults */
+    EMCEM_FP_SET_EOUT_SIGNALING, /*!< Set Eout signal */
+    EMCEM_FP_SET_EOUT_CONTROL_MODE, /*!< Set Eout control mode */
+    EMCEM_FP_SETUP_INJECTION_CHANNEL, /*!< Setup injection channel */
+    EMCEM_FP_VALIDATE_INIT_PTR, /*!< Vaidate initialization PTR */
+    EMCEM_FP_VALIDATE_ERROR_PTR, /*!< Validate error PTR */
+    EMCEM_FP_VALIDATE_FAULT_ID_1, /*!< Validate fault id 1 */
+    EMCEM_FP_VALIDATE_FAULT_ID_2, /*!< Validate fault id 2 */
+    EMCEM_FP_CHECK_STATE, /*!< Check fault point state */
     EMCEM_FP_INIT_INT,
     EMCEM_FP_INJECT_FAULT_INT,
-    EMCEM_FP_CHECK_FAULT_ID_INT,
-    EMCEM_FP_EIM_SETUP_INJECTION_CHANNEL,
-    EMCEM_FP_VFCCU_INIT_CVFCCU,
-    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_1,
-    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_2,
-    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_1,
-    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_2,
-    EMCEM_FP_VFCCU_CLEAR_CVFCCU_FAULTS,
+    EMCEM_FP_CHECK_FAULT_ID_INT, /*!< Check fault Id */
+    EMCEM_FP_EIM_SETUP_INJECTION_CHANNEL, /*!< Check fault point state */
+    EMCEM_FP_VFCCU_INIT_CVFCCU, /*!< Initiliaze the C_VFCCU */
+    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_1, /*!< Access to C_VFCCU FHID 1 */
+    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_2, /*!< Access to C_VFCCU FHID 2 */
+    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_1, /*!< Access to C_VFCCU 1 */
+    EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_2, /*!< Access to C_VFCCU 2 */
+    EMCEM_FP_VFCCU_CLEAR_CVFCCU_FAULTS, /*!< Clear C_VFCCU faults */
     EMCEM_FP_VFCCU_INIT_1,
     EMCEM_FP_VFCCU_INIT_2,
     EMCEM_FP_VFCCU_INIT_3,

@@ -16,8 +16,8 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2023-2024 NXP
-*   Detailed license terms of software usage can be found in the license.txt 
-*   file located in the root folder of this package. 
+*   Detailed license terms of software usage can be found in the license.txt
+*   file located in the root folder of this package.
 ==================================================================================================*/
 
 #ifndef EMCEM_CFG_H
@@ -110,7 +110,7 @@ extern "C" {
 #define EMCEM_TEST_API_AVAILABLE        (STD_OFF)
 
 /*!
-* @brief    Enable/Disable fault statistics. Mode Selector module needs to be present in configuration to allow enabling of this option. 
+* @brief    Enable/Disable fault statistics. Mode Selector module needs to be present in configuration to allow enabling of this option.
 */
 #define EMCEM_FAULT_STATISTICS_ENABLED  (STD_OFF)
 
@@ -272,7 +272,7 @@ extern const eMcem_ConfigType *eMcem_pConfigPtr;
  * Alarm Handler function.
  *
  * @param[in]     nFaultId      Id of the fault
- * 
+ *
  * @return     eMcem_ErrRecoveryType
  * @retval           EMCEM_ERR_RECOVERED      fault has been recovered successfully.
  * @retval           EMCEM_ERR_NOT_RECOVERED  fault has not been recovered.

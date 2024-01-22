@@ -16,7 +16,7 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2012-2016 Freescale
-*   Copyright 2016, 2018-2023 NXP
+*   Copyright 2016, 2018-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -45,14 +45,24 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+
+/*!
+* @brief    eMCEM types extended SW major version
+*/
 #define EMCEM_TYPES_EXT_SW_MAJOR_VERSION             0
+/*!
+* @brief    eMCEM types extended SW minor version
+*/
 #define EMCEM_TYPES_EXT_SW_MINOR_VERSION             4
+/*!
+* @brief    eMCEM tyoes extended SW patch version
+*/
 #define EMCEM_TYPES_EXT_SW_PATCH_VERSION             0
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
+/*!< Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_TYPES_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_TYPES_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_TYPES_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -68,12 +78,30 @@ extern "C"{
 /*==================================================================================================
 *                                      DEFINES AND MACROS
 ==================================================================================================*/
-/* Additional value indicating pending fault when returning from eMcem_Geterrors() */
+/*!< Additional value indicating pending fault when returning from eMcem_Geterrors() */
+/*!
+* @brief    eMCEM  OK
+*/
 #define EMCEM_E_OK                ((Std_ReturnType)E_OK)
+/*!
+* @brief    eMCEM  NOT OK
+*/
 #define EMCEM_E_NOT_OK            ((Std_ReturnType)E_NOT_OK)
+/*!
+* @brief    eMCEM fault detected
+*/
 #define EMCEM_E_FAULT_DETECTED    ((Std_ReturnType)2U)
+/*!
+* @brief    eMCEM pending fault false
+*/
 #define EMCEM_FALSE               ((boolean)FALSE)
+/*!
+* @brief    eMCEM pending fault true
+*/
 #define EMCEM_TRUE                ((boolean)TRUE)
+/*!
+* @brief    eMCEM fault detected
+*/
 #define E_FAULT_DETECTED          ((Std_ReturnType)2)
 
 /*==================================================================================================

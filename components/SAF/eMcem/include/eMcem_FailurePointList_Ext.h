@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
-*   Copyright 2019-2023 NXP
+*   Copyright 2019-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -71,7 +71,7 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
+/*!< Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_FAILUREPOINTLIST_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
