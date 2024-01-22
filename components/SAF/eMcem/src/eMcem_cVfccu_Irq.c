@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
-*   Copyright 2023 NXP
+*   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -240,17 +240,17 @@ static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx )
 
     for( u8RegIdx = 0U; u8RegIdx < EMCEM_VFCCU_FAULT_STATUS_REG_COUNT; u8RegIdx++ )
     {
-        if (u8RegIdx == 0)
+        if (u8RegIdx == 0U)
         {
                 u32FaultRegStatus = AON__FCCU.FHFLTS0_0.R;
                 u32FaultEnableReg = AON__FCCU.FHFLTENC0_0.R;
         }
-        else if (u8RegIdx == 1)
+        else if (u8RegIdx == 1U)
         {
                 u32FaultRegStatus = AON__FCCU.FHFLTS0_1.R;
                 u32FaultEnableReg = AON__FCCU.FHFLTENC0_1.R;
         }
-        else if (u8RegIdx == 2)
+        else
         {
                 u32FaultRegStatus = AON__FCCU.FHFLTS0_2.R;
                 u32FaultEnableReg = AON__FCCU.FHFLTENC0_2.R;
@@ -270,7 +270,7 @@ static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx )
                 if( 0UL < ( u32FaultRegStatus & u32IEMask & u32FaultEnableReg) )
                 {
                     /* Calculate local nFaultId */
-                    nFaultId = ( ( u8RegIdx ) * (uint8)EMCEM_VFCCU_REG_SIZE_U8 ) + u8BitPosition;
+                    nFaultId = (eMcem_FaultType)(( ( u8RegIdx ) * (uint8)EMCEM_VFCCU_REG_SIZE_U8 ) + u8BitPosition);
 
                     /* Calculate global nFaultId */
                     nFaultId += EMCEM_VFCCU_FAULT_LINE_OFFSET;
@@ -338,21 +338,24 @@ static void eMcem_Vfccu_ClearCvfccuFhidFault( eMcem_FaultType nFaultId )
     const uint8 u8BitIdx = (uint8)(nFaultId % EMCEM_REG_SIZE);
 
     /* Check if write access to FH is enabled */
-    if( EMCEM_TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
+    if( EMCEM_TRUE == (boolean)eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
     {
-        if (u8RegIdx == 0)
+        if (u8RegIdx == 0U)
         {
-            AON__FCCU.FHFLTS0_0.R |= ( 1U << u8BitIdx );
+            AON__FCCU.FHFLTS0_0.R |= ( 1U << (u8BitIdx & 0x1F) );
         }
-        else if (u8RegIdx == 1)
+        else if (u8RegIdx == 1U)
         {
-            AON__FCCU.FHFLTS0_1.R |= ( 1U << u8BitIdx );
+            AON__FCCU.FHFLTS0_1.R |= ( 1U << (u8BitIdx & 0x1F) );
         }
-        else if (u8RegIdx == 2)
+        else
         {
-            AON__FCCU.FHFLTS0_2.R |= ( 1U << u8BitIdx );
+            AON__FCCU.FHFLTS0_2.R |= ( 1U << (u8BitIdx & 0xF) );
         }
     }
+	else
+	{
+	}
     	/* No need to call MRU since this should be called only in SysMan which has access to CVFCCU */
 }
 
@@ -402,7 +405,7 @@ void VFCCU_ALARM_ISR( void )
     /* Check if driver was initialized */
     if( EMCEM_S_UNINIT != eMcem_DriverState )
     {
-        if( EMCEM_VFCCU_FSM_IDLE != AON__FCCU.GINTOVFS.B.FSMSTATE )
+        if( (uint32)(EMCEM_VFCCU_FSM_IDLE) != AON__FCCU.GINTOVFS.B.FSMSTATE )
         {
             (void) eMcem_Vfccu_ProcessFaults( EMCEM_C_VFCCU_IDX );
         }
@@ -423,7 +426,7 @@ void VFCCU_ALARM_ISR( void )
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_cVfccu_Irq_c_REF_0410 */
 /* @violates @ref eMcem_cVfccu_Irq_c_REF_2001 */
-#include "eMcem_MemMap.h"
+/* #include "eMcem_MemMap.h" */
 
 #ifdef __cplusplus
 }
