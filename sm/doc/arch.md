@@ -277,7 +277,7 @@ The basic relationship of these modules is as follows:
   to a transport
 - Transports then map to mailboxes; these provide underlying communicate capability; for SMT the mailbox
   is only used to generate doorbells (aka interrupts) in both directions
-- The eMCEM driver reports FCCU faults to the SM. The SM provides configurable reactions to all FCCU
+- The eMCEM component reports FCCU faults to the SM. The SM provides configurable reactions to all FCCU
   faults. Reactions include reset or shutdown of the system, reset or shutdown of an LM, custom board
   reaction, notification to a safe S-EENV to handle the fault, or do nothing. 
 - See @ref STRUCTURE for more information on the structure of the SM and the relationship between
@@ -299,9 +299,9 @@ Client notifications consist of the following basic sequence:
   - See @ref NOTIFY_EXAMPLE for more info.
 
 Faults consist of the following basic sequence:
-  - FCCU IRQ handler runs and calls FCCU driver
-  - FCCU drivers calls bound handlers for each fault type
-  - FCCU handlers request device fault handling
+  - FCCU IRQ handler runs and calls eMcem (FCCU) component
+  - eMcem calls bound handlers for each fault type
+  - eMcem handlers request device fault handling
   - Device fault handler request LMM fault handling
   - LMM fault handler logs fault and applies configured reaction (reset system LM, shutdown system/LM,
     etc.)
@@ -314,8 +314,8 @@ Details on the SAF are beyond the scope of this section. The SAF is encapsulated
 it from the SM. It does not run as a thread or process (no RTOS) and instead operates via interrupts from
 safety IP or API calls. It directly interacts with safety IP like the FCCU.
 
-Note the eMCEM driver (FCCU) is used by the SM even in non-safety cases. This provides interrupts for all
-of the fault conditions, many of which are system faults having nothing to do with safety.
+Note the eMCEM component (FCCU driver) is used by the SM even in non-safety cases. This provides interrupts
+for all of the fault conditions, many of which are system faults having nothing to do with safety.
 
 MCUXpresso SDK  {#ARCH_SDK}
 --------------

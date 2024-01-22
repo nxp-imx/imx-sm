@@ -335,7 +335,38 @@ alarm interrupt. The purpose is to notify clients that the RTC alarm has occurre
 Example Fault Flow {#FAULT_EXAMPLE}
 ==================
 
-- TODO
+The following is an example code flow of a fault. It originates from the FCCU interrupt. The
+purpose is generate reactions to the fault and inform the FCCU the fault has been handled (aka
+recovered). If the SM does not report the fault is resolved with the configured timeout, the
+FCCU is configured to reset the system.
+
+- **FCCU0_IRQHandler()** - shim from the vector table to the associated device handler
+  - Just calls VFCCU_ALARM_ISR()
+- **VFCCU_ALARM_ISR()** - process the fault
+  - calls the handler as defined in the eMcem_CVfccuInstanceCfgType struct passed to
+    eMcem_Init(). All are currently mapped to eMcemCVfccuAlarmHandler()
+- **eMcemCVfccuAlarmHandler()** - default FCCU handler
+  - Fills in a reset record
+  - Calls DEV_SM_FaultComplete() to complete fault handling
+- **DEV_SM_FaultComplete()** - device fault handler
+  - Calls SM_FAULTCOMPLETE() to report to the LMM
+  - Calls DEV_SM_FaultSet() to clear the fault if handled (recovered)
+  - Disables the FCCU interrupts if the fault is not handled
+- **SM_FAULTCOMPLETE()** - shim to LMM_FaultComplete()
+- **LMM_FaultComplete()** - generate fault reaction
+  - Calls LMM_FaultReactionGet() to get the configured reaction
+    - Calls BRD_SM_FaultReactionGet() which allows for the info to be recorded in
+      persistent storage and/or printed to the debug UART
+  - Calls LMM_FusaFaultRecover() to allow the FuSa component to send notifications
+    and/or override the fault reaction
+  - Calls LMM functions (e.g. LMM_SystemReset(), LMM_SystemLmReset()) to handle reaction
+  - If recovered, calls LMM_FusaFaultCleared() to clear fault, this will also re-enable
+    the FCCU interrupts
+- Returns back out of functions until it returns from the interrupt.
+
+Note if the fault isn't recovered, then the FCCU interrupt will remain disabled and the FCCU
+will start a timer to the delayed reaction (system reset). If an agent has been sent a fault
+notification it has this time to send a fault clear message to recover the fault.
 
 Event Processing {#EVENTS}
 ================

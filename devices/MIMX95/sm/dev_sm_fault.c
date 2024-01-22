@@ -76,8 +76,12 @@ int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
     /* Call handler */
     status = SM_FAULTCOMPLETE(resetRec);
 
-    /* Stop taking faults on error */
-    if (status != SM_ERR_SUCCESS)
+    /* Clear fault on success */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = DEV_SM_FaultSet(0U, resetRec.errId, 0U);
+    }
+    else
     {
         /* Disable FCCU interrupts if not recovered - allows
            delayed recovery via clear with DEV_SM_FaultSet() */
@@ -149,7 +153,7 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
                 if (eMcem_AssertSWFault((eMcem_FaultType) faultId)
                     != (Std_ReturnType) E_OK)
                 {
-                    status = SM_ERR_HARDWARE_ERROR;
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
             else
@@ -167,7 +171,7 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
                 if (eMcem_DeassertSWFault((eMcem_FaultType) faultId)
                     != (Std_ReturnType) E_OK)
                 {
-                    status = SM_ERR_HARDWARE_ERROR;
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
 
@@ -177,7 +181,7 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
                 if (eMcem_ClearFaults((eMcem_FaultType) faultId)
                     != (Std_ReturnType) E_OK)
                 {
-                    status = SM_ERR_HARDWARE_ERROR;
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
                 else
                 {
