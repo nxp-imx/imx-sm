@@ -27,6 +27,7 @@ Improvement {#RN_KN_IMP}
 | [SM-17](https://jira.sw.nxp.com/projects/SM/issues/SM-17) | Implement SCMI message sequence checking | Y | Y |
 | [SM-19](https://jira.sw.nxp.com/projects/SM/issues/SM-19) | Optimize boot time | Y | Y |
 | [SM-24](https://jira.sw.nxp.com/projects/SM/issues/SM-24) | Align reset toggle delay with SoC specification | Y | Y |
+| [SM-71](https://jira.sw.nxp.com/projects/SM/issues/SM-71) | Enable/disable VDD_ARM on AP LM boot/shutdown | Y | Y |
 
 Bug {#RN_KN_BUG}
 ============
