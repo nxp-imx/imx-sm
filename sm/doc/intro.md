@@ -23,6 +23,9 @@ with the SM.
 Of critical note, due to the SM abstraction, some hardware described in the SoC RM that is used by the SM is
 not directly accessible to other cores. See the [SM Physical View](@ref PHY_ARCH) for more info.
 
+The SM has a debug monitor presented on a debug UART. See the @ref MONITOR section for an overview of the
+commands and output (e.g. faults).
+
 Supported Platforms
 -------------------
 
@@ -82,6 +85,7 @@ in the Arm SCMI spec.
 | agent        | Entity that sends commands to the platform using SCMI. See 4.1.1 |
 | channel      | The transport link over which the agent communicates to the platform. See 4.1.1 |
 | command      | A message that is sent from an agent to the platform. See 1.2. |
+| FCCU         | The Fault Collection and Control Unit - HW IP to collect and manage faults. |
 | LM           | [Logical Machine](@ref SYS_ARCH_LM), a partition of the SoC resources that looks like a unique SoC. For example, the AP cluster and all the resources and memory is uses. |
 | LMM          | [LM Manager](@ref LMM). Software component that manages logical machines. |
 | MB           | Mailbox, an interface to send transport streams or generate doorbells |

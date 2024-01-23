@@ -12,8 +12,8 @@ are made with regards to its use.**
 Note the terminal needs to be in a mode that sends CR or LF for a new line (not
 CR+LF).
 
-The monitor can asynchronously display error messages including fault reporting. See 
-@ref PORT_NXP_PRINT.
+The monitor can asynchronously display error messages including exception and fault
+reporting. See @ref PORT_NXP_PRINT.
 
 The following commands are supported. Arguments are in *italics*. Optional arguments are
 in [].

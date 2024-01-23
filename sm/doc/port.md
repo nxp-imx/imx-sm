@@ -289,14 +289,37 @@ Typical CM33 exceptions/interrupts:
 | Memory management |  -12  | Cortex-M33 Memory Management Interrupt |
 | Bus fault         |  -11  | Cortex-M33 Bus Fault Interrupt         |
 | Usage fault       |  -10  | Cortex-M33 Usage Fault Interrupt       |
-| Secure fault      |  -9   | Cortex-M33 Secure Fault Interrupt      |
+| Secure fault      |   -9  | Cortex-M33 Secure Fault Interrupt      |
 | WDOG 1            |   31  | Watchdog 1 Interrupt                   |
 | WDOG 2            |   32  | Watchdog 2 Interrupt                   |
 | ELE Group 1       |  160  | ELE Group 1 no clock                   |
 | ELE Group 2       |  161  | ELE Group 2 clock too slow             |
 | ELE Group 3       |  162  | ELE Group 3 fault                      |
 
+For the ELE group exceptions:
+
+    Reset request: reason=cm33_exc, errId=160
+      0x1FFC4A58 <- M33 PC
+      0x00200020 <- ELE_RST_REQ_STAT
+      0x00000020 <- ELE_IRQ_REQ_STAT
+
 For the ::DEV_SM_REASON_FCCU reason, *errId* contains the FCCU faultId.
+
+| Fault         | errId | Description                                |
+|---------------|-------|--------------------------------------------|
+| TMPSNS ANA    |   0   | Temp sensor over-temperature (ANA)         |
+| TMPSNS A55    |   1   | Temp sensor over-temperature (CORTEX-A)    |
+| WDOG 2        |  18   | WDOG2 timeout (Watchdog reset request)     |
+| WDOG 3        |  19   | WDOG3 timeout (Watchdog reset request)     |
+| WDOG 4        |  20   | WDOG4 timeout (Watchdog reset request)     |
+| WDOG 5        |  21   | WDOG5 timeout (Watchdog reset request)     |
+
+For the WDOG2 fault:
+
+    Reset request: reason=fccu, errId=18
+      0x1FFD39CA <- M33 PC
+
+See the SoC RM for a complete list of faults.
 
 Creating a New Port  {#PORT_CREATE}
 ===================
