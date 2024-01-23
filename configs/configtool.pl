@@ -109,6 +109,18 @@ if ($help || (not defined $inputFile) || (not defined $outDir))
     exit;
 }
 
+# Support other cfg files
+if (defined $inputFile)
+{
+	my $otherInputFile = $inputFile;
+    $otherInputFile =~ s/configs/configs\/other/g;
+
+	if (-e $otherInputFile)
+	{
+		$inputFile = $otherInputFile;
+	}
+}
+
 # Open log file
 if (defined $logFile)
 {

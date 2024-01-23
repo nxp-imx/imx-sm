@@ -580,7 +580,7 @@ and memory. This ownership info is then used to determine API access rights to r
 because the [config_dev.h](@ref DEV_CONFIG) file usually has manual customizations, it will
 not be overwritten if it exits.
 
-The cfg files are also usually stored in the configs directory. So an example usage is:
+The cfg files are also usually stored in the *configs* directory. So an example usage is:
 
     cd configs
     ./configtool -i <name>.cfg -o <name>
@@ -588,6 +588,11 @@ The cfg files are also usually stored in the configs directory. So an example us
 where \<name\> is the configuration name. This can also be accomplished using make:
 
     make config=<name> cfg
+
+Some config files are also stored in *configs/other*. This will also be searched to find the
+specified cfg file. No need to include *other* in the file name. Config files in *other* are
+delivered as is and not maintained or tested as part of an SM release. They usually come
+from other teams such as an OS, virtualization, or test teams.
 
 To create a new config, its best to copy a config for the NXP (e.g. EVK) board for the
 same SoC device to a new config file name, modify it, and generate the header files.
