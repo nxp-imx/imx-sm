@@ -126,7 +126,7 @@ void LMM_SensorEvent(uint32_t sensorId, uint8_t tripPoint, uint8_t dir)
             .parm[2] = (uint32_t) dir
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 

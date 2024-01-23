@@ -108,7 +108,7 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
  * - others returned by queuing functions
  */
 int32_t RPC_SCMI_FusaDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 
 /*!
  * Dispatch SCMI fusa protocol reset.

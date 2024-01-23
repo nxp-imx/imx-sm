@@ -182,7 +182,7 @@ int32_t LMM_FusaFaultSet(uint32_t lmId, uint32_t faultId, bool set)
                 .parm[2] = lmId
             };
 
-            (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+            (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
         }
     }
 
@@ -220,7 +220,7 @@ int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
             .parm[2] = 0U
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
     /* Return status */
@@ -243,7 +243,7 @@ void LMM_FusaFaultCleared(uint32_t faultId)
             .parm[2] = 0U
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 

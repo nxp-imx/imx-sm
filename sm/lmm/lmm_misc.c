@@ -147,7 +147,7 @@ void LMM_MiscControlEvent(uint32_t ctrlId, uint32_t flags)
             .parm[1] = flags
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 

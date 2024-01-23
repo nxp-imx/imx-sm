@@ -270,7 +270,7 @@ void TEST_ScmiMisc(void)
         lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_MiscDispatchNotification()\n");
-        RPC_SCMI_MiscDispatchNotification(msgId, trigger);
+        RPC_SCMI_MiscDispatchNotification(msgId, &trigger);
     }
 
     /* Loop over control test domains */

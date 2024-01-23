@@ -361,7 +361,7 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
 static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rmisc16_t *in, const scmi_msg_status_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t MiscResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -468,7 +468,7 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_MiscDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1299,18 +1299,18 @@ static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Loop over all agents */
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
-        uint32_t ctrlId = trigger.parm[0];
-        uint32_t flags = trigger.parm[1];
+        uint32_t ctrlId = trigger->parm[0];
+        uint32_t flags = trigger->parm[1];
 
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && ((s_ctrlNotify[ctrlId][dstAgent] & flags) != 0U))
         {
             msg_rmisc32_t out;

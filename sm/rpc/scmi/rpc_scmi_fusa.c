@@ -377,11 +377,11 @@ static int32_t FusaCrcResultGet(const scmi_caller_t *caller,
 static int32_t FusaNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rfusa16_t *in, const scmi_msg_status_t *out);
 static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t FusaFaultEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t FusaResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -498,7 +498,7 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_FusaDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1511,7 +1511,7 @@ static int32_t FusaNegotiateProtocolVersion(const scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1519,14 +1519,14 @@ static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (BITARRAY_GET(stateNotify, dstAgent) != 0U))
         {
             msg_rfusa32_t out;
 
             /* Fill in data */
-            out.feenvState = trigger.parm[0];
-            out.mselMode = trigger.parm[1];
+            out.feenvState = trigger->parm[0];
+            out.mselMode = trigger->parm[1];
 
             /* Check if queue is full */
             if (!RPC_SCMI_P2aTxQFull(dstAgent, sizeof(out),
@@ -1555,7 +1555,7 @@ static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1563,13 +1563,13 @@ static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (BITARRAY_GET(stateNotify, dstAgent) != 0U))
         {
             msg_rfusa33_t out;
 
             /* Fill in data */
-            out.pingCookie = trigger.parm[0];
+            out.pingCookie = trigger->parm[0];
 
             /* Check if queue is full */
             if (!RPC_SCMI_P2aTxQFull(dstAgent, sizeof(out),
@@ -1597,17 +1597,18 @@ static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
 /* - msgId: Message ID to dispatch                                          */
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
-static int32_t FusaFaultEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
+static int32_t FusaFaultEvent(scmi_msg_id_t msgId,
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Loop over all agents */
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
-        uint32_t fault = trigger.parm[0];
+        uint32_t fault = trigger->parm[0];
 
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (BITARRAY_GET(s_fusaInfo[dstAgent].faultNotify, fault)
             != 0U))
         {
@@ -1615,7 +1616,7 @@ static int32_t FusaFaultEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
 
             /* Fill in data */
             out.faultId = fault;
-            out.flags = trigger.parm[1];
+            out.flags = trigger->parm[1];
 
             /* Check if queue is full */
             if (!RPC_SCMI_P2aTxQFull(dstAgent, sizeof(out),

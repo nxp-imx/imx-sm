@@ -346,7 +346,7 @@ static int32_t SensorConfigSet(const scmi_caller_t *caller,
 static int32_t SensorNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rsensor16_t *in, const scmi_msg_status_t *out);
 static int32_t SensorTripPointEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t SensorResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -438,7 +438,7 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_SensorDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1269,7 +1269,7 @@ static int32_t SensorNegotiateProtocolVersion(const scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 static int32_t SensorTripPointEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1277,16 +1277,16 @@ static int32_t SensorTripPointEvent(scmi_msg_id_t msgId,
     /* Loop over all agents */
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
-        uint32_t sensorId = trigger.parm[0];
+        uint32_t sensorId = trigger->parm[0];
         bool enable = ((s_sensorNotify[dstAgent]
             >> sensorId) & 0x1U) != 0U;
 
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && enable)
         {
-            uint32_t tripPointDesc = SENSOR_EVENT_TP_ID(trigger.parm[1])
-                | SENSOR_EVENT_DIRECTION(trigger.parm[2]);
+            uint32_t tripPointDesc = SENSOR_EVENT_TP_ID(trigger->parm[1])
+                | SENSOR_EVENT_DIRECTION(trigger->parm[2]);
             msg_rsensor32_t out;
 
             /* Fill in data */

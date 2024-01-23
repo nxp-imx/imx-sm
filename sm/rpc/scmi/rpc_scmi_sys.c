@@ -187,7 +187,7 @@ static int32_t SystemPowerStateNotify(const scmi_caller_t *caller,
 static int32_t SysNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rsys16_t *in, const scmi_msg_status_t *out);
 static int32_t SystemPowerStateNotifier(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t SysResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -259,7 +259,7 @@ int32_t RPC_SCMI_SysDispatchCommand(scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_SysDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -703,7 +703,7 @@ static int32_t SysNegotiateProtocolVersion(const scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 static int32_t SystemPowerStateNotifier(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -711,15 +711,15 @@ static int32_t SystemPowerStateNotifier(scmi_msg_id_t msgId,
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (s_sysNotify[dstAgent]))
         {
             msg_rsys32_t out;
 
             /* Fill in data */
-            out.agentId = trigger.parm[1];
-            out.flags = trigger.parm[3];
-            out.systemState = trigger.parm[0];
+            out.agentId = trigger->parm[1];
+            out.flags = trigger->parm[3];
+            out.systemState = trigger->parm[0];
             out.timeout = 0U;
 
             /* Queue notification */

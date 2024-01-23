@@ -340,9 +340,10 @@ static int32_t BbmButtonNotify(const scmi_caller_t *caller,
     const msg_rbbm11_t *in, const scmi_msg_status_t *out);
 static int32_t BbmNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rbbm16_t *in, const scmi_msg_status_t *out);
-static int32_t BbmRtcEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger);
+static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
+    const lmm_rpc_trigger_t *trigger);
 static int32_t BbmButtonEvent(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 static int32_t BbmResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -449,7 +450,7 @@ int32_t RPC_SCMI_BbmDispatchCommand(scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_BbmDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1253,7 +1254,8 @@ static int32_t BbmNegotiateProtocolVersion(const scmi_caller_t *caller,
 /* - msgId: Message ID to dispatch                                          */
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
-static int32_t BbmRtcEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
+static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1261,10 +1263,10 @@ static int32_t BbmRtcEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
         /* Agent belong to instance? */
-        if (g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if (g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
         {
-            uint32_t rtcId = trigger.parm[0];
-            uint32_t event = trigger.parm[1];
+            uint32_t rtcId = trigger->parm[0];
+            uint32_t event = trigger->parm[1];
             msg_rbbm33_t out;
 
             if ((event == LMM_TRIGGER_PARM_RTC_ALARM)
@@ -1317,7 +1319,8 @@ static int32_t BbmRtcEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
 /* - msgId: Message ID to dispatch                                          */
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
-static int32_t BbmButtonEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
+static int32_t BbmButtonEvent(scmi_msg_id_t msgId,
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1325,7 +1328,7 @@ static int32_t BbmButtonEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
         /* Agent belong to instance? */
-        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && s_buttonNotify[dstAgent])
         {
             msg_rbbm33_t out;

@@ -186,7 +186,7 @@ void LMM_BbmRtcAlarmEvent(uint32_t rtcId)
                 };
 
                 s_rtcInfo[rtcId].alarmEnable[dstLm] = false;
-                (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+                (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
             }
         }
     }
@@ -210,7 +210,7 @@ void LMM_BbmRtcRolloverEvent(uint32_t rtcId)
             .parm[1] = LMM_TRIGGER_PARM_RTC_ROLLOVER
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 
@@ -229,7 +229,7 @@ void LMM_BbmRtcUpdateEvent(uint32_t rtcId)
             .parm[1] = LMM_TRIGGER_PARM_RTC_UPDATE
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 
@@ -246,7 +246,7 @@ void LMM_BbmButtonEvent(void)
             .event = LMM_TRIGGER_BUTTON,
         };
 
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 

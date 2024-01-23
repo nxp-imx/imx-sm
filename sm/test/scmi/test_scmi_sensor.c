@@ -286,7 +286,7 @@ void TEST_ScmiSensor(void)
         lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_SensorDispatchNotification()\n");
-        RPC_SCMI_SensorDispatchNotification(msgId, trigger);
+        RPC_SCMI_SensorDispatchNotification(msgId, &trigger);
     }
 
     /* Loop over sensor tests */

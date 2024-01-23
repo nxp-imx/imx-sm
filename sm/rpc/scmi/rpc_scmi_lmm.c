@@ -315,7 +315,8 @@ static int32_t LmmResetReason(const scmi_caller_t *caller,
     const msg_rlmm10_t *in, msg_tlmm10_t *out, uint32_t *len);
 static int32_t LmmNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rlmm16_t *in, const scmi_msg_status_t *out);
-static int32_t LmmEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger);
+static int32_t LmmEvent(scmi_msg_id_t msgId,
+    const lmm_rpc_trigger_t *trigger);
 static int32_t LmmResetAgentConfig(uint32_t lmId, uint32_t agentId,
     bool permissionsReset);
 
@@ -417,7 +418,7 @@ int32_t RPC_SCMI_LmmDispatchCommand(scmi_caller_t *caller,
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_LmmDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger)
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1269,7 +1270,8 @@ static int32_t LmmNegotiateProtocolVersion(const scmi_caller_t *caller,
 /* - msgId: Message ID to dispatch                                          */
 /* - trigger: Trigger data                                                  */
 /*--------------------------------------------------------------------------*/
-static int32_t LmmEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
+static int32_t LmmEvent(scmi_msg_id_t msgId,
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1277,11 +1279,11 @@ static int32_t LmmEvent(scmi_msg_id_t msgId, lmm_rpc_trigger_t trigger)
     for (uint32_t dstAgent = 0U; dstAgent < SM_SCMI_NUM_AGNT; dstAgent++)
     {
         /* Agent belong to instance? */
-        if (g_scmiAgentConfig[dstAgent].scmiInst == trigger.rpcInst)
+        if (g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
         {
-            uint32_t event = trigger.parm[0];
-            uint32_t lmId = trigger.parm[1];
-            uint32_t eventLm = trigger.parm[2];
+            uint32_t event = trigger->parm[0];
+            uint32_t lmId = trigger->parm[1];
+            uint32_t eventLm = trigger->parm[2];
             msg_rlmm32_t out;
 
             if ((event == LMM_TRIGGER_PARM_LM_BOOT)

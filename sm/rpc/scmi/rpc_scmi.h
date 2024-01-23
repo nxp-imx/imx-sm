@@ -277,7 +277,7 @@ int32_t RPC_SCMI_Reset(uint8_t scmiInst);
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t RPC_SCMI_Trigger(lmm_rpc_trigger_t trigger);
+int32_t RPC_SCMI_Trigger(const lmm_rpc_trigger_t *trigger);
 
 /*!
  * Dump collected SCMI errors.

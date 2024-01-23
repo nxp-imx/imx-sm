@@ -251,10 +251,11 @@ int32_t LMM_RpcReset(uint32_t lmId)
 /*--------------------------------------------------------------------------*/
 /* Trigger notification event in the RPC                                    */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_RpcNotificationTrigger(uint32_t lmId, lmm_rpc_trigger_t trigger)
+int32_t LMM_RpcNotificationTrigger(uint32_t lmId,
+    const lmm_rpc_trigger_t *trigger)
 {
     int32_t status = SM_ERR_SUCCESS;
-    lmm_rpc_trigger_t newTrigger = trigger;
+    lmm_rpc_trigger_t newTrigger = *trigger;
 
     /* Add instance */
     newTrigger.rpcInst = g_lmmConfig[lmId].rpcInst;
@@ -265,7 +266,7 @@ int32_t LMM_RpcNotificationTrigger(uint32_t lmId, lmm_rpc_trigger_t trigger)
         case SM_RPC_NONE:
             break;
         case SM_RPC_SCMI:
-            status = RPC_SCMI_Trigger(newTrigger);
+            status = RPC_SCMI_Trigger(&newTrigger);
             break;
         default:
             status = SM_ERR_INVALID_PARAMETERS;

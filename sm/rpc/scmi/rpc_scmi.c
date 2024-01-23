@@ -468,14 +468,14 @@ int32_t RPC_SCMI_Reset(uint8_t scmiInst)
 /*--------------------------------------------------------------------------*/
 /* Trigger SCMI notification                                                */
 /*--------------------------------------------------------------------------*/
-int32_t RPC_SCMI_Trigger(lmm_rpc_trigger_t trigger)
+int32_t RPC_SCMI_Trigger(const lmm_rpc_trigger_t *trigger)
 {
     int32_t status;
 
     scmi_msg_id_t msgId;
 
     /* Queue via protocol */
-    switch (trigger.event)
+    switch (trigger->event)
     {
         case LMM_TRIGGER_SYSTEM:
             msgId.protocolId = SCMI_PROTOCOL_SYSTEM;

@@ -192,7 +192,7 @@ void TEST_ScmiLmm(void)
         lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_LmmDispatchNotification()\n");
-        RPC_SCMI_LmmDispatchNotification(msgId, trigger);
+        RPC_SCMI_LmmDispatchNotification(msgId, &trigger);
     }
 
     /* Loop over power test domains */

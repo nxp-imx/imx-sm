@@ -163,7 +163,7 @@ int32_t LMM_SystemShutdown(uint32_t lmId, uint32_t agentId,
     {
         if (graceful || (lmId != dstLm))
         {
-            (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+            (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
         }
     }
 
@@ -213,7 +213,7 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
     {
         if (graceful || (lmId != dstLm))
         {
-            (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+            (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
         }
     }
 
@@ -261,7 +261,7 @@ int32_t LMM_SystemSuspend(uint32_t lmId, uint32_t agentId)
     /* Notify LMs via system */
     for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
     {
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
     return status;
@@ -286,7 +286,7 @@ int32_t LMM_SystemWake(uint32_t lmId, uint32_t agentId)
     /* Notify LMs via system */
     for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
     {
-        (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+        (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
     return status;
@@ -476,7 +476,7 @@ int32_t LMM_SystemLmShutdown(uint32_t lmId, uint32_t agentId,
         /* Notify LM via system */
         if (graceful || (lmId != shutdownLm))
         {
-            (void) LMM_RpcNotificationTrigger(shutdownLm, trigger);
+            (void) LMM_RpcNotificationTrigger(shutdownLm, &trigger);
         }
 
         /* Force shutdown? */
@@ -528,7 +528,7 @@ int32_t LMM_SystemLmReset(uint32_t lmId, uint32_t agentId, uint32_t resetLm,
         /* Notify LM via system */
         if (graceful || (lmId != resetLm))
         {
-            (void) LMM_RpcNotificationTrigger(resetLm, trigger);
+            (void) LMM_RpcNotificationTrigger(resetLm, &trigger);
         }
 
         /* Force reset? */
@@ -579,7 +579,7 @@ int32_t LMM_SystemLmSuspend(uint32_t lmId, uint32_t agentId,
         };
 
         /* Notify LM via system */
-        (void) LMM_RpcNotificationTrigger(suspendLm, trigger);
+        (void) LMM_RpcNotificationTrigger(suspendLm, &trigger);
     }
 
     return status;
@@ -611,7 +611,7 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm)
                 .parm[2] = wakeLm
             };
 
-            (void) LMM_RpcNotificationTrigger(dstLm, trigger);
+            (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
         }
     }
 
@@ -673,7 +673,7 @@ static int32_t LMM_DoBoot(lmm_rpc_trigger_t *trigger,
             trigger->parm[0] = LMM_TRIGGER_PARM_LM_BOOT;
             for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
             {
-                (void) LMM_RpcNotificationTrigger(dstLm, *trigger);
+                (void) LMM_RpcNotificationTrigger(dstLm, trigger);
             }
 
             /* Record state */
@@ -732,7 +732,7 @@ static int32_t LMM_DoShutdown(lmm_rpc_trigger_t *trigger,
             trigger->parm[0] = LMM_TRIGGER_PARM_LM_SHUTDOWN;
             for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
             {
-                (void) LMM_RpcNotificationTrigger(dstLm, *trigger);
+                (void) LMM_RpcNotificationTrigger(dstLm, trigger);
             }
 
             /* Record state */

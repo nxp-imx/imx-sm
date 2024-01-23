@@ -176,7 +176,8 @@ int32_t LMM_RpcReset(uint32_t lmId);
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_RpcNotificationTrigger(uint32_t lmId, lmm_rpc_trigger_t trigger);
+int32_t LMM_RpcNotificationTrigger(uint32_t lmId,
+    const lmm_rpc_trigger_t *trigger);
 
 /*!
  * Dump LMM errors.

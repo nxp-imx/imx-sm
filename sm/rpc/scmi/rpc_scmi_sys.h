@@ -104,7 +104,7 @@ int32_t RPC_SCMI_SysDispatchCommand(scmi_caller_t *caller,
  * - others returned by queuing functions
  */
 int32_t RPC_SCMI_SysDispatchNotification(scmi_msg_id_t msgId,
-    lmm_rpc_trigger_t trigger);
+    const lmm_rpc_trigger_t *trigger);
 
 /*!
  * Dispatch SCMI sys protocol reset.
