@@ -175,6 +175,10 @@
 #define ES_NOM_KHZ_DISP             ES_666667KHZ
 #define ES_ODV_KHZ_DISP             ES_800000KHZ
 
+/* PLL time limits */
+#define ES_MAX_USEC_PLL_LOCK        100U
+#define ES_MAX_USEC_PLL_PREP        5U
+
 /* PLL frequency limits */
 #define ES_MIN_HZ_PLLVCO            2520000000ULL   /* 2.5GHz rounded to 24M */
 #define ES_MAX_HZ_PLLVCO            4992000000ULL   /* 5.0GHz rounded to 24M */

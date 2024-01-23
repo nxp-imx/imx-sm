@@ -86,6 +86,9 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
             {
                 uint32_t pllNum = pll->NUMERATOR.RW;
                 pll->NUMERATOR.RW = pllNum;
+
+                /* Wait before POWERUP */
+                SystemTimeDelay(ES_MAX_USEC_PLL_PREP);
             }
 #endif
             pll->CTRL.SET = enMask;
@@ -93,16 +96,24 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
             /* If powering up, wait for lock */
             if ((enMask & PLL_CTRL_POWERUP_MASK) != 0U)
             {
-                while ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U)
+                uint32_t pllLockUsec = 0U;
+                while (((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U) &&
+                    (pllLockUsec < ES_MAX_USEC_PLL_LOCK))
                 {
-                    ; /* Intentional empty default */
+                    SystemTimeDelay(1U);
+                    pllLockUsec++;
                 }
             }
 
-            /* If enabling PLL output, disable bypass */
-            if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0U)
+            if ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) != 0U)
             {
-                pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
+                /* If enabling PLL output, disable bypass */
+                if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0U)
+                {
+                    pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
+                }
+
+                enableUpdate = true;
             }
         }
         else
@@ -113,9 +124,10 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
                 pll->CTRL.SET = PLL_CTRL_CLKMUX_BYPASS_MASK;
             }
             pll->CTRL.CLR = enMask;
+
+            enableUpdate = true;
         }
 
-        enableUpdate = true;
     }
 
     return enableUpdate;
@@ -216,18 +228,27 @@ bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
             pll->DENOMINATOR.RW = PLL_DENOMINATOR_MFD(CLOCK_PLL_MFD);
         }
 
+        /* Wait before POWERUP */
+        SystemTimeDelay(ES_MAX_USEC_PLL_PREP);
+
         /* Power up for locking */
         pll->CTRL.SET = PLL_CTRL_POWERUP_MASK;
-        while ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U)
+        uint32_t pllLockUsec = 0U;
+        while (((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U) &&
+            (pllLockUsec < ES_MAX_USEC_PLL_LOCK))
         {
-            ; /* Intentional empty default */
+            SystemTimeDelay(1U);
+            pllLockUsec++;
         }
 
-        /* Enable PLL and clean bypass*/
-        pll->CTRL.SET = PLL_CTRL_CLKMUX_EN_MASK;
-        pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
+        if ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) != 0U)
+        {
+            /* Enable PLL and clean bypass*/
+            pll->CTRL.SET = PLL_CTRL_CLKMUX_EN_MASK;
+            pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
 
-        updateRate = true;
+            updateRate = true;
+        }
     }
 
     return updateRate;
