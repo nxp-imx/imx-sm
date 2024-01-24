@@ -28,8 +28,8 @@ SCMI API Changes {#RN_ADD_API}
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
-- Updated mx95alt to allow M33 access to the SEMA41
-- Update mx95evk fault reactions for testing
+- Updated mx95alt to allow M33 access to the SEMA41 (for testing)
+- Update mx95evk fault reactions (for testing)
 - Update mx95evk to give AP secure (ATF) access to the peripheral LPI
 
 Customers will require the LPI changes if running ATF. They should also configure fault
@@ -51,7 +51,7 @@ Board Implementation Changes {#RN_ADD_BOARD_IMP}
 These are changes to the NXP reference ports:
 
 - Added BRD_SM_SystemReset() overload to reset system instead of just the SoC
-- Support WDOG configuration for FCCU, configured for FCCU mode after FCCU init
+- Supported WDOG configuration for FCCU, configured for FCCU mode after FCCU init
 - Moved to WDOG2 as it goes through the FCCU
 - Enabled the three FCCU interrupts, disable the WDOG interrupt
 - Fixed polarity of the WDOG_ANY flags

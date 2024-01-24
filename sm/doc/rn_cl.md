@@ -16,7 +16,7 @@ New Feature {#RN_CL_NEW}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-10](https://jira.sw.nxp.com/projects/SM/issues/SM-10) | Add eMcem driver to support FCCU [[detail]](@ref RN_DETAIL_SM_10) |   | Y | Y |
-| [SM-30](https://jira.sw.nxp.com/projects/SM/issues/SM-30) | Support management of peripheral low-power interfaces |   | Y | Y |
+| [SM-30](https://jira.sw.nxp.com/projects/SM/issues/SM-30) | Support management of peripheral low-power interfaces [[detail]](@ref RN_DETAIL_SM_30) |   | Y | Y |
 | [SM-66](https://jira.sw.nxp.com/projects/SM/issues/SM-66) | Support designation of A55 CPUs to wake during A55P wakeup [[detail]](@ref RN_DETAIL_SM_66) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
@@ -40,6 +40,7 @@ Bug {#RN_CL_BUG}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-63](https://jira.sw.nxp.com/projects/SM/issues/SM-63) | Fix polarity of WDOG ANY mask [[detail]](@ref RN_DETAIL_SM_63) |   | Y | Y |
+| [SM-73](https://jira.sw.nxp.com/projects/SM/issues/SM-73) | Implement PLL lock timeouts and PLL power up delays [[detail]](@ref RN_DETAIL_SM_73) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -48,7 +49,6 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-54](https://jira.sw.nxp.com/projects/SM/issues/SM-54) | Add software workaround for ERR052127 (NOCMIX BLK_CTRL sync) |   | Y | Y |
 | [SM-58](https://jira.sw.nxp.com/projects/SM/issues/SM-58) | Add software workaround for ERR052128 (TMPSNS wait time) [[detail]](@ref RN_DETAIL_SM_58) |   | Y | Y |
 | [SM-68](https://jira.sw.nxp.com/projects/SM/issues/SM-68) | Update low/nominal drive voltages per latest datasheet [[detail]](@ref RN_DETAIL_SM_68) |   | Y | Y |
 | [SM-70](https://jira.sw.nxp.com/projects/SM/issues/SM-70) | Support M7 SysTick wakeup from WFI when target sleep mode set to RUN [[detail]](@ref RN_DETAIL_SM_70) |   | Y | Y |
@@ -93,6 +93,11 @@ SM-23: Vet the peripheral ID parameter in the CPU LP protocol {#RN_DETAIL_SM_23}
 Added new per agent SCMI configuration data to store peripheral LPI access rights (perlpiPerms). The rights to specify the low-power state of a peripheral with SCMI_CpuPerLpmConfigSet() are then checked for EXCLUSIVE access rights. 
 
 The config data is filled in by the configtool from PERLPI_* resource definitions. These new resources are linked automatically with ownership of the associated peripheral. In addition to the automatically linked rights for owning the peripheral, NXP configs also grant access to the AP secure agent to allow ATF to configure the low-power behavior of these peripherals. Customer ports will need to do the same.
+
+SM-30: Support management of peripheral low-power interfaces {#RN_DETAIL_SM_30}
+----------
+
+Agents can configure the management of peripheral low-power interfaces using SCMI_CpuPerLpmConfigSet.  On MX95, the STOP and Q-CHAN low-power signals will be managed by SM via BLK_CTRL registers per the configuration specified by SCMI_CpuPerLpmConfigSet.  During flows that power down Cortex-M7/Cortex-A55 platforms, the specified STOP and Q-CHAN requests will be asserted.  Conversely, during flows that power up these CPU platforms, the specified STOP and Q-CHAN requests will be deasserted.  All other steps to configure the peripheral and associated clocks for low-power operation are the responsibility of the agent.
 
 SM-58: Add software workaround for ERR052128 (TMPSNS wait time) {#RN_DETAIL_SM_58}
 ----------
@@ -159,4 +164,11 @@ SM-70: Support M7 SysTick wakeup from WFI when target sleep mode set to RUN {#RN
 ----------
 
 Support was added to configure the Cortex-M7 platform to allow the SysTick to wake the CM7 from WFI.  Note that the targeted sleep mode of the Cortex-M7 must be set to RUN prior to entering WFI.
+
+SM-73: Implement PLL lock timeouts and PLL power up delays {#RN_DETAIL_SM_73}
+----------
+
+A 5us delay was added between updates of PLL integer/fractional factors and power up of the PLL.  This delay is required per the PLL block guide.
+
+Misconfiguration of PLL can cause a SM WDOG timeout during PLL lock operations.   A PLL lock timeout of 100us per PLL block guide was added to protect the SM against misconfiguration.  An error will be returned to the caller if PLL fails to lock within the 100us timeout.
 
