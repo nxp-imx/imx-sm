@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
-*   Copyright 2022-2023 NXP
+*   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -144,6 +144,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
 static void eMcem_Vfccu_GetRegBitPosition( eMcem_FaultType nFaultId, uint8 *pu8RegIdx, uint8 *pu8BitIdx );
 static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVal );
 static boolean eMcem_Vfccu_AccessToCVfccuFhid( void );
+Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u32RegVal );
 
 /*==================================================================================================
 *                                       LOCAL FUNCTIONS
@@ -468,9 +469,9 @@ static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVa
     uint8 u8RegIdx = (uint8)( nFaultId / EMCEM_REG_SIZE );
     uint8 u8BitPosition = (uint8)( nFaultId % EMCEM_REG_SIZE );
 
-    if( ( u8RegIdx = 0 && ( 0UL < ( AON__FCCU.GFLTRC_C0.R & ( u32RegVal << u8BitPosition ) ) ) ) ||
-        ( u8RegIdx = 1 && ( 0UL < ( AON__FCCU.GFLTRC_C1.R & ( u32RegVal << u8BitPosition ) ) ) ) ||
-        ( u8RegIdx = 2 && ( 0UL < ( AON__FCCU.GFLTRC_C2.R & ( u32RegVal << u8BitPosition ) ) ) ) )
+    if( (( 0UL != ( AON__FCCU.GFLTRC_C0.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 0U) ) ||
+        (( 0UL != ( AON__FCCU.GFLTRC_C1.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 1U) ) ||
+        (( 0UL != ( AON__FCCU.GFLTRC_C2.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 2U) ) )
     {
         bReturnValue = EMCEM_TRUE;
     }
@@ -534,30 +535,30 @@ boolean eMcem_Vfccu_AccessToCVfccu( void )
 Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u32RegVal )
 {
     Std_ReturnType nReturnValue = EMCEM_E_OK;
-    boolean bClearFault = EMCEM_TRUE;
+    boolean bClearFault;
     uint8 u8RegIdx = (uint8)(nFaultId / EMCEM_REG_SIZE);
     uint8 u8BitIdx = (uint8)(nFaultId % EMCEM_REG_SIZE);
 
     /* Check if fault is SW recoverable */
-    bClearFault &= eMcem_Vfccu_SWRecovery( nFaultId, u32RegVal );
+    bClearFault = eMcem_Vfccu_SWRecovery( nFaultId, u32RegVal );
 
     /* Check access to CVFCCU */
-    bClearFault &= eMcem_Vfccu_AccessToCVfccuFhid();
+    bClearFault = bClearFault && eMcem_Vfccu_AccessToCVfccuFhid();
 
     if( EMCEM_TRUE == bClearFault )
     {
         /* Check if any fault was detected in fault handler */
         if( 0UL < AON__FCCU.FHSRVDS0.B.AGGFLTS )
         {
-            if (u8RegIdx == 0)
+            if (u8RegIdx == 0U)
             {
                 AON__FCCU.FHFLTS0_0.R |= ( u32RegVal << u8BitIdx );
             }
-            else if (u8RegIdx == 1)
+            else if (u8RegIdx == 1U)
             {
                 AON__FCCU.FHFLTS0_1.R |= ( u32RegVal << u8BitIdx );
             }
-            else if (u8RegIdx == 2)
+            else
             {
                 AON__FCCU.FHFLTS0_2.R |= ( u32RegVal << u8BitIdx );
             }
@@ -574,9 +575,9 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
     }
 
     /* Report EMCEM_E_NOT_OK when not all fault were cleared */
-    if((( 0UL != ( AON__FCCU.FHFLTS0_0.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 0)) ||
-       (( 0UL != ( AON__FCCU.FHFLTS0_1.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 1)) ||
-       (( 0UL != ( AON__FCCU.FHFLTS0_2.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 2)))
+    if((( 0UL != ( AON__FCCU.FHFLTS0_0.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 0U)) ||
+       (( 0UL != ( AON__FCCU.FHFLTS0_1.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 1U)) ||
+       (( 0UL != ( AON__FCCU.FHFLTS0_2.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 2U)))
     {
         nReturnValue |= EMCEM_E_NOT_OK;
     }
@@ -610,7 +611,7 @@ Std_ReturnType eMcem_Vfccu_Init( const eMcem_ConfigType *pConfigPtr )
     /* Configure CVFCCU */
     if( pConfigPtr->eMcem_CVfccuCfg != NULL_PTR )
     {
-        eMcem_Vfccu_InitCVfccu( pConfigPtr->eMcem_CVfccuCfg );
+        nReturnValue = eMcem_Vfccu_InitCVfccu( pConfigPtr->eMcem_CVfccuCfg );
     }
 
     return nReturnValue;
@@ -643,19 +644,15 @@ void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulato
     /* Read SW fault status registers */
     for( u8SWRegIdx = 0U; u8SWRegIdx < EMCEM_SW_FAULT_REG_COUNT; u8SWRegIdx++ )
     {
-        if (u8SWRegIdx == 0)
+        if (u8SWRegIdx == 0U)
         {
             u32RegVal[u8SWRegIdx] = ( AON__M33_CACHE_CTRL_ECC0__CM33_CACHE_ECC_MCM.FCCU_SW_FAULTS.R );
         }
-        else if (u8SWRegIdx == 1)
+        else
         {
             /* TODO: Enable CM7 FCCU clock firstly */
             /* u32RegVal[u8SWRegIdx] = ( M7__A7_MCM.FCCU_SW_FAULTS.R ); */
-	        u32RegVal[u8SWRegIdx] = 0;
-        }
-        else if (u8SWRegIdx > 1)
-        {
-            /* Stub for future SW fault registers */
+	        u32RegVal[u8SWRegIdx] = 0UL;
         }
     }
 
@@ -757,11 +754,11 @@ void eMcem_Vfccu_GetErrors( uint32 pFaultContainer[], uint32 *pFaultAccumulator 
         {
             /* Read fault status register and OR it with current values in the fault container.
                Values for all Fault containers are ORed together */
-            if (u8RegIdx == 0)
+            if (u8RegIdx == 0U)
             {
                 pFaultContainer[u8RegIdx] |= AON__FCCU.FHFLTS0_0.R;
             }
-            else if (u8RegIdx == 1)
+            else if (u8RegIdx == 1U)
             {
                 pFaultContainer[u8RegIdx] |= AON__FCCU.FHFLTS0_1.R;
             }

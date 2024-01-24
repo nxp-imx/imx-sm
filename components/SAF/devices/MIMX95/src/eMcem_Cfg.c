@@ -46,6 +46,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
+/* Includes */
 #include "sm.h"
 #include "dev_sm.h"
 #include "MIMX_SAF_Version.h"
@@ -55,14 +56,19 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/*!
+ * @name eMCEM config software version
+ */
+/** @{ */
 #define EMCEM_CFG_SW_MAJOR_VERSION_C               0
 #define EMCEM_CFG_SW_MINOR_VERSION_C               4
 #define EMCEM_CFG_SW_PATCH_VERSION_C               0
+/** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same Software version */
+/*!< Check if current file and MIMX_SAF version header file are of the same Software version */
 #if ((EMCEM_CFG_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_CFG_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_CFG_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
@@ -98,7 +104,13 @@ extern "C"{
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
 ==================================================================================================*/
-#define EMCEM_START_SEC_CONST_32
+/*!
+ * @name EMCEM SEC events
+ */
+/** @{ */
+#define EMCEM_START_SEC_CONST_32 /*!< eMCEM start SEC */
+/** @} */
+
 /* @violates @ref eMcem_Cfg_c_REF_0410 */
 /* @violates @ref eMcem_Cfg_c_REF_2001 */
 #include "eMcem_MemMap.h"
@@ -110,68 +122,80 @@ const uint32 eMcem_au32StaticFaultMasks[3U] =
     0x0000FFFFU
 };
 
-#define EMCEM_STOP_SEC_CONST_32
+/*!
+ * @name EMCEM SEC events
+ */
+/** @{ */
+#define EMCEM_STOP_SEC_CONST_32  /*!< eMCEM stop SEC */
+/** @} */
+
 /* @violates @ref eMcem_Cfg_c_REF_0410 */
 /* @violates @ref eMcem_Cfg_c_REF_2001 */
+
+/* Includes */
 #include "eMcem_MemMap.h"
 
+/**
+* @brief    eMCEM FCCU Instance configurartion struct type.
+* @details  eMCEM Driver configuration structure type.
+*/
 const eMcem_CVfccuInstanceCfgType CVfccuCfg =
 {
-    FALSE, /* bDebugEnabled */
-    TRUE, /* bConfigEnabled */
-    14000000UL, /* u32GlobalReactionTimerPeriod */
-    42000000UL, /* u32MinEoutDuration */
-    { /* EOUT Cfg */
-        (uint32)3UL, /* EoutTimerDisable */
-        { /* EOUT Pin Regs */
+    FALSE, /*!< bDebugEnabled */
+    TRUE, /*!< bConfigEnabled */
+    14000000UL, /*!< u32GlobalReactionTimerPeriod */
+    42000000UL, /*!< u32MinEoutDuration */
+    { /*!< EOUT Cfg */
+        (uint32)3UL, /*!< EoutTimerDisable */
+        { /*!< EOUT Pin Regs */
             (uint32)0x00000000UL,
             (uint32)0x00000001UL
         },
-        { /* EOUT Operating Mode Regs */
+        { /*!< EOUT Operating Mode Regs */
             (uint32)0x00000000UL,
             (uint32)0x00000009UL
         },
     },
-    /* Fault Lines Cfg */
-    /* Fault Recovery cfg */
+    /*!< Fault Lines Cfg */
+    /*!< Fault Recovery cfg */
     {
         (uint32)0xFFFFFFFFUL,
         (uint32)0xFFFFFFFFUL,
         (uint32)0x0000FFFFUL
     },
-    /* CVfccuFhidCfgs */
+    /*!< CVfccuFhidCfgs */
     {
-        0U,       /* u8FaultHandlerId */
-        TRUE,     /* bEnabled */
-        TRUE,     /* bWriteAccessEnabled */
-        { /* ImmReactionRegs */
-            (uint32)0x004UL,    /* Assert FCCU IRQ 0 */
-            (uint32)0x008UL,    /* Assert FCCU IRQ 1 */
-            (uint32)0x010UL,    /* Assert FCCU IRQ 2 */
-            (uint32)0x004UL,    /* Assert FCCU IRQ 0 */
-            (uint32)0x008UL,    /* Assert FCCU IRQ 1 */
-            (uint32)0x010UL,    /* Assert FCCU IRQ 2 */
-            (uint32)0x000UL,    /* None */
-            (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
+        0U,       /*!< u8FaultHandlerId */
+        TRUE,     /*!< bEnabled */
+        TRUE,     /*!< bWriteAccessEnabled */
+        { /*!< ImmReactionRegs */
+            (uint32)0x004UL,    /*!< Assert FCCU IRQ 0 */
+            (uint32)0x008UL,    /*!< Assert FCCU IRQ 1 */
+            (uint32)0x010UL,    /*!< Assert FCCU IRQ 2 */
+            (uint32)0x004UL,    /*!< Assert FCCU IRQ 0 */
+            (uint32)0x008UL,    /*!< Assert FCCU IRQ 1 */
+            (uint32)0x010UL,    /*!< Assert FCCU IRQ 2 */
+            (uint32)0x000UL,    /*!< None */
+            (uint32)0x002UL,    /*!< PMIC reset (assert EOUT1) */
         },
 
-        { /* DelReactionRegs */
-            (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
-            (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
-            (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
-            (uint32)0x100UL,    /* SRC reset */
-            (uint32)0x100UL,    /* SRC reset */
-            (uint32)0x100UL,    /* SRC reset */
-            (uint32)0x002UL,    /* PMIC reset (assert EOUT1) */
-            (uint32)0x002UL     /* PMIC reset (assert EOUT1) */
+        { /*!< DelReactionRegs */
+            (uint32)0x002UL,    /*!< PMIC reset (assert EOUT1) */
+            (uint32)0x002UL,    /*!< PMIC reset (assert EOUT1) */
+            (uint32)0x002UL,    /*!< PMIC reset (assert EOUT1) */
+            (uint32)0x100UL,    /*!< SRC reset */
+            (uint32)0x100UL,    /*!< SRC reset */
+            (uint32)0x100UL,    /*!< SRC reset */
+            (uint32)0x002UL,    /*!< PMIC reset (assert EOUT1) */
+            (uint32)0x002UL     /*!< PMIC reset (assert EOUT1) */
         },
-        /* Fault List */
-        { /* Fault Enabled */
+        /*!< Fault List */
+        { /*!< Fault Enabled */
             (uint32)0xFFFC0003UL,
             (uint32)0x00000003UL,
             (uint32)0x00000000UL
         },
-        { /* Fault Reaction Set Cfg */
+        { /*!< Fault Reaction Set Cfg */
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
@@ -193,7 +217,7 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
             (uint32)0x00000000UL,
             (uint32)0x00000000UL
         },
-        { /* Fault Handlers */
+        { /*!< Fault Handlers */
             &eMcemCVfccuAlarmHandler,
             &eMcemCVfccuAlarmHandler,
             &eMcemCVfccuAlarmHandler,
@@ -278,6 +302,10 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
     }
 };
 
+/*!
+* @brief          eMcem Config.
+* @details        The eMCEM driver configuration type.
+*/
 const eMcem_ConfigType eMcem_Config =
 {
     &CVfccuCfg,
@@ -286,6 +314,17 @@ const eMcem_ConfigType eMcem_Config =
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
+/* Functions */
+/*!
+* @brief      Set VFCCU alarm handler.
+* @details    Complete fault processing and Reset if fault handling failed.
+*
+* @param[in]  nFaultId        ID of the fault that shall be recovered.
+*
+* @return     eMcem_ErrRecoveryType
+* @retval           EMCEM_ERR_RECOVERED      Fault has been recovered.
+* @retval           EMCEM_ERR_NOT_RECOVERED  Fault has not been recovered.
+*/
 eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId )
 {
     int32_t status;
@@ -298,10 +337,10 @@ eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId )
     };
     eMcem_ErrRecoveryType nReturnValue = EMCEM_ERR_RECOVERED;
 
-    /* Finalize fault flow */
+    /*!< Finalize fault flow */
     status = DEV_SM_FaultComplete(resetRec);
 
-    /* Translate error */
+    /*!< Reset if fault handling failed */
     if (status != SM_ERR_SUCCESS)
     {
         nReturnValue = EMCEM_ERR_NOT_RECOVERED;
@@ -309,10 +348,9 @@ eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId )
 
     return nReturnValue;
 }
+/** @} */
 
 #ifdef __cplusplus
 }
 #endif
-
 /** @} */
-

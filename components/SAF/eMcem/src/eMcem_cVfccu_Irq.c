@@ -270,7 +270,7 @@ static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx )
                 if( 0UL < ( u32FaultRegStatus & u32IEMask & u32FaultEnableReg) )
                 {
                     /* Calculate local nFaultId */
-                    nFaultId = (eMcem_FaultType)(( ( u8RegIdx ) * (uint8)EMCEM_VFCCU_REG_SIZE_U8 ) + u8BitPosition);
+                    nFaultId = (uint16)(( (uint16)( u8RegIdx ) * (uint16) EMCEM_VFCCU_REG_SIZE_U8 ) + (uint16)(u8BitPosition));
 
                     /* Calculate global nFaultId */
                     nFaultId += EMCEM_VFCCU_FAULT_LINE_OFFSET;
@@ -342,19 +342,20 @@ static void eMcem_Vfccu_ClearCvfccuFhidFault( eMcem_FaultType nFaultId )
     {
         if (u8RegIdx == 0U)
         {
-            AON__FCCU.FHFLTS0_0.R |= ( 1U << (u8BitIdx & 0x1F) );
+            AON__FCCU.FHFLTS0_0.R |= (uint32)( 1UL << ((uint32)u8BitIdx & 0x1FUL) );
         }
         else if (u8RegIdx == 1U)
         {
-            AON__FCCU.FHFLTS0_1.R |= ( 1U << (u8BitIdx & 0x1F) );
+            AON__FCCU.FHFLTS0_1.R |= (uint32)( 1UL << ((uint32)u8BitIdx & 0x1FUL) );
         }
         else
         {
-            AON__FCCU.FHFLTS0_2.R |= ( 1U << (u8BitIdx & 0xF) );
+            AON__FCCU.FHFLTS0_2.R |= (uint32)( 1UL << ((uint32)u8BitIdx & 0xFUL) );
         }
     }
 	else
 	{
+        ; /* Intentional empty else */
 	}
     	/* No need to call MRU since this should be called only in SysMan which has access to CVFCCU */
 }
