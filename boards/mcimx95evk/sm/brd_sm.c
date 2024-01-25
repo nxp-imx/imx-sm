@@ -143,6 +143,9 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 
     if (status == SM_ERR_SUCCESS)
     {
+        /* Disallow ANA TMPSNS to generate internal warm reset */
+        SRC_GEN->SRMASK |= BIT32(RST_REASON_TEMPSENSE);
+
         /* Switch WDOG to FCCU mode */
         BOARD_WdogModeSet(BOARD_WDOG_MODE_FCCU);
     }
