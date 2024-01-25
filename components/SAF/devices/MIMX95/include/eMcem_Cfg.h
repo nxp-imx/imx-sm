@@ -284,16 +284,6 @@ extern const eMcem_ConfigType *eMcem_pConfigPtr;
  * @retval           EMCEM_ERR_NOT_RECOVERED  fault has not been recovered.
  */
 extern eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId );
-/*!
- * Default Alarm Handler function.
- *
- * @param[in]     nFaultId      Id of the fault
- *
- * @return     eMcem_ErrRecoveryType
- * @retval           EMCEM_ERR_RECOVERED      fault has been recovered successfully.
- * @retval           EMCEM_ERR_NOT_RECOVERED  fault has not been recovered.
- */
-extern eMcem_ErrRecoveryType eMcemCVfccuDefaultAlarmHandler( eMcem_FaultType nFaultId );
 
 /*!
 * @brief    eMCEM stop sec code
