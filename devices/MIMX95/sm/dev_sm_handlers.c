@@ -43,7 +43,7 @@
 #include "mb_mu.h"
 #include "config_mb_mu.h"
 #include "lmm.h"
-#include "eMcem.h"
+#include "eMcem_Vfccu.h"
 
 /* Local defines */
 

@@ -185,7 +185,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
     uint8 u8i = 0U;
 
     /* Check if configuration of the global VFCCU parameters is enabled */
-    if( EMCEM_TRUE == pVfccuCfg->bConfigEnabled )
+    if( (boolean)TRUE == pVfccuCfg->bConfigEnabled )
     {
         /* Configure Fault Line Recovery */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
@@ -226,7 +226,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
 
     /* Configure local VFCCU parameters (FHIDs)
        Check if configuration of the VFCCU FHID parameters is enabled */
-    if( EMCEM_TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
+    if( (boolean)TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
     {
         /* Need to clear status flags and disable FH to be able to reconfigure it */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
@@ -385,23 +385,23 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
     }
 
     /* Check if configuration of the global VFCCU parameters is enabled */
-    if( ( EMCEM_TRUE == pVfccuCfg->bConfigEnabled ) && ( EMCEM_E_OK == nReturnValue ) )
+    if( ( (boolean)TRUE == pVfccuCfg->bConfigEnabled ) && ( EMCEM_E_OK == nReturnValue ) )
     {
         /* Configure Global Debug */
         /* @violates @ref eMcem_Vfccu_c_REF_1003 */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GDBGCFG.B.FRZ = (uint32)(pVfccuCfg->bDebugEnabled);
+        AON__FCCU.GDBGCFG.B.FRZ = (pVfccuCfg->bDebugEnabled == TRUE) ? 1U : 0U;
     }
 
     /* Check if configuration of the VFCCU FHID parameters is enabled */
-    if( (EMCEM_TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled ) && ( EMCEM_E_OK == nReturnValue) )
+    if( ((boolean)TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled ) && ( EMCEM_E_OK == nReturnValue) )
     {
         /* Enable/disable FHID */
         /* @violates @ref eMcem_Vfccu_c_REF_1003 */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.FHCFG0.B.FHIDEN = (uint32)(pVfccuCfg->eMcem_FhidCfg.bEnabled);
+		AON__FCCU.FHCFG0.B.FHIDEN = (pVfccuCfg->eMcem_FhidCfg.bEnabled == TRUE) ? 1U : 0U;
     }
 
     /* Log extended diagnostic data */
@@ -421,14 +421,14 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
 */
 static boolean eMcem_Vfccu_AccessToCVfccuFhid( void )
 {
-    boolean bReturnValue = EMCEM_FALSE;
+    boolean bReturnValue = (boolean)FALSE;
 
     if( NULL_PTR != eMcem_pConfigPtr->eMcem_CVfccuCfg )
     {
         /* Check if write access to FH is enabled */
-        if( EMCEM_TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
+        if( (boolean)TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
         {
-            bReturnValue = EMCEM_TRUE;
+            bReturnValue = (boolean)TRUE;
         }
         else
         {
@@ -465,7 +465,7 @@ static boolean eMcem_Vfccu_AccessToCVfccuFhid( void )
 */
 static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVal )
 {
-    boolean bReturnValue = EMCEM_FALSE;
+    boolean bReturnValue = (boolean)FALSE;
     uint8 u8RegIdx = (uint8)( nFaultId / EMCEM_REG_SIZE );
     uint8 u8BitPosition = (uint8)( nFaultId % EMCEM_REG_SIZE );
 
@@ -473,7 +473,7 @@ static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVa
         (( 0UL != ( AON__FCCU.GFLTRC_C1.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 1U) ) ||
         (( 0UL != ( AON__FCCU.GFLTRC_C2.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 2U) ) )
     {
-        bReturnValue = EMCEM_TRUE;
+        bReturnValue = (boolean)TRUE;
     }
 
     return bReturnValue;
@@ -493,14 +493,14 @@ static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVa
 */
 boolean eMcem_Vfccu_AccessToCVfccu( void )
 {
-    boolean bReturnValue = EMCEM_FALSE;
+    boolean bReturnValue = (boolean)FALSE;
 
     if( eMcem_pConfigPtr->eMcem_CVfccuCfg != NULL_PTR )
     {
         /* Check if write access to FH is enabled */
-        if( EMCEM_TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->bConfigEnabled )
+        if( (boolean)TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->bConfigEnabled )
         {
-            bReturnValue = EMCEM_TRUE;
+            bReturnValue = (boolean)TRUE;
         }
         else
         {
@@ -545,7 +545,7 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
     /* Check access to CVFCCU */
     bClearFault = bClearFault && eMcem_Vfccu_AccessToCVfccuFhid();
 
-    if( EMCEM_TRUE == bClearFault )
+    if( (boolean)TRUE == bClearFault )
     {
         /* Check if any fault was detected in fault handler */
         if( 0UL < AON__FCCU.FHSRVDS0.B.AGGFLTS )
@@ -636,10 +636,11 @@ void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulato
     uint8 u8MaxBitPos = (uint8)(EMCEM_REG_SIZE - EMCEM_SW_FAULT_OFFSET);
     uint8 u8SWRegIdx = 0U;
     uint32 u32RegVal[EMCEM_SW_FAULT_REG_COUNT];
+    eMcem_FaultType nFaultIdInt = nFaultId;
 
     /* Calculate register and bit indexes out of nFaultId (as there is no offsetting per whole register - SW faults
        are aligned after the rest of VFCCU faults) */
-    eMcem_Vfccu_GetRegBitPosition( nFaultId, &u8RegIdx, &u8BitIdx );
+    eMcem_Vfccu_GetRegBitPosition( nFaultIdInt, &u8RegIdx, &u8BitIdx );
 
     /* Read SW fault status registers */
     for( u8SWRegIdx = 0U; u8SWRegIdx < EMCEM_SW_FAULT_REG_COUNT; u8SWRegIdx++ )
@@ -673,8 +674,8 @@ void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulato
             *pFaultAccumulator |= u32RegVal[u8SWRegIdx];
 
             /* Update Fault register and bit */
-            nFaultId += EMCEM_SW_FAULT_OFFSET;
-            eMcem_Vfccu_GetRegBitPosition( nFaultId, &u8RegIdx, &u8BitIdx );
+            nFaultIdInt += EMCEM_SW_FAULT_OFFSET;
+            eMcem_Vfccu_GetRegBitPosition( nFaultIdInt, &u8RegIdx, &u8BitIdx );
         }
         else
         {
@@ -700,8 +701,8 @@ void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulato
             *pFaultAccumulator |= u32RegVal[u8SWRegIdx];
 
             /* Update Fault register and bit */
-            nFaultId += EMCEM_SW_FAULT_OFFSET;
-            eMcem_Vfccu_GetRegBitPosition( nFaultId, &u8RegIdx, &u8BitIdx );
+            nFaultIdInt += EMCEM_SW_FAULT_OFFSET;
+            eMcem_Vfccu_GetRegBitPosition( nFaultIdInt, &u8RegIdx, &u8BitIdx );
         }
     }
 }

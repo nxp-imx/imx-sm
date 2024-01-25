@@ -261,21 +261,6 @@ void eMcem_Vfccu_AssertSWFault( uint8 u8SwFaultId );
 void eMcem_Vfccu_DeassertSWFault( uint8 u8SwFaultId );
 
 /*!
-* @brief      Processing VFCCU Faults
-* @details    Function processes faults upon receiving VFCCU interrupt call
-*
-* @param[in]  u8VfccuIdx       The ID of the VFCCU to process Fault
-*                               - function is recursive, but entry is always CVFCCU
-*                               - recursion is in this case allowed as benefits outweigh the drawbacks
-*
-* @return     Std_ReturnType
-* @retval     E_OK        NMI has originated in FCCU
-* @retval     E_NOT_OK    NMI has not originated in FCCU
-*
-*/
-Std_ReturnType eMcem_Vfccu_ProcessFaults( uint8 u8VfccuIdx );
-
-/*!
 * @brief      VFCCU Alarm Interrupt routine.
 * @details    An ALARM Interrupt is generated when a properly configured fault generates a transition
 *             to the ALARM state. The status (fault triggering interrupt) can be obtained

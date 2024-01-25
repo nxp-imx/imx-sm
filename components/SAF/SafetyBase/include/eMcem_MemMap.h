@@ -19,10 +19,14 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2011-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2023 NXP
+*   Copyright 2017-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
+
+#ifndef EMCEM_MEMMAP_H
+#define EMCEM_MEMMAP_H
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -20563,3 +20567,5 @@ extern "C"{
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* EMCEM_MEMMAP_H */

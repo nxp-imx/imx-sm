@@ -136,13 +136,13 @@ const uint32 eMcem_au32StaticFaultMasks[3U] =
 #include "eMcem_MemMap.h"
 
 /**
-* @brief    eMCEM FCCU Instance configurartion struct type.
+* @brief    eMCEM FCCU Instance configuration struct type.
 * @details  eMCEM Driver configuration structure type.
 */
 const eMcem_CVfccuInstanceCfgType CVfccuCfg =
 {
-    FALSE, /*!< bDebugEnabled */
-    TRUE, /*!< bConfigEnabled */
+    (boolean)FALSE, /*!< bDebugEnabled */
+    (boolean)TRUE, /*!< bConfigEnabled */
     14000000UL, /*!< u32GlobalReactionTimerPeriod */
     42000000UL, /*!< u32MinEoutDuration */
     { /*!< EOUT Cfg */
@@ -166,8 +166,8 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
     /*!< CVfccuFhidCfgs */
     {
         0U,       /*!< u8FaultHandlerId */
-        TRUE,     /*!< bEnabled */
-        TRUE,     /*!< bWriteAccessEnabled */
+        (boolean)TRUE,     /*!< bEnabled */
+        (boolean)TRUE,     /*!< bWriteAccessEnabled */
         { /*!< ImmReactionRegs */
             (uint32)0x004UL,    /*!< Assert FCCU IRQ 0 */
             (uint32)0x008UL,    /*!< Assert FCCU IRQ 1 */

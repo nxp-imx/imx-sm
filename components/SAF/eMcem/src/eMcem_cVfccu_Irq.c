@@ -140,6 +140,8 @@ static uint8 eMcem_Vfccu_GetMaxBitPosition( uint8 u8RegIdx );
 static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx );
 static Std_ReturnType eMcem_Vfccu_ProcessFhidFault( eMcem_FaultType nFaultId, uint8 u8VfccuIdx );
 static eMcem_ErrRecoveryType eMcem_CallAlarmHandler( eMcem_FaultType nFaultId, uint8 u8VfccuIdx );
+Std_ReturnType eMcem_Vfccu_ProcessFaults( uint8 u8VfccuIdx );
+
 /*==================================================================================================
 *                                       LOCAL FUNCTIONS
 ==================================================================================================*/
@@ -338,7 +340,7 @@ static void eMcem_Vfccu_ClearCvfccuFhidFault( eMcem_FaultType nFaultId )
     const uint8 u8BitIdx = (uint8)(nFaultId % EMCEM_REG_SIZE);
 
     /* Check if write access to FH is enabled */
-    if( EMCEM_TRUE == (boolean)eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
+    if( (boolean)TRUE == (boolean)eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
     {
         if (u8RegIdx == 0U)
         {
@@ -360,9 +362,6 @@ static void eMcem_Vfccu_ClearCvfccuFhidFault( eMcem_FaultType nFaultId )
     	/* No need to call MRU since this should be called only in SysMan which has access to CVFCCU */
 }
 
-/*==================================================================================================
-*                                       GLOBAL FUNCTIONS
-==================================================================================================*/
 /**
 * @brief      Processing VFCCU Faults
 * @details    Function processes faults upon receiving VFCCU interrupt call

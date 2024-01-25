@@ -186,7 +186,7 @@ extern eMcem_StateType eMcem_DriverState;
 * @retval           !=0       The given fault is asserted.
 *
 */
-LOCAL_INLINE uint32 eMcem_FaultPending( const eMcem_FaultContainerType *pErrorContainer, eMcem_FaultType nFaultId )
+static inline uint32 eMcem_FaultPending( const eMcem_FaultContainerType *pErrorContainer, eMcem_FaultType nFaultId )
 {
     uint32 u32ReturnValue = 0UL;
     uint8 u8RegisterPosition = (uint8)( nFaultId >> EMCEM_FAULT_CONTAINER_SHIFT );
@@ -211,7 +211,7 @@ LOCAL_INLINE uint32 eMcem_FaultPending( const eMcem_FaultContainerType *pErrorCo
 * @retval           E_FAULT_DETECTED   There is at least one logged fault.
 *
 */
-LOCAL_INLINE Std_ReturnType eMcem_GetErrorsStatus( const eMcem_FaultContainerType *pErrorContainer )
+static inline Std_ReturnType eMcem_GetErrorsStatus( const eMcem_FaultContainerType *pErrorContainer )
 {
     return pErrorContainer->nErrorStatus;
 }

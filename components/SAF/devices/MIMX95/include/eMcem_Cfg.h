@@ -181,7 +181,7 @@ typedef struct
 */
 typedef struct
 {
-    const eMcem_CVfccuInstanceCfgType       *eMcem_CVfccuCfg;     /*!< EMCEM FCCU Instace */
+    const eMcem_CVfccuInstanceCfgType       *eMcem_CVfccuCfg;     /*!< EMCEM FCCU Instance */
 } eMcem_ConfigType;
 
 /*=================================================================================================
@@ -192,6 +192,12 @@ typedef struct
 */
 #define EMCEM_START_SEC_CONFIG_DATA_UNSPECIFIED
 #include "eMcem_MemMap.h"
+
+/*!
+* @brief      eMCEM FCCU Instance configuration struct type.
+*/
+/* @violates @ref eMcem_Cfg_h_REF_0809 */
+extern const eMcem_CVfccuInstanceCfgType CVfccuCfg;
 
 /*!
 * @brief      eMCEM configuration structures.
