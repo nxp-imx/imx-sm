@@ -94,8 +94,8 @@
         .rpcInst = 1U, \
         .boot[0] = 3U, \
         .bootSkip[0] = 1U, \
-        .start = 2U, \
-        .stop = 2U, \
+        .start = 4U, \
+        .stop = 4U, \
     }
 
 /*--------------------------------------------------------------------------*/
@@ -122,30 +122,56 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of start */
-#define SM_LM_NUM_START  4U
+#define SM_LM_NUM_START  12U
 
 /*! LM start list */
 #define SM_LM_START_DATA \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
+    {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
+    {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
     .numArg = 1, .arg[0] = 3U,}, \
-    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0},
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
+    .numArg = 1, .arg[0] = 3U,}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
+    .numArg = 1, .arg[0] = 3U,}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0},
 
 /*! Config for number of stop */
-#define SM_LM_NUM_STOP  9U
+#define SM_LM_NUM_STOP  25U
 
 /*! LM stop list */
 #define SM_LM_STOP_DATA \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
+    {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
+    {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55P}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55P}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55P}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C5}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C5}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C5}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C4}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C4}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C4}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C3}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C3}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C3}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C2}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C2}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C1}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C1}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C1}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C0}, \
-    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P},
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C0}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P},
 
 /*--------------------------------------------------------------------------*/
 /* LM Fault Lists                                                           */
