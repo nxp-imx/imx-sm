@@ -193,6 +193,19 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Post-boot clean-up                                                       */
+/*                                                                          */
+/* Run any clean-up required after starting all LM                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Complete system reset processing                                         */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)

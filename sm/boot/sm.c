@@ -111,6 +111,12 @@ int main(int argc, const char * const argv[])
     }
 #endif
 
+    /* Post-boot cleanup */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_PostBoot(mSel, LMM_INIT_FLAGS);
+    }
+
     /* Report any error during init */
     if (status != SM_ERR_SUCCESS)
     {

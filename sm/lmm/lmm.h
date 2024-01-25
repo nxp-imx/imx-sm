@@ -125,8 +125,8 @@ int32_t LMM_Init(void);
 /*!
  * LMM boot.
  *
- * @param[in]     mSel  Boot mode selection
- * @param[in]     lmmInitFlags  Number of arguments
+ * @param[in]     mSel          Boot mode selection
+ * @param[in]     lmmInitFlags  Init flags from makefile
  *
  * Boots all the LM as specified in the LMM configuration structure.
  * (lmm_config_t ::g_lmmConfig[]). The *boot* member indicates the boot order
@@ -136,6 +136,18 @@ int32_t LMM_Init(void);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t LMM_Boot(uint32_t mSel, uint32_t lmmInitFlags);
+
+/*!
+ * LMM post-boot complete.
+ *
+ * @param[in]     mSel          Boot mode selection
+ * @param[in]     lmmInitFlags  Init flags from makefile
+ *
+ * Do any housekeeping after booting all LM.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t LMM_PostBoot(uint32_t mSel, uint32_t lmmInitFlags);
 
 /*!
  * Get LM name.

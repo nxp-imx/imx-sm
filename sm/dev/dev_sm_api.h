@@ -245,6 +245,11 @@
 #define DEV_SM_SYSTEMRSTREASON  DEV_SM_SystemRstReason
 #endif
 
+#ifndef SM_SYSTEMPOSTBOOT
+/*! Redirector (device/board) to post boot clean-up */
+#define SM_SYSTEMPOSTBOOT       DEV_SM_SystemPostBoot
+#endif
+
 #ifndef SM_PERFNAMEGET
 /*! Redirector (device/board) to get performance domain name */
 #define SM_PERFNAMEGET          DEV_SM_PerfNameGet

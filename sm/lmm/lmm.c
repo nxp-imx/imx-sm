@@ -189,6 +189,17 @@ int32_t LMM_Boot(uint32_t mSel, uint32_t lmmInitFlags)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Post-boot clean-up                                                       */
+/*                                                                          */
+/* Run any clean-up required after starting all LM                          */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_PostBoot(uint32_t mSel, uint32_t lmmInitFlags)
+{
+    /* Just passthru to board/device */
+    return SM_SYSTEMPOSTBOOT(mSel, lmmInitFlags);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Return LM name                                                           */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_LmNameGet(uint32_t lmId, uint32_t lm, string *lmNameAddr,

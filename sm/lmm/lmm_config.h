@@ -75,6 +75,7 @@
 #define LMM_SS_PERF  1U  /*!< Performance command */
 #define LMM_SS_CLK   2U  /*!< Clock command */
 #define LMM_SS_CPU   3U  /*!< CPU command */
+#define LMM_SS_VOLT  4U  /*!< Voltage command */
 /** @} */
 
 /* Types */

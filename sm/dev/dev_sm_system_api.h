@@ -176,6 +176,18 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
     string *reasonNameAddr, int32_t *len);
 
 /*!
+ * System post-boot complete.
+ *
+ * @param[in]     mSel       Boot mode selection
+ * @param[in]     initFlags  Init flags from makefile
+ *
+ * Do any housekeeping after booting all LM.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags);
+
+/*!
  * Complete a reset.
  *
  * @param[in]     resetRec  Reset record to store

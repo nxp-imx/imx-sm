@@ -122,13 +122,19 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of start */
-#define SM_LM_NUM_START  12U
+#define SM_LM_NUM_START  15U
 
 /*! LM start list */
 #define SM_LM_START_DATA \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM, \
+    .numArg = 1, .arg[0] = 1U,}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM, \
+    .numArg = 1, .arg[0] = 1U,}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM, \
+    .numArg = 1, .arg[0] = 1U,}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
@@ -143,7 +149,7 @@
     {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0},
 
 /*! Config for number of stop */
-#define SM_LM_NUM_STOP  27U
+#define SM_LM_NUM_STOP  30U
 
 /*! LM stop list */
 #define SM_LM_STOP_DATA \
@@ -173,7 +179,10 @@
     {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C0}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
-    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P},
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM},
 
 /*--------------------------------------------------------------------------*/
 /* LM Fault Lists                                                           */
