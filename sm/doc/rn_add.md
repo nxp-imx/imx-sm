@@ -29,8 +29,10 @@ Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
 - Updated mx95alt to allow M33 access to the SEMA41 (for testing)
-- Update mx95evk fault reactions (for testing)
-- Update mx95evk to give AP secure (ATF) access to the peripheral LPI
+- Updated mx95evk:
+  - fault reactions (for testing)
+  - to give AP secure (ATF) access to the peripheral LPI
+  - to fix issues with mSel 1 and 2 start/stop script 
 
 Customers will require the LPI changes if running ATF. They should also configure fault
 handling as required.

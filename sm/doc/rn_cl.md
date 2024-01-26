@@ -87,6 +87,8 @@ Updated the extended reset data for the ELE group 1-3 (interrupt 160-162) to cap
       0x00200020 <- ELE_RST_REQ_STAT
       0x00000020 <- ELE_IRQ_REQ_STAT
 
+The definition of these values can be found in the Block Control - Secure AON Domain chapter of the SoC RM.
+
 SM-23: Vet the peripheral ID parameter in the CPU LP protocol {#RN_DETAIL_SM_23}
 ----------
 
@@ -118,6 +120,8 @@ SM-62: Update SM configurations {#RN_DETAIL_SM_62}
 ----------
 
 Minor change to the mx95alt config to give the M33 access to the SEMA41 module. This is only to allow testing.
+
+Updated the mk95evk config to correctly define the start/stop script for mSel 1 and 2.
 
 SM-63: Fix polarity of WDOG ANY mask {#RN_DETAIL_SM_63}
 ----------
