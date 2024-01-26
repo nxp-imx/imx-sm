@@ -163,9 +163,9 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
         }
         else
         {
-            /* Skip M7 SW faults as can't access */
-            if ((faultId < DEV_SM_FAULT_SW6)
-                || (faultId > DEV_SM_FAULT_SW11))
+            /* Negate M33 SW faults */
+            if ((faultId >= DEV_SM_FAULT_SW0)
+                && (faultId <= DEV_SM_FAULT_SW5))
             {
                 /* Negate fault */
                 if (eMcem_DeassertSWFault((eMcem_FaultType) faultId)
