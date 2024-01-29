@@ -1,7 +1,7 @@
 NXP Software Content Register
 
-Release Name:     imx_sm_2023q4_er2
-Version:          2023q4_er2
+Release Name:     imx_sm_2024q1
+Version:          2024q1
 Outgoing License: BSD-3-Clause
 License File:     LICENSE.txt
 Description:      i.MX System Manager
