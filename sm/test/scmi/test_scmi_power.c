@@ -64,7 +64,7 @@ void TEST_ScmiPower(void)
     uint32_t numDomains = 0U;
     uint32_t agentId, channel, domainId, lmId = 0U;
 
-    /* Power domain tests */
+    /* RPC_00070 Power domain tests */
     printf("**** Power Domain Protocol Tests ***\n\n");
 
     /* Test protocol version */

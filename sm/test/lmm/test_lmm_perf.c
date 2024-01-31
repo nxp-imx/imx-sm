@@ -59,7 +59,7 @@
 void TEST_LmmPerf(void)
 {
 
-    /* LM tests */
+    /* LM_00030 LM tests */
     printf("**** LMM Perf API Tests ***\n\n");
 
     uint32_t lmId = 1U;

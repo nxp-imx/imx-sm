@@ -66,7 +66,7 @@ void TEST_LmmClock(void)
     uint64_t rate = 0U;
     bool enabled = false;
 
-    /* LM tests */
+    /* LM_00030 LM tests */
     printf("**** LMM Clock API Tests ***\n\n");
 
     for (uint32_t clockId = 0U; clockId < (SM_NUM_CLOCK - 1U); clockId++)

@@ -58,7 +58,7 @@ void TEST_LmmPower(void)
     uint8_t powerState = 0U;
     uint32_t lmId = 1U;
 
-    /* LMM tests */
+    /* LM_00030 LMM tests */
     printf("**** Lmm Power API Tests ***\n\n");
 
     /* Test API correct calls per domain */

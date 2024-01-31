@@ -69,7 +69,7 @@ void TEST_ScmiLmm(void)
     uint32_t numLm = 0U;
     uint32_t agentId, channel, lm, lmId = 0U;
 
-    /* LMM tests */
+    /* RPC_00180 LMM tests */
     printf("**** LMM Protocol Tests ***\n\n");
 
     /* Test protocol version */
@@ -260,6 +260,7 @@ static void TEST_ScmiLmmGet(bool pass, uint32_t channel, uint32_t lm)
         uint8_t name[SCMI_LMM_MAX_NAME];
         uint32_t newlm = lm;
 
+        /* RPC_00220 Get status */
         printf("SCMI_LmmAttributes(%u, %u)\n", channel, newlm);
         name[0] = 0U;
 
@@ -306,7 +307,7 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
         printf("SCMI_LmmBoot(%u, %u)\n", channel, lm);
         CHECK(SCMI_LmmBoot(channel, lm));
 
-        /* Send notification -- Shutdown */
+        /* RPC_00210 Send notification -- Shutdown */
         flags = SCMI_LMM_NOTIFY_BOOT(0U) | SCMI_LMM_NOTIFY_SHUTDOWN(1U);
         printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, lm, flags);
         CHECK(SCMI_LmmNotify(channel, lm, flags));
@@ -328,7 +329,7 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
             BCHECK(SCMI_LMM_EVENT_SHUTDOWN(flags) == 1U);
         }
 
-        /* Send notification -- Boot */
+        /* RPC_00210 Send notification -- Boot */
         flags = SCMI_LMM_NOTIFY_BOOT(1U) | SCMI_LMM_NOTIFY_SHUTDOWN(0U);
         printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, lm, flags);
         CHECK(SCMI_LmmNotify(channel, lm, flags));

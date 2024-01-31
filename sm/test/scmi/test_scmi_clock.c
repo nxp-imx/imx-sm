@@ -66,7 +66,7 @@ void TEST_ScmiClock(void)
     uint32_t numClocks;
     uint32_t agentId, channel, clockId, lmId;
 
-    /* Clock tests */
+    /* RPC_00100 Clock tests */
     printf("**** Clock Protocol Tests ***\n\n");
 
     /* Test protocol version */

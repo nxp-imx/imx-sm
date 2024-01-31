@@ -62,7 +62,7 @@ void TEST_ScmiPinctrl(void)
     uint32_t groups = 0U;
     uint32_t functions = 0U;
 
-    /* Pin control tests */
+    /* RPC_00140 Pin control tests */
     printf("**** Pinctrl Protocol Test ****\n\n");
 
     /* Protocol Version */

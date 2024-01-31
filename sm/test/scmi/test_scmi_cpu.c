@@ -64,7 +64,7 @@ void TEST_ScmiCpu(void)
     uint32_t numCpu = 0U;
     uint32_t agentId, channel, domainId, lmId = 0U;
 
-    /* CPU tests */
+    /* RPC_00290 CPU tests */
     printf("**** CPU Protocol Tests ***\n\n");
 
     /* Test Protocol Version */
@@ -213,7 +213,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         printf("SCMI_CpuStop(%u, %u)\n", channel, domainId);
         CHECK(SCMI_CpuStop(channel, domainId));
 
-        /* CPU Reset Vector Set */
+        /* RPC_00300 CPU Reset Vector Set */
         {
             uint32_t flags = 0U;
             uint32_t resetVectorLow = 0U;

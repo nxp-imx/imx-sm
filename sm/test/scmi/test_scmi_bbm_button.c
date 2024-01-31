@@ -174,7 +174,7 @@ static void TEST_ScmiButtonNotify(bool pass, uint32_t channel,
             }
         }
 
-        /* Test ON/OFF button notification */
+        /* RPC_00280 Test ON/OFF button notification */
         {
             uint32_t flags = SCMI_BBM_NOTIFY_BUTTON_DETECT(1U);
 

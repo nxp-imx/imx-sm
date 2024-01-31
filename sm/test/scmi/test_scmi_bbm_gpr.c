@@ -64,7 +64,7 @@ void TEST_ScmiBbmGpr(void)
     uint32_t numGpr;
     uint32_t agentId, channel, resource, lmId;
 
-    /* BBM tests */
+    /* RPC_00230 BBM tests */
     printf("**** Battery-backed Module GPR Protocol Tests ***\n\n");
 
     /* Test protocol attributes */
@@ -143,7 +143,7 @@ static void TEST_ScmiGprExclusive(bool pass, uint32_t channel,
 {
     uint32_t value = 0U;
 
-    /* Test read/write GPR */
+    /* RPC_00240 Test read/write GPR */
     printf("SCMI_BbmGprSet(%u, %u, %u)\n", channel, resource, 500U);
     XCHECK(pass, SCMI_BbmGprSet(channel, resource, 500U));
 
