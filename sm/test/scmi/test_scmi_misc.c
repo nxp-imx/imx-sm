@@ -71,8 +71,8 @@ void TEST_ScmiMisc(void)
     uint32_t numCtrl = 0U;
     uint32_t lmId = 0U;
 
-    /* Control tests */
-    printf("**** Control Protocol Tests ***\n\n");
+    /* RPC_00350 Misc tests */
+    printf("**** Misc Protocol Tests ***\n\n");
 
     /* Test protocol version */
     {
@@ -106,7 +106,7 @@ void TEST_ScmiMisc(void)
             30U, NULL));
     }
 
-    /* Test build info */
+    /* RPC_00400 Test build info */
     {
         uint32_t buildNum = 0U;
         uint32_t buildCommit = 0U;
@@ -133,7 +133,7 @@ void TEST_ScmiMisc(void)
             NULL, NULL, NULL));
     }
 
-    /* Test ROM data */
+    /* RPC_00370 Test ROM data */
     {
         uint32_t numPassover = 0U;
         uint32_t passoverBuffer[SCMI_MISC_MAX_PASSOVER] = { 0 };
@@ -214,7 +214,7 @@ void TEST_ScmiMisc(void)
             SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test reset reason */
+    /* RPC_00380 Test reset reason */
     {
         uint32_t flags = SCMI_MISC_REASON_FLAG_SYSTEM(0U);
         uint32_t bootFlags = 0U;
@@ -335,7 +335,7 @@ static void TEST_ScmiMiscNotify(bool pass, uint32_t channel,
     /* Adequate Permissions */
     if (pass)
     {
-        /* Misc Control Notify & Event */
+        /* RPC_00360 Misc Control Notify & Event */
         uint32_t flags = 1U;
 
         /* Request notification */
@@ -396,7 +396,7 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
     /* Adequate Set Permissions */
     if (pass)
     {
-        /* Control Set */
+        /* RPC_00360 Control Set */
         printf("SCMI_MiscControlSet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlSet(channel, ctrlId,
             1U, &val));

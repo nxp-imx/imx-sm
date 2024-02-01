@@ -56,7 +56,7 @@
 /*--------------------------------------------------------------------------*/
 void TEST_Scmi(void)
 {
-    /* RPC_00010 SCMI tests */
+    /* RPC_00010 RPC_00010 SCMI tests */
     printf("**** SCMI Protocol Tests ***\n\n");
 
     /* Test list protocols */

@@ -66,7 +66,7 @@ void TEST_ScmiVoltage(void)
     uint32_t numDomains = 0U;
     uint32_t agentId, channel, domainId, lmId = 0U;
 
-    /* RPC_00130 Voltage tests */
+    /* RPC_00010 RPC_00130 Voltage tests */
     printf("**** Voltage Domain Protocol Test ****\n\n");
 
     /* Protocol Version */

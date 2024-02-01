@@ -65,7 +65,7 @@ void TEST_ScmiSystem(void)
     int32_t status = 0;
     uint32_t agentId, channel, resource, lmId = 0U;
 
-    /* RPC_00080 System power tests */
+    /* RPC_00010 RPC_00080 System power tests */
     printf("**** System Power Tests ***\n\n");
 
     /* Test protocol version */

@@ -67,7 +67,7 @@ void TEST_ScmiPerf(void)
     uint32_t numDomains = 0U;
     uint32_t agentId, channel, domainId, lmId = 0U;
 
-    /* RPC_00090 Performance tests */
+    /* RPC_00010 RPC_00090 Performance tests */
     printf("**** Performance Domain Protocol Tests ***\n\n");
 
     /* Protocol Version*/

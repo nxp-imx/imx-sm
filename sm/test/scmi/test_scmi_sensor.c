@@ -72,7 +72,7 @@ void TEST_ScmiSensor(void)
     uint32_t agentId, channel, sensorId, lmId;
     uint32_t numSensors;
 
-    /* RPC_00110 Sensor tests */
+    /* RPC_00010 RPC_00110 Sensor tests */
     printf("**** Sensor Protocol Tests ***\n\n");
 
     /* Test protocol version */
