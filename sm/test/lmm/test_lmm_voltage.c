@@ -36,6 +36,8 @@
 /* Unit test for the device SM System API.                                  */
 /*==========================================================================*/
 
+/* LM_00010 */
+
 /* Include Config */
 
 /* Includes */

@@ -69,7 +69,7 @@ void TEST_ScmiLmm(void)
     uint32_t numLm = 0U;
     uint32_t agentId, channel, lm, lmId = 0U;
 
-    /* RPC_00180 LMM tests */
+    /* LM_00010 RPC_00180 LMM tests */
     printf("**** LMM Protocol Tests ***\n\n");
 
     /* Test protocol version */
@@ -233,7 +233,7 @@ static void TEST_ScmiLmmNotify(bool pass, uint32_t channel, uint32_t lm)
 {
     uint32_t flags = SCMI_LMM_NOTIFY_BOOT(0U) | SCMI_LMM_NOTIFY_SHUTDOWN(0U);
 
-    /* Adequate Access Permissions */
+    /* LM_00040 LM_00050 Adequate Access Permissions */
     if (pass)
     {
         printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, lm, flags);
@@ -406,7 +406,7 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
                 SCMI_ERR_INVALID_PARAMETERS);
         }
 
-        /* Reset Config */
+        /* LM_00020 Reset Config */
 #ifdef SIMU
         if (pass)
         {

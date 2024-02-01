@@ -36,6 +36,8 @@
 /* Unit test for the device SM RDC API.                                     */
 /*==========================================================================*/
 
+/* DEV_00010 */
+
 /* Includes */
 
 #include "test.h"

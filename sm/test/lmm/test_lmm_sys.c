@@ -58,7 +58,7 @@
 /*--------------------------------------------------------------------------*/
 void TEST_LmmSys(void)
 {
-    /* LM tests */
+    /* LM_00010 LM tests */
     printf("**** LMM Sys API Tests ***\n\n");
 
     /* Test API bounds */

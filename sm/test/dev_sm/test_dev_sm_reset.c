@@ -36,6 +36,8 @@
 /* Unit test for the device SM reset API.                                   */
 /*==========================================================================*/
 
+/* DEV_00010 */
+
 /* Include Config */
 
 /* Includes */

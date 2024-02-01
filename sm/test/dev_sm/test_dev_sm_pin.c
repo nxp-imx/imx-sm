@@ -36,6 +36,8 @@
 /* Unit test for the device SM Pin API.                                     */
 /*==========================================================================*/
 
+/* DEV_00010 */
+
 /* Include Config */
 
 /* Includes */
