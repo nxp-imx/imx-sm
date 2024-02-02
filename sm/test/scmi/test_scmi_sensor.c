@@ -72,7 +72,7 @@ void TEST_ScmiSensor(void)
     uint32_t agentId, channel, sensorId, lmId;
     uint32_t numSensors;
 
-    /* RPC_00010 RPC_00110 Sensor tests */
+    /* RPC_00010 RPC_00110 RPC_00160 Sensor tests */
     printf("**** Sensor Protocol Tests ***\n\n");
 
     /* Test protocol version */
@@ -299,7 +299,7 @@ void TEST_ScmiSensor(void)
         /* Test functions with NONE perm required */
         TEST_ScmiSensorNone(channel, sensorId);
 
-        /* Test functions with NOTIFY perm required */
+        /* RPC_00170 Test functions with NOTIFY perm required */
         TEST_ScmiSensorNotify(perm >= SM_SCMI_PERM_NOTIFY, channel,
             sensorId);
 

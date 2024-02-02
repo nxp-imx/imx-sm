@@ -40,7 +40,7 @@
 
 void TEST_ScmiFusa(void)
 {
-    /* FuSa tests */
+    /* RPC_00410 FuSa tests */
     printf("**** FuSa Protocol Test ****\n\n");
 
     /* Protocol Version */

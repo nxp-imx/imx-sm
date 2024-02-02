@@ -65,7 +65,7 @@ void TEST_ScmiSystem(void)
     int32_t status = 0;
     uint32_t agentId, channel, resource, lmId = 0U;
 
-    /* RPC_00010 RPC_00080 System power tests */
+    /* RPC_00010 RPC_00080 RPC_00160 System power tests */
     printf("**** System Power Tests ***\n\n");
 
     /* Test protocol version */
@@ -132,7 +132,7 @@ void TEST_ScmiSystem(void)
     {
         uint8_t perm = g_scmiAgentConfig[agentId].sysPerms;
 
-        /* Test functions with NOTIFY perm required */
+        /* RPC_00170 Test functions with NOTIFY perm required */
         TEST_ScmiSystemNotify(perm >= SM_SCMI_PERM_NOTIFY, channel);
 
         /* Test functions with SET perm required */

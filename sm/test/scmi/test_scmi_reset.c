@@ -64,7 +64,7 @@ void TEST_ScmiReset(void)
     uint32_t agentId, channel, domainId, lmId;
     int32_t status;
 
-    /* RPC_00010 RPC_00120 Reset tests */
+    /* RPC_00010 RPC_00120 RPC_00160 Reset tests */
     printf("**** Reset Protocol Test ****\n\n");
 
     /* Protocol Version */

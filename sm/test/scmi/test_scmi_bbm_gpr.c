@@ -64,7 +64,7 @@ void TEST_ScmiBbmGpr(void)
     uint32_t numGpr;
     uint32_t agentId, channel, resource, lmId;
 
-    /* RPC_00230 BBM tests */
+    /* RPC_00230 RPC_00160 BBM tests */
     printf("**** Battery-backed Module GPR Protocol Tests ***\n\n");
 
     /* Test protocol attributes */

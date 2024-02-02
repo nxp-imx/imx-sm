@@ -125,7 +125,7 @@ void TEST_ScmiBbmButton(void)
         /* Test functions with no perm required */
         TEST_ScmiButtonNone(channel, resource);
 
-        /* Test functions with NOTIFY perm required */
+        /* RPC_00170 Test functions with NOTIFY perm required */
         TEST_ScmiButtonNotify(perm >= SM_SCMI_PERM_SET, channel, resource);
 
         /* Get next test case */

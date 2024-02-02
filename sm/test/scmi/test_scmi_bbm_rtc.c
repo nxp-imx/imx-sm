@@ -66,7 +66,7 @@ void TEST_ScmiBbmRtc(void)
     int32_t status = 0;
     uint32_t agentId, channel, resource, numRtc, lmId = 0U;
 
-    /* BBM tests */
+    /* RPC_00160 BBM tests */
     printf("**** Battery-backed Module RTC Protocol Tests ***\n\n");
 
     /* Test protocol attributes */
@@ -348,7 +348,7 @@ static void TEST_ScmiRtcExclusive(bool pass, uint32_t channel,
     /* Notification - Rollover */
     if (pass)
     {
-        /* Request to notify on rollover */
+        /* RPC_00170 Request to notify on rollover */
         flags = SCMI_BBM_NOTIFY_RTC_ROLLOVER(1U);
         printf("SCMI_BbmNotify(%u, 0x%X)\n", channel, flags);
         CHECK(SCMI_BbmRtcNotify(channel, resource, flags));

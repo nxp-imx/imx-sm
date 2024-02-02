@@ -62,7 +62,7 @@ void TEST_ScmiBase(void)
     int32_t status = 0;
     uint32_t agentId, channel, resource, lmId = 0;
 
-    /* RPC_00010 RPC_00060 Base tests */
+    /* RPC_00010 RPC_00060 RPC_00160 Base tests */
     printf("**** Base Protocol Tests ***\n\n");
 
     /* Test protocol version */

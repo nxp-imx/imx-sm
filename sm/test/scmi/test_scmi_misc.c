@@ -71,7 +71,7 @@ void TEST_ScmiMisc(void)
     uint32_t numCtrl = 0U;
     uint32_t lmId = 0U;
 
-    /* RPC_00350 Misc tests */
+    /* RPC_00350 RPC_00160 Misc tests */
     printf("**** Misc Protocol Tests ***\n\n");
 
     /* Test protocol version */
@@ -283,7 +283,7 @@ void TEST_ScmiMisc(void)
         /* Test functions with GET perm required */
         TEST_ScmiMiscGet(perm >= SM_SCMI_PERM_GET, channel, ctrlId);
 
-        /* Test functions with notify perms required */
+        /* RPC_00170 Test functions with notify perms required */
         TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY,channel, ctrlId);
 
         /* Test functions with EXCLUSIVE perm required */

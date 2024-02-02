@@ -69,7 +69,7 @@ void TEST_ScmiLmm(void)
     uint32_t numLm = 0U;
     uint32_t agentId, channel, lm, lmId = 0U;
 
-    /* LM_00010 RPC_00180 LMM tests */
+    /* LM_00010 RPC_00180 RPC_00160 LMM tests */
     printf("**** LMM Protocol Tests ***\n\n");
 
     /* Test protocol version */
@@ -205,7 +205,7 @@ void TEST_ScmiLmm(void)
         /* Test functions with GET perm required */
         TEST_ScmiLmmGet(perm >= SM_SCMI_PERM_GET, channel, lm);
 
-        /* Test functions with NOTIFY perm required */
+        /* RPC_00170 Test functions with NOTIFY perm required */
         TEST_ScmiLmmNotify(perm >= SM_SCMI_PERM_NOTIFY,
             channel, lm);
 

@@ -64,7 +64,7 @@ void TEST_ScmiCpu(void)
     uint32_t numCpu = 0U;
     uint32_t agentId, channel, domainId, lmId = 0U;
 
-    /* RPC_00290 CPU tests */
+    /* RPC_00290 RPC_00160  CPU tests */
     printf("**** CPU Protocol Tests ***\n\n");
 
     /* Test Protocol Version */
