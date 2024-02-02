@@ -1,4 +1,4 @@
-The System Manager (SM) is a firmware that runs on a Cortex-M processor on many NXP i.MX processors.
+The System Manager (SM) is an application that runs on a Cortex-M processor on many NXP i.MX processors.
 The Cortex-M is the boot core, runs the boot ROM which loads the SM (and other boot code), and then
 branches to the SM. The SM then configures some aspects of the hardware such as isolation mechanisms
 and then starts other cores in the system. After starting these cores, it enters a service mode where
@@ -44,6 +44,13 @@ Then copy the resulting binary image file, *build/mx95evk/m33_image.bin*, to the
 [mkimage tool](https://github.com/nxp-imx/imx-mkimage). Build a boot container using mkimage, program
 it to the boot device, and boot the board. The SM will display a debug monitor prompt on the M33 debug
 UART.
+
+The above config is for Linux+M7 system testing. Another config is delivered for MCUXpresso testing:
+
+    make config=mx95alt all
+
+Customers will usually create their own config that partitions resources between the AP and M7 for
+their use-case.
 
 Building the Documentation
 ==========================

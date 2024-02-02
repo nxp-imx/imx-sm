@@ -4,7 +4,7 @@ Architecture {#ARCH}
 Overview
 ========
 
-System management (SM) is the act of controlling all the SoC features critical to it running. This includes
+System management is the act of controlling all the SoC features critical to it running. This includes
 things like power, bus clocking, resets, pin muxing, PMIC, fault handling, etc.
 
 The function of these IP needs to be "shared" but the HW does not support sharing. Access granularity is
@@ -33,7 +33,7 @@ In a system with safety SW, the CPU running the safety framework usually has to 
 is usually the most critical function in the system and the safety function usually needs very low latency
 interaction with SM.
 
-This document covers the NXP i.MX System Manager (SM), a firmware that runs on a dedicated core along with
+This document covers the NXP i.MX System Manager (SM), an application that runs on a dedicated core along with
 the FuSa software (optional) to manage the system. On i.MX9, the M33 core in the AON domain is the SCP and runs
 the SM. The other cores (e.g. A55, M7) are user cores and communicate with the SM via an SCMI protocol. 
 
@@ -79,9 +79,9 @@ clocks, etc. and the handling of system-level faults.
 System View {#SYS_ARCH}
 ===========
 
-Running System Management (SM) outside the Cortex-A is an optional feature on i.MX9. When done, SM runs
+Running system management outside the Cortex-A is an optional feature on i.MX9. When done, SM runs
 on the Cortex-M33, aka the System Control Processor (SCP). In this case, the Cortex-M33 is not available
-to run customer applications. The SM firmware runs on the Cotex-M33 bare metal and does not make use of
+to run customer applications. The SM application runs on the Cotex-M33 bare metal and does not make use of
 an RTOS. It isn't shareable (other than with FuSA elements such as SCST and SAF) and additional customer
 functionality may interfere with the real-time response of the SM.
 
@@ -141,11 +141,11 @@ to the standard ARM SCMI [System Protocol](@ref scmi_proto_sys). In addition, th
 be able to control and get notifications about other LM. This is supported via an NXP-defined vendor extension
 called the [LMM Protocol](@ref scmi_proto_lmm).
 
-SM Firmware Logical View {#LOG_ARCH}
-========================
+SM Logical View {#LOG_ARCH}
+===============
 
-This section describes the structure of the SM firmware. It describes the modules that make up the
-firmware and their relationship to each other. The following figure shows the main modules and some of
+This section describes the structure of the SM application. It describes the modules that make up the
+application and their relationship to each other. The following figure shows the main modules and some of
 the elements that make up those modules. The main modules are the SM Framework, the Safety Framework
 (SCST+SAF), MCUXpresso SDK drivers, and [ARM CMSIS](https://arm-software.github.io/CMSIS_5/Core/html/index.html).
 
@@ -181,9 +181,9 @@ Top-level Structure
 SM Framework {#ARCH_FW}
 ------------
 
-The i.MX9 SM firmware is implemented using a custom NXP firmware framework implemented for System Control
-Processors (SCP). This SM codebase provides the primary framework used to construct the SM firmware.
-The following figure shows the modules within the framework. 
+The i.MX9 SM application is implemented using a custom NXP application framework implemented for System
+Control Processors (SCP). This SM codebase provides the primary framework used to construct the SM
+application. The following figure shows the modules within the framework. 
 
 <br>
 @image html module.jpg "SM Framework Modules" width=75%
@@ -354,7 +354,7 @@ functions.
 Physical Architecture {#PHY_ARCH}
 =====================
 
-This section describes the physical architecture of the SM firmware. The following figure shows all the
+This section describes the physical architecture of the SM application. The following figure shows all the
 hardware elements that the SM configures or makes use of. The TRDC is configured to restrict access to
 these IP to the CM33.
 
@@ -364,13 +364,13 @@ these IP to the CM33.
 @image latex physical_view.jpg "Physical View"
 <br>
 
-The SM firmware runs on the Cortex-M33 and uses all of the TCM coupled to it. The SM makes use of the
+The SM application runs on the Cortex-M33 and uses all of the TCM coupled to it. The SM makes use of the
 IP blocks shown in the following table. Most are in always-on power domains (AONMIX, ANAMIX, CCMSRCGPC,
 BBNSM).
 
 | IP Block           | Mix       | Use                                                  |
 |--------------------|-----------|------------------------------------------------------|
-| M33P               | AON       | Executes SM firmware                                 |
+| M33P               | AON       | Executes the SM application                          |
 | ATU_A              | AON       | Isolate memory translations                          |
 | AXBS_AON           | AON       | Configure QoS                                        |
 | BLK_CTRL_NS_AON    | AON       | Misc. controls                                       |
@@ -391,8 +391,8 @@ BBNSM).
 | SYSCTR_CTL         | AON       | Configured to provide a timebase to the system       |
 | TRDC_A             | AON       | Configures to enforce HW isolation (via ELE)         |
 | TSTMR1             | AON       | Arbitrate shared access                              |
-| WDOG1              | AON       | Monitors the health of SM firmware                   |
-| WDOG2              | AON       | Monitors the health of SM firmware                   |
+| WDOG1              | AON       | Monitors the health of SM application                |
+| WDOG2              | AON       | Monitors the health of SM application                |
 | CCM                | CCMSRCGPC | Clock management, arbitrate shared access            |
 | GPC                | CCMSRCGPC | Power management, arbitrate shared access            |
 | PLL Control        | ANA       | Clock management, arbitrate shared access            |
@@ -447,7 +447,7 @@ etc.) for each mix owned exclusively by the SM.
 SCFW versus SM {#SCFW_ARCH}
 ==============
 
-The system manager (SM) on i.MX9 has a similar function as the system controller firmware (SCFW)
+The System Manager (SM) on i.MX9 has a similar function as the system controller firmware (SCFW)
 did on i.MX8. Below is a comparison of the API:
 
 |SCFW Services | SCMI Protocols | Comment|
@@ -465,7 +465,7 @@ directly to the ELE/V2X elements.
 Licensing
 =========
 
-The System Management firmware source code is 3-Clause BSD license as it provides flexibility. The
+The System Manager application source code is 3-Clause BSD license as it provides flexibility. The
 BSD 3-clause license allows customers almost unlimited freedom with the software so long as they include
 the BSD copyright and license notice in it (found in Fulltext). Also, it enables interlinking
 with different software components like MCUXpresso SDK, TF-A, CMSIS, etc. SM releases require compliance
@@ -477,8 +477,8 @@ limits what aspects of the SM can be modified without voiding the safety certifi
 Source Code Release
 ===================
 
-The System Management firmware source code is made accessible to customers. The releases are made via
-NXP public repository by sharing release branches and tags to github.
+The System Manager application fully open-source and all source code is made accessible to customers.
+The releases are made via NXP public repository by sharing release branches and tags to GitHub.
 
 Note this does not include safety components like SCST and SAF. Also, modification of some SM components
 (anything other than the configuration and board code) could affect FuSa pre-certifications.

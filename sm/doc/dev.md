@@ -4,7 +4,7 @@ Developer's Guide {#DEV_GUIDE}
 This section describes how to compile a System Manager image and stitch it into a boot
 image that can boot on a supported platform.
 
-The SM firmware can be compiled for two primary variants: target or simulation. Target
+The SM application can be compiled for two primary variants: target or simulation. Target
 builds are compiled with a cross compiler and will only run on i.MX9 hardware. Simulation
 builds run on the host computer and make use of fake HW functions in the code to simulate
 the hardware. Documentation is also compiled.
@@ -23,7 +23,7 @@ In addition, see @ref MONITOR for more information on using the CLI.
 Build Environment {#GUIDE_BUILD}
 =================
 
-The SM firmware is a 32-bit program compiled using the GNU C compiler (gcc), debugged
+The SM application is a 32-bit program compiled using the GNU C compiler (gcc), debugged
 using the GNU debugger (gdb/ddd), and documented using doxygen. As a result, a GNU-compliant
 build environment is required.
 
@@ -66,7 +66,7 @@ So for example if the GCC toolchain is installed in
 Compiling the SM {#GUIDE_COMPILE}
 ==================
 
-The SM firmware can be fully compiled using the Makefile. The command format is:
+The SM application can be fully compiled using the Makefile. The command format is:
 
 Usage: make TARGET OPTIONS
 
