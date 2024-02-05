@@ -482,10 +482,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
             }
 
-            /* Decode wake event */
-            uint32_t vector = (SCB->ICSR & SCB_ICSR_VECTPENDING_Msk) >> SCB_ICSR_VECTPENDING_Pos;
-            printf("VECTPENDING = %u\n", vector);
-
             /* If WAKEUPMIX powered down during SUSPEND, reenable handshake and
              * force power up processing
              */
