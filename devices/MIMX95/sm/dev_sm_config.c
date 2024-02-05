@@ -511,6 +511,11 @@ int32_t DEV_SM_NocConfigLoad(void)
         status = CONFIG_Load(NULL, s_configData);
     }
 
+#if (defined(FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127) && FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127)
+    /* Issue read access to force sync of default values */
+    BLK_CTRL_NOCMIX->TIE_VALUE;
+#endif
+
 #ifdef SM_NOC_CONFIG_FUNC
     /* Run device config function */
     if (status == SM_ERR_SUCCESS)

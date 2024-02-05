@@ -6,7 +6,7 @@
 **         CMSIS Peripheral Access Layer for MIMX95_cm33
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2023 NXP
+**     Copyright 2016-2024 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -40,6 +40,7 @@
 #include "MIMX95_BBNSM.h"
 #include "MIMX95_BLK_CTRL_NS_AONMIX.h"
 #include "MIMX95_BLK_CTRL_S_AONMIX.h"
+#include "MIMX95_BLK_CTRL_NOCMIX.h"
 #include "MIMX95_BLK_CTRL_WAKEUPMIX.h"
 #include "MIMX95_CCM.h"
 #include "MIMX95_CM33_MCM.h"

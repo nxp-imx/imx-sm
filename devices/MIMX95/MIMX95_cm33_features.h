@@ -7,7 +7,7 @@
 **         Chip specific module features.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2022 NXP
+**     Copyright 2016-2024 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -604,5 +604,9 @@
 /* FRAC_PLL module features */
 /* @brief Is affected by errata with ID 628654 (FRAC_PLL: MFN not retained) */
 #define FSL_FEATURE_FRAC_PLL_HAS_ERRATA_628654 (1)
+
+/* NoC block control module features */
+/* @brief Is affected by errata with ID 52127 (BLK_CTRL_NOC: default value requires access to sync) */
+#define FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127 (1)
 
 #endif /* _MIMX95_cm33_FEATURES_H_ */
