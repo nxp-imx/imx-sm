@@ -213,3 +213,10 @@ int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)
     return SM_SYSTEMRSTCOMP(resetRec);
 }
 
+/*--------------------------------------------------------------------------*/
+/* Idle the system                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SystemIdle(void)
+{
+    return SM_ERR_SUCCESS;
+}

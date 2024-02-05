@@ -73,6 +73,7 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
+static wdog32_config_t s_wdogConfig;
 
 /* Debug UART base pointer list */
 static LPUART_Type *const s_uartBases[] = LPUART_BASE_PTRS;
@@ -94,12 +95,27 @@ static uint32_t const s_uartClks[] =
     CLOCK_ROOT_LPUART8
 };
 
+/* Debug UART peripheral LPI list */
+static uint32_t const s_uartPerLpi[] =
+{
+    0U,
+    CPU_PER_LPI_IDX_LPUART1,
+    CPU_PER_LPI_IDX_LPUART2,
+    CPU_PER_LPI_IDX_LPUART3,
+    CPU_PER_LPI_IDX_LPUART4,
+    CPU_PER_LPI_IDX_LPUART5,
+    CPU_PER_LPI_IDX_LPUART6,
+    CPU_PER_LPI_IDX_LPUART7,
+    CPU_PER_LPI_IDX_LPUART8
+};
+
 /* Debug UART configuration info */
 static board_uart_config_t const s_uartConfig =
 {
     .base = s_uartBases[BOARD_DEBUG_UART_INSTANCE],
     .irq = s_uartIrqs[BOARD_DEBUG_UART_INSTANCE],
     .clockId = s_uartClks[BOARD_DEBUG_UART_INSTANCE],
+    .perLpiId = s_uartPerLpi[BOARD_DEBUG_UART_INSTANCE],
     .baud = BOARD_DEBUG_UART_BAUDRATE,
     .inst = BOARD_DEBUG_UART_INSTANCE
 };
@@ -345,12 +361,11 @@ void BOARD_InitTimers(void)
     NVIC_EnableIRQ(SysTick_IRQn);
 
     /* Configure and enable the WDOG */
-    wdog32_config_t wdogConfig;
-    WDOG32_GetDefaultConfig(&wdogConfig);
-    wdogConfig.clockSource = BOARD_WDOG_CLK_SRC;
-    wdogConfig.timeoutValue = BOARD_WDOG_TIMEOUT;
-    wdogConfig.enableInterrupt = true;
-    WDOG32_Init(BOARD_WDOG_BASE_PTR, &wdogConfig);
+    WDOG32_GetDefaultConfig(&s_wdogConfig);
+    s_wdogConfig.clockSource = BOARD_WDOG_CLK_SRC;
+    s_wdogConfig.timeoutValue = BOARD_WDOG_TIMEOUT;
+    s_wdogConfig.enableInterrupt = true;
+    WDOG32_Init(BOARD_WDOG_BASE_PTR, &s_wdogConfig);
     NVIC_SetPriority(BOARD_WDOG_IRQn, BOARD_HANDLER_PRIO_PREEMPT_CRITICAL);
 
     /* Configure to just non-FCCU SM watchdogs */
@@ -469,3 +484,73 @@ void BOARD_InitSerialBus(void)
     LPI2C_MasterInit(base, &lpi2cConfig, rate);
 }
 
+/*--------------------------------------------------------------------------*/
+/* System sleep prepare                                                     */
+/*--------------------------------------------------------------------------*/
+void BOARD_SystemSleepPrepare(uint32_t sleepMode)
+{
+    /* Configure SM LPUART for wakeup */
+    if (s_uartConfig.base != NULL)
+    {
+        /* Enable edge-detect IRQ */
+        LPUART_ClearStatusFlags(s_uartConfig.base, kLPUART_RxActiveEdgeFlag);
+        LPUART_EnableInterrupts(s_uartConfig.base,
+            kLPUART_RxActiveEdgeInterruptEnable);
+        NVIC_EnableIRQ(s_uartConfig.irq);
+
+        /* Configure LPI of SM LPUART */
+        (void) CPU_PerLpiConfigSet(CPU_IDX_M33P, s_uartConfig.perLpiId,
+            CPU_PER_LPI_ON_RUN_WAIT_STOP);
+    }
+
+    /* Configure LPI for GPIO1 */
+    (void) CPU_PerLpiConfigSet(CPU_IDX_M33P, CPU_PER_LPI_IDX_GPIO1,
+        CPU_PER_LPI_ON_RUN_WAIT_STOP);
+}
+
+/*--------------------------------------------------------------------------*/
+/* System sleep entry                                                       */
+/*--------------------------------------------------------------------------*/
+void BOARD_SystemSleepEnter(uint32_t sleepMode)
+{
+    /* Disable SysTick */
+    uint32_t sysTickMask = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+    SysTick->CTRL &= (~sysTickMask);
+
+    /* Clear pending SysTick exception */
+    SCB->ICSR = SCB_ICSR_PENDSTCLR_Msk;
+
+    /* Disable WDOG */
+    WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
+}
+
+/*--------------------------------------------------------------------------*/
+/* System sleep exit                                                        */
+/*--------------------------------------------------------------------------*/
+void BOARD_SystemSleepExit(uint32_t sleepMode)
+{
+    /* Enable WDOG */
+    WDOG32_Init(BOARD_WDOG_BASE_PTR, &s_wdogConfig);
+
+    /* Enable SysTick */
+    uint32_t sysTickMask = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+    SysTick->VAL   = 0U;
+    SysTick->CTRL |= (sysTickMask);
+}
+
+/*--------------------------------------------------------------------------*/
+/* System sleep unprepare                                                   */
+/*--------------------------------------------------------------------------*/
+void BOARD_SystemSleepUnprepare(uint32_t sleepMode)
+{
+    /* Service SM LPUART wakeup events */
+    if (s_uartConfig.base != NULL)
+    {
+        LPUART_ClearStatusFlags(s_uartConfig.base, kLPUART_RxActiveEdgeFlag);
+        LPUART_DisableInterrupts(s_uartConfig.base,
+            kLPUART_RxActiveEdgeInterruptEnable);
+
+        NVIC_DisableIRQ(s_uartConfig.irq);
+        NVIC_ClearPendingIRQ(s_uartConfig.irq);
+    }
+}

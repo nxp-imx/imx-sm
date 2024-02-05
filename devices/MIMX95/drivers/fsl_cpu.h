@@ -171,6 +171,7 @@ bool CPU_SleepForceSet(uint32_t cpuIdx, bool sleepForce);
 bool CPU_SleepForceGet(uint32_t cpuIdx, bool *sleepForce);
 bool CPU_SystemSleepSet(uint32_t cpuIdx, uint32_t sysSleep);
 bool CPU_SystemSleepGet(uint32_t cpuIdx, uint32_t *sysSleep);
+bool CPU_SystemSleepStatusGet(uint32_t *sysSleepStat);
 bool CPU_WakeMuxSet(uint32_t cpuIdx, bool gicWake);
 bool CPU_WakeMuxGet(uint32_t cpuIdx, bool *gicWake);
 bool CPU_IrqWakeSet(uint32_t cpuIdx, uint32_t maskIdx, uint32_t maskVal);

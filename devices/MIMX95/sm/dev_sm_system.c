@@ -41,6 +41,7 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
+#include "fsl_fract_pll.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 
@@ -52,6 +53,7 @@
 
 static uint32_t s_powerMode = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
+static uint32_t s_clkRootCtrl[CLOCK_NUM_ROOT];
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -74,6 +76,18 @@ int32_t DEV_SM_SystemInit(void)
         s_shutdownRecord.reason = srcResetReason;
         s_shutdownRecord.valid = true;
     }
+
+    /* Shut off OSC_24M during system sleep */
+    GPC_GLOBAL->GPC_ROSC_CTRL = GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK;
+
+    /* Enable GPC PMIC standby control */
+    GPC_GLOBAL->GPC_PMIC_CTRL = GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK;
+
+    /* TODO:  Enable GPC-to-ELE handshake */
+    /* GPC_GLOBAL->GPC_SENTINEL_HDSK_CTRL = 1U; */
+
+    /* TODO:  Use DEEPSLEEP output of M33 to reflect GPC sleep request */
+    /* BLK_CTRL_NS_AONMIX->GPC_CFG |= BLK_CTRL_NS_AONMIX_GPC_CFG_M33_SLEEP_SEL_MASK; */
 
     /* Default to keep M7 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_CFG |=
@@ -270,3 +284,297 @@ int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)
     return SM_SYSTEMRSTCOMP(resetRec);
 }
 
+/*--------------------------------------------------------------------------*/
+/* Sleep the system                                                         */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t clkSrcIdx, rootIdx;
+    uint32_t cpuWakeMask[CPU_NUM_IDX][GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
+    uint32_t sysWakeMask[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
+    uint32_t nvicISER[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
+
+    /* Initalize system wake mask */
+    for (uint32_t wakeIdx = 0;
+        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+        wakeIdx++)
+    {
+        sysWakeMask[wakeIdx] = 0xFFFFFFFFU;
+    }
+
+    /* Initialize NOC/WAKEUP MIX dependencies */
+    uint32_t lpmSettingNoc = CPU_PD_LPM_ON_NEVER;
+    uint32_t lpmSettingWakeup = CPU_PD_LPM_ON_NEVER;
+    SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, CPU_IDX_M33P, &lpmSettingNoc);
+    SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, CPU_IDX_M33P, &lpmSettingWakeup);
+
+    /* Scan CPUs, update GPC wake masks, assess NOC/WAKEUP MIX dependencies */
+    for (uint32_t cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
+    {
+        if (cpuIdx != CPU_IDX_M33P)
+        {
+            /* Check if sleep is forced for the CPU */
+            bool sleepForce;
+            if (CPU_SleepForceGet(cpuIdx, &sleepForce))
+            {
+                /* If sleep is not forced, manage GPC masks */
+                if (!sleepForce)
+                {
+                    /* IRQs enabled at NVIC level become GPC wake sources */
+                    for (uint32_t wakeIdx = 0;
+                        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                        wakeIdx++)
+                    {
+                        uint32_t wakeVal;
+                        CPU_IrqWakeGet(cpuIdx, wakeIdx, &wakeVal);
+                        cpuWakeMask[cpuIdx][wakeIdx] = wakeVal;
+                        sysWakeMask[wakeIdx] &= wakeVal;
+                        CPU_IrqWakeSet(cpuIdx, wakeIdx, 0xFFFFFFFFU);
+                    }
+                }
+
+                /* Update NOCMIX dependency */
+                uint32_t lpmSetting;
+                if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, cpuIdx, &lpmSetting))
+                {
+                    if (lpmSetting > lpmSettingNoc)
+                    {
+                        lpmSettingNoc = lpmSetting;
+                    }
+                }
+
+                /* Update WAKEUPMIX dependency */
+                if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx, &lpmSetting))
+                {
+                    if (lpmSetting > lpmSettingWakeup)
+                    {
+                        lpmSettingWakeup = lpmSetting;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Check system sleep status after clearing GPC masks */
+    uint32_t sysSleepStat;
+    if (CPU_SystemSleepStatusGet(&sysSleepStat))
+    {
+        /* If system can sleep after clearing GPC masks, SUSPEND
+         * processing has reached point of coherency.  Agent CPUs
+         * cannot wake without SM completion of SUSPEND entry/exit
+         * sequence below.
+         */
+        if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
+        {
+            /* Board-level sleep prepare */
+            BOARD_SystemSleepPrepare(sleepMode);
+
+            /* Inhibit GPC LP handshakes for NOCMIX if powering down */
+            if (lpmSettingNoc <= sleepMode)
+            {
+                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_NOC, false);
+            }
+
+            /* Inhibit GPC LP handshakes for NOCMIX if powering down */
+            if (lpmSettingWakeup <= sleepMode)
+            {
+                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_WAKEUP, false);
+            }
+
+            /* Configure SM GPC_CTRL and NVIC for system-level wake events */
+            for (uint32_t wakeIdx = 0;
+                wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                wakeIdx++)
+            {
+                /* Save contex of SM IRQs enabled at NVIC level */
+                nvicISER[wakeIdx] = NVIC->ISER[wakeIdx];
+
+                /* Clear unused system-level IRQs */
+                uint32_t maskVal = ~nvicISER[wakeIdx];
+                NVIC->ICPR[wakeIdx] = 0xFFFFFFFFU & maskVal;
+
+                /* Add system-level wake events */
+                maskVal &= sysWakeMask[wakeIdx];
+
+                /* Update GPC wake mask */
+                CPU_IrqWakeSet(CPU_IDX_M33P, wakeIdx, maskVal);
+
+                /* Update NVIC wake mask */
+                NVIC->ICER[wakeIdx] = 0xFFFFFFFFU;
+                NVIC->ISER[wakeIdx] = ~maskVal;
+            }
+
+            /* Configure M33P to wake from GPC */
+            CPU_WakeMuxSet(CPU_IDX_M33P, false);
+
+            /* Set target M33P sleep mode */
+            CPU_SleepModeSet(CPU_IDX_M33P, sleepMode);
+
+            /* For all clock roots not being sourced from FRO, switch clock source
+             * to OSC_24M to allow PLLs to be powered down.  OSC_24M will be gated
+             * during STANDBY.
+             */
+            for (rootIdx = 0U; rootIdx < CLOCK_NUM_ROOT; rootIdx++)
+            {
+                /* Save clock root context */
+                s_clkRootCtrl[rootIdx] = CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.RW;
+
+                /* Extract clock root mux setting */
+                uint32_t rootMux = (s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_MUX_MASK)
+                    >> CCM_CLOCK_ROOT_MUX_SHIFT;
+
+                /* Switch all roots not sourced from FRO to OSC_24M / 1*/
+                if (g_clockRootMux[rootIdx][rootMux] != CLOCK_SRC_FRO)
+                {
+                    /* Set MUX = 0 (OSC_24M) */
+                    CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.CLR =
+                        CCM_CLOCK_ROOT_MUX_MASK;
+
+                    /* Set DIV = 0 (/1) */
+                    CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.CLR =
+                        CCM_CLOCK_ROOT_DIV_MASK;
+                }
+            }
+
+            /* Power down SYSPLL clock nodes */
+            clkSrcIdx = CLOCK_SRC_SYSPLL1_PFD2_DIV2;
+            while(clkSrcIdx >= CLOCK_SRC_SYSPLL1_VCO)
+            {
+                CLOCK_SourceSetEnable(clkSrcIdx, false);
+                clkSrcIdx--;
+            }
+
+            /* Board-level sleep entry */
+            BOARD_SystemSleepEnter(sleepMode);
+
+            /* Process SM LPIs for sleep entry */
+            CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
+
+            /* Enter WFI to trigger sleep entry */
+            __DSB();
+            __WFI();
+            __ISB();
+
+            /* Process SM LPIs for sleep exit */
+            CPU_PerLpiProcess(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+
+            /* Board-level sleep exit */
+            BOARD_SystemSleepExit(sleepMode);
+
+            /* Power up SYSPLL clock nodes */
+            clkSrcIdx = CLOCK_SRC_SYSPLL1_VCO;
+            while(clkSrcIdx <= CLOCK_SRC_SYSPLL1_PFD2_DIV2)
+            {
+                CLOCK_SourceSetEnable(clkSrcIdx, true);
+                clkSrcIdx++;
+            }
+
+            /* Restore clock roots */
+            for (rootIdx = 0U; rootIdx < CLOCK_NUM_ROOT; rootIdx++)
+            {
+                /* Restore DIV */
+                CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
+                    s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_DIV_MASK;
+
+                /* Restore MUX = 0 */
+                CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
+                    s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
+            }
+
+            /* Decode wake event */
+            uint32_t vector = (SCB->ICSR & SCB_ICSR_VECTPENDING_Msk) >> SCB_ICSR_VECTPENDING_Pos;
+            printf("VECTPENDING = %u\n", vector);
+
+            /* If WAKEUPMIX powered down during SUSPEND, reenable handshake and
+             * force power up processing
+             */
+            if (lpmSettingWakeup <= sleepMode)
+            {
+                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_WAKEUP, true);
+                DEV_SM_PowerUpPost(DEV_SM_PD_WAKEUP);
+            }
+
+            /* If NOCMIX powered down during SUSPEND, reenable handshake and
+             * force power up processing
+             */
+            if (lpmSettingNoc <= sleepMode)
+            {
+                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_WAKEUP, true);
+                DEV_SM_PowerUpPost(DEV_SM_PD_NOC);
+            }
+
+            /* Restore SM NVIC */
+            for (uint32_t wakeIdx = 0;
+                wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                wakeIdx++)
+            {
+                NVIC->ICER[wakeIdx] = 0xFFFFFFFFU;
+                NVIC->ISER[wakeIdx] = nvicISER[wakeIdx];
+            }
+
+            /* Board-level sleep unprepare */
+            BOARD_SystemSleepUnprepare(sleepMode);
+        }
+    }
+
+    /* Restore GPC wake masks for sleeping CPUs */
+    for (uint32_t cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
+    {
+        if (cpuIdx != CPU_IDX_M33P)
+        {
+            /* Check if sleep is forced for the CPU */
+            bool sleepForce;
+            if (CPU_SleepForceGet(cpuIdx, &sleepForce))
+            {
+                /* If sleep is not forced, manage GPC masks */
+                if (!sleepForce)
+                {
+                    /* IRQs enabled at NVIC level become GPC wake sources */
+                    for (uint32_t wakeIdx = 0;
+                        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                        wakeIdx++)
+                    {
+                        CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                            cpuWakeMask[cpuIdx][wakeIdx]);
+                    }
+                }
+            }
+        }
+    }
+
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Idle the system                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SystemIdle(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    __disable_irq();
+
+    /* Check if conditions allow system sleep */
+    uint32_t sysSleepStat;
+    if (CPU_SystemSleepStatusGet(&sysSleepStat))
+    {
+        if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
+        {
+            printf("+Sleep\n");
+            status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
+            printf("-Sleep\n");
+        }
+    }
+    /* Otherwise stay in RUN mode and enter WFI */
+    else
+    {
+        (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+        __DSB();
+        __WFI();
+        __ISB();
+    }
+    __enable_irq();
+
+    return status;
+}

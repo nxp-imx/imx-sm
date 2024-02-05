@@ -345,7 +345,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_WAKEUP),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_WAKEUP),
         .authenCtrl = AUTHENCTRL_HW,
-        .lpmSetting = LPMSETTING_DOM(CPU_IDX_M33P, CPU_PD_LPM_ON_ALWAYS),
+        .lpmSetting = LPMSETTING_CPU(CPU_IDX_M33P),
     }
 };
 

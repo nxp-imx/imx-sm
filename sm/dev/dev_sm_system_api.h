@@ -203,6 +203,26 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags);
  */
 int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec);
 
+/*!
+ * Transition the system to sleep mode.
+ *
+ * @param[in]     sleepMode  system sleep mode
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
+
+/*!
+ * Transition the system to idle mode.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_SystemIdle(void);
+
 #endif /* DEV_SM_SYSTEM_API_H */
 
 /** @} */

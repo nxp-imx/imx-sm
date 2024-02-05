@@ -128,6 +128,7 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
 static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
     int32_t rw);
 #endif
+static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 
 /* Local Variables */
@@ -193,6 +194,7 @@ int32_t MONITOR_Dispatch(char *line)
         "fuse.w",
         "pmic.r",
         "pmic.w",
+        "idle",
         "custom"
     };
 
@@ -355,7 +357,11 @@ int32_t MONITOR_Dispatch(char *line)
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 47:  /* custom */
+            case 47:  /* idle */
+                status = MONITOR_CmdIdle(argc - 1, &argv[1]);
+                break;
+
+            case 48:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
             default:
@@ -2738,6 +2744,14 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
     return status;
 }
 #endif
+
+/*--------------------------------------------------------------------------*/
+/* System idle command                                                      */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[])
+{
+    return DEV_SM_SystemIdle();
+}
 
 /*--------------------------------------------------------------------------*/
 /* Custom command                                                           */

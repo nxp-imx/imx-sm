@@ -138,10 +138,10 @@ int main(int argc, const char * const argv[])
 
 #if !defined(RUN_TEST) && !defined(MONITOR)
     /* Loop - services handled via interrupts */
-    while(true)
+    do
     {
-        ; /* TODO: enter low power mode */
-    }
+        status = DEV_SM_SystemIdle();
+    } while (status == SM_ERR_SUCCESS);
 #endif
 
     printf("\nGood-bye from SM\n\n");

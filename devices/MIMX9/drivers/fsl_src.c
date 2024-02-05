@@ -149,7 +149,7 @@ bool SRC_MixCpuLpmSet(uint32_t srcMixIdx, uint32_t cpuIdx,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Configure CPU LPM response for specified power domain                    */
+/* Get CPU LPM response for specified power domain                          */
 /*--------------------------------------------------------------------------*/
 bool SRC_MixCpuLpmGet(uint32_t srcMixIdx, uint32_t cpuIdx,
     uint32_t *cpuLpmSetting)

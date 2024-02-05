@@ -58,6 +58,7 @@ typedef struct
     LPUART_Type *const base;  /*!< LPUART base pointer */
     IRQn_Type irq;            /*!< Interrupt number */
     uint32_t clockId;         /*!< Clock ID */
+    uint32_t perLpiId;        /*!< Peripheral LPI ID */
     uint32_t baud;            /*!< Baud rate */
     uint8_t inst;             /*!< Instance number */
 } board_uart_config_t;
@@ -100,6 +101,34 @@ void BOARD_InitTimers(void);
 
 /*! Init serial buses */
 void BOARD_InitSerialBus(void);
+
+/*!
+ * Board-level prepare for system sleep entry
+ *
+ * @param sleepMode Sleep mode being entered.
+ */
+void BOARD_SystemSleepPrepare(uint32_t sleepMode);
+
+/*!
+ * Board-level system sleep entry
+ *
+ * @param sleepMode Sleep mode being entered.
+ */
+void BOARD_SystemSleepEnter(uint32_t sleepMode);
+
+/*!
+ * Board-level system sleep exit
+ *
+ * @param sleepMode Sleep mode being exited.
+ */
+void BOARD_SystemSleepExit(uint32_t sleepMode);
+
+/*!
+ * Board-level unprepare for system sleep entry
+ *
+ * @param sleepMode Sleep mode being entered.
+ */
+void BOARD_SystemSleepUnprepare(uint32_t sleepMode);
 
 /*!
  * Set the watchdog mode
