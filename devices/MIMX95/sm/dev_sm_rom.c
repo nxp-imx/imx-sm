@@ -78,9 +78,20 @@ static bool s_m7AddValid = false;
 /*--------------------------------------------------------------------------*/
 void DEV_SM_RomInit(void)
 {
-    if (SRC_MixIsPwrSwitchOn(DEV_SM_PD_M7))
+    /* Silicon rev is Ax? */
+    if ((OSC24M->DIGPROG_DEVICE_ID & 0xF0U) == 0x10U)
     {
-        s_m7AddValid = CPU_ResetVectorGet(DEV_SM_CPU_M7P, &s_m7Addr);
+        /* No ROM patch? */
+        if (FSB->FUSE[FSB_FUSE_M33_ROM_PATCH_VER] == 0x0U)
+        {
+            /* Is M7 powered? */
+            if (SRC_MixIsPwrSwitchOn(DEV_SM_PD_M7))
+            {
+                /* Load address from reset vector registers */
+                s_m7AddValid = CPU_ResetVectorGet(DEV_SM_CPU_M7P,
+                    &s_m7Addr);
+            }
+        }
     }
 }
 
@@ -207,7 +218,7 @@ int32_t DEV_SM_RomBootImgNGet(uint32_t type, uint32_t *cpuId,
         *flags = ROM_HANDOVER_IMG_FLAGS(img->flags);
         *addr = img->addr;
 
-        /* TODO: Temp fix for ROM address patch */
+        /* Fix for ROM address patch */
         if (s_m7AddValid && (*cpuId == DEV_SM_CPU_M7P))
         {
             *addr = s_m7Addr;
