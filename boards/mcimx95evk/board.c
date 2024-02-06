@@ -493,9 +493,10 @@ void BOARD_SystemSleepPrepare(uint32_t sleepMode)
     if (s_uartConfig.base != NULL)
     {
         /* Enable edge-detect IRQ */
-        LPUART_ClearStatusFlags(s_uartConfig.base, kLPUART_RxActiveEdgeFlag);
+        LPUART_ClearStatusFlags(s_uartConfig.base,
+            (uint32_t)kLPUART_RxActiveEdgeFlag);
         LPUART_EnableInterrupts(s_uartConfig.base,
-            kLPUART_RxActiveEdgeInterruptEnable);
+            (uint32_t)kLPUART_RxActiveEdgeInterruptEnable);
         NVIC_EnableIRQ(s_uartConfig.irq);
 
         /* Configure LPI of SM LPUART */
@@ -546,9 +547,10 @@ void BOARD_SystemSleepUnprepare(uint32_t sleepMode)
     /* Service SM LPUART wakeup events */
     if (s_uartConfig.base != NULL)
     {
-        LPUART_ClearStatusFlags(s_uartConfig.base, kLPUART_RxActiveEdgeFlag);
+        LPUART_ClearStatusFlags(s_uartConfig.base,
+            (uint32_t)kLPUART_RxActiveEdgeFlag);
         LPUART_DisableInterrupts(s_uartConfig.base,
-            kLPUART_RxActiveEdgeInterruptEnable);
+            (uint32_t)kLPUART_RxActiveEdgeInterruptEnable);
 
         NVIC_DisableIRQ(s_uartConfig.irq);
         NVIC_ClearPendingIRQ(s_uartConfig.irq);

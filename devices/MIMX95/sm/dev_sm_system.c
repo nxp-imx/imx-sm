@@ -41,7 +41,6 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
-#include "fsl_fract_pll.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 
@@ -53,7 +52,6 @@
 
 static uint32_t s_powerMode = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
-static uint32_t s_clkRootCtrl[CLOCK_NUM_ROOT];
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -289,19 +287,25 @@ int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 {
+    static uint32_t s_clkRootCtrl[CLOCK_NUM_ROOT];
     int32_t status = SM_ERR_SUCCESS;
     uint32_t clkSrcIdx, rootIdx;
     uint32_t cpuWakeMask[CPU_NUM_IDX][GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t sysWakeMask[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t nvicISER[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
 
-    /* Initalize system wake mask */
+    /* Initalize wake masks */
     for (uint32_t wakeIdx = 0;
         wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
         wakeIdx++)
     {
         sysWakeMask[wakeIdx] = 0xFFFFFFFFU;
-    }
+
+        for (uint32_t cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
+        {
+            cpuWakeMask[cpuIdx][wakeIdx] = 0xFFFFFFFFU;
+        }
+   }
 
     /* Initialize NOC/WAKEUP MIX dependencies */
     uint32_t lpmSettingNoc = CPU_PD_LPM_ON_NEVER;
