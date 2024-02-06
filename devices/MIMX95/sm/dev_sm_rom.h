@@ -106,9 +106,9 @@
 #define DEV_SM_ROM_BD_PRELOAD      0x0U
 #define DEV_SM_ROM_BD_SD           0x1U
 #define DEV_SM_ROM_BD_MMC          0x2U
-#define DEV_SM_ROM_BD_FLEXSPINAND  0x3U
 #define DEV_SM_ROM_BD_FLEXSPINOR   0x4U
 #define DEV_SM_ROM_BD_LPSPIEEPROM  0x6U
+#define DEV_SM_ROM_BD_FLEXSPINAND  0x8U
 #define DEV_SM_ROM_BD_USB          0xEU
 /** @} */
 
