@@ -41,6 +41,7 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-63](https://jira.sw.nxp.com/projects/SM/issues/SM-63) | Fix polarity of WDOG ANY mask [[detail]](@ref RN_DETAIL_SM_63) |   | Y | Y |
 | [SM-73](https://jira.sw.nxp.com/projects/SM/issues/SM-73) | Implement PLL lock timeouts and PLL power up delays [[detail]](@ref RN_DETAIL_SM_73) |   | Y | Y |
+| [SM-81](https://jira.sw.nxp.com/projects/SM/issues/SM-81) | Incorrect reference to WAKEUPMIX memory slice instance [[detail]](@ref RN_DETAIL_SM_81) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -49,9 +50,12 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
+| [SM-54](https://jira.sw.nxp.com/projects/SM/issues/SM-54) | Add software workaround for ERR052127 (NOCMIX BLK_CTRL sync) [[detail]](@ref RN_DETAIL_SM_54) |   | Y | Y |
 | [SM-58](https://jira.sw.nxp.com/projects/SM/issues/SM-58) | Add software workaround for ERR052128 (TMPSNS wait time) [[detail]](@ref RN_DETAIL_SM_58) |   | Y | Y |
 | [SM-68](https://jira.sw.nxp.com/projects/SM/issues/SM-68) | Update low/nominal drive voltages per latest datasheet [[detail]](@ref RN_DETAIL_SM_68) |   | Y | Y |
 | [SM-70](https://jira.sw.nxp.com/projects/SM/issues/SM-70) | Support M7 SysTick wakeup from WFI when target sleep mode set to RUN [[detail]](@ref RN_DETAIL_SM_70) |   | Y | Y |
+| [SM-79](https://jira.sw.nxp.com/projects/SM/issues/SM-79) | Bypass workaround for the M7 address issue on parts with ROM patch [[detail]](@ref RN_DETAIL_SM_79) |   | Y | |
+| [SM-80](https://jira.sw.nxp.com/projects/SM/issues/SM-80) | Support ROM spec change for SPI NAND boot device type [[detail]](@ref RN_DETAIL_SM_80) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -100,6 +104,11 @@ SM-30: Support management of peripheral low-power interfaces {#RN_DETAIL_SM_30}
 ----------
 
 Agents can configure the management of peripheral low-power interfaces using SCMI_CpuPerLpmConfigSet.  On MX95, the STOP and Q-CHAN low-power signals will be managed by SM via BLK_CTRL registers per the configuration specified by SCMI_CpuPerLpmConfigSet.  During flows that power down Cortex-M7/Cortex-A55 platforms, the specified STOP and Q-CHAN requests will be asserted.  Conversely, during flows that power up these CPU platforms, the specified STOP and Q-CHAN requests will be deasserted.  All other steps to configure the peripheral and associated clocks for low-power operation are the responsibility of the agent.
+
+SM-54: Add software workaround for ERR052127 (NOCMIX BLK_CTRL sync) {#RN_DETAIL_SM_54}
+----------
+
+A software workaround for ERR052127 will be applied by SM each time the NOCMIX is powered on.  Per the errata description, a simple read of a NOCMIX BLK_CTRL register will be performed to synchronize the NOCMIX BLK_CTRL output signals.
 
 SM-58: Add software workaround for ERR052128 (TMPSNS wait time) {#RN_DETAIL_SM_58}
 ----------
@@ -175,4 +184,19 @@ SM-73: Implement PLL lock timeouts and PLL power up delays {#RN_DETAIL_SM_73}
 A 5us delay was added between updates of PLL integer/fractional factors and power up of the PLL.  This delay is required per the PLL block guide.
 
 Misconfiguration of PLL can cause a SM WDOG timeout during PLL lock operations.   A PLL lock timeout of 100us per PLL block guide was added to protect the SM against misconfiguration.  An error will be returned to the caller if PLL fails to lock within the 100us timeout.
+
+SM-79: Bypass workaround for the M7 address issue on parts with ROM patch {#RN_DETAIL_SM_79}
+----------
+
+SM contains a workaround for an M33 ROM issue where an image load address is passed rather than the execute address. This change skips that workaround if the part is not an Ax part. It also skips on Ax if the ROM patch to fix this issue is applied.
+
+SM-80: Support ROM spec change for SPI NAND boot device type {#RN_DETAIL_SM_80}
+----------
+
+An updated ROM spec changed the value for the FlexSPI NAND boot device type from 0x3 to 0x8.
+
+SM-81: Incorrect reference to WAKEUPMIX memory slice instance {#RN_DETAIL_SM_81}
+----------
+
+A data structure containing MIX management info has an incorrect reference to the memory controller instance associated with WAKEUPMIX.  This error results in an invalid attempt to access to the memory controller instance during calls to configure WAKEUPMIX memory retention.
 
