@@ -168,10 +168,11 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
 
     static string const s_name[DEV_SM_NUM_REASON] =
     {
-        [DEV_SM_REASON_POR] =   "por",
-        [DEV_SM_REASON_FAULT] = "fault",
-        [DEV_SM_REASON_BBM] =   "bbm",
-        [DEV_SM_REASON_SW] =    "sw"
+        [DEV_SM_REASON_POR] =    "por",
+        [DEV_SM_REASON_FAULT] =  "fault",
+        [DEV_SM_REASON_BBM] =    "bbm",
+        [DEV_SM_REASON_SW] =     "sw",
+        [DEV_SM_REASON_SM_ERR] = "sm_err"
     };
 
     /* Get max string width */
@@ -214,9 +215,34 @@ int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Report SM error to log and reset                                         */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemError(int32_t status, uint32_t pc)
+{
+    dev_sm_rst_rec_t resetRec =
+    {
+        .reason = DEV_SM_REASON_SM_ERR,
+        .errId = (uint32_t) status,
+        .validErr = true,
+        .valid = true
+    };
+
+    /* Record PC */
+    if (pc != 0U)
+    {
+        resetRec.extInfo[0] = pc;
+        resetRec.extLen = 1U;
+    }
+
+    /* Finalize system reset flow */
+    DEV_SM_SystemRstComp(resetRec);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Idle the system                                                          */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemIdle(void)
 {
     return SM_ERR_SUCCESS;
 }
+

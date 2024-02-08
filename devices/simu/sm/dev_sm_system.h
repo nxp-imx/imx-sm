@@ -54,16 +54,17 @@
 /* Defines */
 
 /*! Number of device boot/shutdown/reset reasons */
-#define DEV_SM_NUM_REASON  4UL
+#define DEV_SM_NUM_REASON  5UL
 
 /*!
  * @name Device boot/shutdown/reset reason indexes
  */
 /** @{ */
-#define DEV_SM_REASON_POR    0U  /*!< Power on reset */
-#define DEV_SM_REASON_FAULT  1U  /*!< Fault */
-#define DEV_SM_REASON_BBM    2U  /*!< BBM boot/shutdown */
-#define DEV_SM_REASON_SW     3U  /*!< SW requested */
+#define DEV_SM_REASON_POR     0U  /*!< Power on reset */
+#define DEV_SM_REASON_FAULT   1U  /*!< Fault */
+#define DEV_SM_REASON_BBM     2U  /*!< BBM boot/shutdown */
+#define DEV_SM_REASON_SW      3U  /*!< SW requested */
+#define DEV_SM_REASON_SM_ERR  4U  /*!< SM error/exit */
 /** @} */
 
 /*! Number of device reset reasons */

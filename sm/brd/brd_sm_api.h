@@ -79,11 +79,12 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel);
  * Board exit.
  *
  * @param[in]     status        Exit status
+ * @param[in]     pc            PC of calling function
  *
  * This is the general exit function for the SM. Would normally be
  * implemented to result in a fault/reboot.
  */
-void BRD_SM_Exit(int32_t status);
+void BRD_SM_Exit(int32_t status, uint32_t pc);
 
 /*!
  * Board timer tick.

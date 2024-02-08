@@ -68,6 +68,7 @@
         .clkPerms[DEV_SM_CLK_TSTMR2] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_M7P] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_BUTTON] = SM_SCMI_PERM_NOTIFY, \
+        .ctrlPerms[BRD_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPUART3_CTS] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPUART3_RXD] = SM_SCMI_PERM_ALL, \

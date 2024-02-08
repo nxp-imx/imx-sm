@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -33,17 +33,13 @@
 */
 
 /*==========================================================================*/
-/* All unit tests.                                                          */
+/* Unit test for the SCMI clock protocol.                                   */
 /*==========================================================================*/
-
-/* TEST_00010 TEST_00020 TEST_00030 */
 
 /* Include Config */
 
 /* Includes */
 
-#include <stdlib.h>
-#include "sm.h"
 #include "test.h"
 
 /* Local defines */
@@ -55,65 +51,18 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test all                                                                 */
+/* Test response to a test error                                            */
 /*--------------------------------------------------------------------------*/
-void TEST_All(void)
+void TEST_Error(void)
 {
-#ifndef TEST_MIN
-    /* Run device SM tests */
-    TEST_DevSmPower();
-    TEST_DevSmClock();
-    TEST_DevSmPerf();
-#ifdef SIMU
-    TEST_DevSmSensor();
-#endif
-    TEST_DevSmReset();
-    TEST_DevSmVoltage();
-    TEST_DevSmBbm();
-    TEST_DevSmCpu();
-    TEST_DevSmControl();
-    TEST_DevSmSystem();
-    TEST_DevSmRdc();
-    TEST_DevSmPin();
-    TEST_DevSm();
+    /* Error tests */
+    printf("**** Error Test ***\n\n");
 
-    /* Run board SM tests */
-#ifdef SIMU
-    TEST_BrdSmSensor();
-#endif
+    /* TEST_00040 Test error response */
+    {
+        BCHECK(false);
+    }
 
-    /* Run LMM tests */
-    TEST_LmmClock();
-    TEST_LmmPerf();
-//    TEST_LmmPower();
-    TEST_LmmSys();
-    TEST_LmmCpu();
-    TEST_LmmVoltage();
-#endif
-
-    /* Run SCMI tests */
-    TEST_Scmi();
-    TEST_ScmiBase();
-    TEST_ScmiPower();
-    TEST_ScmiSystem();
-    TEST_ScmiPerf();
-    TEST_ScmiClock();
-    TEST_ScmiSensor();
-    TEST_ScmiReset();
-    TEST_ScmiVoltage();
-    TEST_ScmiPinctrl();
-    TEST_ScmiLmm();
-    TEST_ScmiBbmGpr();
-    TEST_ScmiBbmRtc();
-    TEST_ScmiBbmButton();
-    TEST_ScmiCpu();
-    TEST_ScmiFusa();
-    TEST_ScmiMisc();
-
-    /* Run Utility tests */
-    TEST_UtilitiesConfig();
-
-    /* Exit */
-    BRD_SM_Exit(SM_ERR_SUCCESS, 0U);
+    printf("\n");
 }
 

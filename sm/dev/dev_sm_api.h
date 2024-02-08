@@ -250,6 +250,11 @@
 #define SM_SYSTEMPOSTBOOT       DEV_SM_SystemPostBoot
 #endif
 
+#ifndef SM_SYSTEMERROR
+/*! Redirector (device/board) to report an error */
+#define SM_SYSTEMERROR          DEV_SM_SystemError
+#endif
+
 #ifndef SM_PERFNAMEGET
 /*! Redirector (device/board) to get performance domain name */
 #define SM_PERFNAMEGET          DEV_SM_PerfNameGet

@@ -84,7 +84,7 @@ files for redirection functions.
 | Function                    | File     | Purpose                                                   |
 |-----------------------------|----------|-----------------------------------------------------------|
 | BRD_SM_Init()               | brd_sm.c | Board init, calls BOARD_InitHardware() and DEV_SM_Init()  |
-| BRD_SM_Exit()               | brd_sm.c | Board exit, calls SystemExit()/loops for non-production   |
+| BRD_SM_Exit()               | brd_sm.c | Board exit, calls SM_SYSTEMERROR()/loops for non-prod     |
 | BRD_SM_TimerTick()          | brd_sm.c | Board periodic tick, usually services the wdog            |
 | BRD_SM_Custom()             | brd_sm.c | Board custom function, only called from the monitor       |
 | BRD_SM_FaultReactionGet()   | brd_sm.c | Allow board override of fault reaction                    |
@@ -280,7 +280,34 @@ Exception numbers are basically the CM33 exception/interrupt index. Negative for
 fault indicating interrupts. For exceptions, the extended info array, *extInfo[]*, contains the stack pointer,
 fault status, and faulting address.
 
-Typical CM33 exceptions/interrupts:
+Common reset reasons:
+
+| Reason       | errId  | Description                      |
+|--------------|--------|----------------------------------|
+| cm33_lockup  |        | CM33 lockup                      |
+| cm33_swreq   |        | CM33 SW request                  |
+| cm7_lockup   |        | CM7 lockup                       |
+| cm7_swreq    |        | CM7 SW request                   |
+| fccu         | fault  | FCCU                             |
+| jtag_sw      |        | JTAG SW                          |
+| ele          |        | ELE                              |
+| tempsense    |        | ANA sensor panic                 |
+| wdog1        |        | WDOG 1                           |
+| wdog2        |        | WDOG 2                           |
+| wdog3        |        | WDOG 3                           |
+| wdog4        |        | WDOG 4                           |
+| wdog5        |        | WDOG 5                           |
+| jtag         |        | JTAG                             |
+| cm33_exc     | ex/IRQ | CM33 exception                   |
+| bbm          |        | BBM boot/shutdown                |
+| sw           | agent  | SW requested                     |
+| sm_err       | status | SM error/exit                    |
+| por          |        | Power on reset                   |
+
+Note that once the FCCU is configured some of the above become FCCU
+faults (e.g. WDOG2).
+
+Typical CM33 exceptions/interrupts (::DEV_SM_REASON_CM33_EXC):
 
 | Exception         | errId | Description                            |
 |-------------------|-------|----------------------------------------|

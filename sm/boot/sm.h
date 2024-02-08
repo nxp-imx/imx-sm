@@ -236,6 +236,16 @@ extern uint64_t g_bootTime[SM_BT_SUB + 1U];
  */
 int main(int argc, const char * const argv[]);
 
+/*!
+ * Report error.
+ *
+ * @param[in]     status      Status code
+ *
+ * This function reports an error to the board exit code. That code will
+ * record the error information and reset the system.
+ */
+void SM_Error(int32_t status);
+
 #endif /* SM_H */
 
 /** @} */

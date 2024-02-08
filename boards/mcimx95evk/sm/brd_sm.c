@@ -65,6 +65,8 @@
 #define BRD_SM_REC_EID(x) \
     (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_EID_SHIFT)) & \
     BRD_SM_REC_EID_MASK)
+#define BRD_SM_REC_EID_SIGN  (0x00004000U)
+#define BRD_SM_REC_EID_EXT   (0xFFFF8000U)
 
 /* Defines to encode the valid flag for the errId */
 #define BRD_SM_REC_VERR_MASK  (0x00800000U)
@@ -180,12 +182,19 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /*--------------------------------------------------------------------------*/
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_Exit(int32_t status)
+void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
-    printf("exit %d\n", status);
+#if defined(MONITOR) || defined(RUN_TEST)
+    printf("exit %d, 0x%08X\n", status, pc);
 
+    /* Disable watchdog */
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
+#else
+    SM_SYSTEMERROR(status, pc);
     SystemExit();
+#endif
 
+    /* Hang */
     while (true)
     {
         ; /* Intentional empty while */
@@ -332,6 +341,12 @@ void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
         shutdownRec->validOrigin = ((hdr & BRD_SM_REC_VSRC_MASK ) != 0U);
         shutdownRec->extLen = (hdr & BRD_SM_REC_LEN_MASK ) >>
             BRD_SM_REC_LEN_SHIFT;
+
+        /* Sign extend */
+        if ((shutdownRec->errId & BRD_SM_REC_EID_SIGN) != 0U)
+        {
+            shutdownRec->errId |= BRD_SM_REC_EID_EXT;
+        }
 
         shutdownRec->extLen = MIN(shutdownRec->extLen, DEV_SM_NUM_EXT_INFO);
     }

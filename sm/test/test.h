@@ -67,7 +67,7 @@
         if (lstat != SM_ERR_SUCCESS) \
         { \
             printf("  error @ line %d: %d\n", __LINE__, lstat); \
-            BRD_SM_Exit(lstat); \
+            SM_Error(lstat); \
         } \
     }
 
@@ -81,7 +81,7 @@
         if (!(X)) \
         { \
             printf("  error @ line %d: %d\n", __LINE__, SM_ERR_TEST); \
-            BRD_SM_Exit(SM_ERR_TEST); \
+            SM_Error(SM_ERR_TEST); \
         } \
     }
 
@@ -96,7 +96,7 @@
         if (lstat == SM_ERR_SUCCESS) \
         { \
             printf("  no error @ line %d: %d\n",  __LINE__, lstat);                  \
-            BRD_SM_Exit(SM_ERR_TEST); \
+            SM_Error(SM_ERR_TEST); \
         } \
     }
 
@@ -112,12 +112,12 @@
         if ((X) && (lstat != SM_ERR_SUCCESS)) \
         { \
             printf("  error @ line %d: %d\n", __LINE__, lstat); \
-            BRD_SM_Exit(lstat); \
+            SM_Error(lstat); \
         } \
         if ((!(X)) && (lstat == SM_ERR_SUCCESS)) \
         { \
             printf("  no error @ line %d: %d\n", __LINE__, lstat); \
-            BRD_SM_Exit(SM_ERR_TEST); \
+            SM_Error(SM_ERR_TEST); \
         } \
     }
 
@@ -133,7 +133,7 @@
         if (lstat != (Y)) \
         { \
             printf("  no error @ line %d: %d\n", __LINE__, lstat); \
-            BRD_SM_Exit(SM_ERR_TEST); \
+            SM_Error(SM_ERR_TEST); \
         } \
     }
 
@@ -151,12 +151,12 @@
         if ((X) && (lstat != SM_ERR_SUCCESS)) \
         { \
             printf("  error @ line %d: %d\n", __LINE__, lstat); \
-            BRD_SM_Exit(lstat); \
+            SM_Error(lstat); \
         } \
         if ((!(X)) && (lstat != (Z))) \
         {  \
             printf("  error @ line %d: %d\n", __LINE__, lstat); \
-            BRD_SM_Exit(true); \
+            SM_Error(SM_ERR_TEST); \
         } \
     }
 

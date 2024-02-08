@@ -149,13 +149,33 @@ int main(int argc, const char * const argv[])
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Report error                                                             */
+/*--------------------------------------------------------------------------*/
+void SM_Error(int32_t status)
+{
+    uint32_t pc = 0U;
+
+#if !defined(SIMU) && !defined(CPPCHECK)
+    /* Get the LR as PC */
+    __ASM ("MOV %0, LR\n" : "=r" (pc));
+#endif
+
+    BRD_SM_Exit(status, pc);
+}
+
 #if !defined(SIMU) && !defined(MONITOR) && !defined(RUN_TEST)
 /*--------------------------------------------------------------------------*/
 /* Exit function for no clib                                                */
 /*--------------------------------------------------------------------------*/
 void exit(int status)
 {
-    BRD_SM_Exit((int32_t) status);
+    uint32_t pc;
+
+    /* Get the LR as PC */
+    __ASM ("MOV %0, LR\n" : "=r" (pc));
+
+    BRD_SM_Exit((int32_t) status, pc);
     __builtin_unreachable();
 }
 #endif

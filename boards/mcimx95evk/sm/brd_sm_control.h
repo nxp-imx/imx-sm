@@ -58,12 +58,13 @@
  * @name Board redirection defines
  * @{
  */
+#define SM_CONTROLSET          BRD_SM_ControlSet          /*!< Control set */
 #define SM_CONTROLGET          BRD_SM_ControlGet          /*!< Control get */
 #define SM_CONTROLFLAGSSET     BRD_SM_ControlFlagsSet     /*!< Control flags */
 /** @} */
 
 /*! Number of board controls */
-#define BRD_SM_NUM_CTRL  5UL
+#define BRD_SM_NUM_CTRL  6UL
 
 /*! Total number of controls */
 #define SM_NUM_CTRL  (DEV_SM_NUM_CTRL + BRD_SM_NUM_CTRL)
@@ -77,6 +78,7 @@
 #define BRD_SM_CTRL_BT_WAKE     (DEV_SM_NUM_CTRL + 2U)  /*!< PCAL6408A-5 */
 #define BRD_SM_CTRL_PCIE2_WAKE  (DEV_SM_NUM_CTRL + 3U)  /*!< PCAL6408A-6 */
 #define BRD_SM_CTRL_BUTTON      (DEV_SM_NUM_CTRL + 4U)  /*!< PCAL6408A-7 */
+#define BRD_SM_CTRL_TEST        (DEV_SM_NUM_CTRL + 5U)  /*!< Test */
 /** @} */
 
 /* Types */
@@ -87,6 +89,24 @@
  * @name Board control functions
  * @{
  */
+
+/*!
+ * Set a board control value.
+ *
+ * @param[in]     ctrlId   Index of control to write
+ * @param[in]     numVal   Number of array elements
+ * @param[in]     val      Pointer to array of values to set
+ *
+ * This function allows a caller to write an array of values for
+ * a control.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ */
+int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
+    const uint32_t *val);
 
 /*!
  * Get a board control value.
