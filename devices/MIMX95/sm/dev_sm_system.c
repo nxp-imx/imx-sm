@@ -289,7 +289,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 {
     static uint32_t s_clkRootCtrl[CLOCK_NUM_ROOT];
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t clkSrcIdx, rootIdx;
     uint32_t cpuWakeMask[CPU_NUM_IDX][GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t sysWakeMask[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t nvicISER[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
@@ -371,6 +370,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
          */
         if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
         {
+            uint32_t clkSrcIdx, rootIdx;
+
             /* Board-level sleep prepare */
             BOARD_SystemSleepPrepare(sleepMode);
 
