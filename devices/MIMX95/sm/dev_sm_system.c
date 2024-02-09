@@ -566,14 +566,14 @@ int32_t DEV_SM_SystemIdle(void)
             status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
             printf("-Sleep\n");
         }
-    }
-    /* Otherwise stay in RUN mode and enter WFI */
-    else
-    {
-        (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
-        __DSB();
-        __WFI();
-        __ISB();
+        /* Otherwise stay in RUN mode and enter WFI */
+        else
+        {
+            (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+            __DSB();
+            __WFI();
+            __ISB();
+        }
     }
     __enable_irq();
 
