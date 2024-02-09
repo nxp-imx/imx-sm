@@ -952,7 +952,7 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
         *((volatile uint32_t *)muxRegister) = IOMUXC_PAD_MUX_MODE(muxMode) | IOMUXC_PAD_SION(inputOnfield);
     }
 
-    if (inputRegister)
+    if (inputRegister & 0xFFFFU)
     {
         *((volatile uint32_t *)inputRegister) = inputDaisy;
     }
