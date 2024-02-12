@@ -114,7 +114,6 @@
         .clkPerms[DEV_SM_CLK_FLEXIO1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_FLEXIO2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_FLEXSPI1] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_FRO] = SM_SCMI_PERM_SET, \
         .clkPerms[DEV_SM_CLK_HSIOPCIEAUX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPLL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPLL_VCO] = SM_SCMI_PERM_ALL, \
@@ -156,8 +155,6 @@
         .clkPerms[DEV_SM_CLK_MIPITESTBYTE] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MQS1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MQS2] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_OSC24M] = SM_SCMI_PERM_SET, \
-        .clkPerms[DEV_SM_CLK_OSC32K] = SM_SCMI_PERM_SET, \
         .clkPerms[DEV_SM_CLK_PDM] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_SAI1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_SAI2] = SM_SCMI_PERM_ALL, \
@@ -165,12 +162,6 @@
         .clkPerms[DEV_SM_CLK_SAI4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_SAI5] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_SPDIF] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_SYSPLL1_PFD0] = SM_SCMI_PERM_SET, \
-        .clkPerms[DEV_SM_CLK_SYSPLL1_PFD0_DIV2] = SM_SCMI_PERM_SET, \
-        .clkPerms[DEV_SM_CLK_SYSPLL1_PFD1] = SM_SCMI_PERM_SET, \
-        .clkPerms[DEV_SM_CLK_SYSPLL1_PFD1_DIV2] = SM_SCMI_PERM_SET, \
-        .clkPerms[DEV_SM_CLK_SYSPLL1_PFD2] = SM_SCMI_PERM_SET, \
-        .clkPerms[DEV_SM_CLK_SYSPLL1_PFD2_DIV2] = SM_SCMI_PERM_SET, \
         .clkPerms[DEV_SM_CLK_TPM2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_TPM4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_TPM5] = SM_SCMI_PERM_ALL, \
