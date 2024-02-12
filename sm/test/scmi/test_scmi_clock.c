@@ -129,7 +129,7 @@ void TEST_ScmiClock(void)
             flags, rate), SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockConfigSet and invalid channel*/
     {
         uint32_t attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
@@ -141,7 +141,7 @@ void TEST_ScmiClock(void)
             attr, 0U), SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockConfigGet */
     {
         uint32_t flags = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
@@ -157,7 +157,7 @@ void TEST_ScmiClock(void)
             SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockDescribeRates */
     {
         scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES];
@@ -168,7 +168,7 @@ void TEST_ScmiClock(void)
     }
 
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockRateGet and invalid channel*/
     {
         scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES];
@@ -177,7 +177,7 @@ void TEST_ScmiClock(void)
             rates), SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockParentSet and invalid channel*/
     {
         uint32_t parentId = 0U;
@@ -189,7 +189,7 @@ void TEST_ScmiClock(void)
             parentId), SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockParentGet and invalid channel*/
     {
         uint32_t parentId = 0U;
@@ -201,7 +201,7 @@ void TEST_ScmiClock(void)
             &parentId), SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test coverage of exceeding max amount of sensors in
+    /* Test coverage of exceeding max amount of clocks in
         ClockPossibleParentGet */
     {
         uint32_t numParent = 0;

@@ -303,3 +303,45 @@ adds information about the locations of files not covered in the doxygen list.
 | sm/utilities             | SM [utilities](@ref UTIL) and [debug monitor](@ref MONITOR)               |
 | utilities/newlib         | GCC embedded C library                                                    |
 
+Unit Testing {#GUIDE_TESTING}
+============
+
+SM unit tests are run in the main thread of the SM itself. When the T=\<test\> option is specified
+in the make arguments, the test_\<test\>.c file is compiled into the SM. The TEST_\<test\> function
+(note the name is converted to upper-case camel) is run in place of the normal booting of LMs. The T=all
+option include test_all.c which in turn runs all the tests that can be run autonomously.
+
+Tests are in the sm/test directory and structured around the modules of the SM: SCMI, LMM, board, dev,
+etc.
+
+SCMI Testing
+------------
+
+SCMI tests compile in the client API and make SCMI calls. These go through the MUs as if they came from
+client agents. This works as the tests run from the main thread while the SCMI server-side functions run
+within the MU interrupt context.
+
+SCMI tests require knowledge of the SM configuration:
+
+- Which MUs are used for which agents?
+- Which agents have what access rights to make API calls?
+- Which resources are available to each agent?
+- Which resources can be touched without causing the SM itself to fail?
+
+Which resources to test and for which agent is passed in the [test config data](@ref TEST_CONFIG). This
+contains a list of agents+resources to test. Items with *test* on their line in the cfg file generate
+items in this list. The test inspects the access rights and tests that, based on those rights, the
+resource can and cannot be acted on as configured.
+
+Most SCMI unit tests have the same structure.
+
+- Test common protocol functions (version, attributes, etc.)
+- Test non-resource related functions
+- Test functions when the resource is out of range
+- Loop over test array and if the test is for the tested protocol, call a test function based on the
+  access right of the calling agent
+
+To have adequate test coverage, it is important that the cfg file has items from each power domain,
+that is has items of each protocol type and agents that have each level of access right for an item
+of each protocol.
+
