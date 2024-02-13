@@ -177,20 +177,6 @@ typedef struct
 int32_t RPC_SCMI_Init(uint8_t scmiInst);
 
 /*!
- * Init buffer for exchanging a message.
- *
- * @param[in]     scmiChannel Channel for comms
- * @param[out]    msg         Pointer to return payload header address
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_INVALID_PARAMETERS: if the buffer address is incorrectly
- *   configured.
- */
-int32_t RPC_SCMI_BufInit(uint32_t scmiChannel, void **msg);
-
-/*!
  * Dispatch SCMI request.
  *
  * @param[in]     scmiChannel  SCMI channel

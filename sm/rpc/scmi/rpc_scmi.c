@@ -208,52 +208,20 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get transport buffer address                                             */
-/*--------------------------------------------------------------------------*/
-int32_t RPC_SCMI_BufInit(uint32_t scmiChannel, void **msg)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Wait until channel is free */
-    while (!RPC_SCMI_ChannelFree(scmiChannel))
-    {
-        ; /* Intentional empty while */
-    }
-
-    /* Get header address */
-    *msg = RPC_SCMI_HdrAddrGet(scmiChannel);
-    if (*msg == NULL)
-    {
-        status = SM_ERR_INVALID_PARAMETERS;
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Dispatch SCMI doorbell                                                   */
 /*--------------------------------------------------------------------------*/
 void RPC_SCMI_Dispatch(uint32_t scmiChannel)
 {
-    bool channelFree = RPC_SCMI_ChannelFree(scmiChannel);
-
     /* Check channel type */
     switch(g_scmiChannelConfig[scmiChannel].type)
     {
         case SM_SCMI_CHN_A2P:
-            if (!channelFree)
-            {
-                RPC_SCMI_A2pDispatch(scmiChannel);
-            }
+            RPC_SCMI_A2pDispatch(scmiChannel);
             break;
         case SM_SCMI_CHN_P2A:
         case SM_SCMI_CHN_P2A_NOTIFY:
         case SM_SCMI_CHN_P2A_PRIORITY:
-            if (channelFree)
-            {
-                RPC_SCMI_P2aDispatch(scmiChannel);
-            }
+            RPC_SCMI_P2aDispatch(scmiChannel);
             break;
         default:
             ; /* Intentional empty default */
@@ -910,7 +878,7 @@ static int32_t RPC_SCMI_A2pRx(scmi_caller_t *caller, void* msgRx,
         case SM_XPORT_SMT:
             status = RPC_SMT_Rx(
                 g_scmiChannelConfig[scmiChannel].xportChannel,
-                msgRx, &size);
+                msgRx, &size, true);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;

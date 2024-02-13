@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -181,6 +181,7 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
  * @param[in]     smtChannel  SMT channel buffer to read
  * @param[out]    msgRx       Pointer to the destination buffer
  * @param[inout]  len         Pointer to destination buffer size
+ * @param[in]     callee      Caller/callee boolean
  *
  * This function receives an SMT payload. The \a smtChannel parameter
  * identifies the channel to read. The \a msgRx parameter points to a
@@ -197,7 +198,8 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_CRC_ERROR if the CRC fails to match
  */
-int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len);
+int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
+    bool callee);
 
 #endif /* RPC_SMT_H */
 

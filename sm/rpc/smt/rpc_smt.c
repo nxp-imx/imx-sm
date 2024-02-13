@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -78,6 +78,8 @@ static const rpc_smt_chn_config_t s_smtConfig[SM_NUM_SMT_CHN] =
     SM_SMT_CHN_CONFIG_DATA
 };
 
+static bool s_smtInProgress[SM_NUM_SMT_CHN];
+
 /* Local functions */
 
 static rpc_smt_buf_t *RPC_SMT_SmaGet(uint32_t smtChannel);
@@ -136,6 +138,9 @@ int32_t RPC_SMT_Init(uint32_t smtChannel, bool noIrq, uint32_t initCount)
 
         /* Mark channel as free */
         buf->channelStatus = SMT_FREE;
+
+        /* Not in progress */
+        s_smtInProgress[smtChannel] = false;
     }
 
     /* Return status */
@@ -190,6 +195,18 @@ void RPC_SMT_Dispatch(uint32_t smtChannel)
         default:
             ; /* Intentional empty default */
             break;
+    }
+
+    /* Not completed? */
+    if (s_smtInProgress[smtChannel])
+    {
+        rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
+
+        /* Mark channel in error */
+        buf->channelFlags = SMT_ERROR;
+
+        /* Force completion */
+        (void) RPC_SMT_Tx(smtChannel, 0U, true, false);
     }
 }
 
@@ -288,79 +305,88 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
 
         if (callee)
         {
-            /* Wait until channel is busy */
-            while (RPC_SMT_ChannelFree(smtChannel))
+            /* Check if free */
+            if (RPC_SMT_ChannelFree(smtChannel))
             {
-                ; /* Intentional empty while */
+                status = SM_ERR_PROTOCOL_ERROR;
             }
         }
         else
         {
-            /* Wait until channel is free */
-            while (!RPC_SMT_ChannelFree(smtChannel))
+            /* Check if busy */
+            if (!RPC_SMT_ChannelFree(smtChannel))
             {
-                ; /* Intentional empty while */
+                status = SM_ERR_PROTOCOL_ERROR;
             }
         }
 
-        /* Fill in reserved */
-        buf->resv = 0U;
-
-        /* Completion interrupt if caller wants */
-        if (!callee)
+        if (status == SM_ERR_SUCCESS)
         {
-            if (compInt)
+            /* Fill in reserved */
+            buf->resv = 0U;
+
+            /* Mark channel CRC mode */
+            buf->impStatus = impStatus;
+
+            /* Completion interrupt if caller wants */
+            if (!callee)
             {
-                buf->channelFlags = SMT_COMP_INT;
+                if (compInt)
+                {
+                    buf->channelFlags = SMT_COMP_INT;
+                }
+                else
+                {
+                    buf->channelFlags = 0U;
+                }
+            }
+
+            /* Fill in length */
+            buf->length = len;
+
+            /* Calculate CRC */
+            switch (impStatus)
+            {
+                case SM_SMT_CRC_XOR:
+                    buf->impCrc = CRC_Xor((const uint32_t*) &buf->header,
+                        len / 4U);
+                    break;
+                case SM_SMT_CRC_CRC32:
+                    buf->impCrc = CRC_Crc32((const uint8_t*) &buf->header,
+                        len);
+                    break;
+                default:
+                    ; /* Intentional empty while */
+                    break;
+            }
+
+            if (callee)
+            {
+                /* Mark as free */
+                buf->channelStatus |= SMT_FREE;
+
+                /* Mark as complete */
+                s_smtInProgress[smtChannel] = false;
             }
             else
             {
-                buf->channelFlags = 0U;
+                /* Mark as busy */
+                buf->channelStatus &= ~SMT_FREE;
             }
-        }
 
-        /* Fill in length */
-        buf->length = len;
-
-        /* Calculate CRC */
-        switch (impStatus)
-        {
-            case SM_SMT_CRC_XOR:
-                buf->impCrc = CRC_Xor((const uint32_t*) &buf->header,
-                    len / 4U);
-                break;
-            case SM_SMT_CRC_CRC32:
-                buf->impCrc = CRC_Crc32((const uint8_t*) &buf->header,
-                    len);
-                break;
-            default:
-                ; /* Intentional empty while */
-                break;
-        }
-
-        if (callee)
-        {
-            /* Mark as free */
-            buf->channelStatus |= SMT_FREE;
-        }
-        else
-        {
-            /* Mark as busy */
-            buf->channelStatus &= ~SMT_FREE;
-        }
-
-        if (callee)
-        {
-            /* Generate completion interrupt */
-            if ((buf->channelFlags & SMT_COMP_INT) != 0U)
+            if (callee)
             {
+                /* Generate completion interrupt */
+                if ((buf->channelFlags & SMT_COMP_INT) != 0U)
+                {
+                    status = RPC_SMT_DoorbellRing(smtChannel);
+                }
+            }
+            else
+            {
+                /* Generate interrupt */
                 status = RPC_SMT_DoorbellRing(smtChannel);
             }
-        }
-        else
-        {
-            /* Generate interrupt */
-            status = RPC_SMT_DoorbellRing(smtChannel);
         }
     }
 
@@ -371,40 +397,74 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
 /*--------------------------------------------------------------------------*/
 /* SMT receive                                                              */
 /*--------------------------------------------------------------------------*/
-int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len)
+int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
+    bool callee)
 {
     int32_t status = SM_ERR_SUCCESS;
     rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
     uint32_t impStatus = s_smtConfig[smtChannel].crc;
-    uint32_t size;
 
-    /* Copy the minimum */
-    size = (*len < buf->length) ? *len : buf->length;
-
-    /* Record the length */
-    *len = size;
-
-    /* Copy payload */
-    memcpy(msgRx, (void*) &buf->header, size);
-
-    /* Check the CRC */
-    switch (impStatus)
+    /* Callee? */
+    if (callee)
     {
-        case SM_SMT_CRC_XOR:
-            if (buf->impCrc != CRC_Xor((const uint32_t*) msgRx, *len / 4U))
+        /* Mark in progress */
+        s_smtInProgress[smtChannel] = true;
+    }
+
+    /* Check length */
+    if (buf->length > *len)
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+    else
+    {
+        if (callee)
+        {
+            /* Check if free */
+            if (RPC_SMT_ChannelFree(smtChannel))
             {
-                status = SM_ERR_CRC_ERROR;
+                status = SM_ERR_PROTOCOL_ERROR;
             }
-            break;
-        case SM_SMT_CRC_CRC32:
-            if (buf->impCrc != CRC_Crc32((const uint8_t*) msgRx, *len))
+        }
+        else
+        {
+            /* Check if busy */
+            if (!RPC_SMT_ChannelFree(smtChannel))
             {
-                status = SM_ERR_CRC_ERROR;
+                status = SM_ERR_PROTOCOL_ERROR;
             }
-            break;
-        default:
-            ; /* Intentional empty while */
-            break;
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Record the length */
+            *len = buf->length;
+
+            /* Copy payload */
+            memcpy(msgRx, (void*) &buf->header, *len);
+
+            /* Check the CRC */
+            switch (impStatus)
+            {
+                case SM_SMT_CRC_XOR:
+                    if (buf->impCrc != CRC_Xor((const uint32_t*) msgRx,
+                        *len / 4U))
+                    {
+                        status = SM_ERR_CRC_ERROR;
+                    }
+                    break;
+                case SM_SMT_CRC_CRC32:
+                    if (buf->impCrc != CRC_Crc32((const uint8_t*) msgRx,
+                        *len))
+                    {
+                        status = SM_ERR_CRC_ERROR;
+                    }
+                    break;
+                default:
+                    ; /* Intentional empty while */
+                    break;
+            }
+        }
     }
 
     /* Return status */
