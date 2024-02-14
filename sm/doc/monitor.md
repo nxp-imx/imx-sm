@@ -110,6 +110,8 @@ Resource Commands
 | cpu.w *cpu* stop            | stop CPU *cpu*                                               |
 | cpu.w *cpu* vector *addr*   | set boot vectors for CPU *cpu*                               |
 | ctrl.r                      | display values for all controls                              |
+| ctrl.w *ctrl* *list...*     | set *list* values for *ctrl* control                         |
+| ctrl.notify *ctrl* *flags*  | set notify flags to *flags* for *ctrl* control               |
 
 Data R/W Commands
 -----------------
