@@ -200,6 +200,7 @@ Configures the SCMI RPC. The defines in this file are as follows:
   - *type* - type of SCMI channel, for example ::SM_SCMI_CHN_A2P
   - *xportType* - transport type to link, for example ::SM_XPORT_SMT
   - *xportChannel* - transport channel to link
+  - *sequence* - sequence type, for example ::SM_SCMI_SEQ_NONE
 - **SM_SCMIn_CONFIG** - fills a single scmi_config_t structure
   - *lmId* - ID of logical machine linked to this SCMI instance
   - *numAgents* - number of agents in this SCMI instance
@@ -666,39 +667,40 @@ Configtool Commands {#CONFIGTOOL_CMDS}
 The configtool supports the following commands and key=value pairs in the input file.
 
 | Command     | Key     | Value                                        |
-|-------------|---------|----------------------------- ----------------|
-| MAKE        | soc     | Build includes ./devices/\<VAL\>/sm/Makefile |
-|             | board   | Build includes ./boards/\<VAL\>/sm/Makefile |
-|             | build   | Build includes ./sm/makefiles/\<VAL\>.mak |
-| DOX         | name    | Define doxygen group CONFIG_\<VAL\>, use group for all config files |
-|             | desc    | Group description, quoted |
-| DOMn        | did     | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc.,  the DID is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
-| LMn         | name    | Starts an LM section *n*, *n* starts at 0 and should increment, LM name string, quoted, 15 characters max |
-|             | rpc     | Linked RPC is SM_RPC_\<VAL\>, e.g. ::SM_RPC_SCMI |
-|             | boot    | Optional, boot order starting with 1, undefined/0 = do not boot |
-|             | skip    | Optional, if not 0, ignore error on boot if no image in boot container |
-|             | rtime   | Optional, boot time of LM in uS, relative to start of LM boot loop, max 178 seconds |
-|             | did     | RDC DID for this LM |
-|             | safe    | Safety type is LMM_SAFE_TYPE_\<VAL\>, e.g. ::LMM_SAFE_TYPE_SEENV, deault is NSEENV |
-|             | default | The deault LM for the debug monitor |
-| MODE        | msel    | Alternate boot config index |
-|             | boot    | Optional, boot order starting with 1, undefined/0 = do not boot |
-|             | skip    | Optional, if not 0, ignore error on boot if no image in boot container |
-| SCMI_AGENTn | name    | Starts an SCMI agent section *n*, *n* starts at 0 and should increment, agent name string, quoted, 15 characters max |
-|             | secure  | Agent is secure (no =value) |
-| MAILBOX     | type    | Define a mailbox of type SM_MB_<VAL\>, e.g. ::SM_MB_MU, one per agent |
-|             | mu      | Index into SDK MU base pointer array, platform side |
-|             | test    | Index into SDK MU base pointer array, client side for testing |
-|             | sma     | Shared memory area address, undefined/0 = MU SRAM |
-| CHANNEL     | xport   | Define a channel of type SM_XPORT_<VAL\>, e.g. ::SM_XPORT_SMT, up to four per mailbox |
-|             | db      | Mailbox doorbell, 0-3 |
-|             | rpc     | RPC type of SM_RPC_<VAL\>, e.g. ::SM_RPC_SCMI |
-|             | type    | SCMI channel type of SM_SCMI_CHN_<VAL\>, e.g. ::SM_SCMI_CHN_A2P |
-|             | check   | CRC algorithm to use (e.g. crc32 for ::SM_SMT_CRC_CRC32), default is none |
-|             | notify  | Depth of notification buffer, **one setting applies to all channels** |
-|             | test    | =default, use this channel as the default for unit tests |
-| DEBUG       | did     | Specify DID (usually 9) used by the DAP/ETR that should have access to everything |
-| MIX         | name    | Add dev config for the mix |
+|-------------|----------|----------------------------- ----------------|
+| MAKE        | soc      | Build includes ./devices/\<VAL\>/sm/Makefile |
+|             | board    | Build includes ./boards/\<VAL\>/sm/Makefile |
+|             | build    | Build includes ./sm/makefiles/\<VAL\>.mak |
+| DOX         | name     | Define doxygen group CONFIG_\<VAL\>, use group for all config files |
+|             | desc     | Group description, quoted |
+| DOMn        | did      | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc.,  the DID is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
+| LMn         | name     | Starts an LM section *n*, *n* starts at 0 and should increment, LM name string, quoted, 15 characters max |
+|             | rpc      | Linked RPC is SM_RPC_\<VAL\>, e.g. ::SM_RPC_SCMI |
+|             | boot     | Optional, boot order starting with 1, undefined/0 = do not boot |
+|             | skip     | Optional, if not 0, ignore error on boot if no image in boot container |
+|             | rtime    | Optional, boot time of LM in uS, relative to start of LM boot loop, max 178 seconds |
+|             | did      | RDC DID for this LM |
+|             | safe     | Safety type is LMM_SAFE_TYPE_\<VAL\>, e.g. ::LMM_SAFE_TYPE_SEENV, deault is NSEENV |
+|             | default  | The deault LM for the debug monitor |
+| MODE        | msel     | Alternate boot config index |
+|             | boot     | Optional, boot order starting with 1, undefined/0 = do not boot |
+|             | skip     | Optional, if not 0, ignore error on boot if no image in boot container |
+| SCMI_AGENTn | name     | Starts an SCMI agent section *n*, *n* starts at 0 and should increment, agent name string, quoted, 15 characters max |
+|             | secure   | Agent is secure (no =value) |
+| MAILBOX     | type     | Define a mailbox of type SM_MB_<VAL\>, e.g. ::SM_MB_MU, one per agent |
+|             | mu       | Index into SDK MU base pointer array, platform side |
+|             | test     | Index into SDK MU base pointer array, client side for testing |
+|             | sma      | Shared memory area address, undefined/0 = MU SRAM |
+| CHANNEL     | xport    | Define a channel of type SM_XPORT_<VAL\>, e.g. ::SM_XPORT_SMT, up to four per mailbox |
+|             | db       | Mailbox doorbell, 0-3 |
+|             | rpc      | RPC type of SM_RPC_<VAL\>, e.g. ::SM_RPC_SCMI |
+|             | type     | SCMI channel type of SM_SCMI_CHN_<VAL\>, e.g. ::SM_SCMI_CHN_A2P |
+|             | check    | CRC algorithm to use (e.g. crc32 for ::SM_SMT_CRC_CRC32), default is none |
+|             | notify   | Depth of notification buffer, **one setting applies to all channels** |
+|             | test     | =default, use this channel as the default for unit tests |
+|             | sequence | Sequence type (e.g. token for ::SM_SCMI_SEQ_TOKEN), default is none |
+| DEBUG       | did      | Specify DID (usually 9) used by the DAP/ETR that should have access to everything |
+| MIX         | name     | Add dev config for the mix |
 
 
 While any DID can be used, it is recommended to use the standard mapping defined in

@@ -1069,6 +1069,11 @@ sub generate_scmi
 	                print $out '        .type = SM_SCMI_CHN_'
 	                    . uc $parm . ', \\' . "\n";
 	            }
+	            if ((my $parm = &param($dat, 'sequence')) ne '!')
+	            {
+	                print $out '        .sequence = SM_SCMI_SEQ_'
+	                    . uc $parm . ', \\' . "\n";
+	            }
 	            if ((my $parm = &param($dat, 'xport')) ne '!')
 	            {
 	                print $out '        .xportType = SM_XPORT_'

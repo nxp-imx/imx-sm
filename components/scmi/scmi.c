@@ -45,10 +45,11 @@
  * @name SCMI header creation
  */
 /** @{ */
+#define SCMI_HEADER_TOKEN_MASK  0x3FFU
 #define SCMI_HEADER_MSG(x)  (((x) & 0xFFU) << 0U)
 #define SCMI_HEADER_TYPE(x)  (((x) & 0x3U) << 8U)
 #define SCMI_HEADER_PROTOCOL(x)  (((x) & 0xFFU) << 10U)
-#define SCMI_HEADER_TOKEN(x)  (((x) & 0x3FFU) << 18U)
+#define SCMI_HEADER_TOKEN(x)  (((x) & SCMI_HEADER_TOKEN_MASK) << 18U)
 /** @} */
 
 /*!
@@ -70,6 +71,9 @@ typedef struct
 } drv_scmi_msg_status_t;
 
 /* Local variables */
+
+static bool s_tokenCheck[SMT_MAX_CHN] = { 0U };
+static uint32_t s_token[SMT_MAX_CHN] = { 0U };
 
 /*--------------------------------------------------------------------------*/
 /* Get transport buffer address                                             */
@@ -151,17 +155,16 @@ int32_t SCMI_A2pTx(uint32_t channel, uint32_t protocolId,
     /* Valid channel and buffer? */
     if (msg != NULL)
     {
-        static uint32_t s_token = 0U;
-
         /* Generate header */
         *header = SCMI_HEADER_MSG(messageId)
             | SCMI_HEADER_PROTOCOL(protocolId)
             | SCMI_HEADER_TYPE(0UL)
-            | SCMI_HEADER_TOKEN(s_token);
+            | SCMI_HEADER_TOKEN(s_token[channel]);
         msg->header = *header;
 
         /* Increment token */
-        s_token++;
+        s_token[channel]++;
+        s_token[channel] &= SCMI_HEADER_TOKEN_MASK;
 
         /* Send message via transport */
         status = SMT_Tx(channel, len, false, false);
@@ -297,6 +300,22 @@ int32_t SCMI_P2aRx(uint32_t channel, uint32_t protocolId,
         {
             status = SCMI_ERR_PROTOCOL_ERROR;
         }
+    }
+
+    /* Check sequence */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        uint32_t token = SCMI_HEADER_TOKEN_EX(*header);
+
+        /* Check token */
+        if (s_tokenCheck[channel] && (token != s_token[channel]))
+        {
+            status = SCMI_ERR_SEQ_ERROR;
+        }
+
+        /* Increment token */
+        s_token[channel]++;
+        s_token[channel] &= SCMI_HEADER_TOKEN_MASK;
     }
 
     /* Check protocol and message IDs */
@@ -593,5 +612,56 @@ int32_t SCMI_NegotiateProtocolVersion(uint32_t channel, uint32_t protocolId,
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Configure sequence checking                                              */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_SequenceConfig(uint32_t channel, bool enb)
+{
+    int32_t status = SCMI_ERR_SUCCESS;
+
+    /* Check channel */
+    if (channel < SMT_MAX_CHN)
+    {
+        s_tokenCheck[channel] = enb;
+    }
+    else
+    {
+        status = SCMI_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Save all channel sequences                                               */
+/*--------------------------------------------------------------------------*/
+void SCMI_SequenceSave(uint32_t *sequences)
+{
+    uint32_t *ptrSequence = sequences;
+
+    /* Loop over */
+    for (uint32_t idx = 0U; idx < SMT_MAX_CHN; idx++)
+    {
+        *ptrSequence = s_token[idx];
+        ptrSequence++;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Restore all channel sequences                                            */
+/*--------------------------------------------------------------------------*/
+void SCMI_SequenceRestore(uint32_t *sequences)
+{
+    uint32_t *ptrSequence = sequences;
+
+    /* Loop over */
+    for (uint32_t idx = 0U; idx < SMT_MAX_CHN; idx++)
+    {
+        s_token[idx] = *ptrSequence;
+        ptrSequence++;
+    }
 }
 

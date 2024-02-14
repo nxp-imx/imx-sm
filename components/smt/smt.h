@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -53,6 +53,9 @@
 #include <stdbool.h>
 
 /* Defines */
+
+/*! SMT max number of channels */
+#define SMT_MAX_CHN   24U
 
 /*! SMT buffer size */
 #define SMT_BUFFER_SIZE     128U

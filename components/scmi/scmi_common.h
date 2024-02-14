@@ -100,6 +100,8 @@
 #define SCMI_ERR_MISSING_PARAMETERS  (-130)  /*!< One or more parameters is missing. */
 #define SCMI_ERR_POWER               (-131)  /*!< Power domain dependency violation. */
 #define SCMI_ERR_TEST                (-132)  /*!< Test error. Generally lack of an expected error. */
+#define SCMI_ERR_SEQ_ERROR           (-133)  /*!< Sequence error. The message sent or recv. did not
+                                                  include the required sequence number. */
 
 /** @} */
 
@@ -243,6 +245,48 @@ int32_t SCMI_NegotiateProtocolVersion(uint32_t channel, uint32_t protocolId,
  */
 int32_t SCMI_P2aPending(uint32_t channel, uint32_t *protocolId,
     uint32_t *messageId);
+
+/*!
+ * Configure checking of sequence numbers for a channel.
+ *
+ * @param[in]     channel     P2A channel for comms
+ * @param[in ]    enb         True = enable
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Note this only configures checking on a P2A channel. Checking
+ * for A2P channels is determined by the SM configuration. The
+ * default is for checking to be disabled.
+ *
+ * If checking is enabled, sequence numbers may need to be saved
+ * and restored if state will be lost as is common with some
+ * forms of suspend/resume. See SCMI_SequenceSave() and
+ * SCMI_SequenceRestore().
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_INVALID_PARAMETERS: if the channel is invalid.
+ */
+int32_t SCMI_SequenceConfig(uint32_t channel, bool enb);
+
+/*!
+ * Save sequence numbers for all channels.
+ *
+ * Sequence numbers must be saved/restored if the agent will
+ * lose state outside of the context of an SM-driven reset.
+ *
+ * @param[out]    sequences   Array to save sequences
+ */
+void SCMI_SequenceSave(uint32_t *sequences);
+
+/*!
+ * Restore sequence numbers for all channels.
+ *
+ * Sequence numbers must be saved/restored if the agent will
+ * lose state outside of the context of an SM-driven reset.
+ *
+ * @param[in]     sequences   Array of sequences to load
+ */
+void SCMI_SequenceRestore(uint32_t *sequences);
 
 /** @} */
 

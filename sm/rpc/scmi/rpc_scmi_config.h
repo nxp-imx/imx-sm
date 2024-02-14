@@ -69,6 +69,14 @@
 /** @} */
 
 /*!
+ * @name SCMI sequence ordering
+ */
+/** @{ */
+#define SM_SCMI_SEQ_NONE   0U    /*!< No sequence required */
+#define SM_SCMI_SEQ_TOKEN  1U    /*!< Sequence required in token */
+/** @} */
+
+/*!
  * @name SCMI permission attributes
  */
 /** @{ */
@@ -94,6 +102,7 @@ typedef struct
     uint8_t type;         /*!< Type, A2P, P2A, P2A_NOTIFY */
     uint8_t xportType;    /*!< Transport type */
     uint8_t xportChannel; /*!< Transport channel */
+    uint8_t sequence;     /*!< Sequence type */
 } scmi_chn_config_t;
 
 /*!

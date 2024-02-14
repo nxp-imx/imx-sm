@@ -52,10 +52,11 @@
 /* Local macros */
 
 /* SCMI header creation */
+#define SCMI_HEADER_TOKEN_MASK  0x3FFU
 #define SCMI_HEADER_MSG(x)  (((x) & 0xFFU) << 0U)
 #define SCMI_HEADER_TYPE(x)  (((x) & 0x3U) << 8U)
 #define SCMI_HEADER_PROTOCOL(x)  (((x) & 0xFFU) << 10U)
-#define SCMI_HEADER_TOKEN(x)  (((x) & 0x3FFU) << 18U)
+#define SCMI_HEADER_TOKEN(x)  (((x) & SCMI_HEADER_TOKEN_MASK) << 18U)
 
 /* SCMI header extraction */
 #define SCMI_HEADER_MSG_EX(x)  (((x) & 0xFFU) >> 0U)
@@ -171,12 +172,6 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
                 /* First channel for this agent? */
                 if (initCount[agentId] == 0U)
                 {
-                    /* Reset P2A tokens */
-                    s_token[s_agent2channel[agentId][SCMI_NOTIFY_Q]]
-                        = 0U;
-                    s_token[s_agent2channel[agentId][SCMI_PRIORITY_Q]]
-                        = 0U;
-
                     /* Reset P2A queues */
                     s_queue[agentId][SCMI_NOTIFY_Q].head = 0U;
                     s_queue[agentId][SCMI_NOTIFY_Q].tail = 0U;
@@ -185,6 +180,9 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
                     s_queue[agentId][SCMI_PRIORITY_Q].tail = 0U;
                     s_queue[agentId][SCMI_PRIORITY_Q].count = 0U;
                 }
+
+                /* Reset token */
+                s_token[scmiChannel] = 0U;
 
                 /* Reset transport */
                 switch (g_scmiChannelConfig[scmiChannel].xportType)
@@ -287,6 +285,7 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
 
     /* Increment token */
     s_token[scmiChannel]++;
+    s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 
     /* Send message via transport */
     switch (g_scmiChannelConfig[scmiChannel].xportType)
@@ -711,10 +710,12 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
         {
             uint32_t protocolId;
             uint32_t messageId;
+            uint32_t token;
 
             /* Decompose header */
             protocolId = SCMI_HEADER_PROTOCOL_EX(caller.header);
             messageId = SCMI_HEADER_MSG_EX(caller.header);
+            token = SCMI_HEADER_TOKEN_EX(caller.header);
 
             /* Protocol extension? */
             if (protocolId >= 0x90U)
@@ -723,9 +724,27 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
                 protocolId -= 0x80U;
             }
 
-            /* Dispatch subrequest */
-            status = RPC_SCMI_A2pSubDispatch(&caller, protocolId,
-                messageId);
+            /* SCMI token sequence check? */
+            if (g_scmiChannelConfig[scmiChannel].sequence
+                == SM_SCMI_SEQ_TOKEN)
+            {
+                /* Check token */
+                if (token != s_token[scmiChannel])
+                {
+                    status = SM_ERR_SEQ_ERROR;
+                }
+            }
+
+            /* Increment token */
+            s_token[scmiChannel]++;
+            s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Dispatch subrequest */
+                status = RPC_SCMI_A2pSubDispatch(&caller, protocolId,
+                    messageId);
+            }
         }
 
         /* Send response */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,6 +45,7 @@
 #include "test_config.h"
 #include "config_test.h"
 #include "smt.h"
+#include "scmi.h"
 
 /* Local defines */
 
@@ -74,6 +75,12 @@ int32_t TEST_Config(void)
         /* Configure client channel */
         status = SMT_ChannelConfig(channel, s_testConfig[channel].mbInst,
             s_testConfig[channel].mbDoorbell, s_testConfig[channel].sma);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Enable sequence checking */
+            status = SCMI_SequenceConfig(channel, true);
+        }
 
         /* Exit if error */
         if (status != SM_ERR_SUCCESS)
