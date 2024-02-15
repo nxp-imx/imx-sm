@@ -323,6 +323,11 @@
         .daisyPerms[DEV_SM_DAISY_XSPI_SCK] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_M7_LOCKUP] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_M7_RESET] = SM_SCMI_PERM_ALL, \
+        .faultPerms[DEV_SM_FAULT_SW0] = SM_SCMI_PERM_ALL, \
+        .faultPerms[DEV_SM_FAULT_SW1] = SM_SCMI_PERM_ALL, \
+        .faultPerms[DEV_SM_FAULT_SW2] = SM_SCMI_PERM_ALL, \
+        .faultPerms[DEV_SM_FAULT_SW3] = SM_SCMI_PERM_ALL, \
+        .faultPerms[DEV_SM_FAULT_SW4] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG3] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG4] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG5] = SM_SCMI_PERM_ALL, \
