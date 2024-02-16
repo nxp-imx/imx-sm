@@ -1032,18 +1032,20 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
     /* Check argument */
     if (argc != 0)
     {
-        int32_t temp_status;
-        int32_t arg = 0;
+         int32_t arg = 0;
 
-        temp_status = MONITOR_NameToId(argv[0], &lm,
-            LMM_LmNameGet, SM_NUM_LM);
-        if (temp_status == SM_ERR_SUCCESS)
+        if (argc > 1)
         {
-            arg++;
-        }
-        else
-        {
-            lm = s_lm;
+            int32_t temp_status = MONITOR_NameToId(argv[0], &lm,
+                LMM_LmNameGet, SM_NUM_LM);
+            if (temp_status == SM_ERR_SUCCESS)
+            {
+                arg++;
+            }
+            else
+            {
+                lm = s_lm;
+            }
         }
 
         if (arg >= argc)
