@@ -41,6 +41,7 @@
 /* Local Functions */
 static void SRC_MemSetLpMode(uint32_t srcMixIdx, bool enableLpMode);
 static void SRC_MixSetA55HdskMode(uint32_t srcMixIdx, uint8_t hdskMode);
+static void SRC_MixSetA55CpuWait(uint32_t srcMixIdx, bool enableCpuWait);
 static void SRC_MixSetCpuWait(uint32_t srcMixIdx, bool enableCpuWait);
 static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx,uint32_t sleepMode);
 static bool SRC_MixPowerDownCompleted(uint32_t srcMixIdx);
@@ -281,7 +282,21 @@ static void SRC_MixSetA55HdskMode(uint32_t srcMixIdx, uint8_t hdskMode)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Configure CPUWAIT signal of CPUs in MIX                                  */
+/* Configure A55 CPUWAIT signals of a MIX slice                             */
+/*--------------------------------------------------------------------------*/
+static void SRC_MixSetA55CpuWait(uint32_t srcMixIdx, bool enableCpuWait)
+{
+    if ((srcMixIdx == PWR_MIX_SLICE_IDX_A55P) ||
+        ((srcMixIdx >= PWR_MIX_SLICE_IDX_A55C0) &&
+        (srcMixIdx <= PWR_MIX_SLICE_IDX_A55C_LAST)))
+    {
+        SRC_MixSetCpuWait(srcMixIdx, enableCpuWait);
+    }
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* Configure CPUWAIT signals of a MIX slice                                 */
 /*--------------------------------------------------------------------------*/
 static void SRC_MixSetCpuWait(uint32_t srcMixIdx, bool enableCpuWait)
 {
@@ -422,7 +437,7 @@ void SRC_MixSoftPowerDown(uint32_t srcMixIdx)
              * Skipping this step will cause power down handshake to complete
              * (A55_HDSK_STAT bit set) on next power up.
              */
-            SRC_MixSetCpuWait(srcMixIdx, false);
+            SRC_MixSetA55CpuWait(srcMixIdx, false);
 
             /* A55 core will deny Q-channel request for power down if not idle.
              * Ignore A55 handshake since we are forcibly taking down the MIX.
