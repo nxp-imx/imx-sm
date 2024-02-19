@@ -94,7 +94,7 @@ void TEST_DevSmPower(void)
         printf("  len=%d\n", len);
     }
 
-    printf("**** Device SM Power API Error Tests ***\n\n");
+    printf("**** Device SM Power API Err Tests ***\n\n");
 
     /* Test API bounds */
     NECHECK(DEV_SM_PowerDomainNameGet(DEV_SM_NUM_POWER, &name, &len),

@@ -62,7 +62,7 @@ void TEST_DevSmCpu(void)
     printf("**** Device SM CPU API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** Device SM CPU API Error Tests ***\n\n");
+    printf("\n**** Device SM CPU API Err Tests ***\n\n");
 
     /* Name Get */
     {

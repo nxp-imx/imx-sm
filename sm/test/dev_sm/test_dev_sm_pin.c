@@ -61,7 +61,7 @@ void TEST_DevSmPin(void)
     printf("**** Device SM Pin API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** Device SM Pin API Error Tests ***\n\n");
+    printf("\n**** Device SM Pin API Err Tests ***\n\n");
 
     uint32_t value = 0U;
 

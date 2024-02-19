@@ -62,7 +62,7 @@ void TEST_LmmSys(void)
     printf("**** LMM Sys API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** LMM Sys API Error Tests ***\n\n");
+    printf("\n**** LMM Sys API Err Tests ***\n\n");
 
     /* System Model SelSet */
     {

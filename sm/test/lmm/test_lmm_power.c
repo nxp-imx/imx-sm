@@ -90,7 +90,7 @@ void TEST_LmmPower(void)
     }
 
     /* Test API bounds */
-    printf("\n**** LMM Power API Error Tests ***\n\n");
+    printf("\n**** LMM Power API Err Tests ***\n\n");
 
     printf("LMM_PowerStateSet(%u, %lu)\n", lmId, SM_NUM_POWER);
     NECHECK(LMM_PowerStateSet(SM_NUM_LM, SM_NUM_POWER, powerState),

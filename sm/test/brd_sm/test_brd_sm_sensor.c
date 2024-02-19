@@ -134,7 +134,7 @@ void TEST_BrdSmSensor(void)
     /* Test API bounds */
     bool timestampReporting = false;
 
-    printf("\n**** Board SM Sensor API Error Tests ***\n\n");
+    printf("\n**** Board SM Sensor API Err Tests ***\n\n");
 
     printf("BRD_SM_SensorNameGet(%lu)\n", SM_NUM_SENSOR);
     NECHECK(BRD_SM_SensorNameGet(SM_NUM_SENSOR, &name, &len),

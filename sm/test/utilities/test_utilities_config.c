@@ -202,7 +202,7 @@ void TEST_UtilitiesConfig(void)
 
         NECHECK(CONFIG_Load(s_loadArr, commandArrFour),
             SM_ERR_NOT_FOUND);
-        printf("   Successfully caught Error Not Found...\n");
+        printf("   Successfully caught Err Not Found...\n");
     }
 #else
     printf("Skipped.\n");

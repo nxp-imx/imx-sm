@@ -86,7 +86,7 @@ void TEST_DevSmBbm(void)
     }
 
     /* Test API bounds */
-    printf("\n**** Device SM BBM API Error Tests ***\n\n");
+    printf("\n**** Device SM BBM API Err Tests ***\n\n");
     {
         printf("DEV_SM_BbmGprSet(%lu, %u)\n", DEV_SM_NUM_GPR, 0U);
         NECHECK(DEV_SM_BbmGprSet(DEV_SM_NUM_GPR, 0U), SM_ERR_NOT_FOUND);

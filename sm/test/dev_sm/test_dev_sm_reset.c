@@ -62,7 +62,7 @@ void TEST_DevSmReset(void)
     printf("**** Device SM Reset API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** Device SM Reset API Error Tests ***\n\n");
+    printf("\n**** Device SM Reset API Err Tests ***\n\n");
 
     /* Invalid domainId */
     {

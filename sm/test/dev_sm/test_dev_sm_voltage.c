@@ -132,7 +132,7 @@ void TEST_DevSmVoltage(void)
 #endif
 
     /* Test API bounds */
-    printf("\n**** Device SM Voltage API Error Tests ***\n\n");
+    printf("\n**** Device SM Voltage API Err Tests ***\n\n");
 
     /* Test API invalid domainId */
     {

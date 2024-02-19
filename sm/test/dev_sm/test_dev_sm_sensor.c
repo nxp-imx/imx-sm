@@ -140,7 +140,7 @@ void TEST_DevSmSensor(void)
     }
 
     /* Test API bounds */
-    printf("\n**** Device SM Sensor API Error Tests ***\n\n");
+    printf("\n**** Device SM Sensor API Err Tests ***\n\n");
 
     printf("DEV_SM_SensorNameGet(%lu)\n", DEV_SM_NUM_SENSOR);
     NECHECK(DEV_SM_SensorNameGet(DEV_SM_NUM_SENSOR, &name, &len),

@@ -61,7 +61,7 @@ void TEST_LmmCpu(void)
     printf("**** LMM CPU API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** LMM CPU API Error Tests ***\n\n");
+    printf("\n**** LMM CPU API Err Tests ***\n\n");
 
     printf("\n");
 }

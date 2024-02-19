@@ -60,7 +60,7 @@ void TEST_DevSm(void)
     printf("**** Device SM BBM API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** Device SM BBM API Error Tests ***\n\n");
+    printf("\n**** Device SM BBM API Err Tests ***\n\n");
 
     printf("PowerUpPost(DEV_SM_NUM_POWER)\n");
     NECHECK(DEV_SM_PowerUpPost(DEV_SM_NUM_POWER), SM_ERR_NOT_FOUND);

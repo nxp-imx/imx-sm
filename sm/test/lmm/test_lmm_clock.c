@@ -169,7 +169,7 @@ void TEST_LmmClock(void)
     }
 
     /* Test error bounds */
-    printf("\n**** LMM Clock API Error Tests ***\n\n");
+    printf("\n**** LMM Clock API Err Tests ***\n\n");
 
     printf("LMM_ClockEnable(%u, %u)\n", SM_NUM_LM, lmId);
     NECHECK(LMM_ClockEnable(SM_NUM_LM, SM_NUM_CLOCK, enabled),

@@ -60,7 +60,7 @@ void TEST_DevSmControl(void)
     printf("**** Device SM Control API Tests ***\n\n");
 
     /* Test API bounds */
-    printf("\n**** Device SM Control API Error Tests ***\n\n");
+    printf("\n**** Device SM Control API Err Tests ***\n\n");
 
     /* Test invalid ctrlId */
     {

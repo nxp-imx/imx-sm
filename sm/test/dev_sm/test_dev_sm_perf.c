@@ -93,7 +93,7 @@ void TEST_DevSmPerf(void)
     }
 
     /* Test API bounds */
-    printf("\n**** Device SM Performance API Error Tests ***\n\n");
+    printf("\n**** Device SM Performance API Err Tests ***\n\n");
 
     /* Test API invalid domainId */
     {

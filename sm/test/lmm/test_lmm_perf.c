@@ -78,7 +78,7 @@ void TEST_LmmPerf(void)
     }
 
     /* Test API bounds */
-    printf("\n**** LMM Perf API Error Tests ***\n\n");
+    printf("\n**** LMM Perf API Err Tests ***\n\n");
 
     /* INVALID PARAMS -- lmId */
     printf("LMM_PerfLevelSet(%u, %u)\n", SM_NUM_LM, 0U);
