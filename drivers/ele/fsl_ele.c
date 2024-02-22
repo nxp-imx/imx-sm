@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -545,7 +545,6 @@ void ELE_Abort(void)
     if (!s_aborted)
     {
         s_aborted = true;
-//        board_sec_fault(0U, 0U, BOARD_SFAULT_ELE_ABORT);
     }
 }
 

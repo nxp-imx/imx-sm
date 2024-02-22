@@ -751,7 +751,7 @@ static int32_t SysResetAgentConfig(uint32_t lmId, uint32_t agentId,
     /* Reset power mode */
     if (s_powerMode[agentId] != 0U)
     {
-        SystemPowerMode(lmId, agentId, 0U);
+        status = SystemPowerMode(lmId, agentId, 0U);
     }
 
     /* Return status */

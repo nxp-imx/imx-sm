@@ -1045,10 +1045,10 @@ static int32_t VoltageResetAgentConfig(uint32_t lmId, uint32_t agentId,
     /* Loop over all voltage domains */
     for (uint32_t domainId = 0U; domainId < SM_NUM_VOLT; domainId++)
     {
-        /* Turn off power */
+        /* Turn off voltage */
         if (s_voltState[domainId][agentId] != VOLTAGE_DOMAIN_MODES_OFF)
         {
-            VoltageConfigUpdate(lmId, agentId, domainId,
+            status = VoltageConfigUpdate(lmId, agentId, domainId,
                 VOLTAGE_DOMAIN_MODES_OFF);
         }
     }

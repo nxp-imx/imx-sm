@@ -189,7 +189,7 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
                 {
                     case SM_XPORT_SMT:
                         /* Init SMT channel */
-                        RPC_SMT_Init(
+                        status = RPC_SMT_Init(
                             g_scmiChannelConfig[scmiChannel].xportChannel,
                             noIrq, initCount[agentId]);
                         break;
@@ -718,7 +718,7 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
         /* Send response */
         if (caller.lenMsg > 0U)
         {
-            RPC_SCMI_A2pTx(&caller, caller.lenMsg, status);
+            (void) RPC_SCMI_A2pTx(&caller, caller.lenMsg, status);
         }
     }
 }

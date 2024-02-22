@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -137,8 +137,8 @@ int32_t MB_MU_DoorbellRing(uint8_t inst, uint8_t db)
         MU_Type *base = s_muBases[s_mbMuConfig[inst].mu];
 
         /* Trigger GI interrupt */
-        MU_TriggerInterrupts(base, ((uint32_t) kMU_GenInt0InterruptTrigger)
-                << db);
+        (void) MU_TriggerInterrupts(base,
+            ((uint32_t) kMU_GenInt0InterruptTrigger) << db);
     }
 
     /* Return status */

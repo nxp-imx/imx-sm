@@ -653,9 +653,9 @@ void SCMI_SequenceSave(uint32_t *sequences)
 /*--------------------------------------------------------------------------*/
 /* Restore all channel sequences                                            */
 /*--------------------------------------------------------------------------*/
-void SCMI_SequenceRestore(uint32_t *sequences)
+void SCMI_SequenceRestore(const uint32_t *sequences)
 {
-    uint32_t *ptrSequence = sequences;
+    const uint32_t *ptrSequence = sequences;
 
     /* Loop over */
     for (uint32_t idx = 0U; idx < SMT_MAX_CHN; idx++)

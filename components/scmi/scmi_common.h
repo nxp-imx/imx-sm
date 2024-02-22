@@ -286,7 +286,7 @@ void SCMI_SequenceSave(uint32_t *sequences);
  *
  * @param[in]     sequences   Array of sequences to load
  */
-void SCMI_SequenceRestore(uint32_t *sequences);
+void SCMI_SequenceRestore(const uint32_t *sequences);
 
 /** @} */
 

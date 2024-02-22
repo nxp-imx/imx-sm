@@ -1629,7 +1629,7 @@ static int32_t ClockResetAgentConfig(uint32_t lmId, uint32_t agentId,
         /* Disable clock */
         if ((s_clockState[clockId] & (1UL << agentId)) != 0U)
         {
-            ClockConfigUpdate(lmId, agentId, clockId,
+            (void) ClockConfigUpdate(lmId, agentId, clockId,
                 false);
         }
 

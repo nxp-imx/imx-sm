@@ -358,7 +358,7 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
                     + (uint8_t) tripPoint;
 
                 /* Configure sensor threshold */
-                TMPSNS_ThresholdSet(sensorId, threshold, value,
+                status = TMPSNS_ThresholdSet(sensorId, threshold, value,
                     eventControl);
             }
         }

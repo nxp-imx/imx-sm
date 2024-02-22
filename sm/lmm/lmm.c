@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -63,13 +63,17 @@ int32_t LMM_Init(void)
     const uint32_t *clockList;
 
     /* Init LMM system management */
-    LMM_SystemInit();
+    status = LMM_SystemInit();
 
-    /* Get LM0 default resource state */
-    DEV_SM_LmmInitGet(&numClock, &clockList);
+    /* Success? */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Get LM0 default resource state */
+        DEV_SM_LmmInitGet(&numClock, &clockList);
 
-    /* Init LMM clock management */
-    status = LMM_ClockInit(numClock, clockList);
+        /* Init LMM clock management */
+        status = LMM_ClockInit(numClock, clockList);
+    }
 
     /* Init LMM voltage management */
     if (status == SM_ERR_SUCCESS)
