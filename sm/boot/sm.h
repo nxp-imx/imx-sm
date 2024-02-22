@@ -198,6 +198,14 @@
 #define printf(...)
 #endif
 
+#if defined(MONITOR) || defined(RUN_TEST)
+/*! Define PRINTF to print */
+#define PRINTF (void) printf
+#else
+/*! Define PRINTF to void */
+#define PRINTF(...)
+#endif
+
 /*!
  * @name Register accecss macros
  * @{

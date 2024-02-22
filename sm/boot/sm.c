@@ -84,7 +84,7 @@ int main(int argc, const char * const argv[])
     delta = DEV_SM_Usec64Get();
 
     /* Print banner */
-    printf("\nHello from SM (Build %lu, Commit %08lx, %s %s)\n\n",
+    PRINTF("\nHello from SM (Build %lu, Commit %08lx, %s %s)\n\n",
         SM_BUILD, SM_COMMIT, SM_DATE, SM_TIME);
 
     /* Add to subtract time */
@@ -120,7 +120,7 @@ int main(int argc, const char * const argv[])
     /* Report any error during init */
     if (status != SM_ERR_SUCCESS)
     {
-        printf("Init error: %d\n", status);
+        PRINTF("Init error: %d\n", status);
     }
 
 #ifdef RUN_TEST
@@ -144,7 +144,7 @@ int main(int argc, const char * const argv[])
     } while (status == SM_ERR_SUCCESS);
 #endif
 
-    printf("\nGood-bye from SM\n\n");
+    PRINTF("\nGood-bye from SM\n\n");
 
     return status;
 }
