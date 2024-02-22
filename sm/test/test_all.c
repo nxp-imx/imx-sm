@@ -85,7 +85,6 @@ void TEST_All(void)
     /* Run LMM tests */
     TEST_LmmClock();
     TEST_LmmPerf();
-//    TEST_LmmPower();
     TEST_LmmSys();
     TEST_LmmCpu();
     TEST_LmmVoltage();

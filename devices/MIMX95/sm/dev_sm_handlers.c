@@ -452,13 +452,13 @@ void GPC_SM_REQ_IRQHandler(void)
     /* Check if powering up or deasserting reset */
     if (lpHsMode.stat == 1U)
     {
-        DEV_SM_PowerUpPost(lpHsMode.srcMixIdx);
+        (void) DEV_SM_PowerUpPost(lpHsMode.srcMixIdx);
         CPU_MixPowerUpNotify(lpHsMode.srcMixIdx);
     }
     /* Else powering down or asserting reset */
     else
     {
-        DEV_SM_PowerDownPre(lpHsMode.srcMixIdx);
+        (void) DEV_SM_PowerDownPre(lpHsMode.srcMixIdx);
         CPU_MixPowerDownNotify(lpHsMode.srcMixIdx);
     }
 
@@ -503,7 +503,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     };
 
     /* Finalize system reset flow */
-    DEV_SM_SystemRstComp(resetRec);
+    (void) DEV_SM_SystemRstComp(resetRec);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -527,7 +527,7 @@ static void FaultHandler(uint32_t faultId)
     if (status != SM_ERR_SUCCESS)
     {
         /* Finalize system reset flow */
-        DEV_SM_SystemRstComp(resetRec);
+        (void) DEV_SM_SystemRstComp(resetRec);
     }
 }
 

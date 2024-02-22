@@ -441,7 +441,7 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
             *len = buf->length;
 
             /* Copy payload */
-            memcpy(msgRx, (void*) &buf->header, *len);
+            (void) memcpy(msgRx, (void*) &buf->header, *len);
 
             /* Check the CRC */
             switch (impStatus)

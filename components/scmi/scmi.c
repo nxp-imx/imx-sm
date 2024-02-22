@@ -359,7 +359,7 @@ int32_t SCMI_P2aTx(uint32_t channel, uint32_t len, uint32_t header)
 /*--------------------------------------------------------------------------*/
 void SCMI_MemCpy(uint8_t *dst, const uint8_t *src, uint32_t len)
 {
-    memcpy((void*) dst, (const void*) src, len);
+    (void) memcpy((void*) dst, (const void*) src, len);
 }
 
 /*--------------------------------------------------------------------------*/

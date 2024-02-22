@@ -925,7 +925,7 @@ static int32_t MiscRomPassoverGet(const scmi_caller_t *caller,
         out->numPassover = numPassover;
 
         /* Copy data */
-        memcpy((void*) out->passover, (const void*) passover,
+        (void) memcpy((void*) out->passover, (const void*) passover,
             out->numPassover * sizeof(uint32_t));
 
         /* Update length */

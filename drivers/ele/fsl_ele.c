@@ -788,7 +788,7 @@ static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
     else
     {
         /* Pretend was an MU abort response */
-        msg->word[1] = 0U; //SHE_HSM_ABORT;
+        msg->word[1] = 0U;
     }
 }
 

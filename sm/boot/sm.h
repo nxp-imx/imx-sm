@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -196,14 +196,6 @@
 #if !defined(INC_LIBC)
 /*! Eliminate printf */
 #define printf(...)
-#endif
-
-#if defined(INC_LIBC)
-/*! Define PRINTF to print */
-#define PRINTF (void) printf
-#else
-/*! Define PRINTF to void */
-#define PRINTF(...)
 #endif
 
 /*!

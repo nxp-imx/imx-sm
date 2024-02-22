@@ -265,8 +265,8 @@ int32_t SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
         MU_Type *base = s_muBases[inst];
 
         /* Trigger GI interrupt */
-        MU_TriggerInterrupts(base, ((uint32_t) kMU_GenInt0InterruptTrigger)
-                << db);
+        (void) MU_TriggerInterrupts(base,
+            ((uint32_t) kMU_GenInt0InterruptTrigger) << db);
 #else
         /* Call SMT server */
         status = MB_LOOPBACK_DoorbellRing(inst, db);

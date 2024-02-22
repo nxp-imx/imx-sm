@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -84,7 +84,7 @@ int main(int argc, const char * const argv[])
     delta = DEV_SM_Usec64Get();
 
     /* Print banner */
-    PRINTF("\nHello from SM (Build %lu, Commit %08lx, %s %s)\n\n",
+    printf("\nHello from SM (Build %lu, Commit %08lx, %s %s)\n\n",
         SM_BUILD, SM_COMMIT, SM_DATE, SM_TIME);
 
     /* Add to subtract time */
@@ -120,7 +120,7 @@ int main(int argc, const char * const argv[])
     /* Report any error during init */
     if (status != SM_ERR_SUCCESS)
     {
-        PRINTF("Init error: %d\n", status);
+        printf("Init error: %d\n", status);
     }
 
 #ifdef RUN_TEST
@@ -144,7 +144,7 @@ int main(int argc, const char * const argv[])
     } while (status == SM_ERR_SUCCESS);
 #endif
 
-    PRINTF("\nGood-bye from SM\n\n");
+    printf("\nGood-bye from SM\n\n");
 
     return status;
 }

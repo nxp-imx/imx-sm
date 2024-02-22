@@ -208,7 +208,7 @@ void BRD_SM_Gpio1Handler(void)
     flags = RGPIO_GetPinsInterruptFlags(GPIO1, kRGPIO_InterruptOutput0);
 
     /* Get PCAL6408A status */
-    PCAL6408A_IntStatusGet(&pcal6408aDev, &status);
+    (void) PCAL6408A_IntStatusGet(&pcal6408aDev, &status);
 
     /* Get value and Clear PCAL6408A interrupts */
     PCAL6408A_InputGet(&pcal6408aDev, &val);

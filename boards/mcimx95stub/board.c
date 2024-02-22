@@ -267,7 +267,7 @@ void BOARD_ConfigMPU(void)
 void BOARD_InitClocks(void)
 {
     /* Configure default EXT_CLK1 rate tied to XTAL_OUT/EXT_CLK pin */
-    CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
+    (void) CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -472,7 +472,7 @@ void BOARD_SystemSleepPrepare(uint32_t sleepMode)
     if (s_uartConfig.base != NULL)
     {
         /* Enable edge-detect IRQ */
-        LPUART_ClearStatusFlags(s_uartConfig.base,
+        (void) LPUART_ClearStatusFlags(s_uartConfig.base,
             (uint32_t)kLPUART_RxActiveEdgeFlag);
         LPUART_EnableInterrupts(s_uartConfig.base,
             (uint32_t)kLPUART_RxActiveEdgeInterruptEnable);
@@ -522,7 +522,7 @@ void BOARD_SystemSleepUnprepare(uint32_t sleepMode)
     /* Service SM LPUART wakeup events */
     if (s_uartConfig.base != NULL)
     {
-        LPUART_ClearStatusFlags(s_uartConfig.base,
+        (void) LPUART_ClearStatusFlags(s_uartConfig.base,
             (uint32_t)kLPUART_RxActiveEdgeFlag);
         LPUART_DisableInterrupts(s_uartConfig.base,
             (uint32_t)kLPUART_RxActiveEdgeInterruptEnable);
