@@ -83,16 +83,15 @@ void TEST_ScmiClock(void)
     /* Test protocol attributes */
     {
         uint32_t attributes = 0U;
-        uint32_t maxPending;
 
         printf("SCMI_ClockProtocolAttributes()\n");
         CHECK(SCMI_ClockProtocolAttributes(SM_TEST_DEFAULT_CHN,
             &attributes));
         numClocks =
             SCMI_CLOCK_PROTO_ATTR_NUM_CLOCKS(attributes);
-        maxPending = SCMI_CLOCK_PROTO_ATTR_MAX_PENDING(attributes);
         printf("  numClocks=%u\n", numClocks);
-        printf("  maxPending=%u\n", maxPending);
+        printf("  maxPending=%u\n",
+            SCMI_CLOCK_PROTO_ATTR_MAX_PENDING(attributes));
     }
 
     /* Test message attributes */
@@ -335,9 +334,8 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
             CHECK(SCMI_ClockPossibleParentsGet(channel, clockId,
                 skipParents, NULL, NULL));
 
-            uint32_t remainingParents =
-                SCMI_CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(numParentsFlags);
-            printf("  remaining parents= %u\n", remainingParents);
+            printf("  remaining parents= %u\n",
+                SCMI_CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(numParentsFlags));
 
             uint32_t numParents =
                 SCMI_CLOCK_NUM_PARENT_FLAGS_NUM_PARENTS(numParentsFlags);

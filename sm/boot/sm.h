@@ -193,12 +193,12 @@
 /*! Magic macro to do a compile time check */
 #define COMPILE_ASSERT(X) ((void)sizeof(char[1 - (2 * (!(X)))]))
 
-#if !defined(MONITOR) && !defined(RUN_TEST)
+#if !defined(INC_LIBC)
 /*! Eliminate printf */
 #define printf(...)
 #endif
 
-#if defined(MONITOR) || defined(RUN_TEST)
+#if defined(INC_LIBC)
 /*! Define PRINTF to print */
 #define PRINTF (void) printf
 #else

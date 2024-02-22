@@ -137,8 +137,10 @@ void TEST_ScmiMisc(void)
     {
         uint32_t numPassover = 0U;
         uint32_t passoverBuffer[SCMI_MISC_MAX_PASSOVER] = { 0 };
+#ifdef INC_LIBC
         const rom_passover_t *passover
             = (const rom_passover_t*) passoverBuffer;
+#endif
 
         printf("SCMI_MiscRomPassoverGet(%u)\n",
             SM_TEST_DEFAULT_CHN);

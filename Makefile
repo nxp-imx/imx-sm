@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2024 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -53,7 +53,7 @@ ifndef T
 	FLAGS += -DLMM_INIT_FLAGS=1
 else
 	FLAGS += -DLMM_INIT_FLAGS=0 -DRUN_TEST
-	INC_LIBC = 1
+	INC_LIBC ?= 1
 endif
 ifeq ($(T),all)
 	FLAGS += -DTEST_ALL
@@ -69,9 +69,13 @@ endif
 M ?= 1
 ifeq ($(M),1)
 	FLAGS += -DMONITOR
-	INC_LIBC = 1
+	INC_LIBC ?= 1
 endif
 INC_LIBC ?= 0
+
+ifeq ($(INC_LIBC),1)
+    FLAGS += -DINC_LIBC
+endif
 
 # Configure RDC
 ifdef r

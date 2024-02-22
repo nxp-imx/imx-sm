@@ -89,7 +89,6 @@ void TEST_ScmiSensor(void)
     /* Test protocol attributes */
     {
         uint32_t attributes = 0U;
-        uint32_t maxPending = 0U;
         uint32_t sensorRegAddressLow = 1U;
         uint32_t sensorRegAddressHigh = 1U;
         uint32_t sensorRegLen = 1U;
@@ -100,10 +99,10 @@ void TEST_ScmiSensor(void)
             &attributes, NULL, NULL, NULL));
 
         numSensors = SCMI_SENSOR_PROTO_ATTR_NUM_SENSORS(attributes);
-        maxPending = SCMI_SENSOR_PROTO_ATTR_MAX_PENDING(attributes);
 
         printf("  numSensors=%u\n", numSensors);
-        printf("  maxPending=%u\n", maxPending);
+        printf("  maxPending=%u\n",
+            SCMI_SENSOR_PROTO_ATTR_MAX_PENDING(attributes));
 
         printf("SCMISensorProtocolAttributes(%u)\n",
             SM_TEST_DEFAULT_CHN);
@@ -158,10 +157,9 @@ void TEST_ScmiSensor(void)
     /* Test coverage of exceeding max amount of sensors in
        SensorReadingGet */
     {
-        uint32_t sensorEventControl = SCMI_SENSOR_TP_EV_CTRL(3U);
-
         printf("SCMI_SensorTripPointConfig(%u, %u, %u, %d, %d)\n",
-            SM_TEST_DEFAULT_CHN, numSensors, sensorEventControl, 0, 0);
+            SM_TEST_DEFAULT_CHN, numSensors, SCMI_SENSOR_TP_EV_CTRL(3U),
+            0, 0);
         NCHECK(SCMI_SensorReadingGet(SM_TEST_DEFAULT_CHN, numSensors,
             0, NULL));
 
@@ -234,9 +232,8 @@ void TEST_ScmiSensor(void)
             SCMI_SENSOR_NUM_SENSOR_FLAGS_REMAINING_DESCS
                 (numSensorFlags));
 
-        uint32_t numData =
-            SCMI_SENSOR_NUM_SENSOR_FLAGS_NUM_DESCS(numSensorFlags);
-        printf(" numData=%u\n", numData);
+        printf(" numData=%u\n",
+            SCMI_SENSOR_NUM_SENSOR_FLAGS_NUM_DESCS(numSensorFlags));
     }
 
     /* Testing functionality of SensorDescriptionGet */

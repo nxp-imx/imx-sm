@@ -520,7 +520,7 @@ Reset_Handler:
     ldr   r0,=__START
     blx   r0
 #else
-#if defined(MONITOR) || defined(RUN_TEST)
+#if defined(INC_LIBC)
     ldr   r0,=__libc_init_array
     blx   r0
 #endif

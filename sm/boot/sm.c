@@ -71,7 +71,7 @@ int main(int argc, const char * const argv[])
     /* Store boot start time */
     g_bootTime[SM_BT_START] = DEV_SM_Usec64Get();
 
-#if defined(MONITOR) || defined(RUN_TEST)
+#ifdef INC_LIBC
     /* Configure stdio for no buffering */
     (void) setvbuf(stdin, NULL, _IONBF, 0);
     (void) setvbuf(stdout, NULL, _IONBF, 0);
@@ -164,7 +164,7 @@ void SM_Error(int32_t status)
     BRD_SM_Exit(status, pc);
 }
 
-#if !defined(SIMU) && !defined(MONITOR) && !defined(RUN_TEST)
+#if !defined(SIMU) && !defined(INC_LIBC)
 /*--------------------------------------------------------------------------*/
 /* Exit function for no clib                                                */
 /*--------------------------------------------------------------------------*/
@@ -180,7 +180,7 @@ void exit(int status)
 }
 #endif
 
-#if !defined(SIMU) && !defined(MONITOR) && !defined(RUN_TEST)
+#if !defined(SIMU) && !defined(INC_LIBC)
 /*--------------------------------------------------------------------------*/
 /* C array init for no clib                                                 */
 /*--------------------------------------------------------------------------*/

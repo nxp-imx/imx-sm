@@ -125,8 +125,6 @@ void TEST_ScmiPinctrl(void)
         uint32_t attributes = 0U;
         uint8_t name[SCMI_PINCTRL_MAX_NAME];
         uint32_t flags = 0U;
-        uint32_t extendedName = 0U;
-        uint32_t num = 0U;
 
         for(uint8_t i = 0U; i < SCMI_PINCTRL_MAX_NAME; i++)
         {
@@ -166,11 +164,9 @@ void TEST_ScmiPinctrl(void)
             CHECK(SCMI_PinctrlAttributes(SM_TEST_DEFAULT_CHN,
                 0U, flags, &attributes, name));
 
-            extendedName = SCMI_PINCTRL_ATTR_EXT_NAME(attributes);
-            num = SCMI_PINCTRL_ATTR_NUM(attributes);
-
-            printf("Extended name = %u, ", extendedName);
-            printf("Num pins = %u\n", num);
+            printf("Extended name = %u, ",
+                SCMI_PINCTRL_ATTR_EXT_NAME(attributes));
+            printf("Num pins = %u\n", SCMI_PINCTRL_ATTR_NUM(attributes));
 
             /* Branch -- Invalid Channel */
             NECHECK(SCMI_PinctrlAttributes(SM_SCMI_NUM_CHN,
@@ -190,11 +186,10 @@ void TEST_ScmiPinctrl(void)
             CHECK(SCMI_PinctrlAttributes(SM_TEST_DEFAULT_CHN,
                 0U, flags, &attributes, name));
 
-            extendedName = SCMI_PINCTRL_ATTR_EXT_NAME(attributes);
-            num = SCMI_PINCTRL_ATTR_NUM(attributes);
-
-            printf("Extended name = %u, ", extendedName);
-            printf("Num groups = %u\n", num);
+            printf("Extended name = %u, ",
+                SCMI_PINCTRL_ATTR_EXT_NAME(attributes));
+            printf("Num groups = %u\n",
+                SCMI_PINCTRL_ATTR_NUM(attributes));
 
             /* Branch -- Invalid Channel */
             NECHECK(SCMI_PinctrlAttributes(SM_SCMI_NUM_CHN,
@@ -214,9 +209,8 @@ void TEST_ScmiPinctrl(void)
             CHECK(SCMI_PinctrlAttributes(SM_TEST_DEFAULT_CHN,
                 0U, flags, &attributes, name));
 
-            extendedName = SCMI_PINCTRL_ATTR_EXT_NAME(attributes);
-
-            printf("Extended name = %u\n", extendedName);
+            printf("Extended name = %u\n",
+                SCMI_PINCTRL_ATTR_EXT_NAME(attributes));
 
             /* Branch -- Invalid Channel */
             NECHECK(SCMI_PinctrlAttributes(SM_SCMI_NUM_CHN,

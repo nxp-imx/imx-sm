@@ -62,12 +62,12 @@ void TEST_ScmiFusa(void)
         printf("SCMI_FusaProtocolAttributes(%u)\n", SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_FusaProtocolAttributes(SM_TEST_DEFAULT_CHN,
             &attributes1, &attributes2));
-        uint32_t numFault = SCMI_FUSA_PROTO_ATTR1_NUM_FAULT(attributes1);
-        uint32_t numCrc = SCMI_FUSA_PROTO_ATTR1_NUM_CRC(attributes1);
-        uint32_t numSeenv = SCMI_FUSA_PROTO_ATTR1_NUM_SEENV(attributes1);
-        printf("  numFault=%u\n", numFault);
-        printf("  numCrc=%u\n", numCrc);
-        printf("  numSeenv=%u\n", numSeenv);
+        printf("  numFault=%u\n",
+            SCMI_FUSA_PROTO_ATTR1_NUM_FAULT(attributes1));
+        printf("  numCrc=%u\n",
+            SCMI_FUSA_PROTO_ATTR1_NUM_CRC(attributes1));
+        printf("  numSeenv=%u\n",
+            SCMI_FUSA_PROTO_ATTR1_NUM_SEENV(attributes1));
     }
 
     /* Protocol Message Attributes */
