@@ -42,40 +42,6 @@
 #undef errno
 extern int errno;
 
-#ifdef DEBUG
-char term_emul_getc(void)
-{
-    char c;
-    volatile uint32_t *rx = SM_DBG_RX_PTR;
-
-    /* Wait for debugger to send char */
-    do
-    {
-        c = *rx;
-        BOARD_WdogRefresh();
-    } while(c == (char) 0);
-
-    /* ACK the character received to debugger */
-    *rx = 0;
-
-    return c;
-}
-
-void term_emul_putc(char c)
-{
-    volatile uint32_t *tx = SM_DBG_TX_PTR;
-
-    /* Write char to terminal emulation TX address */
-    *tx = c;
-
-    /* Wait for debugger to read char */
-    while(*tx != 0U)
-    {
-        BOARD_WdogRefresh();
-    }
-}
-#endif
-
 int _read(int file, char *buf, int len)
 {
     const board_uart_config_t *uartConfig = BOARD_GetDebugUart();
@@ -95,32 +61,6 @@ int _read(int file, char *buf, int len)
 
         return len;
     }
-#ifdef DEBUG
-    else if (SM_DBG_READY == 2U)
-    {
-        int idx = 0;
-
-        while((len--) != 0)
-        {
-            char c;
-
-            /* Get character */
-            c = term_emul_getc();
-
-            /* Convert CR into LF */
-            if (c == '\r')
-            {
-                c = '\n';
-            }
-            buf[idx++] = c;
-
-            /* Echo received character */
-            term_emul_putc(c);
-        }
-
-        return idx;
-    }
-#endif
     else
     {
         errno = EBADF;
@@ -149,27 +89,6 @@ int _write(int file, char *buf, int len)
         }
         return ret_len;
     }
-#ifdef DEBUG
-    else if (SM_DBG_READY == 2U)
-    {
-        /* Use ipg_stop to halt WDOG */
-        DSC_SC->GPR_CTRL[1].SET = (1U << 21U);
-
-        while((len--) != 0)
-        {
-            char c = *buf;
-
-            /* Put character */
-            term_emul_putc(c);
-
-            buf++;
-        }
-
-        /* Resume WDOG */
-        DSC_SC->GPR_CTRL[1].CLR = (1U << 21U);
-        return ret_len;
-    }
-#endif
     else
     {
         errno = EBADF;
@@ -276,3 +195,4 @@ int _unlink(char *name)
     errno = ENOENT;
     return -1;
 }
+
