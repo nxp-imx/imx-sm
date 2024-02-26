@@ -150,18 +150,16 @@ and some of the optional messages are supported.
 | Fusa | 0x83 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_FUSA_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Fusa | 0x83 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_FUSA_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
 | Fusa | 0x83 | [FUSA_FEENV_STATE_GET](@ref SCMI_PROTO_FUSA_FUSA_FEENV_STATE_GET) | 0x3 | GET |
-| Fusa | 0x83 | [FUSA_FEENV_STATE_SET](@ref SCMI_PROTO_FUSA_FUSA_FEENV_STATE_SET) | 0x4 | SET |
 | Fusa | 0x83 | [FUSA_FEENV_STATE_NOTIFY](@ref SCMI_PROTO_FUSA_FUSA_FEENV_STATE_NOTIFY) | 0x5 | NOTIFY |
 | Fusa | 0x83 | [FUSA_SEENV_STATE_GET](@ref SCMI_PROTO_FUSA_FUSA_SEENV_STATE_GET) | 0x6 |  |
 | Fusa | 0x83 | [FUSA_SEENV_STATE_SET](@ref SCMI_PROTO_FUSA_FUSA_SEENV_STATE_SET) | 0x7 |  |
 | Fusa | 0x83 | [FUSA_FAULT_GET](@ref SCMI_PROTO_FUSA_FUSA_FAULT_GET) | 0x8 | GET |
-| Fusa | 0x83 | [FUSA_FAULT_SET](@ref SCMI_PROTO_FUSA_FUSA_FAULT_SET) | 0x9 | SET |
+| Fusa | 0x83 | [FUSA_FAULT_SET](@ref SCMI_PROTO_FUSA_FUSA_FAULT_SET) | 0x9 | EXCLUSIVE |
 | Fusa | 0x83 | [FUSA_FAULT_GROUP_NOTIFY](@ref SCMI_PROTO_FUSA_FUSA_FAULT_GROUP_NOTIFY) | 0xA | NOTIFY |
 | Fusa | 0x83 | [FUSA_SCHECK_EVNTRIG](@ref SCMI_PROTO_FUSA_FUSA_SCHECK_EVNTRIG) | 0xB |  |
-| Fusa | 0x83 | [FUSA_CRC_CALCULATE](@ref SCMI_PROTO_FUSA_FUSA_CRC_CALCULATE) | 0xC | SET |
-| Fusa | 0x83 | [FUSA_CRC_RESULT_GET](@ref SCMI_PROTO_FUSA_FUSA_CRC_RESULT_GET) | 0xD | SET |
+| Fusa | 0x83 | [FUSA_SCHECK_TEST_EXEC](@ref SCMI_PROTO_FUSA_FUSA_SCHECK_TEST_EXEC) | 0xE | EXCLUSIVE |
 | Fusa | 0x83 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_FUSA_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
-| Fusa\n(notification) | 0x83 | [FUSA_FEENV_STATE_EVENT](@ref SCMI_PROTO_FUSA_FUSA_FEENV_STATE_EVENT) | 0x0 |  |
+| Fusa\n(notification) | 0x83 | [FUSA_FEENV_STATE_EVENT](@ref SCMI_PROTO_FUSA_FUSA_FEENV_STATE_EVENT) | 0x0 | EXCLUSIVE |
 | Fusa\n(notification) | 0x83 | [FUSA_SEENV_STATE_REQ_EVENT](@ref SCMI_PROTO_FUSA_FUSA_SEENV_STATE_REQ_EVENT) | 0x1 |  |
 | Fusa\n(notification) | 0x83 | [FUSA_FAULT_EVENT](@ref SCMI_PROTO_FUSA_FUSA_FAULT_EVENT) | 0x2 |  |
 | Misc | 0x84 | [PROTOCOL_VERSION](@ref SCMI_PROTO_MISC_PROTOCOL_VERSION) | 0x0 |  |
@@ -2840,26 +2838,6 @@ See SCMI_FusaFeenvStateGet() for details.
     | uint32         | msel_mode                                                    |
     ---------------------------------------------------------------------------------
 
-## Fusa: FUSA_FEENV_STATE_SET ## {#SCMI_PROTO_FUSA_FUSA_FEENV_STATE_SET}
-
-See SCMI_FusaFeenvStateSet() for details.
-
-    Send
-    ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x83, msg=0x4                          |
-    ---------------------------------------------------------------------------------
-    | uint32         | feenv_state                                                  |
-    ---------------------------------------------------------------------------------
-    | uint32         | flags                                                        |
-    ---------------------------------------------------------------------------------
-
-    Receive
-    ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x83, msg=0x4                          |
-    ---------------------------------------------------------------------------------
-    | int32          | status                                                       |
-    ---------------------------------------------------------------------------------
-
 ## Fusa: FUSA_FEENV_STATE_NOTIFY ## {#SCMI_PROTO_FUSA_FUSA_FEENV_STATE_NOTIFY}
 
 See SCMI_FusaFeenvStateNotify() for details.
@@ -2886,12 +2864,18 @@ See SCMI_FusaSeenvStateGet() for details.
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x83, msg=0x6                          |
     ---------------------------------------------------------------------------------
+    | uint32         | seenv_id                                                     |
+    ---------------------------------------------------------------------------------
 
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x83, msg=0x6                          |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | seenv_id                                                     |
+    ---------------------------------------------------------------------------------
+    | uint32         | lm_id                                                        |
     ---------------------------------------------------------------------------------
     | uint32         | seenv_state                                                  |
     ---------------------------------------------------------------------------------
@@ -2907,8 +2891,6 @@ See SCMI_FusaSeenvStateSet() for details.
     | uint32         | seenv_state                                                  |
     ---------------------------------------------------------------------------------
     | uint32         | ping_cookie                                                  |
-    ---------------------------------------------------------------------------------
-    | uint32         | scst_signature                                               |
     ---------------------------------------------------------------------------------
 
     Receive
@@ -3000,56 +2982,22 @@ See SCMI_FusaScheckEvntrig() for details.
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
 
-## Fusa: FUSA_CRC_CALCULATE ## {#SCMI_PROTO_FUSA_FUSA_CRC_CALCULATE}
+## Fusa: FUSA_SCHECK_TEST_EXEC ## {#SCMI_PROTO_FUSA_FUSA_SCHECK_TEST_EXEC}
 
-See SCMI_FusaCrcCalculate() for details.
+See SCMI_FusaScheckTestExec() for details.
 
     Send
     ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x83, msg=0xC                          |
+    | uint32         | header (type=0, proto=0x83, msg=0xE                          |
     ---------------------------------------------------------------------------------
-    | uint32         | crc_channel                                                  |
-    ---------------------------------------------------------------------------------
-    | uint32         | crc_cfg                                                      |
-    ---------------------------------------------------------------------------------
-    | uint32         | mem_start_low                                                |
-    ---------------------------------------------------------------------------------
-    | uint32         | mem_start_high                                               |
-    ---------------------------------------------------------------------------------
-    | uint32         | mem_size                                                     |
+    | uint32         | target_test_id                                               |
     ---------------------------------------------------------------------------------
 
     Receive
     ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x83, msg=0xC                          |
+    | uint32         | header (type=0, proto=0x83, msg=0xE                          |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
-    ---------------------------------------------------------------------------------
-
-## Fusa: FUSA_CRC_RESULT_GET ## {#SCMI_PROTO_FUSA_FUSA_CRC_RESULT_GET}
-
-See SCMI_FusaCrcResultGet() for details.
-
-    Send
-    ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x83, msg=0xD                          |
-    ---------------------------------------------------------------------------------
-    | uint32         | crc_channel                                                  |
-    ---------------------------------------------------------------------------------
-
-    Receive
-    ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x83, msg=0xD                          |
-    ---------------------------------------------------------------------------------
-    | int32          | status                                                       |
-    ---------------------------------------------------------------------------------
-    | uint32         | mem_start_low                                                |
-    ---------------------------------------------------------------------------------
-    | uint32         | mem_start_high                                               |
-    ---------------------------------------------------------------------------------
-    | uint32         | mem_size                                                     |
-    ---------------------------------------------------------------------------------
-    | uint32         | crc_result                                                   |
     ---------------------------------------------------------------------------------
 
 ## Fusa: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_FUSA_NEGOTIATE_PROTOCOL_VERSION}

@@ -56,7 +56,7 @@ static uint64_t s_lmStartTime[SM_NUM_LM];
 /*--------------------------------------------------------------------------*/
 /* Init logical machine manager                                             */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_Init(void)
+int32_t LMM_Init(uint32_t *mSel)
 {
     int32_t status;
     uint32_t numClock;
@@ -87,11 +87,13 @@ int32_t LMM_Init(void)
         status = LMM_CpuInit();
     }
 
+#ifdef USES_FUSA
     /* Init FuSa */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_FusaInit();
+        status = LMM_FusaInit(mSel);
     }
+#endif
 
     /* Init LMs */
     if (status == SM_ERR_SUCCESS)

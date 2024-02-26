@@ -54,49 +54,121 @@
 
 /* Defines */
 
-/* SCMI FuSa F-EENV states */
-#define LMM_FUSA_FEENV_STATE_PRE_SAFETY      0U
-#define LMM_FUSA_FEENV_STATE_SAFETY_RUNTIME  1U
-#define LMM_FUSA_FEENV_STATE_SOC_STANDBY     2U
-#define LMM_FUSA_FEENV_STATE_SOC_SHUTDOWN    3U
-#define LMM_FUSA_FEENV_STATE_SOC_RESET       4U
+/*!
+ * @name LMM FuSa F-EENV states
+ */
+/** @{ */
+/*! Initial state during boot up */
+#define LMM_FUSA_FEENV_STATE_INIT             0U
+/*! Waiting for all S-EENVs to be safety ready */
+#define LMM_FUSA_FEENV_STATE_PRE_SAFETY       1U
+/*! Running in normal safety context */
+#define LMM_FUSA_FEENV_STATE_SAFETY_RUNTIME   2U
+/*! Before SoC reset or shutdown transitions */
+#define LMM_FUSA_FEENV_STATE_SOC_TERMINATING  3U
+/** @} */
 
-/* SCMI FuSa S-EENV states */
-#define LMM_FUSA_SEENV_STATE_INIT            0U
-#define LMM_FUSA_SEENV_STATE_SAFETY_READY    1U
-#define LMM_FUSA_SEENV_STATE_SAFETY_RUNTIME  2U
-#define LMM_FUSA_SEENV_STATE_TERMINAL        3U
+/*!
+ * @name LMM FuSa S-EENV states
+ */
+/** @{ */
+/*! S-EENV is disabled */
+#define LMM_FUSA_SEENV_STATE_DISABLED        0U
+/*! Initial S-EENV state */
+#define LMM_FUSA_SEENV_STATE_INIT            1U
+/*! S-EENV is ready to transition to the RUNTIME state */
+#define LMM_FUSA_SEENV_STATE_SAFETY_READY    2U
+/*! Running in normal safety context */
+#define LMM_FUSA_SEENV_STATE_SAFETY_RUNTIME  3U
+/*! Transitioned to a terminal state */
+#define LMM_FUSA_SEENV_STATE_TERMINAL        4U
+/** @} */
 
 /* Types */
+
+/*!
+ * LMM FuSA caller ID structure
+ */
+typedef struct
+{
+    uint32_t seenvId;  /*!< Caller S-EENV ID */
+    uint32_t lmId;     /*!< Caller LM ID */
+} lmm_fusa_id_t;
 
 /* Functions */
 
 /*!
  * Initialize the FuSa system.
  *
+ * @param[in,out] mSel          Boot mode selection
+ *
  * This function initializes the functional safety system.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_FusaInit(void);
+int32_t LMM_FusaInit(uint32_t *mSel);
 
-void LMM_SsenvNumGet(uint32_t *num);
+/*!
+ * Return number of S-EENV LM.
+ *
+ * @param[out]    num           Number of S-EENV LM
+ */
+void LMM_SsenvLmNumGet(uint32_t *num);
 
-int32_t LMM_FusaFeenvStateGet(uint32_t lmId, uint32_t *feenvState,
-    uint32_t *mselMode);
+/*!
+ * Get current FuSa system state.
+ *
+ * @param[in]     caller      Caller requesting
+ * @param[out]    feenvState  Parameter identifying the safety state of the
+ *                            F-EENV
+ * @param[out]    mselMode    Mode selector value as returned by SAF
+ *
+ * This function is used to get the current FuSa system state and operation
+ * mode selected by the SAF mSel.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t LMM_FusaFeenvStateGet(const lmm_fusa_id_t *caller,
+    uint32_t *feenvState, uint32_t *mselMode);
 
-int32_t LMM_FusaFeenvStateSet(uint32_t lmId, uint32_t feenvState,
-    bool graceful);
+/*!
+ * Get S-EENV state.
+ *
+ * @param[in]     caller      Caller requesting
+ * @param[in]     target      Identifier of the S-EENV whose state is
+ *                            requested.
+ * @param[out]    seenvState  Parameter identifying the safety state of the
+ *                            S-EENV
+ *
+ * This function is used by any S-EENV to retrieve information about itself as
+ * it is recorded in the F-EENV internal memory.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t LMM_FusaSeenvStateGet(const lmm_fusa_id_t *caller,
+    const lmm_fusa_id_t *target, uint32_t *seenvState);
 
-int32_t LMM_FusaSeenvStateGet(uint32_t lmId, uint32_t *seenvState);
-
-int32_t LMM_FusaSeenvStateSet(uint32_t lmId, uint32_t seenvState,
-    uint32_t pingCookie, uint32_t scstSignature);
+/*!
+ * Set S-EENV state.
+ *
+ * @param[in]     caller      Caller requesting
+ * @param[in]     seenvState  Parameter to set the safety state of the S-EENV
+ * @param[in]     pingCookie  Cookie value last sent by the F-EENV
+ *
+ * This function is used by the S-EENVs to inform SM about transition to a new
+ * state. The SM accepts this transition and records the S-EENV state
+ * internally. Collecting the state information from all S-EENVs is important
+ * for SM to transition between various F-EENV states.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t LMM_FusaSeenvStateSet(const lmm_fusa_id_t *caller,
+    uint32_t seenvState, uint32_t pingCookie);
 
 /*!
  * Get the state of a fault.
  *
- * @param[in]     lmId          LM requesting
+ * @param[in]     caller        Caller requesting
  * @param[in]     faultId       Fault ID
  * @param[out]    state         State, true if asserted
  *
@@ -107,13 +179,13 @@ int32_t LMM_FusaSeenvStateSet(uint32_t lmId, uint32_t seenvState,
  * Return errors (see @ref STATUS "SM error codes"):
  * - others returned by LMM_FaultGet()
  */
-int32_t LMM_FusaFaultGet(uint32_t lmId, uint32_t faultId,
+int32_t LMM_FusaFaultGet(const lmm_fusa_id_t *caller, uint32_t faultId,
     bool *state);
 
 /*!
  * Set the state of a fault.
  *
- * @param[in]     lmId          LM requesting
+ * @param[in]     caller        Caller requesting
  * @param[in]     faultId       Fault ID
  * @param[in]     set           True to set, false to clear
  *
@@ -130,9 +202,39 @@ int32_t LMM_FusaFaultGet(uint32_t lmId, uint32_t faultId,
  * Return errors (see @ref STATUS "SM error codes"):
  * - others returned by LMM_FaultSet()
  */
-int32_t LMM_FusaFaultSet(uint32_t lmId, uint32_t faultId, bool set);
+int32_t LMM_FusaFaultSet(const lmm_fusa_id_t *caller, uint32_t faultId,
+    bool set);
 
-int32_t LMM_FusaScheckEvntrig(uint32_t lmId);
+/*!
+ * Temporarily disable fault handling.
+ *
+ * @param[in]     caller        Caller requesting
+ *
+ * This function is used by the S-EENV during sCheck event processing to
+ * temporarily disable user handling of faults being tested. This is used
+ * whenever an S-EENV sCheck is about to inject faults for testing purposes and
+ * needs to pause normal SM fault processing. In this mode, the injected faults
+ * are handled internally by SAF.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t LMM_FusaScheckEvntrig(const lmm_fusa_id_t *caller);
+
+/*!
+ * Request manually-triggered execution of sCheck test.
+ *
+ * @param[in]     caller        Caller requesting
+ * @param[in]     targetTestId  Identifier of sCheck target test to be executed
+ *
+ * This function is used by the S-EENV to request manually-triggered execution
+ * of sCheck test. The target test is identified using the \a targetTestId
+ * parameter. The test identifiers are assigned during SAF sCheck user
+ * configuration.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t LMM_FusaScheckTestExec(const lmm_fusa_id_t *caller,
+    uint32_t targetTestId);
 
 /*!
  * Report a fault was set (asserted) to FuSa.
@@ -158,18 +260,15 @@ int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
  * @param[in]     faultId       Fault ID
  *
  * Sends fault notifications indicating a fault was cleared.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
  */
 void LMM_FusaFaultCleared(uint32_t faultId);
 
-int32_t LMM_FusaCrcCalculate(uint32_t lmId, uint32_t crcChannel,
-    uint32_t crcCfg, uint64_t memStart, uint32_t memSize);
-
-int32_t LMM_FusaCrcResultGet(uint32_t lmId, uint32_t crcChannel,
-    uint64_t *memStart, uint32_t *memSize, uint32_t *crcResult);
+/*!
+ * Report assertion error.
+ *
+ * @param[in]     status        Error status
+ */
+void LMM_FuSaAssertionFailure(int32_t status);
 
 #endif /* LMM_FUSA_H */
 

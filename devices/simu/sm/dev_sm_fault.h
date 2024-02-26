@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,20 +54,21 @@
 /* Defines */
 
 /*! Number of device faults */
-#define DEV_SM_NUM_FAULT  8U
+#define DEV_SM_NUM_FAULT  9U
 
 /*!
  * @name Device fault indexes
  */
 /** @{ */
-#define DEV_SM_FAULT_0  0U  /*!< Test fault 0 */
-#define DEV_SM_FAULT_1  1U  /*!< Test fault 1 */
-#define DEV_SM_FAULT_2  2U  /*!< Test fault 2 */
-#define DEV_SM_FAULT_3  3U  /*!< Test fault 3 */
-#define DEV_SM_FAULT_4  4U  /*!< Test fault 4 */
-#define DEV_SM_FAULT_5  5U  /*!< Test fault 5 */
-#define DEV_SM_FAULT_6  6U  /*!< Test fault 6 */
-#define DEV_SM_FAULT_7  7U  /*!< Test fault 7 */
+#define DEV_SM_FAULT_0       0U  /*!< Test fault 0 */
+#define DEV_SM_FAULT_1       1U  /*!< Test fault 1 */
+#define DEV_SM_FAULT_2       2U  /*!< Test fault 2 */
+#define DEV_SM_FAULT_3       3U  /*!< Test fault 3 */
+#define DEV_SM_FAULT_4       4U  /*!< Test fault 4 */
+#define DEV_SM_FAULT_5       5U  /*!< Test fault 5 */
+#define DEV_SM_FAULT_6       6U  /*!< Test fault 6 */
+#define DEV_SM_FAULT_7       7U  /*!< Test fault 7 */
+#define DEV_SM_FAULT_SM_ERR  8U  /*!< SM error */
 /** @} */
 
 /*! Default init for fault record */

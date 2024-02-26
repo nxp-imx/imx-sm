@@ -54,8 +54,6 @@
 /** @{ */
 /*! Get current FuSa system state */
 #define SCMI_MSG_FUSA_FEENV_STATE_GET        0x3U
-/*! Request F-EENV transition to new state */
-#define SCMI_MSG_FUSA_FEENV_STATE_SET        0x4U
 /*! Configure F-EENV notifications */
 #define SCMI_MSG_FUSA_FEENV_STATE_NOTIFY     0x5U
 /*! Get S-EENV state */
@@ -70,10 +68,8 @@
 #define SCMI_MSG_FUSA_FAULT_GROUP_NOTIFY     0xAU
 /*! Temporarily disable fault handling */
 #define SCMI_MSG_FUSA_SCHECK_EVNTRIG         0xBU
-/*! Start CRC calculation */
-#define SCMI_MSG_FUSA_CRC_CALCULATE          0xCU
-/*! Get CRC calculation result */
-#define SCMI_MSG_FUSA_CRC_RESULT_GET         0xDU
+/*! Request manually-triggered execution of sCheck test */
+#define SCMI_MSG_FUSA_SCHECK_TEST_EXEC       0xEU
 /*! Read F-EENV state change notification event */
 #define SCMI_MSG_FUSA_FEENV_STATE_EVENT      0x0U
 /*! Read S-EENV state request notification event */
@@ -87,31 +83,37 @@
  */
 /** @{ */
 /*! Initial state during boot up */
-#define SCMI_FUSA_FEENV_STATE_INIT            0U
+#define SCMI_FUSA_FEENV_STATE_INIT             0U
 /*! Waiting for all S-EENVs to be safety ready */
-#define SCMI_FUSA_FEENV_STATE_PRE_SAFETY      1U
+#define SCMI_FUSA_FEENV_STATE_PRE_SAFETY       1U
 /*! Running in normal safety context */
-#define SCMI_FUSA_FEENV_STATE_SAFETY_RUNTIME  2U
-/*! SoC power standby requested, waiting for S-EENV to be off */
-#define SCMI_FUSA_FEENV_STATE_SOC_STANDBY     3U
-/*! SoC shutdown requested, waiting for S-EENV to be off */
-#define SCMI_FUSA_FEENV_STATE_SOC_SHUTDOWN    4U
-/*! SoC graceful reset requested, waiting for S-EENV to be off */
-#define SCMI_FUSA_FEENV_STATE_SOC_RESET       5U
+#define SCMI_FUSA_FEENV_STATE_SAFETY_RUNTIME   2U
+/*! Before SoC reset or shutdown transitions */
+#define SCMI_FUSA_FEENV_STATE_SOC_TERMINATING  3U
 /** @} */
 
 /*!
  * @name SCMI FuSa S-EENV states
  */
 /** @{ */
+/*! S-EENV is disabled */
+#define SCMI_FUSA_SEENV_STATE_DISABLED        0U
 /*! Initial S-EENV state */
-#define SCMI_FUSA_SEENV_STATE_INIT            0U
+#define SCMI_FUSA_SEENV_STATE_INIT            1U
 /*! S-EENV is ready to transition to the RUNTIME state */
-#define SCMI_FUSA_SEENV_STATE_SAFETY_READY    1U
+#define SCMI_FUSA_SEENV_STATE_SAFETY_READY    2U
 /*! Running in normal safety context */
-#define SCMI_FUSA_SEENV_STATE_SAFETY_RUNTIME  2U
+#define SCMI_FUSA_SEENV_STATE_SAFETY_RUNTIME  3U
 /*! Transitioned to a terminal state */
-#define SCMI_FUSA_SEENV_STATE_TERMINAL        3U
+#define SCMI_FUSA_SEENV_STATE_TERMINAL        4U
+/** @} */
+
+/*!
+ * @name SCMI FUSA ID
+ */
+/** @{ */
+/*! S-EENV ID to use to discover the callers S-EENV ID */
+#define SCMI_FUSA_ID_DISCOVER  0xFFFFFFFFU
 /** @} */
 
 /* Macros */
@@ -121,19 +123,11 @@
  */
 /** @{ */
 /*! Number of fault sources */
-#define SCMI_FUSA_PROTO_ATTR1_NUM_FAULT(x)  (((x) & 0xFFFF0000U) >> 16U)
-/*! Number of CRC channels supported */
-#define SCMI_FUSA_PROTO_ATTR1_NUM_CRC(x)    (((x) & 0xFF00U) >> 8U)
+#define SCMI_FUSA_PROTO_ATTR1_NUM_FAULT(x)     (((x) & 0xFFFF0000U) >> 16U)
+/*! Number of S-EENV ID in the system */
+#define SCMI_FUSA_PROTO_ATTR1_NUM_SEENV_ID(x)  (((x) & 0xFF00U) >> 8U)
 /*! Number of S-EENV LM in the system */
-#define SCMI_FUSA_PROTO_ATTR1_NUM_SEENV(x)  (((x) & 0xFFU) >> 0U)
-/** @} */
-
-/*!
- * @name SCMI FuSa F-eenv set flags
- */
-/** @{ */
-/*! Graceful request */
-#define SCMI_FUSA_FLAGS_GRACEFUL(x)  (((x) & 0x1U) << 0U)
+#define SCMI_FUSA_PROTO_ATTR1_NUM_SEENV_LM(x)  (((x) & 0xFFU) >> 0U)
 /** @} */
 
 /*!
@@ -157,7 +151,7 @@
  */
 /** @{ */
 /*! Fault state */
-#define SCMI_FUSA_FAULT_SET_STATE(x)  (((x) & 0x1U) << 0U)
+#define SCMI_FUSA_FAULT_SET_STATE(x)  (((x) & 0x3U) << 0U)
 /** @} */
 
 /*!
@@ -193,7 +187,7 @@ int32_t SCMI_FusaProtocolVersion(uint32_t channel, uint32_t *version);
  *                             Bits[31:16] Number of Fault sources (this number
  *                             defines valid range of the fault ID identifiers
  *                             used in the fault functions)<BR>
- *                             Bits[15:8] Number of CRC channels supported<BR>
+ *                             Bits[15:8] Number of S-EENV ID in the system<BR>
  *                             Bits[7:0] Number of S-EENV LM in the system (not
  *                             counting the F-EENV itself)
  * @param[out]    attributes2  Protocol attributes 2:<BR>
@@ -204,8 +198,8 @@ int32_t SCMI_FusaProtocolVersion(uint32_t channel, uint32_t *version);
  *
  * Access macros:
  * - ::SCMI_FUSA_PROTO_ATTR1_NUM_FAULT() - Number of fault sources
- * - ::SCMI_FUSA_PROTO_ATTR1_NUM_CRC() - Number of CRC channels supported
- * - ::SCMI_FUSA_PROTO_ATTR1_NUM_SEENV() - Number of S-EENV LM in the system
+ * - ::SCMI_FUSA_PROTO_ATTR1_NUM_SEENV_ID() - Number of S-EENV ID in the system
+ * - ::SCMI_FUSA_PROTO_ATTR1_NUM_SEENV_LM() - Number of S-EENV LM in the system
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  */
@@ -263,45 +257,6 @@ int32_t SCMI_FusaFeenvStateGet(uint32_t channel, uint32_t *feenvState,
     uint32_t *mselMode);
 
 /*!
- * Request F-EENV transition to new state.
- *
- * @param[in]     channel     A2P channel for comms
- * @param[in]     feenvState  Parameter identifying the requested safety state
- *                            of the F-EENV
- * @param[in]     flags       F-EENV set state flags. This parameter has the
- *                            following format:<BR>
- *                            Bits[31:1] Reserved, must be zero.<BR>
- *                            Bit[0] Graceful request.<BR>
- *                            Set to 1 if the request is a graceful
- *                            request.<BR>
- *                            Set to 0 if the request is a forceful
- *                            request.<BR>
- *                            In graceful transition, the S-EENVs are notified
- *                            and SM waits for their transition to off state
- *
- * This function is used by an S-EENV to request the F-EENV (and the whole SoC)
- * to transition to a new power state. Only the SoC standby, SoC shutdown and
- * SoC reset states can be requested. An example state is
- * ::SCMI_FUSA_FEENV_STATE_SAFETY_RUNTIME.
- *
- * Access macros:
- * - ::SCMI_FUSA_FLAGS_GRACEFUL() - Graceful request
- *
- * @return Returns the status (::SCMI_ERR_SUCCESS = success).
- *
- * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
- * - ::SCMI_ERR_SUCCESS: if the F-EENV state was set successfully.
- * - ::SCMI_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller
- *   is not an S-EENV.
- * - ::SCMI_ERR_INVALID_PARAMETERS: if the requested state or flags are
- *   invalid.
- * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to set the F-EENV
- *   state.
- */
-int32_t SCMI_FusaFeenvStateSet(uint32_t channel, uint32_t feenvState,
-    uint32_t flags);
-
-/*!
  * Configure F-EENV notifications.
  *
  * @param[in]     channel       A2P channel for comms
@@ -332,6 +287,15 @@ int32_t SCMI_FusaFeenvStateNotify(uint32_t channel, uint32_t notifyEnable);
  * Get S-EENV state.
  *
  * @param[in]     channel     A2P channel for comms
+ * @param[in,out] seenvId     Identifier of the S-EENV whose state is
+ *                            requested. This field is:<BR>
+ *                            - populated with the S-EENV ID of the calling
+ *                            agent, when the \a seenvId parameter passed via
+ *                            the function is 0xFFFFFFFF.<BR>
+ *                            - identical to the \a seenvId field passed via
+ *                            the calling parameters, in all other cases
+ * @param[out]    lmId        Identifier of the LM which contains the S-EENV
+ *                            identified by \a seenvId
  * @param[out]    seenvState  Parameter identifying the safety state of the
  *                            S-EENV
  *
@@ -343,20 +307,20 @@ int32_t SCMI_FusaFeenvStateNotify(uint32_t channel, uint32_t notifyEnable);
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
  * - ::SCMI_ERR_SUCCESS: if the S-EENV state is returned successfully.
+ * - ::SCMI_ERR_NOT_FOUND: if \a seenvId is out of range or not an S-EENV if
+ *   self identifying.
  * - ::SCMI_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller
  *   is not an S-EENV.
  */
-int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvState);
+int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvId,
+    uint32_t *lmId, uint32_t *seenvState);
 
 /*!
  * Set S-EENV state.
  *
- * @param[in]     channel        A2P channel for comms
- * @param[in]     seenvState     Parameter to set the safety state of the
- *                               S-EENV
- * @param[in]     pingCookie     Cookie value last sent by the F-EENV
- * @param[in]     scstSignature  Last result of local core self-test routine
- *                               executed by the S-EENV
+ * @param[in]     channel     A2P channel for comms
+ * @param[in]     seenvState  Parameter to set the safety state of the S-EENV
+ * @param[in]     pingCookie  Cookie value last sent by the F-EENV
  *
  * This function is used by the S-EENVs to inform SM about transition to a new
  * state. The SM accepts this transition and records the S-EENV state
@@ -373,7 +337,7 @@ int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvState);
  * - ::SCMI_ERR_INVALID_PARAMETERS: if the requested state is invalid.
  */
 int32_t SCMI_FusaSeenvStateSet(uint32_t channel, uint32_t seenvState,
-    uint32_t pingCookie, uint32_t scstSignature);
+    uint32_t pingCookie);
 
 /*!
  * Get fault state.
@@ -413,10 +377,12 @@ int32_t SCMI_FusaFaultGet(uint32_t channel, uint32_t faultId,
  * @param[in]     channel  A2P channel for comms
  * @param[in]     faultId  Global fault identifier
  * @param[in]     flags    State of the fault:<BR>
- *                         Bits[31:1] Reserved, must be zero.<BR>
- *                         Bit[0] Fault state.<BR>
- *                         Set to 1 to set the fault.<BR>
- *                         Set to 0 to clear the fault
+ *                         Bits[31:2] Reserved, must be zero.<BR>
+ *                         Bit[1:0] Fault state.<BR>
+ *                         Set to 0 to set the fault.<BR>
+ *                         Set to 1 to clear the fault.<BR>
+ *                         Set to 2 to report the fault is recovered.<BR>
+ *                         Set to 3 to report the fault could not be reovered
  *
  * This function is used by the S-EENVs to assert a SW fault (NCF) at the FCCU
  * module.
@@ -497,70 +463,32 @@ int32_t SCMI_FusaFaultGroupNotify(uint32_t channel, uint32_t faultIdFirst,
  * - ::SCMI_ERR_SUCCESS: if fault handling disabled for the caller.
  * - ::SCMI_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller
  *   is not an S-EENV.
+ * - ::SCMI_ERR_DENIED: if the calling agent is not permitted to request this
+ *   command.
  */
 int32_t SCMI_FusaScheckEvntrig(uint32_t channel);
 
 /*!
- * Start CRC calculation.
+ * Request manually-triggered execution of sCheck test.
  *
  * @param[in]     channel       A2P channel for comms
- * @param[in]     crcChannel    Index of CRC channel
- * @param[in]     crcCfg        CRC CFG value
- * @param[in]     memStartLow   Start address (lower 32-bits)
- * @param[in]     memStartHigh  Start address (upper 32-bits)
- * @param[in]     memSize       Byte count
+ * @param[in]     targetTestId  Identifier of sCheck target test to be executed
  *
- * This function can be used by any client to request a HW-accelerated CRC
- * calculation of a memory block. The CRC module is used internally by the SM
- * to accomplish this task. CRC calculation is performed asynchronously, the
- * operation status and result can be retrieved using the
- * SCMI_FusaCrcResultGet() function.
+ * This function is used by the S-EENV to request manually-triggered execution
+ * of sCheck test. The target test is identified using the \a targetTestId
+ * parameter. The test identifiers are assigned during SAF sCheck user
+ * configuration.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
- * - ::SCMI_ERR_SUCCESS: if the CRC calcultation started successfully.
+ * - ::SCMI_ERR_SUCCESS: if fault handling disabled for the caller.
  * - ::SCMI_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller
  *   is not an S-EENV.
- * - ::SCMI_ERR_NOT_FOUND: if \a crcChannel is invalid.
- * - ::SCMI_ERR_INVALID_PARAMETERS: if any of the parameters are invalid.
- * - ::SCMI_ERR_BUSY: if the CRC channel is already performing a CRC
- *   calculation.
- * - ::SCMI_ERR_DENIED: if the calling agent is not permitted to use this CRC
- *   channel.
+ * - ::SCMI_ERR_DENIED: if the calling agent is not permitted to request an
+ *   sCheck.
  */
-int32_t SCMI_FusaCrcCalculate(uint32_t channel, uint32_t crcChannel,
-    uint32_t crcCfg, uint32_t memStartLow, uint32_t memStartHigh,
-    uint32_t memSize);
-
-/*!
- * Get CRC calculation result.
- *
- * @param[in]     channel       A2P channel for comms
- * @param[in]     crcChannel    Index of CRC channel
- * @param[out]    memStartLow   Start address (lower 32-bits)
- * @param[out]    memStartHigh  Start address (upper 32-bits)
- * @param[out]    memSize       Byte count
- * @param[out]    crcResult     Resulting CRC value
- *
- * This function can be used by any client to retrieve the CRC value calculated
- * by the last SCMI_FusaCrcCalculate() function call.
- *
- * @return Returns the status (::SCMI_ERR_SUCCESS = success).
- *
- * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
- * - ::SCMI_ERR_SUCCESS: if the CRC calcultation completed successfully.
- * - ::SCMI_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller
- *   is not an S-EENV.
- * - ::SCMI_ERR_NOT_FOUND: if \a crcChannel is invalid.
- * - ::SCMI_ERR_BUSY: if the CRC channel has not completed the CRC
- *   calculation.
- * - ::SCMI_ERR_DENIED: if the calling agent is not permitted to use this CRC
- *   channel.
- */
-int32_t SCMI_FusaCrcResultGet(uint32_t channel, uint32_t crcChannel,
-    uint32_t *memStartLow, uint32_t *memStartHigh, uint32_t *memSize,
-    uint32_t *crcResult);
+int32_t SCMI_FusaScheckTestExec(uint32_t channel, uint32_t targetTestId);
 
 /*!
  * Negotiate the protocol version.

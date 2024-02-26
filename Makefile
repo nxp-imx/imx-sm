@@ -53,6 +53,7 @@ ifndef T
 	FLAGS += -DLMM_INIT_FLAGS=1
 else
 	FLAGS += -DLMM_INIT_FLAGS=0 -DRUN_TEST
+	DEBUG ?= 1
 	INC_LIBC ?= 1
 endif
 ifeq ($(T),all)
@@ -72,6 +73,11 @@ ifeq ($(M),1)
 	INC_LIBC ?= 1
 endif
 INC_LIBC ?= 0
+DEBUG ?= 0
+
+ifeq ($(DEBUG),1)
+    FLAGS += -DDEBUG
+endif
 
 ifeq ($(INC_LIBC),1)
     FLAGS += -DINC_LIBC
@@ -104,6 +110,11 @@ INCLUDE = -I$(OUT)
 
 # Defaults
 ROM_IMG ?= none
+USES_FUSA ?= 0
+
+ifeq ($(USES_FUSA),1)
+	FLAGS += -DUSES_FUSA
+endif
 
 INCLUDE += -I$(ROOT_DIR)/configs/$(CONFIG)
 

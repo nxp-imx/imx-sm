@@ -153,6 +153,7 @@ typedef struct
     uint32_t scmiChannel;    /*!< Caller SCMI channel */
     uint32_t header;         /*!< Snooped header of message */
     uint32_t safeType;       /*!< Safety classification */
+    uint32_t seenvId;        /*!< S-EENV ID */
     bool extension;          /*!< Vendor extension protocol */
 } scmi_caller_t;
 

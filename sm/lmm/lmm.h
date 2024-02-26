@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -64,7 +64,9 @@
 #include "lmm_cpu.h"
 #include "lmm_misc.h"
 #include "lmm_fault.h"
+#ifdef USES_FUSA
 #include "lmm_fusa.h"
+#endif
 
 /* Defines */
 
@@ -114,13 +116,15 @@ typedef struct
 /*!
  * LMM initialization.
  *
+ * @param[in,out] mSel          Boot mode selection
+ *
  * This function initializes the various LMM submodules such as the LMM
  * clock function via LMM_ClockInit(). It then loops over the LMs and
  * initializes the associated RPC (e.g. RPC_SCMI_Init()).
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_Init(void);
+int32_t LMM_Init(uint32_t *mSel);
 
 /*!
  * LMM boot.

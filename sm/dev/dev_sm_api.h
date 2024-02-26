@@ -165,11 +165,6 @@
 #define SM_NUM_FAULT            DEV_SM_NUM_FAULT
 #endif
 
-#ifndef SM_NUM_CRC
-/*! Redirector (device/board) for the number of CRC channels */
-#define SM_NUM_CRC              1U
-#endif
-
 #ifndef SM_NUM_RDC
 /*! Redirector (device/board) for the number of RDC */
 #define SM_NUM_RDC              DEV_SM_NUM_RDC

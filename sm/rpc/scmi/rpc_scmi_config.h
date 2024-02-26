@@ -115,6 +115,7 @@ typedef struct
     string name;                         /*!< Agent name */
     uint8_t domId;                       /*!< Domain ID */
     uint8_t secure;                      /*!< Security state */
+    uint8_t seenvId;                     /*!< S-EENV ID */
     uint8_t scmiInst;                    /*!< SCMI instance */
     uint8_t basePerms[SM_NUM_BASE];      /*!< Base protocol permissions */
     uint8_t pdPerms[SM_NUM_POWER];       /*!< Power protocol permissions */
@@ -134,7 +135,6 @@ typedef struct
     uint8_t daisyPerms[SM_NUM_DAISY];    /*!< Pin control protocol daisy permissions */
     uint8_t ctrlPerms[SM_NUM_CTRL];      /*!< Control protocol permissions */
     uint8_t faultPerms[SM_NUM_FAULT];    /*!< FuSa protocol fault permissions */
-    uint8_t crcPerms[SM_NUM_CRC];        /*!< FuSa protocol CRC permissions */
     uint8_t fusaPerms;                   /*!< FuSa protocol permission */
 } scmi_agnt_config_t;
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -47,28 +47,43 @@
 
 /* Local types */
 
+/* LMM FuSA S-EENV info */
+typedef struct
+{
+    uint32_t state;
+} lmm_seenv_info_t;
+
 /* Local variables */
+
+static uint32_t s_feenvState = LMM_FUSA_FEENV_STATE_INIT;
+static uint32_t s_mSelMode = 0U;
+static lmm_seenv_info_t s_seenvInfo[SM_LM_NUM_SEENV] = { 0U };
 
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
 /* Init LMM FuSa management                                                 */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaInit(void)
+int32_t LMM_FusaInit(uint32_t *mSel)
 {
     int32_t status = SM_ERR_SUCCESS;
+
+    /* Save mSel Mode */
+    s_mSelMode = *mSel;
 
     /* Return status */
     return status;
 }
 
 /*--------------------------------------------------------------------------*/
-/* Return number of S-EENV                                                  */
+/* Return number of S-EENV LM                                               */
 /*--------------------------------------------------------------------------*/
-void LMM_SsenvNumGet(uint32_t *num)
+void LMM_SsenvLmNumGet(uint32_t *num)
 {
-    /* Count S-EENV */
+    /* Init to 0 */
     *num = 0U;
+
+    /* Count S-EENV LM */
     for (uint32_t lmId = 0U; lmId < SM_NUM_LM; lmId++)
     {
         if (g_lmmConfig[lmId].safeType == LMM_SAFE_TYPE_SEENV)
@@ -81,46 +96,14 @@ void LMM_SsenvNumGet(uint32_t *num)
 /*--------------------------------------------------------------------------*/
 /* Get current FuSa system state                                            */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaFeenvStateGet(uint32_t lmId, uint32_t *feenvState,
-    uint32_t *mselMode)
+int32_t LMM_FusaFeenvStateGet(const lmm_fusa_id_t *caller,
+    uint32_t *feenvState, uint32_t *mselMode)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Request F-EENV transition to new state                                   */
-/*--------------------------------------------------------------------------*/
-int32_t LMM_FusaFeenvStateSet(uint32_t lmId, uint32_t feenvState,
-    bool graceful)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Switch state */
-    switch (feenvState)
-    {
-        case LMM_FUSA_FEENV_STATE_SOC_STANDBY:
-            /* System suspend (graceful only) */
-            status = LMM_SystemSuspend(lmId, 0U);
-            break;
-        case LMM_FUSA_FEENV_STATE_SOC_SHUTDOWN:
-            /* System shutdown */
-            status = LMM_SystemShutdown(lmId, 0U, graceful,
-                &g_swReason);
-            break;
-        case LMM_FUSA_FEENV_STATE_SOC_RESET:
-            /* System reset*/
-            status = LMM_SystemReset(lmId, 0U, graceful,
-                &g_swReason);
-            break;
-        case LMM_FUSA_FEENV_STATE_PRE_SAFETY:
-        case LMM_FUSA_FEENV_STATE_SAFETY_RUNTIME:
-        default:
-            status = SM_ERR_INVALID_PARAMETERS;
-            break;
-    }
+    /* Return state */
+    *feenvState = s_feenvState;
+    *mselMode = s_mSelMode;
 
     /* Return status */
     return status;
@@ -129,9 +112,21 @@ int32_t LMM_FusaFeenvStateSet(uint32_t lmId, uint32_t feenvState,
 /*--------------------------------------------------------------------------*/
 /* Get S-EENV state                                                         */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaSeenvStateGet(uint32_t lmId, uint32_t *seenvState)
+int32_t LMM_FusaSeenvStateGet(const lmm_fusa_id_t *caller,
+    const lmm_fusa_id_t *target, uint32_t *seenvState)
 {
     int32_t status = SM_ERR_SUCCESS;
+
+    /* Check S-EENV ID */
+    if (caller->seenvId >= SM_LM_NUM_SEENV)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Get state */
+        *seenvState = s_seenvInfo[caller->seenvId].state;
+    }
 
     /* Return status */
     return status;
@@ -140,10 +135,21 @@ int32_t LMM_FusaSeenvStateGet(uint32_t lmId, uint32_t *seenvState)
 /*--------------------------------------------------------------------------*/
 /* Set S-EENV state                                                         */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaSeenvStateSet(uint32_t lmId, uint32_t seenvState,
-    uint32_t pingCookie, uint32_t scstSignature)
+int32_t LMM_FusaSeenvStateSet(const lmm_fusa_id_t *caller,
+    uint32_t seenvState, uint32_t pingCookie)
 {
     int32_t status = SM_ERR_SUCCESS;
+
+    /* Check S-EENV ID */
+    if (caller->seenvId >= SM_LM_NUM_SEENV)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Save state */
+        s_seenvInfo[caller->seenvId].state = LMM_FUSA_SEENV_STATE_INIT;
+    }
 
     /* Return status */
     return status;
@@ -152,23 +158,25 @@ int32_t LMM_FusaSeenvStateSet(uint32_t lmId, uint32_t seenvState,
 /*--------------------------------------------------------------------------*/
 /* Get fault state                                                          */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaFaultGet(uint32_t lmId, uint32_t faultId,
+int32_t LMM_FusaFaultGet(const lmm_fusa_id_t *caller, uint32_t faultId,
     bool *state)
 {
+    /* Get fault and return */
     return LMM_FaultGet(faultId, state);
 }
 
 /*--------------------------------------------------------------------------*/
 /* Set fault                                                                */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaFaultSet(uint32_t lmId, uint32_t faultId, bool set)
+int32_t LMM_FusaFaultSet(const lmm_fusa_id_t *caller, uint32_t faultId,
+    bool set)
 {
     int32_t status;
 
-    status = LMM_FaultSet(lmId, faultId, set);
+    /* Set fault state */
+    status = LMM_FaultSet(caller->lmId, faultId, set);
 
-    /* TODO: Work through fault with no reaction */
-
+    /* Call was to clear the fault? */
     if ((status == SM_ERR_SUCCESS) && !set)
     {
         /* Send FuSa fault clear notification */
@@ -179,9 +187,10 @@ int32_t LMM_FusaFaultSet(uint32_t lmId, uint32_t faultId, bool set)
                 .event = LMM_TRIGGER_FUSA_FAULT,
                 .parm[0] = faultId,
                 .parm[1] = 0U,
-                .parm[2] = lmId
+                .parm[2] = caller->lmId
             };
 
+            /* Send notification */
             (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
         }
     }
@@ -193,7 +202,19 @@ int32_t LMM_FusaFaultSet(uint32_t lmId, uint32_t faultId, bool set)
 /*--------------------------------------------------------------------------*/
 /* Temporarily disable fault handling                                       */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaScheckEvntrig(uint32_t lmId)
+int32_t LMM_FusaScheckEvntrig(const lmm_fusa_id_t *caller)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Request S-check                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_FusaScheckTestExec(const lmm_fusa_id_t *caller,
+    uint32_t targetTestId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -220,6 +241,7 @@ int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
             .parm[2] = 0U
         };
 
+        /* Send notification */
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
@@ -243,31 +265,17 @@ void LMM_FusaFaultCleared(uint32_t faultId)
             .parm[2] = 0U
         };
 
+        /* Send notification */
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }
 
 /*--------------------------------------------------------------------------*/
-/* Calculate CRC                                                            */
+/* Report assertion error                                                   */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_FusaCrcCalculate(uint32_t lmId, uint32_t crcChannel,
-    uint32_t crcCfg, uint64_t memStart, uint32_t memSize)
+void LMM_FuSaAssertionFailure(int32_t status)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Get CRC calculation results                                              */
-/*--------------------------------------------------------------------------*/
-int32_t LMM_FusaCrcResultGet(uint32_t lmId, uint32_t crcChannel,
-    uint64_t *memStart, uint32_t *memSize, uint32_t *crcResult)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Return status */
-    return status;
+    /* Assert fault */
+    (void) LMM_FaultSet(0U, DEV_SM_FAULT_SM_ERR, true);
 }
 

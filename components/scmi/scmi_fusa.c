@@ -188,56 +188,6 @@ int32_t SCMI_FusaFeenvStateGet(uint32_t channel, uint32_t *feenvState,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Request F-EENV transition to new state                                   */
-/*--------------------------------------------------------------------------*/
-int32_t SCMI_FusaFeenvStateSet(uint32_t channel, uint32_t feenvState,
-    uint32_t flags)
-{
-    int32_t status;
-    uint32_t header;
-    void *msg;
-
-    /* Acquire lock */
-    SCMI_A2P_LOCK(channel);
-
-    /* Init buffer */
-    status = SCMI_BufInit(channel, &msg);
-
-    /* Send request */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        /* Request message structure */
-        typedef struct
-        {
-            uint32_t header;
-            uint32_t feenvState;
-            uint32_t flags;
-        } msg_tfusad4_t;
-        msg_tfusad4_t *msgTx = (msg_tfusad4_t*) msg;
-
-        /* Fill in parameters */
-        msgTx->feenvState = feenvState;
-        msgTx->flags = flags;
-
-        /* Send message */
-        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_FUSA_FEENV_STATE_SET, sizeof(msg_tfusad4_t), &header);
-    }
-
-    /* Receive response */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        status = SCMI_A2pRx(channel, sizeof(msg_status_t), header);
-    }
-
-    /* Release lock */
-    SCMI_A2P_UNLOCK(channel);
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Configure F-EENV notifications                                           */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_FusaFeenvStateNotify(uint32_t channel, uint32_t notifyEnable)
@@ -288,17 +238,20 @@ int32_t SCMI_FusaFeenvStateNotify(uint32_t channel, uint32_t notifyEnable)
 /*--------------------------------------------------------------------------*/
 /* Get S-EENV state                                                         */
 /*--------------------------------------------------------------------------*/
-int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvState)
+int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvId,
+    uint32_t *lmId, uint32_t *seenvState)
 {
     int32_t status;
     uint32_t header;
-    const void *msg;
+    void *msg;
 
     /* Response message structure */
     typedef struct
     {
         uint32_t header;
         int32_t status;
+        uint32_t seenvId;
+        uint32_t lmId;
         uint32_t seenvState;
     } msg_rfusad6_t;
 
@@ -306,13 +259,31 @@ int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvState)
     SCMI_A2P_LOCK(channel);
 
     /* Init buffer */
-    status = SCMI_BufInitC(channel, &msg);
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Check seenvId pointer */
+    if ((status == SCMI_ERR_SUCCESS) && (seenvId == NULL))
+    {
+        status = SCMI_ERR_INVALID_PARAMETERS;
+    }
 
     /* Send request */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t seenvId;
+        } msg_tfusad6_t;
+        msg_tfusad6_t *msgTx = (msg_tfusad6_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->seenvId = *seenvId;
+
+        /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_FUSA_SEENV_STATE_GET, sizeof(header), &header);
+            SCMI_MSG_FUSA_SEENV_STATE_GET, sizeof(msg_tfusad6_t), &header);
     }
 
     /* Receive response */
@@ -325,6 +296,15 @@ int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvState)
     if (status == SCMI_ERR_SUCCESS)
     {
         const msg_rfusad6_t *msgRx = (const msg_rfusad6_t*) msg;
+
+        /* Extract seenvId */
+        *seenvId = msgRx->seenvId;
+
+        /* Extract lmId */
+        if (lmId != NULL)
+        {
+            *lmId = msgRx->lmId;
+        }
 
         /* Extract seenvState */
         if (seenvState != NULL)
@@ -344,7 +324,7 @@ int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvState)
 /* Set S-EENV state                                                         */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_FusaSeenvStateSet(uint32_t channel, uint32_t seenvState,
-    uint32_t pingCookie, uint32_t scstSignature)
+    uint32_t pingCookie)
 {
     int32_t status;
     uint32_t header;
@@ -365,14 +345,12 @@ int32_t SCMI_FusaSeenvStateSet(uint32_t channel, uint32_t seenvState,
             uint32_t header;
             uint32_t seenvState;
             uint32_t pingCookie;
-            uint32_t scstSignature;
         } msg_tfusad7_t;
         msg_tfusad7_t *msgTx = (msg_tfusad7_t*) msg;
 
         /* Fill in parameters */
         msgTx->seenvState = seenvState;
         msgTx->pingCookie = pingCookie;
-        msgTx->scstSignature = scstSignature;
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
@@ -627,11 +605,9 @@ int32_t SCMI_FusaScheckEvntrig(uint32_t channel)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Start CRC calculation                                                    */
+/* Request manually-triggered execution of sCheck test                      */
 /*--------------------------------------------------------------------------*/
-int32_t SCMI_FusaCrcCalculate(uint32_t channel, uint32_t crcChannel,
-    uint32_t crcCfg, uint32_t memStartLow, uint32_t memStartHigh,
-    uint32_t memSize)
+int32_t SCMI_FusaScheckTestExec(uint32_t channel, uint32_t targetTestId)
 {
     int32_t status;
     uint32_t header;
@@ -650,120 +626,23 @@ int32_t SCMI_FusaCrcCalculate(uint32_t channel, uint32_t crcChannel,
         typedef struct
         {
             uint32_t header;
-            uint32_t crcChannel;
-            uint32_t crcCfg;
-            uint32_t memStartLow;
-            uint32_t memStartHigh;
-            uint32_t memSize;
-        } msg_tfusad12_t;
-        msg_tfusad12_t *msgTx = (msg_tfusad12_t*) msg;
+            uint32_t targetTestId;
+        } msg_tfusad14_t;
+        msg_tfusad14_t *msgTx = (msg_tfusad14_t*) msg;
 
         /* Fill in parameters */
-        msgTx->crcChannel = crcChannel;
-        msgTx->crcCfg = crcCfg;
-        msgTx->memStartLow = memStartLow;
-        msgTx->memStartHigh = memStartHigh;
-        msgTx->memSize = memSize;
+        msgTx->targetTestId = targetTestId;
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_FUSA_CRC_CALCULATE, sizeof(msg_tfusad12_t), &header);
+            SCMI_MSG_FUSA_SCHECK_TEST_EXEC, sizeof(msg_tfusad14_t),
+            &header);
     }
 
     /* Receive response */
     if (status == SCMI_ERR_SUCCESS)
     {
         status = SCMI_A2pRx(channel, sizeof(msg_status_t), header);
-    }
-
-    /* Release lock */
-    SCMI_A2P_UNLOCK(channel);
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Get CRC calculation result                                               */
-/*--------------------------------------------------------------------------*/
-int32_t SCMI_FusaCrcResultGet(uint32_t channel, uint32_t crcChannel,
-    uint32_t *memStartLow, uint32_t *memStartHigh, uint32_t *memSize,
-    uint32_t *crcResult)
-{
-    int32_t status;
-    uint32_t header;
-    void *msg;
-
-    /* Response message structure */
-    typedef struct
-    {
-        uint32_t header;
-        int32_t status;
-        uint32_t memStartLow;
-        uint32_t memStartHigh;
-        uint32_t memSize;
-        uint32_t crcResult;
-    } msg_rfusad13_t;
-
-    /* Acquire lock */
-    SCMI_A2P_LOCK(channel);
-
-    /* Init buffer */
-    status = SCMI_BufInit(channel, &msg);
-
-    /* Send request */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        /* Request message structure */
-        typedef struct
-        {
-            uint32_t header;
-            uint32_t crcChannel;
-        } msg_tfusad13_t;
-        msg_tfusad13_t *msgTx = (msg_tfusad13_t*) msg;
-
-        /* Fill in parameters */
-        msgTx->crcChannel = crcChannel;
-
-        /* Send message */
-        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_FUSA_CRC_RESULT_GET, sizeof(msg_tfusad13_t), &header);
-    }
-
-    /* Receive response */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        status = SCMI_A2pRx(channel, sizeof(msg_rfusad13_t), header);
-    }
-
-    /* Copy out if no error */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        const msg_rfusad13_t *msgRx = (const msg_rfusad13_t*) msg;
-
-        /* Extract memStartLow */
-        if (memStartLow != NULL)
-        {
-            *memStartLow = msgRx->memStartLow;
-        }
-
-        /* Extract memStartHigh */
-        if (memStartHigh != NULL)
-        {
-            *memStartHigh = msgRx->memStartHigh;
-        }
-
-        /* Extract memSize */
-        if (memSize != NULL)
-        {
-            *memSize = msgRx->memSize;
-        }
-
-        /* Extract crcResult */
-        if (crcResult != NULL)
-        {
-            *crcResult = msgRx->crcResult;
-        }
     }
 
     /* Release lock */

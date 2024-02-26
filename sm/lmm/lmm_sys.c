@@ -235,6 +235,14 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
         newResetRec.reset = true;
         DEV_SM_SystemShutdownRecSet(newResetRec);
 
+#ifdef USES_FUSA
+        /* Report to FuSa */
+        if (resetRec->reason == DEV_SM_REASON_SM_ERR)
+        {
+            LMM_FuSaAssertionFailure((int32_t) resetRec->errId);
+        }
+#endif
+
         /* Request system reset */
         status = SM_SYSTEMRESET();
     }

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -53,7 +53,15 @@
 
 /* Defines */
 
+/*! Config for UART instance */
+#define BOARD_DEBUG_UART_INSTANCE    0U
+/*! Config for UART baudrate */
+#define BOARD_DEBUG_UART_BAUDRATE    115200U
 
+/*! Config for PMIC I2C instance */
+#define BOARD_I2C_INSTANCE           0U
+/*! Config for PMIC I2C baudrate */
+#define BOARD_I2C_BAUDRATE           100000U
 
 #endif /* CONFIG_BOARD_H */
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ typedef struct
     uint32_t origin;
     /*! Number of extended info words */
     uint32_t extLen;
-    /*! EExtended info (PC, BFAR, etc. for exceptions) */
+    /*! Extended info (PC, BFAR, etc. for exceptions) */
     uint32_t extInfo[DEV_SM_NUM_EXT_INFO];
 } dev_sm_rst_rec_t;
 

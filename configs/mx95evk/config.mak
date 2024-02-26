@@ -32,6 +32,8 @@
 
 BOARD ?= mcimx95evk
 
+USES_FUSA ?= 1
+
 include ./devices/MIMX95/sm/Makefile
 include ./boards/$(BOARD)/sm/Makefile
 include ./sm/lmm/Makefile

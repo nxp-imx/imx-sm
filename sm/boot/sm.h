@@ -198,6 +198,21 @@
 #define printf(...)
 #endif
 
+/*! Assert all builds */
+#define ENSURE(cond, err) \
+    if (!(cond)) \
+    { \
+        SM_Error(err); \
+    }
+
+#if defined(DEBUG)
+/*! Include asserts */
+#define ASSERT(cond, err) ENSURE(cond, err)
+#else
+/*! Eliminate assert */
+#define ASSERT(cond, err)
+#endif
+
 /*!
  * @name Register accecss macros
  * @{

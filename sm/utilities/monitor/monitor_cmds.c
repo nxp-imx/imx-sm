@@ -129,6 +129,7 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
     int32_t rw);
 #endif
 static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 
 /* Local Variables */
@@ -195,6 +196,7 @@ int32_t MONITOR_Dispatch(char *line)
         "pmic.r",
         "pmic.w",
         "idle",
+        "assert",
         "custom"
     };
 
@@ -360,8 +362,10 @@ int32_t MONITOR_Dispatch(char *line)
             case 47:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-
-            case 48:  /* custom */
+            case 48:  /* assert */
+                status = MONITOR_CmdAssert(argc - 1, &argv[1]);
+                break;
+            case 49:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
             default:
@@ -2753,6 +2757,34 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
 static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[])
 {
     return DEV_SM_SystemIdle();
+}
+
+/*--------------------------------------------------------------------------*/
+/* Assert command                                                           */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (argc < 1)
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
+    else
+    {
+        int32_t s;
+
+        /* Parse data */
+        s = strtol(argv[0], NULL, 0);
+
+        printf("Asser %d\n", s);
+
+        /* Do assert */
+        ASSERT(false, s);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

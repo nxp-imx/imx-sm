@@ -199,7 +199,7 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
-            (uint32)0x00000000UL,
+            (uint32)0x00006000UL,
             (uint32)0x00060000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,

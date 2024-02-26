@@ -60,6 +60,7 @@
         .scmiInst = 0U, \
         .domId = 4U, \
         .secure = 0U, \
+        .seenvId = 1U, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_CAN1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPUART3] = SM_SCMI_PERM_ALL, \
@@ -172,7 +173,6 @@
         .cpuPerms[DEV_SM_CPU_A55C5] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_A55P] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_SW3] = SM_SCMI_PERM_ALL, \
-        .faultPerms[DEV_SM_FAULT_SW4] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG3] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG4] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \

@@ -82,6 +82,11 @@ and modules for the LMM, MU MB, SCMI, and SMT. It also includes the GCC
 cross-compile toolchain info (targets, flags, warnings, libraries, linker control
 files, etc.).
 
+Other defines may exit such as defining the board or various USES.
+
+    BOARD ?= mcimx95evk
+    USES_FUSA ?= 1
+
 MU Mailbox {#MB_MU_CONFIG}
 ----------------
 
@@ -174,6 +179,7 @@ Configures the SCMI RPC. The defines in this file are as follows:
   - *name* - agent name
   - *domId* - RDC domain ID (DID)
   - *secure* - security state, 1=secure, 0=not secure
+  - *seenvId* - S-EENV ID, 0=not an S-EENV, otherwise ID + 1
   - *scmiInst* - SCMI instance this agent belongs to
   - *basePerms[]* - array of base protocol permissions, one per agent, device
   - *pdPerms[]* - array of power protocol permissions, one per power domain
@@ -193,7 +199,6 @@ Configures the SCMI RPC. The defines in this file are as follows:
   - *daisyPerms[]* - array of pin control protocol daisy permissions, one per daisy register
   - *ctrlPerms[]* - array of control protocol permissions, one per control
   - *faultPerms[]* - array of FuSa protocol fault permissions, one per fault
-  - *crcPerms[]* - array of FuSa protocol CRC permissions, one per CRC channel
   - *fusaPerms* - FuSa protocol permission (F-EENV)
 - **SM_SCMI_CHNn_CONFIG** - fills a single scmi_chn_config_t structure
   - *agentId* - agent this channel linked with
@@ -687,6 +692,7 @@ The configtool supports the following commands and key=value pairs in the input 
 |             | skip     | Optional, if not 0, ignore error on boot if no image in boot container |
 | SCMI_AGENTn | name     | Starts an SCMI agent section *n*, *n* starts at 0 and should increment, agent name string, quoted, 15 characters max |
 |             | secure   | Agent is secure (no =value) |
+|             | dup      | Duplicate API perms from agent <val\> |
 | MAILBOX     | type     | Define a mailbox of type SM_MB_<VAL\>, e.g. ::SM_MB_MU, one per agent |
 |             | mu       | Index into SDK MU base pointer array, platform side |
 |             | test     | Index into SDK MU base pointer array, client side for testing |
@@ -733,7 +739,6 @@ files for a list of each resource type):
 - **CTRL_a** - Device/board control *a*
 - **FUSA** - Used to define access rights to the F-EENV functions (for FuSa)
 - **FAULT_a** - Device/board fault *a* (for FuSa)
-- **CRC_a** - Device/board CRC channel *a* (for FuSa)
 - **TRDC_CONFIG_a** - TRDC *a* configuration info
 - **MDAC_am=r** - TRDC *a*, MDA_Wr_m, *m* is the master, *r* is register (can be
   a range r1-r2)

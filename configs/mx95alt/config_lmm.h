@@ -75,7 +75,6 @@
         .rpcType = SM_RPC_SCMI, \
         .rpcInst = 0U, \
         .boot[0] = 2U, \
-        .safeType = LMM_SAFE_TYPE_SEENV, \
         .start = 1U, \
         .stop = 1U, \
         .boot[1] = 2U, \
@@ -96,6 +95,9 @@
 
 /*! Number of  mSel */
 #define SM_LM_NUM_MSEL  3U
+
+/*! Number of  S-EENV */
+#define SM_LM_NUM_SEENV  0U
 
 /*! Default LM for monitor */
 #define SM_LM_DEFAULT  1U

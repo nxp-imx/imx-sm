@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -67,7 +67,9 @@
 #include "rpc_scmi_bbm.h"
 #include "rpc_scmi_cpu.h"
 #include "rpc_scmi_misc.h"
+#ifdef USES_FUSA
 #include "rpc_scmi_fusa.h"
+#endif
 
 /* Defines */
 

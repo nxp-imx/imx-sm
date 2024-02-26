@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2024 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -45,7 +45,6 @@ OBJS += \
 	$(OUT)/rpc_scmi_clock.o  \
 	$(OUT)/rpc_scmi_config.o  \
 	$(OUT)/rpc_scmi_cpu.o  \
-	$(OUT)/rpc_scmi_fusa.o  \
 	$(OUT)/rpc_scmi_lmm.o  \
 	$(OUT)/rpc_scmi_misc.o  \
 	$(OUT)/rpc_scmi_perf.o  \
@@ -55,4 +54,9 @@ OBJS += \
 	$(OUT)/rpc_scmi_reset.o  \
 	$(OUT)/rpc_scmi_sys.o  \
 	$(OUT)/rpc_scmi_voltage.o
+
+ifeq ($(USES_FUSA),1)
+OBJS += \
+	$(OUT)/rpc_scmi_fusa.o
+endif
 

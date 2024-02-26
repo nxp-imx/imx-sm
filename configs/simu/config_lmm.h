@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -108,6 +108,9 @@
 
 /*! Number of  mSel */
 #define SM_LM_NUM_MSEL  1U
+
+/*! Number of  S-EENV */
+#define SM_LM_NUM_SEENV  1U
 
 /*! Default LM for monitor */
 #define SM_LM_DEFAULT  2U

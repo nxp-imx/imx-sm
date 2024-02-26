@@ -96,7 +96,9 @@ static const uint8_t s_protocolList[] =
     (uint8_t) SCMI_PROTOCOL_LMM,
     (uint8_t) SCMI_PROTOCOL_BBM,
     (uint8_t) SCMI_PROTOCOL_CPU,
+#ifdef USES_FUSA
     (uint8_t) SCMI_PROTOCOL_FUSA,
+#endif
     (uint8_t) SCMI_PROTOCOL_MISC
 };
 
@@ -469,6 +471,7 @@ int32_t RPC_SCMI_Trigger(const lmm_rpc_trigger_t *trigger)
             msgId.messageId = RPC_SCMI_NOTIFY_BBM_BUTTON_EVENT;
             status = RPC_SCMI_BbmDispatchNotification(msgId, trigger);
             break;
+#ifdef USES_FUSA
         case LMM_TRIGGER_FUSA_FEENV:
             msgId.protocolId = SCMI_PROTOCOL_FUSA;
             msgId.messageId = RPC_SCMI_NOTIFY_FUSA_FEENV_STATE_EVENT;
@@ -484,6 +487,7 @@ int32_t RPC_SCMI_Trigger(const lmm_rpc_trigger_t *trigger)
             msgId.messageId = RPC_SCMI_NOTIFY_FUSA_FAULT_EVENT;
             status = RPC_SCMI_FusaDispatchNotification(msgId, trigger);
             break;
+#endif
         case LMM_TRIGGER_CTRL:
             msgId.protocolId = SCMI_PROTOCOL_MISC;
             msgId.messageId = RPC_SCMI_NOTIFY_MISC_CONTROL_EVENT;
@@ -621,16 +625,19 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
     caller.scmiChannel = scmiChannel;
 
     /* Map channel to agent */
-    caller.agentId = g_scmiChannelConfig[scmiChannel].agentId;
+    caller.agentId = (uint32_t) g_scmiChannelConfig[scmiChannel].agentId;
 
     /* Map agent to instance */
-    caller.scmiInst= g_scmiAgentConfig[caller.agentId].scmiInst;
+    caller.scmiInst= (uint32_t) g_scmiAgentConfig[caller.agentId].scmiInst;
 
     /* Map instance to LM */
     caller.lmId= g_scmiConfig[caller.scmiInst].lmId;
 
     /* Record safety type */
-    caller.safeType= g_lmmConfig[caller.lmId].safeType;
+    caller.safeType= (uint32_t) g_lmmConfig[caller.lmId].safeType;
+
+    /* Record S-EENV ID */
+    caller.seenvId= (uint32_t) g_scmiAgentConfig[caller.agentId].seenvId;
 
     /* Map agent to instance agent */
     caller.instAgentId = caller.agentId + 1U
@@ -769,9 +776,11 @@ static int32_t RPC_SCMI_A2pSubDispatch(scmi_caller_t *caller,
         case SCMI_PROTOCOL_CPU:
             status = RPC_SCMI_CpuDispatchCommand(caller, messageId);
             break;
+#ifdef USES_FUSA
         case SCMI_PROTOCOL_FUSA:
             status = RPC_SCMI_FusaDispatchCommand(caller, messageId);
             break;
+#endif
         case SCMI_PROTOCOL_MISC:
             status = RPC_SCMI_MiscDispatchCommand(caller, messageId);
             break;

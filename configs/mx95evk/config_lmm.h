@@ -114,6 +114,9 @@
 /*! Number of  mSel */
 #define SM_LM_NUM_MSEL  3U
 
+/*! Number of  S-EENV */
+#define SM_LM_NUM_SEENV  1U
+
 /*! Default LM for monitor */
 #define SM_LM_DEFAULT  2U
 
@@ -190,7 +193,7 @@
 
 /*! LM fault reactions */
 #define SM_LM_FAULT_DATA \
-    [DEV_SM_FAULT_SW5] = {.reaction = LMM_REACT_SYS_SHUTDOWN, .lm = 0U}, \
+    [DEV_SM_FAULT_SW4] = {.reaction = LMM_REACT_SYS_SHUTDOWN, .lm = 0U}, \
     [DEV_SM_FAULT_WDOG5] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M7_LOCKUP] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M7_RESET] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
@@ -199,8 +202,7 @@
     [DEV_SM_FAULT_SW2] = {.reaction = LMM_REACT_LM_SHUTDOWN, .lm = 1U}, \
     [DEV_SM_FAULT_WDOG3] = {.reaction = LMM_REACT_LM_RESET, .lm = 2U}, \
     [DEV_SM_FAULT_WDOG4] = {.reaction = LMM_REACT_LM_RESET, .lm = 2U}, \
-    [DEV_SM_FAULT_SW3] = {.reaction = LMM_REACT_LM_RESET, .lm = 2U}, \
-    [DEV_SM_FAULT_SW4] = {.reaction = LMM_REACT_LM_SHUTDOWN, .lm = 2U},
+    [DEV_SM_FAULT_SW3] = {.reaction = LMM_REACT_LM_SHUTDOWN, .lm = 2U},
 
 #endif /* CONFIG_LMM_H */
 

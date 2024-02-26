@@ -52,7 +52,6 @@
 #define COMMAND_PROTOCOL_ATTRIBUTES          0x1U
 #define COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES  0x2U
 #define COMMAND_FUSA_FEENV_STATE_GET         0x3U
-#define COMMAND_FUSA_FEENV_STATE_SET         0x4U
 #define COMMAND_FUSA_FEENV_STATE_NOTIFY      0x5U
 #define COMMAND_FUSA_SEENV_STATE_GET         0x6U
 #define COMMAND_FUSA_SEENV_STATE_SET         0x7U
@@ -60,34 +59,32 @@
 #define COMMAND_FUSA_FAULT_SET               0x9U
 #define COMMAND_FUSA_FAULT_GROUP_NOTIFY      0xAU
 #define COMMAND_FUSA_SCHECK_EVNTRIG          0xBU
-#define COMMAND_FUSA_CRC_CALCULATE           0xCU
-#define COMMAND_FUSA_CRC_RESULT_GET          0xDU
+#define COMMAND_FUSA_SCHECK_TEST_EXEC        0xEU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x13FFFUL
+#define COMMAND_SUPPORTED_MASK               0x14FEFUL
 
 /* SCMI FuSa F-EENV states */
-#define FUSA_FEENV_STATE_INIT            0U
-#define FUSA_FEENV_STATE_PRE_SAFETY      1U
-#define FUSA_FEENV_STATE_SAFETY_RUNTIME  2U
-#define FUSA_FEENV_STATE_SOC_STANDBY     3U
-#define FUSA_FEENV_STATE_SOC_SHUTDOWN    4U
-#define FUSA_FEENV_STATE_SOC_RESET       5U
+#define FUSA_FEENV_STATE_INIT             0U
+#define FUSA_FEENV_STATE_PRE_SAFETY       1U
+#define FUSA_FEENV_STATE_SAFETY_RUNTIME   2U
+#define FUSA_FEENV_STATE_SOC_TERMINATING  3U
 
 /* SCMI FuSa S-EENV states */
-#define FUSA_SEENV_STATE_INIT            0U
-#define FUSA_SEENV_STATE_SAFETY_READY    1U
-#define FUSA_SEENV_STATE_SAFETY_RUNTIME  2U
-#define FUSA_SEENV_STATE_TERMINAL        3U
+#define FUSA_SEENV_STATE_DISABLED        0U
+#define FUSA_SEENV_STATE_INIT            1U
+#define FUSA_SEENV_STATE_SAFETY_READY    2U
+#define FUSA_SEENV_STATE_SAFETY_RUNTIME  3U
+#define FUSA_SEENV_STATE_TERMINAL        4U
+
+/* SCMI FUSA ID */
+#define FUSA_ID_DISCOVER  0xFFFFFFFFU
 
 /* Local macros */
 
 /* SCMI FuSa protocol attributes 1 */
-#define FUSA_PROTO_ATTR1_NUM_FAULT(x)  (((x) & 0xFFFFU) << 16U)
-#define FUSA_PROTO_ATTR1_NUM_CRC(x)    (((x) & 0xFFU) << 8U)
-#define FUSA_PROTO_ATTR1_NUM_SEENV(x)  (((x) & 0xFFU) << 0U)
-
-/* SCMI FuSa F-eenv set flags */
-#define FUSA_FLAGS_GRACEFUL(x)  (((x) & 0x1U) >> 0U)
+#define FUSA_PROTO_ATTR1_NUM_FAULT(x)     (((x) & 0xFFFFU) << 16U)
+#define FUSA_PROTO_ATTR1_NUM_SEENV_ID(x)  (((x) & 0xFFU) << 8U)
+#define FUSA_PROTO_ATTR1_NUM_SEENV_LM(x)  (((x) & 0xFFU) << 0U)
 
 /* SCMI FuSa notification flags */
 #define FUSA_FEENV_NOTIFY_ENABLE(x)  (((x) & 0x1U) >> 0U)
@@ -96,7 +93,7 @@
 #define FUSA_FAULT_GET_STATE(x)  (((x) & 0x1U) << 0U)
 
 /* SCMI FuSa fault get state flags */
-#define FUSA_FAULT_SET_STATE(x)  (((x) & 0x1U) >> 0U)
+#define FUSA_FAULT_SET_STATE(x)  (((x) & 0x3U) >> 0U)
 
 /* SCMI FuSa fault event flags */
 #define FUSA_FAULT_FLAG_STATE(x)  (((x) & 0x1U) << 0U)
@@ -160,17 +157,6 @@ typedef struct
     uint32_t mselMode;
 } msg_tfusa3_t;
 
-/* Request type for FusaFeenvStateSet() */
-typedef struct
-{
-    /* Header word */
-    uint32_t header;
-    /* Parameter identifying the requested safety state of the F-EENV */
-    uint32_t feenvState;
-    /* F-EENV set state flags */
-    uint32_t flags;
-} msg_rfusa4_t;
-
 /* Request type for FusaFeenvStateNotify() */
 typedef struct
 {
@@ -180,6 +166,15 @@ typedef struct
     uint32_t notifyEnable;
 } msg_rfusa5_t;
 
+/* Request type for FusaSeenvStateGet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier of the S-EENV whose status is requested */
+    uint32_t seenvId;
+} msg_rfusa6_t;
+
 /* Response type for FusaSeenvStateGet() */
 typedef struct
 {
@@ -187,6 +182,10 @@ typedef struct
     uint32_t header;
     /* Return status */
     int32_t status;
+    /* Identifier of the S-EENV whose state is requested */
+    uint32_t seenvId;
+    /* Identifier of the LM which contains the S-EENV identified by seenvId */
+    uint32_t lmId;
     /* Parameter identifying the safety state of the S-EENV */
     uint32_t seenvState;
 } msg_tfusa6_t;
@@ -200,8 +199,6 @@ typedef struct
     uint32_t seenvState;
     /* Cookie value last sent by the F-EENV */
     uint32_t pingCookie;
-    /* Last result of local core self-test routine executed by the S-EENV */
-    uint32_t scstSignature;
 } msg_rfusa7_t;
 
 /* Request type for FusaFaultGet() */
@@ -261,48 +258,14 @@ typedef struct
     uint32_t notifyEnabled;
 } msg_tfusa10_t;
 
-/* Request type for FusaCrcCalculate() */
+/* Request type for FusaScheckTestExec() */
 typedef struct
 {
     /* Header word */
     uint32_t header;
-    /* index of CRC channel */
-    uint32_t crcChannel;
-    /* CRC CFG value */
-    uint32_t crcCfg;
-    /* start address (lower 32-bits) */
-    uint32_t memStartLow;
-    /* start address (upper 32-bits) */
-    uint32_t memStartHigh;
-    /* byte count */
-    uint32_t memSize;
-} msg_rfusa12_t;
-
-/* Request type for FusaCrcResultGet() */
-typedef struct
-{
-    /* Header word */
-    uint32_t header;
-    /* index of CRC channel */
-    uint32_t crcChannel;
-} msg_rfusa13_t;
-
-/* Response type for FusaCrcResultGet() */
-typedef struct
-{
-    /* Header word */
-    uint32_t header;
-    /* Return status */
-    int32_t status;
-    /* start address (lower 32-bits) */
-    uint32_t memStartLow;
-    /* start address (upper 32-bits) */
-    uint32_t memStartHigh;
-    /* byte count */
-    uint32_t memSize;
-    /* resulting CRC value */
-    uint32_t crcResult;
-} msg_tfusa13_t;
+    /* identifier of sCheck target test to be executed */
+    uint32_t targetTestId;
+} msg_rfusa14_t;
 
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
@@ -354,12 +317,10 @@ static int32_t FusaProtocolMessageAttributes(const scmi_caller_t *caller,
     const msg_rfusa2_t *in, msg_tfusa2_t *out);
 static int32_t FusaFeenvStateGet(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tfusa3_t *out);
-static int32_t FusaFeenvStateSet(const scmi_caller_t *caller,
-    const msg_rfusa4_t *in, const scmi_msg_status_t *out);
 static int32_t FusaFeenvStateNotify(const scmi_caller_t *caller,
     const msg_rfusa5_t *in, const scmi_msg_status_t *out);
 static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
-    const scmi_msg_header_t *in, msg_tfusa6_t *out);
+    const msg_rfusa6_t *in, msg_tfusa6_t *out);
 static int32_t FusaSeenvStateSet(const scmi_caller_t *caller,
     const msg_rfusa7_t *in, const scmi_msg_status_t *out);
 static int32_t FusaFaultGet(const scmi_caller_t *caller,
@@ -370,10 +331,8 @@ static int32_t FusaFaultGroupNotify(const scmi_caller_t *caller,
     const msg_rfusa10_t *in, msg_tfusa10_t *out);
 static int32_t FusaScheckEvntrig(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, const scmi_msg_status_t *out);
-static int32_t FusaCrcCalculate(const scmi_caller_t *caller,
-    const msg_rfusa12_t *in, const scmi_msg_status_t *out);
-static int32_t FusaCrcResultGet(const scmi_caller_t *caller,
-    const msg_rfusa13_t *in, msg_tfusa13_t *out);
+static int32_t FusaScheckTestExec(const scmi_caller_t *caller,
+    const msg_rfusa14_t *in, const scmi_msg_status_t *out);
 static int32_t FusaNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rfusa16_t *in, const scmi_msg_status_t *out);
 static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
@@ -423,11 +382,6 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
             status = FusaFeenvStateGet(caller, (const scmi_msg_header_t*) in,
                 (msg_tfusa3_t*) out);
             break;
-        case COMMAND_FUSA_FEENV_STATE_SET:
-            lenOut = sizeof(const scmi_msg_status_t);
-            status = FusaFeenvStateSet(caller, (const msg_rfusa4_t*) in,
-                (const scmi_msg_status_t*) out);
-            break;
         case COMMAND_FUSA_FEENV_STATE_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
             status = FusaFeenvStateNotify(caller, (const msg_rfusa5_t*) in,
@@ -435,7 +389,7 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
             break;
         case COMMAND_FUSA_SEENV_STATE_GET:
             lenOut = sizeof(msg_tfusa6_t);
-            status = FusaSeenvStateGet(caller, (const scmi_msg_header_t*) in,
+            status = FusaSeenvStateGet(caller, (const msg_rfusa6_t*) in,
                 (msg_tfusa6_t*) out);
             break;
         case COMMAND_FUSA_SEENV_STATE_SET:
@@ -463,15 +417,10 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
             status = FusaScheckEvntrig(caller, (const scmi_msg_header_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
-        case COMMAND_FUSA_CRC_CALCULATE:
+        case COMMAND_FUSA_SCHECK_TEST_EXEC:
             lenOut = sizeof(const scmi_msg_status_t);
-            status = FusaCrcCalculate(caller, (const msg_rfusa12_t*) in,
+            status = FusaScheckTestExec(caller, (const msg_rfusa14_t*) in,
                 (const scmi_msg_status_t*) out);
-            break;
-        case COMMAND_FUSA_CRC_RESULT_GET:
-            lenOut = sizeof(msg_tfusa13_t);
-            status = FusaCrcResultGet(caller, (const msg_rfusa13_t*) in,
-                (msg_tfusa13_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -597,7 +546,7 @@ static int32_t FusaProtocolVersion(const scmi_caller_t *caller,
 /* - out->attributes1: Protocol attributes 1:                               */
 /*   Bits[31:16] Number of Fault sources (this number defines valid range   */
 /*   of the fault ID identifiers used in the fault functions)               */
-/*   Bits[15:8] Number of CRC channels supported                            */
+/*   Bits[15:8] Number of S-EENV ID in the system                           */
 /*   Bits[7:0] Number of S-EENV LM in the system (not counting the F-EENV   */
 /*   itself)                                                                */
 /* - out->attributes2: Protocol attributes 2:                               */
@@ -608,8 +557,8 @@ static int32_t FusaProtocolVersion(const scmi_caller_t *caller,
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - FUSA_PROTO_ATTR1_NUM_FAULT() - Number of fault sources                 */
-/* - FUSA_PROTO_ATTR1_NUM_CRC() - Number of CRC channels supported          */
-/* - FUSA_PROTO_ATTR1_NUM_SEENV() - Number of S-EENV LM in the system       */
+/* - FUSA_PROTO_ATTR1_NUM_SEENV_ID() - Number of S-EENV ID in the system    */
+/* - FUSA_PROTO_ATTR1_NUM_SEENV_LM() - Number of S-EENV LM in the system    */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
@@ -628,16 +577,16 @@ static int32_t FusaProtocolAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t numSeenv = 0U;
+        uint32_t numSeenvLm = 0U;
 
         /* Get number of S-EENV */
-        LMM_SsenvNumGet(&numSeenv);
+        LMM_SsenvLmNumGet(&numSeenvLm);
 
         /* Set attributes 1 */
         out->attributes1
             = FUSA_PROTO_ATTR1_NUM_FAULT((uint32_t) SM_NUM_FAULT)
-            | FUSA_PROTO_ATTR1_NUM_CRC((uint32_t) SM_NUM_CRC)
-            | FUSA_PROTO_ATTR1_NUM_SEENV(numSeenv);
+            | FUSA_PROTO_ATTR1_NUM_SEENV_ID((uint32_t) SM_LM_NUM_SEENV)
+            | FUSA_PROTO_ATTR1_NUM_SEENV_LM(numSeenvLm);
 
         /* Attributes 2 always 0 */
         out->attributes2 = 0U;
@@ -747,78 +696,14 @@ static int32_t FusaFeenvStateGet(const scmi_caller_t *caller,
     /* Get requested info */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_FusaFeenvStateGet(caller->lmId, &(out->feenvState),
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
+
+        status = LMM_FusaFeenvStateGet(&fusaCaller, &(out->feenvState),
             &(out->mselMode));
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Request F-EENV transition to new state                                   */
-/*                                                                          */
-/* Parameters:                                                              */
-/* - caller: Caller info                                                    */
-/* - in->feenvState: Parameter identifying the requested safety state of    */
-/*   the F-EENV                                                             */
-/* - in->flags: F-EENV set state flags. This parameter has the following    */
-/*   format:                                                                */
-/*   Bits[31:1] Reserved, must be zero.                                     */
-/*   Bit[0] Graceful request.                                               */
-/*   Set to 1 if the request is a graceful request.                         */
-/*   Set to 0 if the request is a forceful request.                         */
-/*   In graceful transition, the S-EENVs are notified and SM waits for      */
-/*   their transition to off state                                          */
-/*                                                                          */
-/* Process the FUSA_FEENV_STATE_SET message. Platform handler for           */
-/* SCMI_FusaFeenvStateSet(). Requires access greater than or equal to SET.  */
-/*                                                                          */
-/*  Access macros:                                                          */
-/* - FUSA_FLAGS_GRACEFUL() - Graceful request                               */
-/*                                                                          */
-/* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the F-EENV state was set successfully.              */
-/* - SM_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller     */
-/*   is not an S-EENV.                                                      */
-/* - SM_ERR_INVALID_PARAMETERS: if the requested state or flags are         */
-/*   invalid.                                                               */
-/* - SM_ERR_DENIED: if the calling agent is not allowed to set the          */
-/*   F-EENV state.                                                          */
-/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
-/*--------------------------------------------------------------------------*/
-static int32_t FusaFeenvStateSet(const scmi_caller_t *caller,
-    const msg_rfusa4_t *in, const scmi_msg_status_t *out)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    bool graceful = FUSA_FLAGS_GRACEFUL(in->flags) != 0U;
-
-    /* Check request length */
-    if (caller->lenCopy < sizeof(*in))
-    {
-        status = SM_ERR_PROTOCOL_ERROR;
-    }
-
-    /* Check call from S-EENV */
-    if ((status == SM_ERR_SUCCESS)
-        && (caller->safeType != LMM_SAFE_TYPE_SEENV))
-    {
-        status = SM_ERR_NOT_SUPPORTED;
-    }
-
-    /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].fusaPerms
-        < SM_SCMI_PERM_SET))
-    {
-        status = SM_ERR_DENIED;
-    }
-
-    /* Change system state */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = LMM_FusaFeenvStateSet(caller->lmId, in->feenvState,
-            graceful);
     }
 
     /* Return status */
@@ -900,6 +785,15 @@ static int32_t FusaFeenvStateNotify(const scmi_caller_t *caller,
 /*                                                                          */
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
+/* - in->seenvId: Identifier of the S-EENV whose status is requested        */
+/* - out->seenvId: Identifier of the S-EENV whose state is requested. This  */
+/*   field is:                                                              */
+/*   - populated with the S-EENV ID of the calling agent, when the \a       */
+/*   seenvId parameter passed via the function is 0xFFFFFFFF.               */
+/*   - identical to the seenvId field passed via the calling                */
+/*   parameters, in all other cases                                         */
+/* - out->lmId: Identifier of the LM which contains the S-EENV identified   */
+/*   by seenvId                                                             */
 /* - out->seenvState: Parameter identifying the safety state of the S-EENV  */
 /*                                                                          */
 /* Process the FUSA_SEENV_STATE_GET message. Platform handler for           */
@@ -907,14 +801,17 @@ static int32_t FusaFeenvStateNotify(const scmi_caller_t *caller,
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the S-EENV state is returned successfully.          */
+/* - SM_ERR_NOT_FOUND: if seenvId is out of range or not an S-EENV if       */
+/*   self identifying.                                                      */
 /* - SM_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller     */
 /*   is not an S-EENV.                                                      */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
-    const scmi_msg_header_t *in, msg_tfusa6_t *out)
+    const msg_rfusa6_t *in, msg_tfusa6_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    lmm_fusa_id_t target;
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -929,10 +826,59 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
         status = SM_ERR_NOT_SUPPORTED;
     }
 
+    /* Lookup target S-EENV info */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Fill in target S-EENV info */
+        if (in->seenvId == FUSA_ID_DISCOVER)
+        {
+            target.seenvId = caller->seenvId - 1U;
+            target.lmId = caller->lmId;
+        }
+        else
+        {
+            target.seenvId = in->seenvId;
+            target.lmId = 0U;
+
+            /* Find target LM */
+            for (uint32_t agent = 0U; agent < SM_SCMI_NUM_AGNT; agent++)
+            {
+                if ((target.seenvId + 1U) ==
+                    (uint32_t) g_scmiAgentConfig[agent].seenvId)
+                {
+                    target.lmId = g_scmiConfig[g_scmiAgentConfig[
+                                agent].scmiInst].lmId;
+                    break;
+                }
+            }
+
+            /* Check found */
+            if (target.lmId == 0U)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+        }
+    }
+
     /* Get requested info */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_FusaSeenvStateGet(caller->lmId, &(out->seenvState));
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
+
+        /* Call to get state */
+        status = LMM_FusaSeenvStateGet(&fusaCaller, &target,
+            &(out->seenvState));
+    }
+
+    /* Return results */
+    if (status == SM_ERR_SUCCESS)
+    {
+        out->seenvId = target.seenvId;
+        out->lmId= target.lmId;
     }
 
     /* Return status */
@@ -946,8 +892,6 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
 /* - caller: Caller info                                                    */
 /* - in->seenvState: Parameter to set the safety state of the S-EENV        */
 /* - in->pingCookie: Cookie value last sent by the F-EENV                   */
-/* - in->scstSignature: Last result of local core self-test routine         */
-/*   executed by the S-EENV                                                 */
 /*                                                                          */
 /* Process the FUSA_SEENV_STATE_SET message. Platform handler for           */
 /* SCMI_FusaSeenvStateSet().                                                */
@@ -980,8 +924,14 @@ static int32_t FusaSeenvStateSet(const scmi_caller_t *caller,
     /* Change system state */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_FusaSeenvStateSet(caller->lmId, in->seenvState,
-            in->pingCookie, in->scstSignature);
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
+
+        status = LMM_FusaSeenvStateSet(&fusaCaller, in->seenvState,
+            in->pingCookie);
     }
 
     /* Return status */
@@ -1052,7 +1002,13 @@ static int32_t FusaFaultGet(const scmi_caller_t *caller,
     /* Get fault state */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_FusaFaultGet(caller->lmId, in->faultId,
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
+
+        status = LMM_FusaFaultGet(&fusaCaller, in->faultId,
             &state);
     }
 
@@ -1073,13 +1029,16 @@ static int32_t FusaFaultGet(const scmi_caller_t *caller,
 /* - caller: Caller info                                                    */
 /* - in->faultId: Global fault identifier                                   */
 /* - in->flags: State of the fault:                                         */
-/*   Bits[31:1] Reserved, must be zero.                                     */
-/*   Bit[0] Fault state.                                                    */
-/*   Set to 1 to set the fault.                                             */
-/*   Set to 0 to clear the fault                                            */
+/*   Bits[31:2] Reserved, must be zero.                                     */
+/*   Bit[1:0] Fault state.                                                  */
+/*   Set to 0 to set the fault.                                             */
+/*   Set to 1 to clear the fault.                                           */
+/*   Set to 2 to report the fault is recovered.                             */
+/*   Set to 3 to report the fault could not be reovered                     */
 /*                                                                          */
 /* Process the FUSA_FAULT_SET message. Platform handler for                 */
-/* SCMI_FusaFaultSet(). Requires access greater than or equal to SET.       */
+/* SCMI_FusaFaultSet(). Requires access greater than or equal to            */
+/* EXCLUSIVE.                                                               */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - FUSA_FAULT_SET_STATE() - Fault state                                   */
@@ -1121,7 +1080,7 @@ static int32_t FusaFaultSet(const scmi_caller_t *caller,
     /* Check permissions */
     if ((status == SM_ERR_SUCCESS)
         && (g_scmiAgentConfig[caller->agentId].faultPerms[in->faultId]
-        < SM_SCMI_PERM_SET))
+        < SM_SCMI_PERM_EXCLUSIVE))
     {
         status = SM_ERR_DENIED;
     }
@@ -1130,9 +1089,14 @@ static int32_t FusaFaultSet(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         bool set = FUSA_FAULT_SET_STATE(in->flags) != 0U;
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
 
         /* Update state */
-        status = LMM_FusaFaultSet(caller->lmId, in->faultId, set);
+        status = LMM_FusaFaultSet(&fusaCaller, in->faultId, set);
     }
 
     /* Return status */
@@ -1276,6 +1240,8 @@ static int32_t FusaFaultGroupNotify(const scmi_caller_t *caller,
 /* - SM_ERR_SUCCESS: if fault handling disabled for the caller.             */
 /* - SM_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller     */
 /*   is not an S-EENV.                                                      */
+/* - SM_ERR_DENIED: if the calling agent is not permitted to request        */
+/*   this command.                                                          */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t FusaScheckEvntrig(const scmi_caller_t *caller,
@@ -1296,10 +1262,24 @@ static int32_t FusaScheckEvntrig(const scmi_caller_t *caller,
         status = SM_ERR_NOT_SUPPORTED;
     }
 
+    /* Check permissions */
+    if ((status == SM_ERR_SUCCESS)
+        && (g_scmiAgentConfig[caller->agentId].fusaPerms
+        < SM_SCMI_PERM_EXCLUSIVE))
+    {
+        status = SM_ERR_DENIED;
+    }
+
     /* Report S-check event trigger */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_FusaScheckEvntrig(caller->lmId);
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
+
+        status = LMM_FusaScheckEvntrig(&fusaCaller);
     }
 
     /* Return status */
@@ -1307,33 +1287,26 @@ static int32_t FusaScheckEvntrig(const scmi_caller_t *caller,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Start CRC calculation                                                    */
+/* Request manually-triggered execution of sCheck test                      */
 /*                                                                          */
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
-/* - in->crcChannel: Index of CRC channel                                   */
-/* - in->crcCfg: CRC CFG value                                              */
-/* - in->memStartLow: Start address (lower 32-bits)                         */
-/* - in->memStartHigh: Start address (upper 32-bits)                        */
-/* - in->memSize: Byte count                                                */
+/* - in->targetTestId: Identifier of sCheck target test to be executed      */
 /*                                                                          */
-/* Process the FUSA_CRC_CALCULATE message. Platform handler for             */
-/* SCMI_FusaCrcCalculate(). Requires access greater than or equal to SET.   */
+/* Process the FUSA_SCHECK_TEST_EXEC message. Platform handler for          */
+/* SCMI_FusaScheckTestExec(). Requires access greater than or equal to      */
+/* EXCLUSIVE.                                                               */
 /*                                                                          */
 /* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the CRC calcultation started successfully.          */
+/* - SM_ERR_SUCCESS: if fault handling disabled for the caller.             */
 /* - SM_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller     */
 /*   is not an S-EENV.                                                      */
-/* - SM_ERR_NOT_FOUND: if crcChannel is invalid.                            */
-/* - SM_ERR_INVALID_PARAMETERS: if any of the parameters are invalid.       */
-/* - SM_ERR_BUSY: if the CRC channel is already performing a CRC            */
-/*   calculation.                                                           */
-/* - SM_ERR_DENIED: if the calling agent is not permitted to use this       */
-/*   CRC channel.                                                           */
+/* - SM_ERR_DENIED: if the calling agent is not permitted to request an     */
+/*   sCheck.                                                                */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
-static int32_t FusaCrcCalculate(const scmi_caller_t *caller,
-    const msg_rfusa12_t *in, const scmi_msg_status_t *out)
+static int32_t FusaScheckTestExec(const scmi_caller_t *caller,
+    const msg_rfusa14_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -1350,107 +1323,26 @@ static int32_t FusaCrcCalculate(const scmi_caller_t *caller,
         status = SM_ERR_NOT_SUPPORTED;
     }
 
-    /* Check CRC channel */
-    if ((status == SM_ERR_SUCCESS)
-        && (in->crcChannel >= SM_NUM_CRC))
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
     /* Check permissions */
     if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].crcPerms[in->crcChannel]
-        < SM_SCMI_PERM_SET))
+        && (g_scmiAgentConfig[caller->agentId].fusaPerms
+        < SM_SCMI_PERM_EXCLUSIVE))
     {
         status = SM_ERR_DENIED;
     }
 
-    /* Change system state */
+    /* Request S-check */
     if (status == SM_ERR_SUCCESS)
     {
-        uint64_t memStart = (((uint64_t) in->memStartHigh) << 32U)
-            | (uint64_t) in->memStartLow;
+        lmm_fusa_id_t fusaCaller =
+        {
+            .seenvId = caller->seenvId,
+            .lmId = caller->lmId
+        };
 
-        status = LMM_FusaCrcCalculate(caller->lmId, in->crcChannel,
-            in->crcCfg, memStart, in->memSize);
+        status = LMM_FusaScheckTestExec(&fusaCaller, in->targetTestId);
     }
 
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Get CRC calculation result                                               */
-/*                                                                          */
-/* Parameters:                                                              */
-/* - caller: Caller info                                                    */
-/* - in->crcChannel: Index of CRC channel                                   */
-/* - out->memStartLow: Start address (lower 32-bits)                        */
-/* - out->memStartHigh: Start address (upper 32-bits)                       */
-/* - out->memSize: Byte count                                               */
-/* - out->crcResult: Resulting CRC value                                    */
-/*                                                                          */
-/* Process the FUSA_CRC_RESULT_GET message. Platform handler for            */
-/* SCMI_FusaCrcResultGet(). Requires access greater than or equal to SET.   */
-/*                                                                          */
-/* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the CRC calcultation completed successfully.        */
-/* - SM_ERR_NOT_SUPPORTED: if FuSa not an enabled feature or the caller     */
-/*   is not an S-EENV.                                                      */
-/* - SM_ERR_NOT_FOUND: if crcChannel is invalid.                            */
-/* - SM_ERR_BUSY: if the CRC channel has not completed the CRC              */
-/*   calculation.                                                           */
-/* - SM_ERR_DENIED: if the calling agent is not permitted to use this       */
-/*   CRC channel.                                                           */
-/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
-/*--------------------------------------------------------------------------*/
-static int32_t FusaCrcResultGet(const scmi_caller_t *caller,
-    const msg_rfusa13_t *in, msg_tfusa13_t *out)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    uint64_t memStart = 0ULL;
-
-    /* Check request length */
-    if (caller->lenCopy < sizeof(*in))
-    {
-        status = SM_ERR_PROTOCOL_ERROR;
-    }
-
-    /* Check call from S-EENV */
-    if ((status == SM_ERR_SUCCESS)
-        && (caller->safeType != LMM_SAFE_TYPE_SEENV))
-    {
-        status = SM_ERR_NOT_SUPPORTED;
-    }
-
-    /* Check CRC channel */
-    if ((status == SM_ERR_SUCCESS)
-        && (in->crcChannel >= SM_NUM_CRC))
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].crcPerms[in->crcChannel]
-        < SM_SCMI_PERM_SET))
-    {
-        status = SM_ERR_DENIED;
-    }
-
-    /* Get fault state */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = LMM_FusaCrcResultGet(caller->lmId, in->crcChannel,
-            &memStart, &(out->memSize), &(out->crcResult));
-    }
-
-    /* Return results */
-    if (status == SM_ERR_SUCCESS)
-    {
-        out->memStartHigh = SM_UINT64_H(memStart);
-        out->memStartLow = SM_UINT64_L(memStart);
-    }
     /* Return status */
     return status;
 }

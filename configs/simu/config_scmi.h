@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,6 +60,7 @@
         .scmiInst = 0U, \
         .domId = 4U, \
         .secure = 0U, \
+        .seenvId = 1U, \
         .clkPerms[DEV_SM_CLK_0] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_1] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_2] = SM_SCMI_PERM_ALL, \

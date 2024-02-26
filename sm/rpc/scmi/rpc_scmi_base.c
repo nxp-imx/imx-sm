@@ -1038,12 +1038,14 @@ static int32_t BaseResetAgentConfig(uint32_t lmId, uint32_t agentId,
             permissionsReset);
     }
 
+#ifdef USES_FUSA
     /* Reset FuSa protocol */
     if (status == SM_ERR_SUCCESS)
     {
         status = RPC_SCMI_FusaDispatchReset(lmId, agentId,
             permissionsReset);
     }
+#endif
 
     /* Reset voltage protocol */
     if (status == SM_ERR_SUCCESS)

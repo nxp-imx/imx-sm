@@ -93,7 +93,7 @@ int main(int argc, const char * const argv[])
     /* Init LMM */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_Init();
+        status = LMM_Init(&mSel);
     }
 
     /* Boot LMs */

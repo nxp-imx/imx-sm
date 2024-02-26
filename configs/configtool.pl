@@ -74,7 +74,7 @@ sub get_define;
 
 my @protocols = ('base', 'pd', 'sys', 'perf', 'clk', 'sensor',
     'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'perlpi',
-    'pin', 'daisy', 'ctrl', 'fault', 'crc', 'fusa');
+    'pin', 'daisy', 'ctrl', 'fault', 'fusa');
 my @mbTypes = ('MU', 'LOOPBACK');
 my @xportTypes = ('SMT');
 	my @permTypes = ('none', 'get', 'notify', 'set', 'priv',
@@ -82,6 +82,8 @@ my @xportTypes = ('SMT');
 my %makeInclude;
 my %args;
 my $log;
+
+my $seenvid = 0;
 
 # Parse command line
 getopts('hi:l:o:v', \%args);
@@ -920,6 +922,7 @@ sub generate_scmi
     my $firstAgent;
     my $chn = 0;
     my $notify = 20;
+    my $safe = 0;
     foreach my $dat (@list)
     {
         # Handle LM and EOF
@@ -978,6 +981,16 @@ sub generate_scmi
                 }
                 $firstAgent = $agnt + 1;
                 $lmId++;
+
+                # Check safety type
+                $safe = 0;
+       	        if ((my $parm = &param($dat, 'safe')) ne '!')
+    	        {
+                    if ($parm eq 'seenv')
+                    {
+                        $safe = 1;
+                    }
+    	        }
             }
 
             next;
@@ -1019,6 +1032,11 @@ sub generate_scmi
                 $dup = $agnt;
             }
 
+            if ($safe == 1)
+            {
+                $seenvid++;
+            }
+
             # Output banner
             print $out &banner($line);
 
@@ -1045,6 +1063,10 @@ sub generate_scmi
             print $out '        .scmiInst = ' . $scmiInst . 'U, \\' . "\n";
             print $out '        .domId = ' . $did . 'U, \\' . "\n";
             print $out '        .secure = ' . $secure . 'U, \\' . "\n";
+            if ($safe == 1)
+            {
+                print $out '        .seenvId = ' . $seenvid . 'U, \\' . "\n";
+            }
 
             # Loop over perms
             $i = 0;
@@ -1482,6 +1504,10 @@ sub generate_lmm
 	# Output max msel
     print $out '/*! Number of  mSel */' . "\n";
     print $out '#define SM_LM_NUM_MSEL  ' . ($maxMsel + 1) . 'U' . "\n\n";
+
+	# Output max num seenv
+    print $out '/*! Number of  S-EENV */' . "\n";
+    print $out '#define SM_LM_NUM_SEENV  ' . ($seenvid) . 'U' . "\n\n";
 
 	# Output default monitor LM
     print $out '/*! Default LM for monitor */' . "\n";
@@ -2043,6 +2069,12 @@ sub generate_make
     if ((my $parm = &param($make[0], 'board')) ne '!')
     {
 	    print $out 'BOARD ?= ' . $parm . "\n\n";
+    }		
+
+	# Output FuSa define
+    if ($seenvid != 0)
+    {
+	    print $out 'USES_FUSA ?= 1' . "\n\n";
     }		
 
 	# Output SoC/board includes
