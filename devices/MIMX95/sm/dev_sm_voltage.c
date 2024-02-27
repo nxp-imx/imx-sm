@@ -160,8 +160,6 @@ int32_t DEV_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    printf("mode %u set %u\n", domainId, voltMode);
-
     /* Check domain */
     if (domainId < DEV_SM_NUM_VOLT)
     {
