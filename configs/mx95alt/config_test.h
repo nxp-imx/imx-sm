@@ -81,18 +81,54 @@
         .agentId = 0U, \
     }
 
+/*! Config for test channel 3 */
+#define SM_TEST_CHN3_CONFIG \
+    { \
+        .mbInst = 0U, \
+        .mbDoorbell = 0U, \
+        .agentId = 1U, \
+    }
+
+/*! Config for test channel 4 */
+#define SM_TEST_CHN4_CONFIG \
+    { \
+        .mbInst = 0U, \
+        .mbDoorbell = 1U, \
+        .agentId = 1U, \
+    }
+
+/*! Config for test channel 5 */
+#define SM_TEST_CHN5_CONFIG \
+    { \
+        .mbInst = 2U, \
+        .mbDoorbell = 0U, \
+        .agentId = 2U, \
+    }
+
+/*! Config for test channel 6 */
+#define SM_TEST_CHN6_CONFIG \
+    { \
+        .mbInst = 2U, \
+        .mbDoorbell = 1U, \
+        .agentId = 2U, \
+    }
+
 /*--------------------------------------------------------------------------*/
 /* Test Channel Config                                                      */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of test channels */
-#define SM_NUM_TEST_CHN  3U
+#define SM_NUM_TEST_CHN  7U
 
 /*! Config data array for test channels */
 #define SM_TEST_CHN_CONFIG_DATA \
     SM_TEST_CHN0_CONFIG, \
     SM_TEST_CHN1_CONFIG, \
-    SM_TEST_CHN2_CONFIG
+    SM_TEST_CHN2_CONFIG, \
+    SM_TEST_CHN3_CONFIG, \
+    SM_TEST_CHN4_CONFIG, \
+    SM_TEST_CHN5_CONFIG, \
+    SM_TEST_CHN6_CONFIG
 
 /*--------------------------------------------------------------------------*/
 /* Test Config                                                              */

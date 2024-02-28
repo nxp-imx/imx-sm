@@ -990,6 +990,7 @@ sub generate_scmi
             $agentToken =~ s/_/ /g; 
             my $line = $agentToken . ' Config';
     		my $secure = 0;
+            my $dup;
             if ((my $parm = &param($dat, 'name')) ne '!')
             {
                 $parm =~ s/\"//g;
@@ -1009,6 +1010,14 @@ sub generate_scmi
             }
             $agnt++;
             $numAgents++;
+            if ((my $parm = &param($dat, 'dup')) ne '!')
+            {
+                $dup = $parm;
+            }
+            else
+            {
+                $dup = $agnt;
+            }
 
             # Output banner
             print $out &banner($line);
@@ -1020,7 +1029,7 @@ sub generate_scmi
             }
 
             # Get perms
-            my @perms = &get_perms($cfgRef, $agnt);
+            my @perms = &get_perms($cfgRef, $dup);
 
             # Output agent info
 			print $out '/*! Config for SCMI agent ' . $agnt

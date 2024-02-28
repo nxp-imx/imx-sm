@@ -73,16 +73,38 @@
         .xportChannel[2] = 2U, \
     }
 
+/*! Config for MU1 MB */
+#define SM_MB_MU1_CONFIG \
+    { \
+        .mu = 1U, \
+        .xportType[0] = SM_XPORT_SMT, \
+        .xportChannel[0] = 3U, \
+        .xportType[1] = SM_XPORT_SMT, \
+        .xportChannel[1] = 4U, \
+    }
+
+/*! Config for MU3 MB */
+#define SM_MB_MU3_CONFIG \
+    { \
+        .mu = 3U, \
+        .xportType[0] = SM_XPORT_SMT, \
+        .xportChannel[0] = 5U, \
+        .xportType[1] = SM_XPORT_SMT, \
+        .xportChannel[1] = 6U, \
+    }
+
 /*--------------------------------------------------------------------------*/
 /* MB MU Config                                                             */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of MU MB */
-#define SM_NUM_MB_MU  1U
+#define SM_NUM_MB_MU  3U
 
 /*! Config data array for MU MB */
 #define SM_MB_MU_CONFIG_DATA \
-    SM_MB_MU9_CONFIG
+    SM_MB_MU9_CONFIG, \
+    SM_MB_MU1_CONFIG, \
+    SM_MB_MU3_CONFIG
 
 #endif /* CONFIG_MB_MU_H */
 

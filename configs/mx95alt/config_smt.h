@@ -69,6 +69,7 @@
         .mbType = SM_MB_MU, \
         .mbInst = 0U, \
         .mbDoorbell = 0U, \
+        .crc = SM_SMT_CRC_CRC32, \
     }
 
 /*! Config for SMT channel 1 */
@@ -79,6 +80,7 @@
         .mbType = SM_MB_MU, \
         .mbInst = 0U, \
         .mbDoorbell = 1U, \
+        .crc = SM_SMT_CRC_CRC32, \
     }
 
 /*! Config for SMT channel 2 */
@@ -89,6 +91,47 @@
         .mbType = SM_MB_MU, \
         .mbInst = 0U, \
         .mbDoorbell = 2U, \
+        .crc = SM_SMT_CRC_CRC32, \
+    }
+
+/*! Config for SMT channel 3 */
+#define SM_SMT_CHN3_CONFIG \
+    { \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcChannel = 3U, \
+        .mbType = SM_MB_MU, \
+        .mbInst = 1U, \
+        .mbDoorbell = 0U, \
+    }
+
+/*! Config for SMT channel 4 */
+#define SM_SMT_CHN4_CONFIG \
+    { \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcChannel = 4U, \
+        .mbType = SM_MB_MU, \
+        .mbInst = 1U, \
+        .mbDoorbell = 1U, \
+    }
+
+/*! Config for SMT channel 5 */
+#define SM_SMT_CHN5_CONFIG \
+    { \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcChannel = 5U, \
+        .mbType = SM_MB_MU, \
+        .mbInst = 2U, \
+        .mbDoorbell = 0U, \
+    }
+
+/*! Config for SMT channel 6 */
+#define SM_SMT_CHN6_CONFIG \
+    { \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcChannel = 6U, \
+        .mbType = SM_MB_MU, \
+        .mbInst = 2U, \
+        .mbDoorbell = 1U, \
     }
 
 /*--------------------------------------------------------------------------*/
@@ -96,17 +139,23 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of SMT channels */
-#define SM_NUM_SMT_CHN  3U
+#define SM_NUM_SMT_CHN  7U
 
 /*! Config data array for SMT channels */
 #define SM_SMT_CHN_CONFIG_DATA \
     SM_SMT_CHN0_CONFIG, \
     SM_SMT_CHN1_CONFIG, \
-    SM_SMT_CHN2_CONFIG
+    SM_SMT_CHN2_CONFIG, \
+    SM_SMT_CHN3_CONFIG, \
+    SM_SMT_CHN4_CONFIG, \
+    SM_SMT_CHN5_CONFIG, \
+    SM_SMT_CHN6_CONFIG
 
 /* Mailbox and CRC types to support */
 /*! Config for MB_MU USE */
 #define USES_MB_MU
+/*! Config for CRC32 CRC USE */
+#define USES_CRC_CRC32
 
 #endif /* CONFIG_SMT_H */
 
