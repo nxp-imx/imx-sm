@@ -192,7 +192,7 @@ void TEST_ScmiLmm(void)
         lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_LmmDispatchNotification()\n");
-        RPC_SCMI_LmmDispatchNotification(msgId, &trigger);
+        NCHECK(RPC_SCMI_LmmDispatchNotification(msgId, &trigger));
     }
 
     /* Loop over power test domains */
@@ -313,7 +313,7 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
         CHECK(SCMI_LmmNotify(channel, lm, flags));
 
         /* Cause Event to Occur */
-        uint32_t sequences[24] = { 0U };
+        const uint32_t sequences[24] = { 0U };
         flags = SCMI_LMM_FLAGS_GRACEFUL(0U);
         printf("SCMI_LmmShutdown(%u, %u)\n", channel, lm);
         CHECK(SCMI_LmmShutdown(channel, lm, flags));

@@ -112,7 +112,7 @@ void TEST_ScmiBbmButton(void)
         lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_BbmDispatchNotification()\n");
-        RPC_SCMI_BbmDispatchNotification(msgId, &trigger);
+        NCHECK(RPC_SCMI_BbmDispatchNotification(msgId, &trigger));
     }
 
     /* Loop over BBM test resources */

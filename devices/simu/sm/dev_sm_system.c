@@ -235,7 +235,7 @@ void DEV_SM_SystemError(int32_t status, uint32_t pc)
     }
 
     /* Finalize system reset flow */
-    DEV_SM_SystemRstComp(resetRec);
+    (void) DEV_SM_SystemRstComp(resetRec);
 }
 
 /*--------------------------------------------------------------------------*/

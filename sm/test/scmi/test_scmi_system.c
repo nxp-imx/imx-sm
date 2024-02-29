@@ -122,7 +122,7 @@ void TEST_ScmiSystem(void)
         lmm_rpc_trigger_t trigger = { 0 };
 
         printf("RPC_SCMI_SysDispatchNotification()\n");
-        RPC_SCMI_SysDispatchNotification(msgId, &trigger);
+        NCHECK(RPC_SCMI_SysDispatchNotification(msgId, &trigger));
     }
 
     /* Loop over system power tests */
