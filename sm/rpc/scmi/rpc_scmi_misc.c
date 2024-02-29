@@ -866,10 +866,12 @@ static int32_t MiscDiscoverBuildInfo(const scmi_caller_t *caller,
         out->buildCommit = SM_COMMIT;
 
         /* Copy out build date */
+        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
         RPC_SCMI_StrCpy(out->buildDate, ((uint8_t const *) SM_DATE),
             MISC_MAX_BUILDDATE);
 
         /* Copy out build time */
+        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
         RPC_SCMI_StrCpy(out->buildTime, ((uint8_t const *) SM_TIME),
             MISC_MAX_BUILDTIME);
     }
