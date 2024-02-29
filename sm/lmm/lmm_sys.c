@@ -851,20 +851,20 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
             switch (ptr->ss)
             {
                 case LMM_SS_PD:
-                    status = LMM_PowerStateSet(ptr->lmId, ptr->rsrc,
+                    (void) LMM_PowerStateSet(ptr->lmId, ptr->rsrc,
                         DEV_SM_POWER_STATE_OFF);
                     break;
                 case LMM_SS_PERF:
-                    status = LMM_PerfLevelSet(ptr->lmId, ptr->rsrc, 0U);
+                    (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc, 0U);
                     break;
                 case LMM_SS_CLK:
-                    status = LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);
+                    (void) LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);
                     break;
                 case LMM_SS_CPU:
-                    status = LMM_CpuStop(ptr->lmId, ptr->rsrc);
+                    (void) LMM_CpuStop(ptr->lmId, ptr->rsrc);
                     break;
                 case LMM_SS_VOLT:
-                    status = LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
+                    (void) LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
                         DEV_SM_VOLT_MODE_OFF);
                     break;
                 default:
