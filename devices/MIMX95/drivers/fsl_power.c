@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -66,6 +66,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = 0U,
         .memMask = 0U,
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -78,6 +79,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = 0U,
         .memMask = (1U << PWR_MEM_SLICE_IDX_AON),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -90,6 +92,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = 0U,
         .memMask = 0U,
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -102,6 +105,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_CAMERA),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK, /* MIPI, MPLL */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_CAMERA),
@@ -114,6 +118,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = 0U,
         .memMask = 0U,
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -126,6 +131,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55C0),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55C0),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -138,6 +144,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55C1),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55C1),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -150,6 +157,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55C2),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55C2),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -162,6 +170,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55C3),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55C3),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -174,6 +183,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55C4),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55C4),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -186,6 +196,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55C5),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55C5),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -199,6 +210,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55P) |
                    (1U << PWR_MEM_SLICE_IDX_A55L3),
+        .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55P),
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK, /* ARM PLL */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_A55P),
@@ -211,6 +223,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_DDR),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* DDR complex */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* DDR complex */
@@ -225,6 +238,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_DISPLAY),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK, /* LVDS */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_DISPLAY),
@@ -237,6 +251,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_GPU),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_GPU),
@@ -249,6 +264,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_HSIO),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_2_MASK | /* HSIO PLL */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_3_MASK | /* USB1 */
@@ -265,6 +281,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = 0U,
         .memMask = 0U,
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = 0U,
@@ -277,6 +294,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_M7),
+        .retainMask = (1U << PWR_MEM_SLICE_IDX_M7),
         .cpuMask = (1U << CPU_IDX_M7P),
         .ipIsoMask = 0U,
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_M7),
@@ -289,6 +307,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_NETC),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* unused */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* GPIO */
@@ -303,22 +322,24 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_NOC1) |
                    (1U << PWR_MEM_SLICE_IDX_NOC2),
+        .retainMask = (1U << PWR_MEM_SLICE_IDX_NOC1),
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_NOC),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_NOC),
-        .authenCtrl = AUTHENCTRL_HW,
-        .lpmSetting = LPMSETTING_CPU(CPU_IDX_M33P),
+        .authenCtrl = AUTHENCTRL_SW,
+        .lpmSetting = LPMSETTING_SWCTRL,
     },
 
     [PWR_MIX_SLICE_IDX_NPU] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_NPU),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
-        .gpcReqMaskRst = 0U,
-        .gpcReqMaskPwr = 0U,
+        .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_NPU),
+        .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_NPU),
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
     },
@@ -327,6 +348,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
         .memMask = (1U << PWR_MEM_SLICE_IDX_VPU),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = 0U,
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_VPU),
@@ -339,13 +361,14 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_WAKEUP),
+        .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* EARC */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* GPIO */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_WAKEUP),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_WAKEUP),
-        .authenCtrl = AUTHENCTRL_HW,
-        .lpmSetting = LPMSETTING_CPU(CPU_IDX_M33P),
+        .authenCtrl = AUTHENCTRL_SW,
+        .lpmSetting = LPMSETTING_SWCTRL,
     }
 };
 

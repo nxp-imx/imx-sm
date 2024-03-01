@@ -114,8 +114,6 @@
 #define CPU_PER_LPI_IDX_WDOG4           19U
 #define CPU_PER_LPI_IDX_WDOG5           20U
 
-#define CPU_PER_LPI_LPCG_OFFSET         128U
-
 #define CPU_PER_LPI_ON_NEVER            0U
 #define CPU_PER_LPI_ON_RUN              1U
 #define CPU_PER_LPI_ON_RUN_WAIT         2U

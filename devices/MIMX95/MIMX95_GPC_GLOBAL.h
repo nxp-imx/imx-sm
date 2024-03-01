@@ -6,9 +6,7 @@
 **         CMSIS Peripheral Access Layer for MIMX95_cm33
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2023 NXP
-**     All rights reserved.
-**
+**     Copyright 2016-2024 NXP
 **     SPDX-License-Identifier: BSD-3-Clause
 **
 **     http:                 www.nxp.com
@@ -47,8 +45,7 @@
 typedef struct {
        uint8_t RESERVED_0[4];
   __IO uint32_t GPC_GLOB_AUTHEN_CTRL;              /**< GPC Global Authentication Control, offset: 0x4 */
-       uint8_t RESERVED_1[16];
-  __IO uint32_t GPC_DOMAIN_SEL;                    /**< GPC domain assignment select, offset: 0x18 */
+       uint8_t RESERVED_1[20];
   __IO uint32_t GPC_MASTER;                        /**< GPC master CPU configuration, offset: 0x1C */
        uint8_t RESERVED_2[32];
   __IO uint32_t GPC_SYS_SLEEP;                     /**< GPC system sleep control, offset: 0x40 */
@@ -56,12 +53,13 @@ typedef struct {
   __IO uint32_t GPC_CPU_DOMAIN_ASSIGNMENT[9];      /**< GPC domain assignment, array offset: 0x50, array step: 0x4 */
        uint8_t RESERVED_4[140];
   __IO uint32_t GPC_PMIC_CTRL;                     /**< PMIC standby control from GPC, offset: 0x100 */
-  __IO uint32_t GPC_PMIC_PRE_DLY_CTRL;             /**< PMIC standby pre delay control, offset: 0x104 */
+       uint8_t RESERVED_5[4];
   __IO uint32_t GPC_PMIC_STBY_ACK_CTRL;            /**< PMIC standby acknowledge control, offset: 0x108 */
-       uint8_t RESERVED_5[244];
+       uint8_t RESERVED_6[244];
   __IO uint32_t GPC_ROSC_CTRL;                     /**< RCOSC control, offset: 0x200 */
-  __IO uint32_t GPC_AON_MEM_CTRL;                  /**< AON Memory control, offset: 0x204 */
+       uint8_t RESERVED_7[4];
   __IO uint32_t GPC_EFUSE_CTRL;                    /**< eFUSE control, offset: 0x208 */
+  __IO uint32_t GPC_SENTINEL_HDSK_CTRL;            /**< Sentinel Handshake control, offset: 0x20C */
 } GPC_GLOBAL_Type;
 
 /* ----------------------------------------------------------------------------
@@ -122,18 +120,6 @@ typedef struct {
 #define GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST_SHIFT)) & GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST_MASK)
 /*! @} */
 
-/*! @name GPC_DOMAIN_SEL - GPC domain assignment select */
-/*! @{ */
-
-#define GPC_GLOBAL_GPC_DOMAIN_SEL_DOMAIN_SEL_MASK (0x1U)
-#define GPC_GLOBAL_GPC_DOMAIN_SEL_DOMAIN_SEL_SHIFT (0U)
-/*! DOMAIN_SEL - Domain select
- *  0b0..Domain assignment from register
- *  0b1..Domain assignment from TRDC
- */
-#define GPC_GLOBAL_GPC_DOMAIN_SEL_DOMAIN_SEL(x)  (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_DOMAIN_SEL_DOMAIN_SEL_SHIFT)) & GPC_GLOBAL_GPC_DOMAIN_SEL_DOMAIN_SEL_MASK)
-/*! @} */
-
 /*! @name GPC_MASTER - GPC master CPU configuration */
 /*! @{ */
 
@@ -157,7 +143,24 @@ typedef struct {
 
 #define GPC_GLOBAL_GPC_CPU_DOMAIN_ASSIGNMENT_CPU_DOMAIN_MASK (0xFU)
 #define GPC_GLOBAL_GPC_CPU_DOMAIN_ASSIGNMENT_CPU_DOMAIN_SHIFT (0U)
-/*! CPU_DOMAIN - CPU domain assignment */
+/*! CPU_DOMAIN - CPU domain assignment
+ *  0b0000..Domain 0
+ *  0b0001..Domain 1
+ *  0b0010..Domain 2
+ *  0b0011..Domain 3
+ *  0b0100..Domain 4
+ *  0b0101..Domain 5
+ *  0b0110..Domain 6
+ *  0b0111..Domain 7
+ *  0b1000..Domain 8
+ *  0b1001..Domain 9
+ *  0b1010..Domain 10
+ *  0b1011..Domain 11
+ *  0b1100..Domain 12
+ *  0b1101..Domain 13
+ *  0b1110..Domain 14
+ *  0b1111..Domain 15
+ */
 #define GPC_GLOBAL_GPC_CPU_DOMAIN_ASSIGNMENT_CPU_DOMAIN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_CPU_DOMAIN_ASSIGNMENT_CPU_DOMAIN_SHIFT)) & GPC_GLOBAL_GPC_CPU_DOMAIN_ASSIGNMENT_CPU_DOMAIN_MASK)
 /*! @} */
 
@@ -169,22 +172,11 @@ typedef struct {
 
 #define GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK (0x1U)
 #define GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_SHIFT (0U)
-/*! PMIC_STBY_EN - Assert the pmic standby request when system sleep */
+/*! PMIC_STBY_EN - Assert the PMIC standby request when system sleep
+ *  0b1..Enter PMIC standby request
+ *  0b0..Exit PMIC standby request
+ */
 #define GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_SHIFT)) & GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK)
-/*! @} */
-
-/*! @name GPC_PMIC_PRE_DLY_CTRL - PMIC standby pre delay control */
-/*! @{ */
-
-#define GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_ON_MASK (0xFFFFU)
-#define GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_ON_SHIFT (0U)
-/*! DLY_PRE_STBY_ON - Delay before pmic_standby on. Locked by LOCK_CFG field. */
-#define GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_ON(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_ON_SHIFT)) & GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_ON_MASK)
-
-#define GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_OFF_MASK (0xFFFF0000U)
-#define GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_OFF_SHIFT (16U)
-/*! DLY_PRE_STBY_OFF - Delay before pmic_standby off. Locked by LOCK_CFG field. */
-#define GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_OFF(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_OFF_SHIFT)) & GPC_GLOBAL_GPC_PMIC_PRE_DLY_CTRL_DLY_PRE_STBY_OFF_MASK)
 /*! @} */
 
 /*! @name GPC_PMIC_STBY_ACK_CTRL - PMIC standby acknowledge control */
@@ -235,18 +227,6 @@ typedef struct {
 #define GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN(x)  (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_SHIFT)) & GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK)
 /*! @} */
 
-/*! @name GPC_AON_MEM_CTRL - AON Memory control */
-/*! @{ */
-
-#define GPC_GLOBAL_GPC_AON_MEM_CTRL_AON_MEM_LP_EN_MASK (0x1U)
-#define GPC_GLOBAL_GPC_AON_MEM_CTRL_AON_MEM_LP_EN_SHIFT (0U)
-/*! AON_MEM_LP_EN - AON memory enter LP enable
- *  0b0..Do not enter AON memories into retention during system sleep
- *  0b1..Enter AON memories into retention during system sleep
- */
-#define GPC_GLOBAL_GPC_AON_MEM_CTRL_AON_MEM_LP_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_AON_MEM_CTRL_AON_MEM_LP_EN_SHIFT)) & GPC_GLOBAL_GPC_AON_MEM_CTRL_AON_MEM_LP_EN_MASK)
-/*! @} */
-
 /*! @name GPC_EFUSE_CTRL - eFUSE control */
 /*! @{ */
 
@@ -257,6 +237,18 @@ typedef struct {
  *  0b1..Power Down efuse during system sleep
  */
 #define GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_SHIFT)) & GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK)
+/*! @} */
+
+/*! @name GPC_SENTINEL_HDSK_CTRL - Sentinel Handshake control */
+/*! @{ */
+
+#define GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_MASK (0x1U)
+#define GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_SHIFT (0U)
+/*! SENTINEL_HDSK_EN - GPC-to-Sentinel handshake enable
+ *  0b0..Disable GPC-to-Sentinel handshake during system sleep sequence
+ *  0b1..Enable GPC-to-Sentinel handshake during system sleep sequence
+ */
+#define GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_SHIFT)) & GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_MASK)
 /*! @} */
 
 

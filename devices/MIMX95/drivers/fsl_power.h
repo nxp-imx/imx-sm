@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -66,6 +66,8 @@
 #define PWR_MIX_SLICE_IDX_NPU           20U
 #define PWR_MIX_SLICE_IDX_VPU           21U
 #define PWR_MIX_SLICE_IDX_WAKEUP        22U
+
+#define PWR_NUM_MEM_SLICE               21UL
 
 #define PWR_MEM_SLICE_IDX_AON           0U
 #define PWR_MEM_SLICE_IDX_CAMERA        1U
@@ -216,6 +218,7 @@ typedef struct
 {
     uint32_t flags;
     uint32_t memMask;
+    uint32_t retainMask;
     uint32_t cpuMask;
     uint32_t ipIsoMask;
     uint32_t gpcReqMaskRst;

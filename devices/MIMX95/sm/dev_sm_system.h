@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -124,6 +124,31 @@
     }
 
 /* Types */
+
+/*!
+ * System sleep record
+ */
+typedef struct
+{
+    /*! System sleep entry latency */
+    uint32_t sleepEntryUsec;
+
+    /*! System sleep exit latency */
+    uint32_t sleepExitUsec;
+
+    /*! IRQ/exception causing system wake */
+    uint32_t wakeSource;
+
+    /*! MIX power status */
+    uint32_t mixPwrStat;
+
+    /*! MEM power status */
+    uint32_t memPwrStat;
+
+    /*! PLL power status */
+    uint32_t pllPwrStat;
+
+} dev_sm_sys_sleep_rec_t;
 
 /* Functions */
 

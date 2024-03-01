@@ -45,6 +45,7 @@
 #include "fsl_reset.h"
 
 /* Local defines */
+#define DEV_SM_NUM_SLEEP_ROOTS  3U
 
 /* Local types */
 
@@ -52,6 +53,7 @@
 
 static uint32_t s_powerMode = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
+static dev_sm_sys_sleep_rec_t s_sysSleepRecord;
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -74,12 +76,6 @@ int32_t DEV_SM_SystemInit(void)
         s_shutdownRecord.reason = srcResetReason;
         s_shutdownRecord.valid = true;
     }
-
-    /* Shut off OSC_24M during system sleep */
-    GPC_GLOBAL->GPC_ROSC_CTRL = GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK;
-
-    /* Enable GPC PMIC standby control */
-    GPC_GLOBAL->GPC_PMIC_CTRL = GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK;
 
 #if 0
     /* TODO:  Enable GPC-to-ELE handshake */
@@ -314,11 +310,69 @@ void DEV_SM_SystemError(int32_t status, uint32_t pc)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 {
-    static uint32_t s_clkRootCtrl[CLOCK_NUM_ROOT];
+    static const uint32_t s_clkRootSleepList[DEV_SM_NUM_SLEEP_ROOTS] =
+    {
+        [0] = CLOCK_ROOT_SENTINEL,
+        [1] = CLOCK_ROOT_BUSAON,
+        [2] = CLOCK_ROOT_M33
+    };
+    static const uint32_t s_pllVcoList[CLOCK_NUM_PLL] =
+    {
+        [CLOCK_PLL_SYS1] = CLOCK_SRC_SYSPLL1_VCO,
+        [CLOCK_PLL_AUDIO1] = CLOCK_SRC_AUDIOPLL1_VCO,
+        [CLOCK_PLL_AUDIO2] = CLOCK_SRC_AUDIOPLL2_VCO,
+        [CLOCK_PLL_VIDEO1] = CLOCK_SRC_VIDEOPLL1_VCO,
+        [CLOCK_PLL_ARM] = CLOCK_SRC_ARMPLL_VCO,
+        [CLOCK_PLL_DRAM] = CLOCK_SRC_DRAMPLL_VCO,
+        [CLOCK_PLL_HSIO] = CLOCK_SRC_HSIOPLL_VCO,
+        [CLOCK_PLL_LDB] = CLOCK_SRC_LDBPLL_VCO
+    };
+    static src_mem_slice_t *const s_srcMemPtrs[] = SRC_MEM_BASE_PTRS;
+
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t s_clkRootCtrl[DEV_SM_NUM_SLEEP_ROOTS];
     uint32_t cpuWakeMask[CPU_NUM_IDX][GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t sysWakeMask[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t nvicISER[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
+
+    /* Capture start of sleep entry */
+    uint64_t sleepEntryStart = DEV_SM_Usec64Get();
+    uint64_t sleepExitStart = sleepEntryStart;
+
+    /* Reset wake source of sleep record */
+    s_sysSleepRecord.wakeSource = 0U;
+
+    /* Capture power status of MIXes */
+    s_sysSleepRecord.mixPwrStat = 0U;
+    for (uint32_t mixIdx = 0U; mixIdx < PWR_NUM_MIX_SLICE; mixIdx++)
+    {
+        if (SRC_MixIsPwrSwitchOn(mixIdx))
+        {
+            s_sysSleepRecord.mixPwrStat |= (1UL << mixIdx);
+        }
+    }
+
+    /* Capture power status of memories */
+    s_sysSleepRecord.memPwrStat = 0U;
+    for (uint32_t memIdx = 0U; memIdx < PWR_NUM_MEM_SLICE; memIdx++)
+    {
+        src_mem_slice_t *srcMem = s_srcMemPtrs[memIdx];
+        if ((srcMem->MEM_CTRL & SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK) != 0U)
+        {
+            s_sysSleepRecord.memPwrStat |= (1UL << memIdx);
+        }
+    }
+
+    /* Capture power status of PLLs */
+    s_sysSleepRecord.pllPwrStat = 0U;
+    for (uint32_t pllIdx = 0U; pllIdx < CLOCK_NUM_PLL; pllIdx++)
+    {
+        uint32_t sourceIdx = s_pllVcoList[pllIdx];
+        if (CLOCK_SourceGetEnable(sourceIdx))
+        {
+            s_sysSleepRecord.pllPwrStat |= (1UL << pllIdx);
+        }
+    }
 
     /* Initalize wake masks */
     for (uint32_t wakeIdx = 0;
@@ -331,13 +385,11 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         {
             cpuWakeMask[cpuIdx][wakeIdx] = 0xFFFFFFFFU;
         }
-   }
+    }
 
     /* Initialize NOC/WAKEUP MIX dependencies */
     uint32_t lpmSettingNoc = CPU_PD_LPM_ON_NEVER;
     uint32_t lpmSettingWakeup = CPU_PD_LPM_ON_NEVER;
-    SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, CPU_IDX_M33P, &lpmSettingNoc);
-    SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, CPU_IDX_M33P, &lpmSettingWakeup);
 
     /* Scan CPUs, update GPC wake masks, assess NOC/WAKEUP MIX dependencies */
     for (uint32_t cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
@@ -362,24 +414,24 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                         sysWakeMask[wakeIdx] &= wakeVal;
                         CPU_IrqWakeSet(cpuIdx, wakeIdx, 0xFFFFFFFFU);
                     }
-                }
 
-                /* Update NOCMIX dependency */
-                uint32_t lpmSetting;
-                if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, cpuIdx, &lpmSetting))
-                {
-                    if (lpmSetting > lpmSettingNoc)
+                    /* Update NOCMIX dependency */
+                    uint32_t lpmSetting;
+                    if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, cpuIdx, &lpmSetting))
                     {
-                        lpmSettingNoc = lpmSetting;
+                        if (lpmSetting > lpmSettingNoc)
+                        {
+                            lpmSettingNoc = lpmSetting;
+                        }
                     }
-                }
 
-                /* Update WAKEUPMIX dependency */
-                if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx, &lpmSetting))
-                {
-                    if (lpmSetting > lpmSettingWakeup)
+                    /* Update WAKEUPMIX dependency */
+                    if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx, &lpmSetting))
                     {
-                        lpmSettingWakeup = lpmSetting;
+                        if (lpmSetting > lpmSettingWakeup)
+                        {
+                            lpmSettingWakeup = lpmSetting;
+                        }
                     }
                 }
             }
@@ -397,22 +449,35 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
          */
         if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
         {
-            uint32_t clkSrcIdx, rootIdx;
-
             /* Board-level sleep prepare */
             BOARD_SystemSleepPrepare(sleepMode);
 
-            /* Inhibit GPC LP handshakes for NOCMIX if powering down */
+            /* If NOCMIX powered down during SUSPEND, force power down */
             if (lpmSettingNoc <= sleepMode)
             {
-                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_NOC, false);
+                DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_OFF);
+                s_sysSleepRecord.mixPwrStat &=
+                    (~(1UL << PWR_MIX_SLICE_IDX_NOC));
             }
 
-            /* Inhibit GPC LP handshakes for NOCMIX if powering down */
-            if (lpmSettingWakeup <= sleepMode)
+            /* If WAKEUPMIX powered down during SUSPEND, force power down */
+            if ((lpmSettingWakeup <= sleepMode) &&
+                ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0))
             {
-                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_WAKEUP, false);
+                DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_OFF);
+                s_sysSleepRecord.mixPwrStat &=
+                    (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
             }
+
+            /* Inhibit all GPC LP handshakes during SUSPEND */
+            uint32_t lpHsSm = BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM = 0U;
+            uint32_t lpHs2Sm = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM = 0U;
+            uint32_t lpHsEle = BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL = 0U;
+            uint32_t lpHs2Ele = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL = 0U;
 
             /* Configure SM GPC_CTRL and NVIC for system-level wake events */
             for (uint32_t wakeIdx = 0;
@@ -443,39 +508,53 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Set target M33P sleep mode */
             CPU_SleepModeSet(CPU_IDX_M33P, sleepMode);
 
-            /* For all clock roots not being sourced from FRO, switch clock source
-             * to OSC_24M to allow PLLs to be powered down.  OSC_24M will be gated
-             * during STANDBY.
+            /* TODO:  Apply configuration based on
+             *      SCMI system power mode flags
              */
-            for (rootIdx = 0U; rootIdx < CLOCK_NUM_ROOT; rootIdx++)
+
+            /* Shut off OSC_24M during system sleep */
+            GPC_GLOBAL->GPC_ROSC_CTRL =
+                GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK;
+
+            /* Enable GPC PMIC standby control */
+            GPC_GLOBAL->GPC_PMIC_CTRL =
+                GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK;
+
+            /* Power down eFUSE */
+            GPC_GLOBAL->GPC_EFUSE_CTRL =
+                GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK;
+
+            /* Move ELE and SM clock roots to OSC_24M to allow SysPLL to be
+             * powered down.  OSC_24M may be gated by hardware during final phases
+             * of system SUSPEND entry.
+             */
+            for (uint32_t sleepRootIdx = 0U;
+                sleepRootIdx < DEV_SM_NUM_SLEEP_ROOTS;
+                sleepRootIdx++)
             {
+                uint32_t rootIdx = s_clkRootSleepList[sleepRootIdx];
+
                 /* Save clock root context */
-                s_clkRootCtrl[rootIdx] = CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.RW;
+                s_clkRootCtrl[sleepRootIdx] =
+                    CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.RW;
 
-                /* Extract clock root mux setting */
-                uint32_t rootMux = (s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_MUX_MASK)
-                    >> CCM_CLOCK_ROOT_MUX_SHIFT;
+                /* Set MUX = 0 (OSC_24M) */
+                CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.CLR =
+                    CCM_CLOCK_ROOT_MUX_MASK;
 
-                /* Switch all roots not sourced from FRO to OSC_24M / 1*/
-                if (g_clockRootMux[rootIdx][rootMux] != CLOCK_SRC_FRO)
-                {
-                    /* Set MUX = 0 (OSC_24M) */
-                    CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.CLR =
-                        CCM_CLOCK_ROOT_MUX_MASK;
-
-                    /* Set DIV = 0 (/1) */
-                    CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.CLR =
-                        CCM_CLOCK_ROOT_DIV_MASK;
-                }
+                /* Set DIV = 0 (/1) */
+                CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.CLR =
+                    CCM_CLOCK_ROOT_DIV_MASK;
             }
 
             /* Power down SYSPLL clock nodes */
-            clkSrcIdx = CLOCK_SRC_SYSPLL1_PFD2_DIV2;
+            uint32_t clkSrcIdx = CLOCK_SRC_SYSPLL1_PFD2_DIV2;
             while(clkSrcIdx >= CLOCK_SRC_SYSPLL1_VCO)
             {
                 CLOCK_SourceSetEnable(clkSrcIdx, false);
                 clkSrcIdx--;
             }
+            s_sysSleepRecord.pllPwrStat &= (~(1UL << CLOCK_PLL_SYS1));
 
             /* Board-level sleep entry */
             BOARD_SystemSleepEnter(sleepMode);
@@ -483,10 +562,28 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Process SM LPIs for sleep entry */
             CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
 
+            /* Power down FRO */
+            FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
+
+            /* Capture sleep entry latency */
+            s_sysSleepRecord.sleepEntryUsec =
+               UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+
             /* Enter WFI to trigger sleep entry */
             __DSB();
             __WFI();
             __ISB();
+
+            /* Capture start of sleep exit */
+            sleepExitStart = DEV_SM_Usec64Get();
+
+            /* Power up FRO */
+            FRO->CSR.SET = FRO_CSR_FROEN_MASK;
+
+            /* Capture wake source */
+            s_sysSleepRecord.wakeSource =
+                (SCB->ICSR & SCB_ICSR_VECTPENDING_Msk)
+                >> SCB_ICSR_VECTPENDING_Pos;
 
             /* Process SM LPIs for sleep exit */
             CPU_PerLpiProcess(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
@@ -502,34 +599,45 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 clkSrcIdx++;
             }
 
-            /* Restore clock roots */
-            for (rootIdx = 0U; rootIdx < CLOCK_NUM_ROOT; rootIdx++)
+            /* Restore ELE and SM clock roots */
+            for (uint32_t sleepRootIdx = 0U;
+                sleepRootIdx < DEV_SM_NUM_SLEEP_ROOTS;
+                sleepRootIdx++)
             {
+                uint32_t rootIdx = s_clkRootSleepList[sleepRootIdx];
+
                 /* Restore DIV */
                 CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
-                    s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_DIV_MASK;
+                    s_clkRootCtrl[sleepRootIdx] & CCM_CLOCK_ROOT_DIV_MASK;
 
-                /* Restore MUX = 0 */
+                /* Restore MUX */
                 CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
-                    s_clkRootCtrl[rootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
+                    s_clkRootCtrl[sleepRootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
             }
 
-            /* If WAKEUPMIX powered down during SUSPEND, reenable handshake and
-             * force power up processing
+            /* TODO:  Apply configuration based on
+             *      SCMI system power mode flags
              */
+
+            /* Power up eFUSE */
+            GPC_GLOBAL->GPC_EFUSE_CTRL = 0U;
+
+            /* Restore GPC LP handshakes */
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM = lpHsSm;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM = lpHs2Sm;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL = lpHsEle;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL = lpHs2Ele;
+
+            /* If WAKEUPMIX powered down during SUSPEND, force power up */
             if (lpmSettingWakeup <= sleepMode)
             {
-                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_WAKEUP, true);
-                DEV_SM_PowerUpPost(DEV_SM_PD_WAKEUP);
+                DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_ON);
             }
 
-            /* If NOCMIX powered down during SUSPEND, reenable handshake and
-             * force power up processing
-             */
+            /* If NOCMIX powered down during SUSPEND, force power up */
             if (lpmSettingNoc <= sleepMode)
             {
-                PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_WAKEUP, true);
-                DEV_SM_PowerUpPost(DEV_SM_PD_NOC);
+                DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_ON);
             }
 
             /* Restore SM NVIC */
@@ -544,6 +652,14 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Board-level sleep unprepare */
             BOARD_SystemSleepUnprepare(sleepMode);
         }
+    }
+
+    /* Check if system did not sleep */
+    if (s_sysSleepRecord.wakeSource == 0U)
+    {
+        sleepExitStart = DEV_SM_Usec64Get();
+        s_sysSleepRecord.sleepEntryUsec =
+           UINT64_L(sleepExitStart - sleepEntryStart);
     }
 
     /* Restore GPC wake masks for sleeping CPUs */
@@ -571,6 +687,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         }
     }
 
+    s_sysSleepRecord.sleepExitUsec =
+       UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
+
     return status;
 }
 
@@ -591,7 +710,13 @@ int32_t DEV_SM_SystemIdle(void)
         {
             printf("+Sleep\n");
             status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
-            printf("-Sleep\n");
+            printf("-Sleep (wake vector = %u)\n", s_sysSleepRecord.wakeSource);
+
+            printf("MIX power status = 0x%08X\n", s_sysSleepRecord.mixPwrStat);
+            printf("MEM power status = 0x%08X\n", s_sysSleepRecord.memPwrStat);
+            printf("PLL power status = 0x%08X\n", s_sysSleepRecord.pllPwrStat);
+            printf("Sleep latency = %u usec\n", s_sysSleepRecord.sleepEntryUsec);
+            printf("Wake latency = %u usec\n", s_sysSleepRecord.sleepExitUsec);
         }
         /* Otherwise stay in RUN mode and enter WFI */
         else

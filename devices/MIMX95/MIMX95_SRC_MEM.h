@@ -6,9 +6,7 @@
 **         CMSIS Peripheral Access Layer for MIMX95_cm33
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2023 NXP
-**     All rights reserved.
-**
+**     Copyright 2016-2024 NXP
 **     SPDX-License-Identifier: BSD-3-Clause
 **
 **     http:                 www.nxp.com
@@ -66,26 +64,13 @@ typedef struct {
 /*! @name MEM_CTRL - MEM Low Power Control */
 /*! @{ */
 
-#define SRC_MEM_MEM_CTRL_SW_MEM_CTRL_MASK        (0x1U)
-#define SRC_MEM_MEM_CTRL_SW_MEM_CTRL_SHIFT       (0U)
-/*! SW_MEM_CTRL - Software control MEM low power
- *  0b0..software control MEM to exit low power
- *  0b1..software control MEM to enter low power
- */
-#define SRC_MEM_MEM_CTRL_SW_MEM_CTRL(x)          (((uint32_t)(((uint32_t)(x)) << SRC_MEM_MEM_CTRL_SW_MEM_CTRL_SHIFT)) & SRC_MEM_MEM_CTRL_SW_MEM_CTRL_MASK)
-
 #define SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK        (0x2U)
 #define SRC_MEM_MEM_CTRL_MEM_LP_MODE_SHIFT       (1U)
-/*! MEM_LP_MODE - MEM low power mode. Locked by LOCK_CFG field.
- *  0b0..Power down mode
- *  0b1..Retention mode
+/*! MEM_LP_MODE - Memory Low Power Mode configuration. Locked by LOCK_CFG field.
+ *  0b0..Power Down
+ *  0b1..Retention Mode
  */
 #define SRC_MEM_MEM_CTRL_MEM_LP_MODE(x)          (((uint32_t)(((uint32_t)(x)) << SRC_MEM_MEM_CTRL_MEM_LP_MODE_SHIFT)) & SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK)
-
-#define SRC_MEM_MEM_CTRL_MEM_LP_EN_MASK          (0x4U)
-#define SRC_MEM_MEM_CTRL_MEM_LP_EN_SHIFT         (2U)
-/*! MEM_LP_EN - Enable MEM low power control. Locked by LOCK_CFG field */
-#define SRC_MEM_MEM_CTRL_MEM_LP_EN(x)            (((uint32_t)(((uint32_t)(x)) << SRC_MEM_MEM_CTRL_MEM_LP_EN_SHIFT)) & SRC_MEM_MEM_CTRL_MEM_LP_EN_MASK)
 
 #define SRC_MEM_MEM_CTRL_MEM_LF_CNT_CFG_MASK     (0xFF00U)
 #define SRC_MEM_MEM_CTRL_MEM_LF_CNT_CFG_SHIFT    (8U)
