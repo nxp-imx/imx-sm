@@ -80,6 +80,31 @@ typedef struct
     uint32_t extInfo[DEV_SM_NUM_EXT_INFO];
 } dev_sm_rst_rec_t;
 
+/*!
+ * System sleep record
+ */
+typedef struct
+{
+    /*! System sleep entry latency */
+    uint32_t sleepEntryUsec;
+
+    /*! System sleep exit latency */
+    uint32_t sleepExitUsec;
+
+    /*! IRQ/exception causing system wake */
+    uint32_t wakeSource;
+
+    /*! MIX power status */
+    uint32_t mixPwrStat;
+
+    /*! MEM power status */
+    uint32_t memPwrStat;
+
+    /*! PLL power status */
+    uint32_t pllPwrStat;
+
+} dev_sm_sys_sleep_rec_t;
+
 /* Functions */
 
 /*!
@@ -232,6 +257,15 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
  * Return errors (see @ref STATUS "SM error codes"):
  */
 int32_t DEV_SM_SystemIdle(void);
+
+/*!
+ * Query system sleep record.
+ *
+ * @param[out]    sysSleepRecord  Pointer to return the record
+ *
+ * Returns the record from the most recent system sleep occurrence.
+ */
+void DEV_SM_SystemSleepRecGet(dev_sm_sys_sleep_rec_t *sysSleepRecord);
 
 #endif /* DEV_SM_SYSTEM_API_H */
 

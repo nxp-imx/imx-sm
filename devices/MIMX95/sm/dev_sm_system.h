@@ -125,31 +125,6 @@
 
 /* Types */
 
-/*!
- * System sleep record
- */
-typedef struct
-{
-    /*! System sleep entry latency */
-    uint32_t sleepEntryUsec;
-
-    /*! System sleep exit latency */
-    uint32_t sleepExitUsec;
-
-    /*! IRQ/exception causing system wake */
-    uint32_t wakeSource;
-
-    /*! MIX power status */
-    uint32_t mixPwrStat;
-
-    /*! MEM power status */
-    uint32_t memPwrStat;
-
-    /*! PLL power status */
-    uint32_t pllPwrStat;
-
-} dev_sm_sys_sleep_rec_t;
-
 /* Functions */
 
 /** @} */

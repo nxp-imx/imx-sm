@@ -356,7 +356,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     s_sysSleepRecord.memPwrStat = 0U;
     for (uint32_t memIdx = 0U; memIdx < PWR_NUM_MEM_SLICE; memIdx++)
     {
-        src_mem_slice_t *const srcMem = s_srcMemPtrs[memIdx];
+        const src_mem_slice_t *srcMem = s_srcMemPtrs[memIdx];
         if ((srcMem->MEM_CTRL & SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK) != 0U)
         {
             s_sysSleepRecord.memPwrStat |= (1UL << memIdx);
@@ -738,4 +738,13 @@ int32_t DEV_SM_SystemIdle(void)
     __enable_irq();
 
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Return system sleep record                                               */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemSleepRecGet(dev_sm_sys_sleep_rec_t *sysSleepRecord)
+{
+    /* Copy out system sleep record */
+    *sysSleepRecord = s_sysSleepRecord;
 }
