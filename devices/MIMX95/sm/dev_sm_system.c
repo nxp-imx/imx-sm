@@ -356,7 +356,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     s_sysSleepRecord.memPwrStat = 0U;
     for (uint32_t memIdx = 0U; memIdx < PWR_NUM_MEM_SLICE; memIdx++)
     {
-        src_mem_slice_t *srcMem = s_srcMemPtrs[memIdx];
+        src_mem_slice_t *const srcMem = s_srcMemPtrs[memIdx];
         if ((srcMem->MEM_CTRL & SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK) != 0U)
         {
             s_sysSleepRecord.memPwrStat |= (1UL << memIdx);
@@ -462,7 +462,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* If WAKEUPMIX powered down during SUSPEND, force power down */
             if ((lpmSettingWakeup <= sleepMode) &&
-                ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0))
+                ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0U))
             {
                 DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_OFF);
                 s_sysSleepRecord.mixPwrStat &=
@@ -495,7 +495,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 maskVal &= sysWakeMask[wakeIdx];
 
                 /* Update GPC wake mask */
-                CPU_IrqWakeSet(CPU_IDX_M33P, wakeIdx, maskVal);
+                (void) CPU_IrqWakeSet(CPU_IDX_M33P, wakeIdx, maskVal);
 
                 /* Update NVIC wake mask */
                 NVIC->ICER[wakeIdx] = 0xFFFFFFFFU;

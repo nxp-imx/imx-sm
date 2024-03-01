@@ -84,7 +84,7 @@ bool SRC_MixInit(uint32_t srcMixIdx)
             srcMix->SLICE_SW_CTRL &= (~ipIsoMask);
         }
 
-        return SRC_MemRetentionModeInit(srcMixIdx);
+        rc = SRC_MemRetentionModeInit(srcMixIdx);
     }
 
     return rc;

@@ -1687,7 +1687,7 @@ bool CPU_LpmConfigDeInit(uint32_t cpuIdx, uint32_t lpmSetting)
 /*--------------------------------------------------------------------------*/
 /* Set Virtual LPCG low-power mode setting for specified CPU                */
 /*--------------------------------------------------------------------------*/
-bool CPU_VirtLpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx,
+static bool CPU_VirtLpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx,
     uint32_t lpmSetting)
 {
     bool rc = false;
