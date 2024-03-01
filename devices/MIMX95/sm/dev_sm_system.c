@@ -409,10 +409,12 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                         wakeIdx++)
                     {
                         uint32_t wakeVal;
-                        CPU_IrqWakeGet(cpuIdx, wakeIdx, &wakeVal);
-                        cpuWakeMask[cpuIdx][wakeIdx] = wakeVal;
-                        sysWakeMask[wakeIdx] &= wakeVal;
-                        CPU_IrqWakeSet(cpuIdx, wakeIdx, 0xFFFFFFFFU);
+                        if (CPU_IrqWakeGet(cpuIdx, wakeIdx, &wakeVal))
+                        {
+                            cpuWakeMask[cpuIdx][wakeIdx] = wakeVal;
+                            sysWakeMask[wakeIdx] &= wakeVal;
+                            (void) CPU_IrqWakeSet(cpuIdx, wakeIdx, 0xFFFFFFFFU);
+                        }
                     }
 
                     /* Update NOCMIX dependency */
@@ -455,18 +457,24 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* If NOCMIX powered down during SUSPEND, force power down */
             if (lpmSettingNoc <= sleepMode)
             {
-                DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_OFF);
-                s_sysSleepRecord.mixPwrStat &=
-                    (~(1UL << PWR_MIX_SLICE_IDX_NOC));
+                if (DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_OFF)
+                    == SM_ERR_SUCCESS)
+                {
+                    s_sysSleepRecord.mixPwrStat &=
+                        (~(1UL << PWR_MIX_SLICE_IDX_NOC));
+                }
             }
 
             /* If WAKEUPMIX powered down during SUSPEND, force power down */
             if ((lpmSettingWakeup <= sleepMode) &&
                 ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0U))
             {
-                DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_OFF);
-                s_sysSleepRecord.mixPwrStat &=
-                    (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
+                if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_OFF)
+                    == SM_ERR_SUCCESS)
+                {
+                    s_sysSleepRecord.mixPwrStat &=
+                        (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
+                }
             }
 
             /* Inhibit all GPC LP handshakes during SUSPEND */
@@ -503,10 +511,10 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
 
             /* Configure M33P to wake from GPC */
-            CPU_WakeMuxSet(CPU_IDX_M33P, false);
+            (void) CPU_WakeMuxSet(CPU_IDX_M33P, false);
 
             /* Set target M33P sleep mode */
-            CPU_SleepModeSet(CPU_IDX_M33P, sleepMode);
+            (void) CPU_SleepModeSet(CPU_IDX_M33P, sleepMode);
 
             /* TODO:  Apply configuration based on
              *      SCMI system power mode flags
@@ -551,7 +559,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             uint32_t clkSrcIdx = CLOCK_SRC_SYSPLL1_PFD2_DIV2;
             while(clkSrcIdx >= CLOCK_SRC_SYSPLL1_VCO)
             {
-                CLOCK_SourceSetEnable(clkSrcIdx, false);
+                (void) CLOCK_SourceSetEnable(clkSrcIdx, false);
                 clkSrcIdx--;
             }
             s_sysSleepRecord.pllPwrStat &= (~(1UL << CLOCK_PLL_SYS1));
@@ -560,7 +568,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             BOARD_SystemSleepEnter(sleepMode);
 
             /* Process SM LPIs for sleep entry */
-            CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
+            (void) CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
 
             /* Power down FRO */
             FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
@@ -586,7 +594,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 >> SCB_ICSR_VECTPENDING_Pos;
 
             /* Process SM LPIs for sleep exit */
-            CPU_PerLpiProcess(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+            (void) CPU_PerLpiProcess(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
 
             /* Board-level sleep exit */
             BOARD_SystemSleepExit(sleepMode);
@@ -595,7 +603,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             clkSrcIdx = CLOCK_SRC_SYSPLL1_VCO;
             while(clkSrcIdx <= CLOCK_SRC_SYSPLL1_PFD2_DIV2)
             {
-                CLOCK_SourceSetEnable(clkSrcIdx, true);
+                (void) CLOCK_SourceSetEnable(clkSrcIdx, true);
                 clkSrcIdx++;
             }
 
@@ -631,13 +639,13 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* If WAKEUPMIX powered down during SUSPEND, force power up */
             if (lpmSettingWakeup <= sleepMode)
             {
-                DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_ON);
+                (void) DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_ON);
             }
 
             /* If NOCMIX powered down during SUSPEND, force power up */
             if (lpmSettingNoc <= sleepMode)
             {
-                DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_ON);
+                (void) DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_ON);
             }
 
             /* Restore SM NVIC */
@@ -679,7 +687,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                         wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
                         wakeIdx++)
                     {
-                        CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                        (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
                             cpuWakeMask[cpuIdx][wakeIdx]);
                     }
                 }
@@ -731,4 +739,3 @@ int32_t DEV_SM_SystemIdle(void)
 
     return status;
 }
-
