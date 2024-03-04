@@ -218,6 +218,15 @@ void LMM_Handler(void);
  */
 uint64_t LMM_BootTimeGet(uint32_t lmId);
 
+/*!
+ * Get config name.
+ *
+ * Returns the cfg file name as specified in the LMM config header.
+ *
+ * @return Returns a pointer to the name.
+ */
+string LMM_CfgNameGet(void);
+
 /** @} */
 
 #endif /* LMM_H */

@@ -363,3 +363,13 @@ uint64_t LMM_BootTimeGet(uint32_t lmId)
     return s_lmStartTime[lmId];
 }
 
+/*--------------------------------------------------------------------------*/
+/* Get cfg file name                                                        */
+/*--------------------------------------------------------------------------*/
+string LMM_CfgNameGet(void)
+{
+    static string cfgName = SM_LM_CFG_NAME;
+
+    return cfgName;
+}
+

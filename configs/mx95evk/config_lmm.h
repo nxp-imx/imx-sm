@@ -117,6 +117,9 @@
 /*! Number of  S-EENV */
 #define SM_LM_NUM_SEENV  1U
 
+/*! Config name */
+#define SM_LM_CFG_NAME  "mx95evk"
+
 /*! Default LM for monitor */
 #define SM_LM_DEFAULT  2U
 

@@ -718,6 +718,61 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get build config name                                                    */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName)
+{
+    int32_t status;
+    uint32_t header;
+    const void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint8_t cfgName[SCMI_MISC_MAX_CFGNAME];
+    } msg_rmiscd12_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInitC(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_MISC_DISCOVER_CFG_NAME, sizeof(header), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rmiscd12_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rmiscd12_t *msgRx = (const msg_rmiscd12_t*) msg;
+
+        /* Extract cfgName */
+        if (cfgName != NULL)
+        {
+            SCMI_StrCpy(cfgName, msgRx->cfgName, SCMI_MISC_MAX_CFGNAME);
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Negotiate the protocol version                                           */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_MiscNegotiateProtocolVersion(uint32_t channel,

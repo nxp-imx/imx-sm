@@ -60,14 +60,16 @@
 #define COMMAND_MISC_REASON_ATTRIBUTES       0x9U
 #define COMMAND_MISC_RESET_REASON            0xAU
 #define COMMAND_MISC_SI_INFO                 0xBU
+#define COMMAND_MISC_DISCOVER_CFG_NAME       0xCU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x10FFFUL
+#define COMMAND_SUPPORTED_MASK               0x11FFFUL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
 #define MISC_MAX_BUILDTIME  16U
 #define MISC_MAX_NAME       16U
 #define MISC_MAX_SINAME     16U
+#define MISC_MAX_CFGNAME    16U
 #define MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_VAL        SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_ARG_T      SCMI_ARRAY(12U, uint32_t)
@@ -312,6 +314,17 @@ typedef struct
     uint8_t siName[MISC_MAX_SINAME];
 } msg_tmisc11_t;
 
+/* Response type for MiscDiscoverCfgName() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Config (cfg) file basename */
+    uint8_t cfgName[MISC_MAX_CFGNAME];
+} msg_tmisc12_t;
+
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
 {
@@ -358,6 +371,8 @@ static int32_t MiscResetReason(const scmi_caller_t *caller,
     const msg_rmisc10_t *in, msg_tmisc10_t *out, uint32_t *len);
 static int32_t MiscSiInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc11_t *out);
+static int32_t MiscDiscoverCfgName(const scmi_caller_t *caller,
+    const scmi_msg_header_t *in, msg_tmisc12_t *out);
 static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rmisc16_t *in, const scmi_msg_status_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
@@ -442,6 +457,11 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tmisc11_t);
             status = MiscSiInfo(caller, (const scmi_msg_header_t*) in,
                 (msg_tmisc11_t*) out);
+            break;
+        case COMMAND_MISC_DISCOVER_CFG_NAME:
+            lenOut = sizeof(msg_tmisc12_t);
+            status = MiscDiscoverCfgName(caller,
+                (const scmi_msg_header_t*) in, (msg_tmisc12_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -1239,6 +1259,45 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
 
         /* Copy out name */
         RPC_SCMI_StrCpy(out->siName, nameAddr, MISC_MAX_SINAME);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get build config name                                                    */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - out->cfgName: Config (cfg) file basename                               */
+/*                                                                          */
+/* Process the MISC_DISCOVER_CFG_NAME message. Platform handler for         */
+/* SCMI_MiscDiscoverCfgName().                                              */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: in case the cfg name is returned.                      */
+/* - SM_ERR_NOT_SUPPORTED: if the name is not available.                    */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscDiscoverCfgName(const scmi_caller_t *caller,
+    const scmi_msg_header_t *in, msg_tmisc12_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Return data */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Copy out cfg name */
+        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        RPC_SCMI_StrCpy(out->cfgName, (const uint8_t*) LMM_CfgNameGet(),
+            MISC_MAX_CFGNAME);
     }
 
     /* Return status */

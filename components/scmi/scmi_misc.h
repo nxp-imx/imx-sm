@@ -70,6 +70,8 @@
 #define SCMI_MSG_MISC_RESET_REASON         0xAU
 /*! Get silicon info */
 #define SCMI_MSG_MISC_SI_INFO              0xBU
+/*! Get build config name */
+#define SCMI_MSG_MISC_DISCOVER_CFG_NAME    0xCU
 /*! Read control notification event */
 #define SCMI_MSG_MISC_CONTROL_EVENT        0x0U
 /** @} */
@@ -86,6 +88,8 @@
 #define SCMI_MISC_MAX_NAME       16U
 /*! Max length of the returned silicon name */
 #define SCMI_MISC_MAX_SINAME     16U
+/*! Max length of the returned cfg name */
+#define SCMI_MISC_MAX_CFGNAME    16U
 /*! Max number value words */
 #define SCMI_MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
 /*! Max number return words */
@@ -496,6 +500,22 @@ int32_t SCMI_MiscResetReason(uint32_t channel, uint32_t flags,
  */
 int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
     uint32_t *siRev, uint32_t *partNum, uint8_t *siName);
+
+/*!
+ * Get build config name.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[out]    cfgName  Config (cfg) file basename
+ *
+ * This function returns the basename of the SM configuration (cfg) file.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: in case the cfg name is returned.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the name is not available.
+ */
+int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName);
 
 /*!
  * Negotiate the protocol version.

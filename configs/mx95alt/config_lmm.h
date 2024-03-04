@@ -99,6 +99,9 @@
 /*! Number of  S-EENV */
 #define SM_LM_NUM_SEENV  0U
 
+/*! Config name */
+#define SM_LM_CFG_NAME  "mx95alt"
+
 /*! Default LM for monitor */
 #define SM_LM_DEFAULT  1U
 

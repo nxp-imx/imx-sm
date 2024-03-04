@@ -404,6 +404,9 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
         printf("Silicon       = %s\n", siName);
     }
 
+    /* Display the cfg info */
+    printf("Config        = %s\n", LMM_CfgNameGet());
+
     /* Display ROM passover info */
     if (LMM_MiscRomPassoverGet(0U, &passover) == SM_ERR_SUCCESS)
     {

@@ -1509,6 +1509,12 @@ sub generate_lmm
     print $out '/*! Number of  S-EENV */' . "\n";
     print $out '#define SM_LM_NUM_SEENV  ' . ($seenvid) . 'U' . "\n\n";
 
+	# Output config name
+    my ($inName, $inPath, $inSuffix) = fileparse($inputFile, '\.[^\.]*');
+    print $out '/*! Config name */' . "\n";
+    print $out '#define SM_LM_CFG_NAME  "' . substr($inName, 0, 15)
+        . '"' . "\n\n";
+
 	# Output default monitor LM
     print $out '/*! Default LM for monitor */' . "\n";
     print $out '#define SM_LM_DEFAULT  ' . $default . 'U' . "\n\n";
