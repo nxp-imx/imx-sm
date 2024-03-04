@@ -37,8 +37,7 @@ This is an alpha release! It is not production quality.
 Highlights {#RN_HIGH}
 ==========
 
-- Added support for the FCCU (via an eMcem component)
-- Added peripheral low-power management
+- Added system suspend/resume support
 - Misc. improvements and bug fixes
 
 Note these are highlights of the original release. These do not cover changes
