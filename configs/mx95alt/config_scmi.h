@@ -364,6 +364,7 @@
         .perfPerms[DEV_SM_PERF_CAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DISP] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_GPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M7] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_VPU] = SM_SCMI_PERM_ALL, \
@@ -859,6 +860,7 @@
         .perfPerms[DEV_SM_PERF_CAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DISP] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_GPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M7] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_VPU] = SM_SCMI_PERM_ALL, \
@@ -1345,6 +1347,7 @@
         .perfPerms[DEV_SM_PERF_CAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DISP] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_GPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M7] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_VPU] = SM_SCMI_PERM_ALL, \
