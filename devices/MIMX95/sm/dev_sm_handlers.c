@@ -502,8 +502,13 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
         .valid = true
     };
 
+#ifdef USES_FUSA
+    /* Report to FuSa */
+    LMM_FuSaExceptionHandler(&resetRec);
+#endif
+
     /* Finalize system reset flow */
-    (void) DEV_SM_SystemRstComp(resetRec);
+    (void) DEV_SM_SystemRstComp(&resetRec);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -527,7 +532,7 @@ static void FaultHandler(uint32_t faultId)
     if (status != SM_ERR_SUCCESS)
     {
         /* Finalize system reset flow */
-        (void) DEV_SM_SystemRstComp(resetRec);
+        (void) DEV_SM_SystemRstComp(&resetRec);
     }
 }
 

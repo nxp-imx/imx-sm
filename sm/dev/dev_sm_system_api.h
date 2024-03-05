@@ -226,7 +226,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags);
  * Return errors (see @ref STATUS "SM error codes"):
  * - others returned by ::SM_SYSTEMRSTCOMP
  */
-int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec);
+int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec);
 
 /*!
  * Report an SM system error.

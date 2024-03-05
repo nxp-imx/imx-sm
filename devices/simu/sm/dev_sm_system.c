@@ -168,11 +168,12 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
 
     static string const s_name[DEV_SM_NUM_REASON] =
     {
-        [DEV_SM_REASON_POR] =    "por",
-        [DEV_SM_REASON_FAULT] =  "fault",
-        [DEV_SM_REASON_BBM] =    "bbm",
-        [DEV_SM_REASON_SW] =     "sw",
-        [DEV_SM_REASON_SM_ERR] = "sm_err"
+        [DEV_SM_REASON_POR] =        "por",
+        [DEV_SM_REASON_FAULT] =      "fault",
+        [DEV_SM_REASON_BBM] =        "bbm",
+        [DEV_SM_REASON_SW] =         "sw",
+        [DEV_SM_REASON_SM_ERR] =     "sm_err",
+        [DEV_SM_REASON_FUSA_SRECO] = "fusa_sreco"
     };
 
     /* Get max string width */
@@ -209,7 +210,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 /* Complete system reset processing                                         */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)
+int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
     return SM_SYSTEMRSTCOMP(resetRec);
 }
@@ -235,7 +236,7 @@ void DEV_SM_SystemError(int32_t status, uint32_t pc)
     }
 
     /* Finalize system reset flow */
-    (void) DEV_SM_SystemRstComp(resetRec);
+    (void) DEV_SM_SystemRstComp(&resetRec);
 }
 
 /*--------------------------------------------------------------------------*/

@@ -264,6 +264,36 @@ int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
 void LMM_FusaFaultCleared(uint32_t faultId);
 
 /*!
+ * Report a full (system) shutdown event.
+ *
+ * @param[in]     shutdownRec Shutdown record to store
+ *
+ * Called from LMM_SystemShutdown() and LMM_SystemReset() to report
+ * a shutdown event. Used to flush data to FuSa persistent storage.
+ */
+void LMM_FusaExit(const lmm_rst_rec_t *shutdownRec);
+
+/*!
+ * Request global error recovery.
+ *
+ * @param[in]     shutdownRec Shutdown record to store
+ *
+ * Use to report an internal FuSa error condition. Results in a full
+ * system reset with a ::DEV_SM_REASON_FUSA_SRECO reset reason.
+ */
+void LMM_FusaGlobalRecovery(uint32_t status);
+
+/*!
+ * Report a full (system) reset event due to an SCP exception.
+ *
+ * @param[in]     resetRec    Exception information
+ *
+ * Called from the handlers ExceptionHandler() function to report
+ * a reset event due to an SCP exception.
+ */
+void LMM_FuSaExceptionHandler(const dev_sm_rst_rec_t *resetRec);
+
+/*!
  * Report assertion error.
  *
  * @param[in]     status        Error status

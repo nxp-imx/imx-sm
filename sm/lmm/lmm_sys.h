@@ -168,7 +168,7 @@ int32_t LMM_SystemReasonNameGet(uint32_t lmId, uint32_t resetReason,
  * Return errors (see @ref STATUS "SM error codes"):
  * - others returned by LMM_SystemReset()
  */
-int32_t LMM_SystemRstComp(lmm_rst_rec_t resetRec);
+int32_t LMM_SystemRstComp(const lmm_rst_rec_t *resetRec);
 
 /*!
  * @name LMM full system functions

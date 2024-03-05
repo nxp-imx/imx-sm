@@ -212,7 +212,7 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
         [DEV_SM_REASON_BBM] =         "bbm",
         [DEV_SM_REASON_SW] =          "sw",
         [DEV_SM_REASON_SM_ERR] =      "sm_err",
-        [DEV_SM_REASON_UNUSED3] =     "unused3",
+        [DEV_SM_REASON_FUSA_SRECO] =  "fusa_sreco",
         [DEV_SM_REASON_UNUSED4] =     "unused4",
         [DEV_SM_REASON_UNUSED5] =     "unused5",
         [DEV_SM_REASON_UNUSED6] =     "unused6",
@@ -276,7 +276,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 /* Complete system reset processing                                         */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemRstComp(dev_sm_rst_rec_t resetRec)
+int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
     return SM_SYSTEMRSTCOMP(resetRec);
 }
@@ -302,7 +302,7 @@ void DEV_SM_SystemError(int32_t status, uint32_t pc)
     }
 
     /* Finalize system reset flow */
-    (void) DEV_SM_SystemRstComp(resetRec);
+    (void) DEV_SM_SystemRstComp(&resetRec);
 }
 
 /*--------------------------------------------------------------------------*/

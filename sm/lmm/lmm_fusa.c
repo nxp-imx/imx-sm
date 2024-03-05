@@ -271,6 +271,37 @@ void LMM_FusaFaultCleared(uint32_t faultId)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Report full shutdown/reset                                               */
+/*--------------------------------------------------------------------------*/
+void LMM_FusaExit(const lmm_rst_rec_t *shutdownRec)
+{
+}
+
+/*--------------------------------------------------------------------------*/
+/* Recover from global error                                                */
+/*--------------------------------------------------------------------------*/
+void LMM_FusaGlobalRecovery(uint32_t status)
+{
+    dev_sm_rst_rec_t resetRec =
+    {
+        .reason = DEV_SM_REASON_FUSA_SRECO,
+        .errId = (uint32_t) status,
+        .validErr = true,
+        .valid = true
+    };
+
+    /* Finalize system reset flow */
+    (void) DEV_SM_SystemRstComp(&resetRec);
+}
+
+/*--------------------------------------------------------------------------*/
+/* Report exception                                                         */
+/*--------------------------------------------------------------------------*/
+void LMM_FuSaExceptionHandler(const dev_sm_rst_rec_t *resetRec)
+{
+}
+
+/*--------------------------------------------------------------------------*/
 /* Report assertion error                                                   */
 /*--------------------------------------------------------------------------*/
 void LMM_FuSaAssertionFailure(int32_t status)

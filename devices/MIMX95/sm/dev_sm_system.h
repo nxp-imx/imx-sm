@@ -81,7 +81,7 @@
 #define DEV_SM_REASON_BBM          RST_REASON_UNUSED0      /*!< 15: BBM boot/shutdown */
 #define DEV_SM_REASON_SW           RST_REASON_UNUSED1      /*!< 16: SW requested */
 #define DEV_SM_REASON_SM_ERR       RST_REASON_UNUSED2      /*!< 17: SM error/exit */
-#define DEV_SM_REASON_UNUSED3      RST_REASON_UNUSED3      /*!< 18: Unused */
+#define DEV_SM_REASON_FUSA_SRECO   RST_REASON_UNUSED3      /*!< 18: FuSa global recovery */
 #define DEV_SM_REASON_UNUSED4      RST_REASON_UNUSED4      /*!< 19: Unused */
 #define DEV_SM_REASON_UNUSED5      RST_REASON_UNUSED5      /*!< 20: Unused */
 #define DEV_SM_REASON_UNUSED6      RST_REASON_UNUSED6      /*!< 21: Unused */

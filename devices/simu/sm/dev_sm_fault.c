@@ -125,7 +125,7 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
             if (status != SM_ERR_SUCCESS)
             {
                 /* Finalize system reset flow */
-                (void) DEV_SM_SystemRstComp(resetRec);
+                (void) DEV_SM_SystemRstComp(&resetRec);
             }
         }
     }

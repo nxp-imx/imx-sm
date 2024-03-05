@@ -131,11 +131,11 @@ int32_t LMM_SystemReasonNameGet(uint32_t lmId, uint32_t resetReason,
 /*--------------------------------------------------------------------------*/
 /* Complete system reset handling                                           */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_SystemRstComp(lmm_rst_rec_t resetRec)
+int32_t LMM_SystemRstComp(const lmm_rst_rec_t *resetRec)
 {
     int32_t status;
 
-    status = LMM_SystemReset(0U, 0U, false, &resetRec);
+    status = LMM_SystemReset(0U, 0U, false, resetRec);
 
     /* Return status */
     return status;
@@ -183,6 +183,11 @@ int32_t LMM_SystemShutdown(uint32_t lmId, uint32_t agentId,
 
         /* Save reason */
         DEV_SM_SystemShutdownRecSet(newShutdownRec);
+
+#ifdef USES_FUSA
+        /* Report to FuSa */
+        LMM_FusaExit(shutdownRec);
+#endif
 
         /* Request system shutdown */
         status = SM_SYSTEMSHUTDOWN();
@@ -237,10 +242,7 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
 
 #ifdef USES_FUSA
         /* Report to FuSa */
-        if (resetRec->reason == DEV_SM_REASON_SM_ERR)
-        {
-            LMM_FuSaAssertionFailure((int32_t) resetRec->errId);
-        }
+        LMM_FusaExit(resetRec);
 #endif
 
         /* Request system reset */

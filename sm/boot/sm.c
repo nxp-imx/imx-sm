@@ -161,6 +161,12 @@ void SM_Error(int32_t status)
     __ASM ("MOV %0, LR\n" : "=r" (pc));
 #endif
 
+#ifdef USES_FUSA
+    /* Report to FuSa */
+    LMM_FuSaAssertionFailure(status);
+#endif
+
+    /* Request board reset */
     BRD_SM_Exit(status, pc);
 }
 
@@ -175,6 +181,7 @@ void exit(int status)
     /* Get the LR as PC */
     __ASM ("MOV %0, LR\n" : "=r" (pc));
 
+    /* Request board reset */
     BRD_SM_Exit((int32_t) status, pc);
     __builtin_unreachable();
 }
