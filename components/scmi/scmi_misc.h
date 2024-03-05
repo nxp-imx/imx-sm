@@ -71,7 +71,7 @@
 /*! Get silicon info */
 #define SCMI_MSG_MISC_SI_INFO              0xBU
 /*! Get build config name */
-#define SCMI_MSG_MISC_DISCOVER_CFG_NAME    0xCU
+#define SCMI_MSG_MISC_CFG_INFO             0xCU
 /*! Read control notification event */
 #define SCMI_MSG_MISC_CONTROL_EVENT        0x0U
 /** @} */
@@ -505,9 +505,11 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
  * Get build config name.
  *
  * @param[in]     channel  A2P channel for comms
+ * @param[out]    mSel     Mode selector value
  * @param[out]    cfgName  Config (cfg) file basename
  *
- * This function returns the basename of the SM configuration (cfg) file.
+ * This function returns the basename of the SM configuration (cfg) file and
+ * the mSel value.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -515,7 +517,8 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
  * - ::SCMI_ERR_SUCCESS: in case the cfg name is returned.
  * - ::SCMI_ERR_NOT_SUPPORTED: if the name is not available.
  */
-int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName);
+int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
+    uint8_t *cfgName);
 
 /*!
  * Negotiate the protocol version.

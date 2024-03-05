@@ -174,7 +174,7 @@ and some of the optional messages are supported.
 | Misc | 0x84 | [MISC_REASON_ATTRIBUTES](@ref SCMI_PROTO_MISC_MISC_REASON_ATTRIBUTES) | 0x9 |  |
 | Misc | 0x84 | [MISC_RESET_REASON](@ref SCMI_PROTO_MISC_MISC_RESET_REASON) | 0xA |  |
 | Misc | 0x84 | [MISC_SI_INFO](@ref SCMI_PROTO_MISC_MISC_SI_INFO) | 0xB |  |
-| Misc | 0x84 | [MISC_DISCOVER_CFG_NAME](@ref SCMI_PROTO_MISC_MISC_DISCOVER_CFG_NAME) | 0xC |  |
+| Misc | 0x84 | [MISC_CFG_INFO](@ref SCMI_PROTO_MISC_MISC_CFG_INFO) | 0xC |  |
 | Misc | 0x84 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Misc\n(notification) | 0x84 | [MISC_CONTROL_EVENT](@ref SCMI_PROTO_MISC_MISC_CONTROL_EVENT) | 0x0 |  |
 
@@ -3333,9 +3333,9 @@ See SCMI_MiscSiInfo() for details.
     | uint8          | si_name[16]                                                  |
     ---------------------------------------------------------------------------------
 
-## Misc: MISC_DISCOVER_CFG_NAME ## {#SCMI_PROTO_MISC_MISC_DISCOVER_CFG_NAME}
+## Misc: MISC_CFG_INFO ## {#SCMI_PROTO_MISC_MISC_CFG_INFO}
 
-See SCMI_MiscDiscoverCfgName() for details.
+See SCMI_MiscCfgInfo() for details.
 
     Send
     ---------------------------------------------------------------------------------
@@ -3347,6 +3347,8 @@ See SCMI_MiscDiscoverCfgName() for details.
     | uint32         | header (type=0, proto=0x84, msg=0xC                          |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | mSel                                                         |
     ---------------------------------------------------------------------------------
     | uint8          | cfg_name[16]                                                 |
     ---------------------------------------------------------------------------------

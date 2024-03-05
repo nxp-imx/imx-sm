@@ -93,14 +93,14 @@ int main(int argc, const char * const argv[])
     /* Init LMM */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_Init(&mSel);
+        status = LMM_Init(&mSel, LMM_INIT_FLAGS);
     }
 
     /* Boot LMs */
     if (status == SM_ERR_SUCCESS)
     {
         /* mSel from BRD_SM_Init(), LMM_INIT_FLAGS from Makefile */
-        status = LMM_Boot(mSel, LMM_INIT_FLAGS);
+        status = LMM_Boot();
     }
 
 #ifdef RUN_TEST
@@ -114,7 +114,7 @@ int main(int argc, const char * const argv[])
     /* Post-boot cleanup */
     if (status == SM_ERR_SUCCESS)
     {
-        status = LMM_PostBoot(mSel, LMM_INIT_FLAGS);
+        status = LMM_PostBoot();
     }
 
     /* Report any error during init */

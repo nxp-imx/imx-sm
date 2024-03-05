@@ -48,6 +48,8 @@
 
 /* Local variables */
 
+static volatile uint32_t s_mSel;
+static volatile uint32_t s_lmmInitFlags;
 static volatile uint32_t s_bootLm;
 static volatile uint8_t s_bootSkip;
 static volatile int32_t s_bootStatus;
@@ -56,7 +58,7 @@ static uint64_t s_lmStartTime[SM_NUM_LM];
 /*--------------------------------------------------------------------------*/
 /* Init logical machine manager                                             */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_Init(uint32_t *mSel)
+int32_t LMM_Init(uint32_t *mSel, uint32_t lmmInitFlags)
 {
     int32_t status;
     uint32_t numClock;
@@ -123,6 +125,10 @@ int32_t LMM_Init(uint32_t *mSel)
         }
     }
 
+    /* Record init parms */
+    s_mSel = *mSel;
+    s_lmmInitFlags = lmmInitFlags;
+
     /* Return status */
     return status;
 }
@@ -132,9 +138,16 @@ int32_t LMM_Init(uint32_t *mSel)
 /*                                                                          */
 /* Note only call from main(). Cannot be called from an interrupt context.  */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_Boot(uint32_t mSel, uint32_t lmmInitFlags)
+int32_t LMM_Boot(void)
 {
     int32_t status;
+    uint32_t mSel = s_mSel;
+
+    /* Default out of range mSel */
+    if (mSel >= SM_LM_NUM_MSEL)
+    {
+        mSel = 0U;
+    }
 
     /* Inform LM system of mode select */
     status = LMM_SystemModeSelSet(mSel);
@@ -144,7 +157,7 @@ int32_t LMM_Boot(uint32_t mSel, uint32_t lmmInitFlags)
 
     /* Boot LMs */
     if ((status == SM_ERR_SUCCESS)
-        && ((lmmInitFlags & LM_INIT_FLAGS_BOOT) != 0U))
+        && ((s_lmmInitFlags & LM_INIT_FLAGS_BOOT) != 0U))
     {
         /* Loop over boot order */
         for (uint8_t bootOrder = 1U; bootOrder <= SM_NUM_LM; bootOrder++)
@@ -199,10 +212,10 @@ int32_t LMM_Boot(uint32_t mSel, uint32_t lmmInitFlags)
 /*                                                                          */
 /* Run any clean-up required after starting all LM                          */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_PostBoot(uint32_t mSel, uint32_t lmmInitFlags)
+int32_t LMM_PostBoot(void)
 {
     /* Just passthru to board/device */
-    return SM_SYSTEMPOSTBOOT(mSel, lmmInitFlags);
+    return SM_SYSTEMPOSTBOOT(s_mSel, s_lmmInitFlags);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -364,12 +377,16 @@ uint64_t LMM_BootTimeGet(uint32_t lmId)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get cfg file name                                                        */
+/* Get cfg info                                                             */
 /*--------------------------------------------------------------------------*/
-string LMM_CfgNameGet(void)
+string LMM_CfgInfoGet(uint32_t *mSel)
 {
     static string cfgName = SM_LM_CFG_NAME;
 
+    /* Return mSel value */
+    *mSel = s_mSel;
+
+    /* Return cfg file name */
     return cfgName;
 }
 

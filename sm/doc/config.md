@@ -286,6 +286,9 @@ as follows:
 - **SM_NUM_LM** - total number of LM
 - **SM_LM_CONFIG_DATA** - fills in the ::g_lmmConfig array of lmm_config_t
   structures, one per LM
+- **SM_LM_NUM_MSEL** - number of mSel
+- **SM_LM_NUM_SEENV** - Number of S-EENV IDs
+- **SM_LM_CFG_NAME** - Basename of the cfg file
 - **SM_LM_DEFAULT** - default LM used by the debug monitor
 - **SM_LM_NUM_START** - total number of start array entries
 - **SM_LM_START_DATA** - fills in the s_lmmStart array of lmm_start_t

@@ -392,9 +392,16 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     uint32_t deviceId;
     uint32_t siRev;
     uint32_t partNum;
+    string cfgName;
+    uint32_t mSel = 0U;
 
     printf("SM Version    = Build %u", buildNum);
     printf(", Commit %08x\n", buildCommit);
+
+    /* Display the cfg info */
+    cfgName = LMM_CfgInfoGet(&mSel);
+    printf("SM Config     = %s, %u\n", cfgName, mSel);
+
     printf("Platform      = %s\n", SCMI_SUB_VENDOR);
 
     /* Get the silicon info */
@@ -403,9 +410,6 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     {
         printf("Silicon       = %s\n", siName);
     }
-
-    /* Display the cfg info */
-    printf("Config        = %s\n", LMM_CfgNameGet());
 
     /* Display ROM passover info */
     if (LMM_MiscRomPassoverGet(0U, &passover) == SM_ERR_SUCCESS)

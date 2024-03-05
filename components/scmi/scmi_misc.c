@@ -720,7 +720,8 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
 /*--------------------------------------------------------------------------*/
 /* Get build config name                                                    */
 /*--------------------------------------------------------------------------*/
-int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName)
+int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
+    uint8_t *cfgName)
 {
     int32_t status;
     uint32_t header;
@@ -731,6 +732,7 @@ int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName)
     {
         uint32_t header;
         int32_t status;
+        uint32_t mSel;
         uint8_t cfgName[SCMI_MISC_MAX_CFGNAME];
     } msg_rmiscd12_t;
 
@@ -744,7 +746,7 @@ int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName)
     if (status == SCMI_ERR_SUCCESS)
     {
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_MISC_DISCOVER_CFG_NAME, sizeof(header), &header);
+            SCMI_MSG_MISC_CFG_INFO, sizeof(header), &header);
     }
 
     /* Receive response */
@@ -757,6 +759,12 @@ int32_t SCMI_MiscDiscoverCfgName(uint32_t channel, uint8_t *cfgName)
     if (status == SCMI_ERR_SUCCESS)
     {
         const msg_rmiscd12_t *msgRx = (const msg_rmiscd12_t*) msg;
+
+        /* Extract mSel */
+        if (mSel != NULL)
+        {
+            *mSel = msgRx->mSel;
+        }
 
         /* Extract cfgName */
         if (cfgName != NULL)

@@ -117,6 +117,7 @@ typedef struct
  * LMM initialization.
  *
  * @param[in,out] mSel          Boot mode selection
+ * @param[in]     lmmInitFlags  Init flags from makefile
  *
  * This function initializes the various LMM submodules such as the LMM
  * clock function via LMM_ClockInit(). It then loops over the LMs and
@@ -124,13 +125,10 @@ typedef struct
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_Init(uint32_t *mSel);
+int32_t LMM_Init(uint32_t *mSel, uint32_t lmmInitFlags);
 
 /*!
  * LMM boot.
- *
- * @param[in]     mSel          Boot mode selection
- * @param[in]     lmmInitFlags  Init flags from makefile
  *
  * Boots all the LM as specified in the LMM configuration structure.
  * (lmm_config_t ::g_lmmConfig[]). The *boot* member indicates the boot order
@@ -139,19 +137,16 @@ int32_t LMM_Init(uint32_t *mSel);
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_Boot(uint32_t mSel, uint32_t lmmInitFlags);
+int32_t LMM_Boot(void);
 
 /*!
  * LMM post-boot complete.
- *
- * @param[in]     mSel          Boot mode selection
- * @param[in]     lmmInitFlags  Init flags from makefile
  *
  * Do any housekeeping after booting all LM.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_PostBoot(uint32_t mSel, uint32_t lmmInitFlags);
+int32_t LMM_PostBoot(void);
 
 /*!
  * Get LM name.
@@ -219,13 +214,15 @@ void LMM_Handler(void);
 uint64_t LMM_BootTimeGet(uint32_t lmId);
 
 /*!
- * Get config name.
+ * Get config info.
+ *
+ * @param[out]    mSel          Returned mSel value used to boot
  *
  * Returns the cfg file name as specified in the LMM config header.
  *
  * @return Returns a pointer to the name.
  */
-string LMM_CfgNameGet(void);
+string LMM_CfgInfoGet(uint32_t *mSel);
 
 /** @} */
 
