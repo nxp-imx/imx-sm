@@ -139,13 +139,13 @@
 #define ES_ODV_KHZ_A55PER           ES_400000KHZ
 #define ES_SOD_KHZ_A55PER           ES_500000KHZ
 
-#define ES_LOW_KHZ_DRAM_LP4X        ES_233333KHZ
-#define ES_NOM_KHZ_DRAM_LP4X        ES_360000KHZ
-#define ES_ODV_KHZ_DRAM_LP4X        ES_466667KHZ
+#define ES_LOW_KHZ_DRAM_LP4X        ES_233333KHZ /* 1866 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_LP4X        ES_360000KHZ /* 2880 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_LP4X        ES_533333KHZ /* 4267 MT/s / 8 */
 
-#define ES_LOW_KHZ_DRAM_LP5         ES_400000KHZ
-#define ES_NOM_KHZ_DRAM_LP5         ES_600000KHZ
-#define ES_ODV_KHZ_DRAM_LP5         ES_800000KHZ
+#define ES_LOW_KHZ_DRAM_LP5         ES_400000KHZ /* 3200 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_LP5         ES_600000KHZ /* 4800 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_LP5         ES_800000KHZ /* 6400 MT/s / 8 */
 
 #define ES_LOW_KHZ_HSIO             ES_250000KHZ
 #define ES_NOM_KHZ_HSIO             ES_400000KHZ

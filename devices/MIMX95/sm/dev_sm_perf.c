@@ -543,11 +543,11 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC]
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+         * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
-        .mfi = 155U,                            /* VCO MFI */
-        .mfn = VCO_MFD/2U,                      /* VCO MFN */
-        .odiv = 8U,                             /* ODIV */
+        .mfi = 133U,                            /* VCO MFI */
+        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .odiv = 6U,                             /* ODIV */
     }
 };
 
