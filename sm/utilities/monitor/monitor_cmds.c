@@ -2164,7 +2164,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
 
                     if (status == SM_ERR_SUCCESS)
                     {
-                        status = SM_CPUINFOGET(cpuId, &runMode,
+                        status = LMM_CpuInfoGet(s_lm, cpuId, &runMode,
                             &sleepMode, &vector);
                     }
 

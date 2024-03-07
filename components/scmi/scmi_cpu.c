@@ -571,6 +571,96 @@ int32_t SCMI_CpuPerLpmConfigSet(uint32_t channel, uint32_t cpuId,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get info for a CPU                                                       */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_CpuInfoGet(uint32_t channel, uint32_t cpuId, uint32_t *runMode,
+    uint32_t *sleepMode, uint32_t *resetVectorLow,
+    uint32_t *resetVectorHigh)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t runMode;
+        uint32_t sleepMode;
+        uint32_t resetVectorLow;
+        uint32_t resetVectorHigh;
+    } msg_rcpud12_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t cpuId;
+        } msg_tcpud12_t;
+        msg_tcpud12_t *msgTx = (msg_tcpud12_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->cpuId = cpuId;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_CPU_INFO_GET, sizeof(msg_tcpud12_t), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rcpud12_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rcpud12_t *msgRx = (const msg_rcpud12_t*) msg;
+
+        /* Extract runMode */
+        if (runMode != NULL)
+        {
+            *runMode = msgRx->runMode;
+        }
+
+        /* Extract sleepMode */
+        if (sleepMode != NULL)
+        {
+            *sleepMode = msgRx->sleepMode;
+        }
+
+        /* Extract resetVectorLow */
+        if (resetVectorLow != NULL)
+        {
+            *resetVectorLow = msgRx->resetVectorLow;
+        }
+
+        /* Extract resetVectorHigh */
+        if (resetVectorHigh != NULL)
+        {
+            *resetVectorHigh = msgRx->resetVectorHigh;
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Negotiate the protocol version                                           */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_CpuNegotiateProtocolVersion(uint32_t channel,

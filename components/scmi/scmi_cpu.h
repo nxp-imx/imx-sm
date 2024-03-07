@@ -70,6 +70,8 @@
 #define SCMI_MSG_CPU_PD_LPM_CONFIG_SET   0xAU
 /*! Configure a list of peripheral LPM configs */
 #define SCMI_MSG_CPU_PER_LPM_CONFIG_SET  0xBU
+/*! Get info for a CPU */
+#define SCMI_MSG_CPU_INFO_GET            0xCU
 /** @} */
 
 /*!
@@ -126,6 +128,20 @@
 #define SCMI_CPU_LPM_SETTING_ON_RUN_WAIT_STOP  3U
 /*! Power always on */
 #define SCMI_CPU_LPM_SETTING_ON_ALWAYS         4U
+/** @} */
+
+/*!
+ * @name SCMI CPU run modes
+ */
+/** @{ */
+/*! On */
+#define SCMI_CPU_RUN_RUN    0U
+/*! Wait mode */
+#define SCMI_CPU_RUN_WAIT   1U
+/*! Stop mode */
+#define SCMI_CPU_RUN_STOP   2U
+/*! Sleep mode */
+#define SCMI_CPU_RUN_SLEEP  3U
 /** @} */
 
 /* Macros */
@@ -383,8 +399,8 @@ int32_t SCMI_CpuResetVectorSet(uint32_t channel, uint32_t cpuId,
  * @param[in]     flags      Sleep mode flags:<BR>
  *                           Bits[31:1] Reserved, must be zero.<BR>
  *                           Bit[0] IRQ mux:<BR>
- *                           If set to 1 the the wakeup mux source is the GIC,
- *                           else if 0 then the GPC
+ *                           If set to 1 the wakeup mux source is the GIC, else
+ *                           if 0 then the GPC
  * @param[in]     sleepMode  Target sleep mode
  *
  * This function allows the calling agent to set sleep mode of a CPU. The CPU
@@ -498,14 +514,14 @@ int32_t SCMI_CpuPdLpmConfigSet(uint32_t channel, uint32_t cpuId,
  * CPU sleep modes will affect a peripheral's low-power handshake signals (e.g.
  * IPG_STOP, Q_CHN) . An example LPM setting is
  * ::SCMI_CPU_LPM_SETTING_ON_NEVER. Note each CPU can have different settings
- * and the hardware aggregates these settings to determine the pierpheral
+ * and the hardware aggregates these settings to determine the peripheral
  * low-power state. The max number of configs is ::SCMI_CPU_MAX_PERCONFIGS_T.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
  * - ::SCMI_ERR_SUCCESS: if the CPU is started successfully.
- * - ::SCMI_ERR_NOT_FOUND: if \a cpuId or a pereipheral ID does not exist.
+ * - ::SCMI_ERR_NOT_FOUND: if \a cpuId or a peripheral ID does not exist.
  * - ::SCMI_ERR_INVALID_PARAMETERS: if \a numConfigs or an LPM setting is
  *   invalid.
  * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to configure this
@@ -513,6 +529,29 @@ int32_t SCMI_CpuPdLpmConfigSet(uint32_t channel, uint32_t cpuId,
  */
 int32_t SCMI_CpuPerLpmConfigSet(uint32_t channel, uint32_t cpuId,
     uint32_t numConfigs, const scmi_per_lpm_config_t *perConfigs);
+
+/*!
+ * Get info for a CPU.
+ *
+ * @param[in]     channel          A2P channel for comms
+ * @param[in]     cpuId            Identifier for the CPU
+ * @param[out]    runMode          Run mode for the CPU
+ * @param[out]    sleepMode        Sleep mode for the CPU
+ * @param[out]    resetVectorLow   Reset vector low 32 bits for the CPU
+ * @param[out]    resetVectorHigh  Reset vector high 32 bits for the CPU
+ *
+ * This function allows the calling agent to get information about a CPU. This
+ * includes the run mode, sleep mode, and current reset vector.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the CPU info is returned successfully.
+ * - ::SCMI_ERR_NOT_FOUND: if \a cpuId does not exist.
+ */
+int32_t SCMI_CpuInfoGet(uint32_t channel, uint32_t cpuId, uint32_t *runMode,
+    uint32_t *sleepMode, uint32_t *resetVectorLow,
+    uint32_t *resetVectorHigh);
 
 /*!
  * Negotiate the protocol version.

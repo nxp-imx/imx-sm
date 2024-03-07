@@ -216,6 +216,26 @@ int32_t LMM_CpuSleepModeSet(uint32_t lmId, uint32_t cpuId,
     uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
+ * Get info for a a CPU.
+ *
+ * @param[in]     lmId       LM call is for
+ * @param[in]     cpuId      Identifier for the CPU
+ * @param[out]    runMode    Return pointer to run mode
+ * @param[out]    sleepMode  Return pointer to sleep mode
+ * @param[out]    vector     Return pointer to vector
+ *
+ * This function allows the caller to get information for a CPU.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if information is returned.
+ * - others returned by ::SM_CPUINFOGET
+ */
+int32_t LMM_CpuInfoGet(uint32_t lmId, uint32_t cpuId, uint32_t *runMode,
+    uint32_t *sleepMode, uint64_t *vector);
+
+/*!
  * Set a CPU IRQ wake mask.
  *
  * @param[in]     lmId     LM call is for

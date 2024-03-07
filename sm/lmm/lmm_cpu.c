@@ -261,6 +261,15 @@ int32_t LMM_CpuSleepModeSet(uint32_t lmId, uint32_t cpuId,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get CPU info                                                             */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_CpuInfoGet(uint32_t lmId, uint32_t cpuId, uint32_t *runMode,
+    uint32_t *sleepMode, uint64_t *vector)
+{
+    return SM_CPUINFOGET(cpuId, runMode, sleepMode, vector);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set CPU IRQ wake mask                                                    */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_CpuIrqWakeSet(uint32_t lmId, uint32_t cpuId, uint32_t maskIdx,
