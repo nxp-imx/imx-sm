@@ -259,16 +259,6 @@ void MU6_B_IRQHandler(void);
 void FCCU0_IRQHandler(void);
 
 /*!
- * FCCU Interrupt Reaction 1 IRQ handler.
- */
-void FCCU1_IRQHandler(void);
-
-/*!
- * FCCU Interrupt Reaction 2 IRQ handler.
- */
-void FCCU2_IRQHandler(void);
-
-/*!
  * GPC SM Request IRQ handler.
  */
 void GPC_SM_REQ_IRQHandler(void);
