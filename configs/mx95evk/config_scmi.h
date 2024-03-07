@@ -208,7 +208,7 @@
         .perlpiPerms[DEV_SM_PERLPI_LPUART8] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_WDOG3] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_WDOG4] = SM_SCMI_PERM_ALL, \
-        .sysPerms = SM_SCMI_PERM_PRIV, \
+        .sysPerms = SM_SCMI_PERM_ALL, \
     }
 
 /*! Config for SCMI channel 3 */
