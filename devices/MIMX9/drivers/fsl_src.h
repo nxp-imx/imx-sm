@@ -27,8 +27,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FSL_SRC_H_
-#define _FSL_SRC_H_
+#ifndef FSL_SRC_H
+#define FSL_SRC_H
 
 /*!
  * @addtogroup SRC_driver
@@ -67,6 +67,6 @@ void SRC_MixIsolationSetup(uint32_t isoMask, bool enable);
 
 /* Externs */
 
-#endif /* _FSL_SRC_H_ */
+#endif /* FSL_SRC_H */
 
 /** @} */

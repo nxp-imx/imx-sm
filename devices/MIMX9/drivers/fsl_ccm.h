@@ -27,8 +27,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FSL_CCM_H_
-#define _FSL_CCM_H_
+#ifndef FSL_CCM_H
+#define FSL_CCM_H
 
 /*!
  * @addtogroup CCM_driver
@@ -70,6 +70,6 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting);
 
 /* Externs */
 
-#endif /* _FSL_CCM_H_ */
+#endif /* FSL_CCM_H */
 
 /** @} */

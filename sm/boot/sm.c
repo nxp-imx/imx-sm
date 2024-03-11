@@ -158,6 +158,7 @@ void SM_Error(int32_t status)
 
 #if !defined(SIMU) && !defined(CPPCHECK)
     /* Get the LR as PC */
+    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
     __ASM ("MOV %0, LR\n" : "=r" (pc));
 #endif
 
@@ -179,6 +180,7 @@ void exit(int status)
     uint32_t pc;
 
     /* Get the LR as PC */
+    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
     __ASM ("MOV %0, LR\n" : "=r" (pc));
 
     /* Request board reset */

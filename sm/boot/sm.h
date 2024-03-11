@@ -195,6 +195,8 @@
 
 #if !defined(INC_LIBC)
 /*! Eliminate printf */
+// coverity[misra_c_2012_rule_21_1_violation:FALSE]
+// coverity[misra_c_2012_rule_21_2_violation:FALSE]
 #define printf(...)
 #endif
 

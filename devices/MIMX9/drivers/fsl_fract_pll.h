@@ -27,8 +27,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FSL_FRACT_PLL_H_
-#define _FSL_FRACT_PLL_H_
+#ifndef FSL_FRACT_PLL_H
+#define FSL_FRACT_PLL_H
 
 /*!
  * @addtogroup CLOCK_driver
@@ -70,6 +70,6 @@ bool FRACTPLL_GetContext(uint32_t pllIdx, fracpll_context_t *pllContext);
 
 /* Externs */
 
-#endif /* _FSL_FRACT_PLL_H_ */
+#endif /* FSL_FRACT_PLL_H */
 
 /** @} */

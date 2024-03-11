@@ -27,8 +27,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FSL_CLOCK_H_
-#define _FSL_CLOCK_H_
+#ifndef FSL_CLOCK_H
+#define FSL_CLOCK_H
 
 /*!
  * @addtogroup CLOCK_driver
@@ -277,6 +277,6 @@ extern const pll_attr_t g_pllAttrs[];
 extern const uint8_t g_clockRootMux[][CLOCK_NUM_ROOT_MUX_SEL];
 extern const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL];
 
-#endif /* _FSL_CLOCK_H_ */
+#endif /* FSL_CLOCK_H */
 
 /** @} */

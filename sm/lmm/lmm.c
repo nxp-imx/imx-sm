@@ -142,6 +142,7 @@ int32_t LMM_Boot(void)
 {
     int32_t status;
     uint32_t mSel = s_mSel;
+    uint32_t lmmInitFlags = s_lmmInitFlags;
 
     /* Default out of range mSel */
     if (mSel >= SM_LM_NUM_MSEL)
@@ -157,7 +158,7 @@ int32_t LMM_Boot(void)
 
     /* Boot LMs */
     if ((status == SM_ERR_SUCCESS)
-        && ((s_lmmInitFlags & LM_INIT_FLAGS_BOOT) != 0U))
+        && ((lmmInitFlags & LM_INIT_FLAGS_BOOT) != 0U))
     {
         /* Loop over boot order */
         for (uint8_t bootOrder = 1U; bootOrder <= SM_NUM_LM; bootOrder++)
@@ -214,8 +215,10 @@ int32_t LMM_Boot(void)
 /*--------------------------------------------------------------------------*/
 int32_t LMM_PostBoot(void)
 {
+    uint32_t lmmInitFlags = s_lmmInitFlags;
+
     /* Just passthru to board/device */
-    return SM_SYSTEMPOSTBOOT(s_mSel, s_lmmInitFlags);
+    return SM_SYSTEMPOSTBOOT(s_mSel, lmmInitFlags);
 }
 
 /*--------------------------------------------------------------------------*/

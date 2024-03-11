@@ -401,7 +401,7 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
     bool callee)
 {
     int32_t status = SM_ERR_SUCCESS;
-    rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
+    const rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
     uint32_t impStatus = s_smtConfig[smtChannel].crc;
 
     /* Callee? */
@@ -441,7 +441,7 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
             *len = buf->length;
 
             /* Copy payload */
-            (void) memcpy(msgRx, (void*) &buf->header, *len);
+            (void) memcpy(msgRx, (const void*) &buf->header, *len);
 
             /* Check the CRC */
             switch (impStatus)
