@@ -50,6 +50,8 @@
 
 /* Local variables */
 
+static uint32_t numDevCtrl = 0U;
+
 /* Local functions */
 
 static void TEST_ScmiMiscGet(bool pass, uint32_t channel,
@@ -68,7 +70,6 @@ void TEST_ScmiMisc(void)
     uint32_t agentId = 0U;
     uint32_t channel = 0U;
     uint32_t ctrlId = 0U;
-    uint32_t numCtrl = 0U;
     uint32_t lmId = 0U;
 
     /* RPC_00350 RPC_00160 Misc tests */
@@ -88,12 +89,15 @@ void TEST_ScmiMisc(void)
     /* Test protocol attributes */
     {
         uint32_t attributes = 0U;
+        uint32_t numBrdCtrl = 0U;
 
         printf("SCMI_MiscProtocolAttributes()\n");
         CHECK(SCMI_MiscProtocolAttributes(SM_TEST_DEFAULT_CHN,
             &attributes));
-        numCtrl = SCMI_MISC_PROTO_ATTR_NUM_CTRL(attributes);
-        printf("  numCtrl=%u\n", numCtrl);
+        numDevCtrl = SCMI_MISC_PROTO_ATTR_NUM_DEV_CTRL(attributes);
+        numBrdCtrl = SCMI_MISC_PROTO_ATTR_NUM_BRD_CTRL(attributes);
+        printf("  numDevCtrl=%u\n", numDevCtrl);
+        printf("  numBrdCtrl=%u\n", numBrdCtrl);
     }
 
     /* Test message attributes */
@@ -169,7 +173,7 @@ void TEST_ScmiMisc(void)
         /* Control Set -- Invalid ctrlId */
         uint32_t val = 0x1234ABCDU;
 
-        NECHECK(SCMI_MiscControlSet(SM_TEST_DEFAULT_CHN, numCtrl,
+        NECHECK(SCMI_MiscControlSet(SM_TEST_DEFAULT_CHN, numDevCtrl,
             1U, &val), SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
@@ -180,7 +184,7 @@ void TEST_ScmiMisc(void)
     /* Control Get */
     {
         /* Control Get -- Invalid ctrlId */
-        NECHECK(SCMI_MiscControlGet(SM_TEST_DEFAULT_CHN, numCtrl, NULL,
+        NECHECK(SCMI_MiscControlGet(SM_TEST_DEFAULT_CHN, numDevCtrl, NULL,
             NULL), SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
@@ -195,7 +199,7 @@ void TEST_ScmiMisc(void)
         uint32_t numVal = 0U;
         uint32_t rtnVal[5] = {0U, 0U, 0U, 0U, 0U};
 
-        NECHECK(SCMI_MiscControlAction(SM_TEST_DEFAULT_CHN, numCtrl, 23U,
+        NECHECK(SCMI_MiscControlAction(SM_TEST_DEFAULT_CHN, numDevCtrl, 23U,
             3, arg, &numVal, rtnVal), SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
@@ -208,7 +212,7 @@ void TEST_ScmiMisc(void)
         /* Control Notify -- Invalid ctrlId */
         printf("SCMI_MiscControlNotify(%u, %u)\n", SM_TEST_DEFAULT_CHN,
             ctrlId);
-        NECHECK(SCMI_MiscControlNotify(SM_TEST_DEFAULT_CHN, numCtrl, 1U),
+        NECHECK(SCMI_MiscControlNotify(SM_TEST_DEFAULT_CHN, numDevCtrl, 1U),
             SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
@@ -280,17 +284,24 @@ void TEST_ScmiMisc(void)
         &channel, &ctrlId, &lmId);
     while (status == SM_ERR_SUCCESS)
     {
+        uint32_t sCtrlId = ctrlId;
         uint8_t perm = g_scmiAgentConfig[agentId].ctrlPerms[ctrlId];
 
+        /* Convert to slit ctrlId */
+        if (ctrlId >= numDevCtrl)
+        {
+            sCtrlId = (sCtrlId - numDevCtrl) | SCMI_MISC_CTRL_FLAG_BRD;
+        }
+
         /* Test functions with GET perm required */
-        TEST_ScmiMiscGet(perm >= SM_SCMI_PERM_GET, channel, ctrlId);
+        TEST_ScmiMiscGet(perm >= SM_SCMI_PERM_GET, channel, sCtrlId);
 
         /* RPC_00170 Test functions with notify perms required */
-        TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY,channel, ctrlId);
+        TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY,channel, sCtrlId);
 
         /* Test functions with EXCLUSIVE perm required */
         TEST_ScmiMiscExclusive(perm >= SM_SCMI_PERM_EXCLUSIVE, channel,
-            ctrlId, lmId);
+            sCtrlId, lmId);
 
         /* Get next test case */
         status = TEST_ConfigNextGet(TEST_CTRL, &agentId,

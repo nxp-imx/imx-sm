@@ -2296,7 +2296,16 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                     status = LMM_MiscControlGet(s_lm, ctrl, &numRtn, rtn);
                     if (status == SM_ERR_SUCCESS)
                     {
-                        printf("%03u:", ctrl);
+                        if (ctrl < DEV_SM_NUM_CTRL)
+                        {
+                            printf("0x%04X:", ctrl);
+                        }
+                        else
+                        {
+                            printf("0x%04X:", (ctrl
+                                - (uint32_t) DEV_SM_NUM_CTRL)
+                                | LMM_CTRL_FLAG_BRD);
+                        }
                         for (uint32_t idx = 0U; idx < numRtn; idx++)
                         {
                             printf(" 0x%08X", rtn[idx]);
@@ -2316,6 +2325,12 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                     uint32_t val[24] = { 0 };
 
                     status = MONITOR_ConvU32(argv[0], &ctrl);
+
+                    if ((ctrl & LMM_CTRL_FLAG_BRD) != 0U)
+                    {
+                        ctrl &= ~LMM_CTRL_FLAG_BRD;
+                        ctrl += DEV_SM_NUM_CTRL;
+                    }
 
                     while ((status == SM_ERR_SUCCESS) && (numVal <
                         ((uint32_t) argc) - 1U))

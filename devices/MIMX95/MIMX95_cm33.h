@@ -38,6 +38,7 @@
 
 /* IP Header Files List */
 #include "MIMX95_BBNSM.h"
+#include "MIMX95_BLK_CTRL_BBSMIX.h"
 #include "MIMX95_BLK_CTRL_NS_AONMIX.h"
 #include "MIMX95_BLK_CTRL_S_AONMIX.h"
 #include "MIMX95_BLK_CTRL_NOCMIX.h"

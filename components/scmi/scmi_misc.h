@@ -122,16 +122,26 @@
 #define SCMI_MISC_NUM_EXTINFO   SCMI_MISC_SHUTDOWN_FLAG_EXT_LEN(msgRx->shutdownFlags)
 /** @} */
 
+/*!
+ * @name SCMI Control ID Flags
+ */
+/** @{ */
+/*! Flag bit indicating board control */
+#define SCMI_MISC_CTRL_FLAG_BRD  0x8000U
+/** @} */
+
 /* Macros */
 
 /*!
  * @name SCMI misc protocol attributes
  */
 /** @{ */
+/*! Number of board controls */
+#define SCMI_MISC_PROTO_ATTR_NUM_BRD_CTRL(x)  (((x) & 0xFF000000U) >> 24U)
 /*! Number of reasons */
-#define SCMI_MISC_PROTO_ATTR_NUM_REASON(x)  (((x) & 0xFF0000U) >> 16U)
-/*! Number of controls */
-#define SCMI_MISC_PROTO_ATTR_NUM_CTRL(x)    (((x) & 0xFFFFU) >> 0U)
+#define SCMI_MISC_PROTO_ATTR_NUM_REASON(x)    (((x) & 0xFF0000U) >> 16U)
+/*! Number of device controls */
+#define SCMI_MISC_PROTO_ATTR_NUM_DEV_CTRL(x)  (((x) & 0xFFFFU) >> 0U)
 /** @} */
 
 /*!
@@ -210,8 +220,9 @@ int32_t SCMI_MiscProtocolVersion(uint32_t channel, uint32_t *version);
  * protocol.
  *
  * Access macros:
+ * - ::SCMI_MISC_PROTO_ATTR_NUM_BRD_CTRL() - Number of board controls
  * - ::SCMI_MISC_PROTO_ATTR_NUM_REASON() - Number of reasons
- * - ::SCMI_MISC_PROTO_ATTR_NUM_CTRL() - Number of controls
+ * - ::SCMI_MISC_PROTO_ATTR_NUM_DEV_CTRL() - Number of device controls
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  */
@@ -250,9 +261,11 @@ int32_t SCMI_MiscProtocolMessageAttributes(uint32_t channel,
  * @param[in]     numVal   Size of the value data
  * @param[in]     val      Value data array
  *
- * This allows the calling agent to set a control value. No aggregation is done
- * and controls are exclusively access controlled. Max number of data words is
- * ::SCMI_MISC_MAX_VAL_T.
+ * This function allows the calling agent to set a control value. No
+ * aggregation is done and controls are exclusively access controlled. Max
+ * number of data words is ::SCMI_MISC_MAX_VAL_T. The \a ctrlId parameter is a
+ * device control unless the ::SCMI_MISC_CTRL_FLAG_BRD bit is set to make it a
+ * board control.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -274,7 +287,9 @@ int32_t SCMI_MiscControlSet(uint32_t channel, uint32_t ctrlId,
  * @param[out]    val      Return data array
  *
  * This function allows the calling agent to get a control value. Max number of
- * data words is ::SCMI_MISC_MAX_VAL.
+ * data words is ::SCMI_MISC_MAX_VAL. The \a ctrlId parameter is a device
+ * control unless the ::SCMI_MISC_CTRL_FLAG_BRD bit is set to make it a board
+ * control.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -301,7 +316,8 @@ int32_t SCMI_MiscControlGet(uint32_t channel, uint32_t ctrlId,
  * This function allows the calling agent to initiate an action on a control.
  * Actions and action parameters are specific to a control. Max number of
  * argument words is ::SCMI_MISC_MAX_ARG_T. Max number of return words is
- * ::SCMI_MISC_MAX_RTN.
+ * ::SCMI_MISC_MAX_RTN. The \a ctrlId parameter is a device control unless the
+ * ::SCMI_MISC_CTRL_FLAG_BRD bit is set to make it a board control.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -368,6 +384,8 @@ int32_t SCMI_MiscRomPassoverGet(uint32_t channel, uint32_t *numPassover,
  * @param[in]     flags    Notification flags, varies by control
  *
  * This function allows an agent to enable/disable notification for a control.
+ * The \a ctrlId parameter is a device control unless the
+ * ::SCMI_MISC_CTRL_FLAG_BRD bit is set to make it a board control.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *

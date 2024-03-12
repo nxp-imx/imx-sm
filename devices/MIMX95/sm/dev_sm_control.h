@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,18 +54,19 @@
 /* Defines */
 
 /*! Number of device controls */
-#define DEV_SM_NUM_CTRL  6UL
+#define DEV_SM_NUM_CTRL  7UL
 
 /*!
  * @name Device control indexes
  */
 /** @{ */
-#define DEV_SM_CTRL_PDM_CLK_SEL    0U  /*!< AON PDM clock sel */
-#define DEV_SM_CTRL_MQS1_SETTINGS  1U  /*!< AON MQS settings */
-#define DEV_SM_CTRL_SAI1_MCLK      2U  /*!< AON SAI1 MCLK */
-#define DEV_SM_CTRL_SAI3_MCLK      3U  /*!< WAKE SAI3 MCLK */
-#define DEV_SM_CTRL_SAI4_MCLK      4U  /*!< WAKE SAI4 MCLK */
-#define DEV_SM_CTRL_SAI5_MCLK      5U  /*!< WAKE SAI5 MCLK */
+#define DEV_SM_CTRL_PDM_CLK_SEL    0U   /*!< AON PDM clock sel */
+#define DEV_SM_CTRL_MQS1_SETTINGS  1U   /*!< AON MQS settings */
+#define DEV_SM_CTRL_SAI1_MCLK      2U   /*!< AON SAI1 MCLK */
+#define DEV_SM_CTRL_SAI3_MCLK      3U   /*!< WAKE SAI3 MCLK */
+#define DEV_SM_CTRL_SAI4_MCLK      4U   /*!< WAKE SAI4 MCLK */
+#define DEV_SM_CTRL_SAI5_MCLK      5U   /*!< WAKE SAI5 MCLK */
+#define DEV_SM_CTRL_ADC_TEST       6U   /*!< BBSM SNVS ADC enable */
 /** @} */
 
 /* Types */

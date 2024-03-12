@@ -192,6 +192,7 @@
         .ctrlPerms[BRD_SM_CTRL_PCIE1_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_PCIE2_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_SD3_WAKE] = SM_SCMI_PERM_NOTIFY, \
+        .ctrlPerms[DEV_SM_CTRL_ADC_TEST] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_MQS1_SETTINGS] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_PDM_CLK_SEL] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI1_MCLK] = SM_SCMI_PERM_ALL, \
@@ -691,6 +692,7 @@
         .ctrlPerms[BRD_SM_CTRL_PCIE1_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_PCIE2_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_SD3_WAKE] = SM_SCMI_PERM_NOTIFY, \
+        .ctrlPerms[DEV_SM_CTRL_ADC_TEST] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_MQS1_SETTINGS] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_PDM_CLK_SEL] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI1_MCLK] = SM_SCMI_PERM_ALL, \
@@ -1181,6 +1183,7 @@
         .ctrlPerms[BRD_SM_CTRL_PCIE1_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_PCIE2_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_SD3_WAKE] = SM_SCMI_PERM_NOTIFY, \
+        .ctrlPerms[DEV_SM_CTRL_ADC_TEST] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_MQS1_SETTINGS] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_PDM_CLK_SEL] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI1_MCLK] = SM_SCMI_PERM_ALL, \
