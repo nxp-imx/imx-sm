@@ -127,7 +127,7 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_LmmBoot(SM_SCMI_NUM_CHN, numLm),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* LmmReset -- Invalid lm */
@@ -139,7 +139,7 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_LmmReset(SM_SCMI_NUM_CHN, numLm, flags),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* LmmShutdown -- Invalid lm */
@@ -151,7 +151,7 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_LmmShutdown(SM_SCMI_NUM_CHN, numLm, flags),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* LmmWake -- Invalid lm */
@@ -161,7 +161,7 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_LmmWake(SM_SCMI_NUM_CHN, numLm),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* LmmNotify -- Invalid lm */
@@ -174,12 +174,12 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_LmmNotify(SM_SCMI_NUM_CHN, numLm, flags),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     {
         NECHECK(SCMI_LmmEvent(SM_SCMI_NUM_CHN, NULL, NULL, NULL),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Invalid notification */

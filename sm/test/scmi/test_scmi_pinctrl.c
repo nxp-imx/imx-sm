@@ -458,7 +458,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_PinctrlConfigSet(SM_SCMI_NUM_CHN, identifier,
-            attributes, configs), SM_ERR_INVALID_PARAMETERS);
+            attributes, configs), SCMI_ERR_INVALID_PARAMETERS);
 
 #ifdef SIMU
         num += 2;
@@ -489,7 +489,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         flags = SCMI_PINCTRL_FLAGS_SELECTOR(1U);
 
         NECHECK(SCMI_PinctrlFunctionSelect(SM_SCMI_NUM_CHN, identifier, 0U,
-            flags), SM_ERR_INVALID_PARAMETERS);
+            flags), SCMI_ERR_INVALID_PARAMETERS);
 
     }
     /* ACCESS DENIED */

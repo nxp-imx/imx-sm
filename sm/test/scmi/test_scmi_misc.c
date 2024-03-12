@@ -174,7 +174,7 @@ void TEST_ScmiMisc(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlSet(SM_SCMI_NUM_CHN, 0U,
-            1U, &val), SM_ERR_INVALID_PARAMETERS);
+            1U, &val), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Control Get */
@@ -185,7 +185,7 @@ void TEST_ScmiMisc(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlGet(SM_SCMI_NUM_CHN, 0U, NULL, NULL),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Control Action */
@@ -200,7 +200,7 @@ void TEST_ScmiMisc(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlAction(SM_SCMI_NUM_CHN, 0U, 23U,
-            3, arg, NULL, NULL), SM_ERR_INVALID_PARAMETERS);
+            3, arg, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Control Notify */
@@ -213,7 +213,7 @@ void TEST_ScmiMisc(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlNotify(SM_SCMI_NUM_CHN, 0U, 1U),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* RPC_00380 Test reset reason */

@@ -111,7 +111,7 @@ void TEST_ScmiClock(void)
             NULL));
 
         NECHECK(SCMI_ClockAttributes(SM_SCMI_NUM_CHN, numClocks, NULL,
-            NULL), SM_ERR_INVALID_PARAMETERS);
+            NULL), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Test clock rate set for invalid clock and invalid channel*/
@@ -133,10 +133,10 @@ void TEST_ScmiClock(void)
     {
         uint32_t attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
 
-        NCHECK(SCMI_ClockConfigSet(SM_TEST_DEFAULT_CHN,numClocks,
+        NCHECK(SCMI_ClockConfigSet(SM_TEST_DEFAULT_CHN, numClocks,
             attr, 0U));
 
-        NECHECK(SCMI_ClockConfigSet(SCMI_ERR_INVALID_PARAMETERS, numClocks,
+        NECHECK(SCMI_ClockConfigSet(SM_SCMI_NUM_CHN, numClocks,
             attr, 0U), SCMI_ERR_INVALID_PARAMETERS);
     }
 
@@ -149,11 +149,11 @@ void TEST_ScmiClock(void)
         uint32_t oemConfigVal = 0U;
 
         NECHECK(SCMI_ClockConfigGet(SM_TEST_DEFAULT_CHN, numClocks,
-            flags, &attr, &config, &oemConfigVal), SM_ERR_NOT_FOUND);
+            flags, &attr, &config, &oemConfigVal), SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_ClockConfigGet(SM_SCMI_NUM_CHN, numClocks,
             flags, &attr, &config, &oemConfigVal),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Test coverage of exceeding max amount of clocks in
@@ -182,10 +182,10 @@ void TEST_ScmiClock(void)
         uint32_t parentId = 0U;
 
         NECHECK(SCMI_ClockParentSet(SM_TEST_DEFAULT_CHN, numClocks,
-            parentId), SM_ERR_NOT_FOUND);
+            parentId), SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_ClockParentSet(SM_SCMI_NUM_CHN, numClocks,
-            parentId), SM_ERR_INVALID_PARAMETERS);
+            parentId), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Test coverage of exceeding max amount of clocks in
@@ -194,10 +194,10 @@ void TEST_ScmiClock(void)
         uint32_t parentId = 0U;
 
         NECHECK(SCMI_ClockParentGet(SM_TEST_DEFAULT_CHN, numClocks,
-            &parentId), SM_ERR_NOT_FOUND);
+            &parentId), SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_ClockParentGet(SM_SCMI_NUM_CHN, numClocks,
-            &parentId), SM_ERR_INVALID_PARAMETERS);
+            &parentId), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Test coverage of exceeding max amount of clocks in
@@ -207,10 +207,10 @@ void TEST_ScmiClock(void)
         uint32_t parents = 0;
 
         NECHECK(SCMI_ClockPossibleParentsGet(SM_TEST_DEFAULT_CHN, numClocks,
-            0U, &numParent, &parents), SM_ERR_NOT_FOUND);
+            0U, &numParent, &parents), SCMI_ERR_NOT_FOUND);
 
         NECHECK(SCMI_ClockPossibleParentsGet(SM_SCMI_NUM_CHN, numClocks,
-            0U, &numParent, &parents), SM_ERR_INVALID_PARAMETERS);
+            0U, &numParent, &parents), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Loop over clock test domains */
@@ -280,10 +280,10 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         SCMI_CLOCK_NUM_RATE_FLAGS_REMAING_RATES(numRatesFlags));
 
     NECHECK(SCMI_ClockDescribeRates(channel, clockId, 2U,
-        &numRatesFlags, rates), SM_ERR_OUT_OF_RANGE);
+        &numRatesFlags, rates), SCMI_ERR_OUT_OF_RANGE);
 
     NECHECK(SCMI_ClockDescribeRates(SM_SCMI_NUM_CHN, clockId, 0U,
-        &numRatesFlags, rates), SM_ERR_INVALID_PARAMETERS);
+        &numRatesFlags, rates), SCMI_ERR_INVALID_PARAMETERS);
 
     CHECK(SCMI_ClockDescribeRates(channel, clockId, 0U,
         NULL, NULL));
@@ -347,13 +347,13 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
             }
 
             NECHECK(SCMI_ClockPossibleParentsGet(channel, clockId,
-                256U, &numParentsFlags, parents), SM_ERR_OUT_OF_RANGE);
+                256U, &numParentsFlags, parents), SCMI_ERR_OUT_OF_RANGE);
         }
         else
         {
             NECHECK(SCMI_ClockPossibleParentsGet(channel, clockId,
                 skipParents,&numParentsFlags, parents),
-                SM_ERR_NOT_SUPPORTED);
+                SCMI_ERR_NOT_SUPPORTED);
         }
     }
 }
@@ -372,7 +372,7 @@ static void TEST_ScmiClockSet(bool pass, uint32_t channel,
 
     /* Error check for invalid enabled number*/
     NECHECK(SCMI_ClockConfigSet(channel, clockId,
-        SCMI_CLOCK_CONFIG_SET_ENABLE(2U), 0U), SM_ERR_INVALID_PARAMETERS);
+        SCMI_CLOCK_CONFIG_SET_ENABLE(2U), 0U), SCMI_ERR_INVALID_PARAMETERS);
 
     if (pass)
     {

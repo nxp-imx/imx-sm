@@ -175,6 +175,8 @@ void SM_Error(int32_t status)
 /*--------------------------------------------------------------------------*/
 /* Exit function for no clib                                                */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_21_2_violation:FALSE]
+// coverity[misra_c_2012_rule_21_8_violation:FALSE]
 void exit(int status)
 {
     uint32_t pc;

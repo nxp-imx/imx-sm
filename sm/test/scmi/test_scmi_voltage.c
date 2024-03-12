@@ -124,7 +124,7 @@ void TEST_ScmiVoltage(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_VoltageDomainAttributes(SM_SCMI_NUM_CHN,
-            0U, NULL, NULL), SM_ERR_INVALID_PARAMETERS);
+            0U, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Null Params */
         CHECK(SCMI_VoltageDomainAttributes(SM_TEST_DEFAULT_CHN,
@@ -141,7 +141,7 @@ void TEST_ScmiVoltage(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_VoltageConfigGet(SM_SCMI_NUM_CHN, numDomains,
-            &config), SM_ERR_INVALID_PARAMETERS);
+            &config), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Null Params */
         CHECK(SCMI_VoltageConfigGet(SM_TEST_DEFAULT_CHN, 0U,
@@ -157,7 +157,7 @@ void TEST_ScmiVoltage(void)
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_VoltageConfigSet(SM_SCMI_NUM_CHN,
             numDomains, SCMI_VOLTAGE_DOMAIN_MODES_OFF),
-            SM_ERR_INVALID_PARAMETERS);
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Level Get -- Invalid domainId */
@@ -190,7 +190,7 @@ void TEST_ScmiVoltage(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_VoltageDescribeLevels(SM_SCMI_NUM_CHN,
-            0U, levelIndex, NULL, NULL), SM_ERR_INVALID_PARAMETERS);
+            0U, levelIndex, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Null Params */
         CHECK(SCMI_VoltageDescribeLevels(SM_TEST_DEFAULT_CHN,
@@ -200,7 +200,7 @@ void TEST_ScmiVoltage(void)
     /* Loop over voltage test domains */
     status = TEST_ConfigFirstGet(TEST_VOLT, &agentId,
         &channel, &domainId, &lmId);
-    while (status == SCMI_ERR_SUCCESS)
+    while (status == SM_ERR_SUCCESS)
     {
         uint8_t perm = g_scmiAgentConfig[agentId].voltPerms[domainId];
 

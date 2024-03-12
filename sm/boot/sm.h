@@ -265,6 +265,14 @@ int main(int argc, const char * const argv[]);
  */
 void SM_Error(int32_t status);
 
+#if !defined(SIMU) && !defined(INC_LIBC)
+/*!
+ * Init C lib.
+ */
+// coverity[misra_c_2012_rule_21_2_violation:FALSE]
+void __libc_init_array(void);
+#endif
+
 #endif /* SM_H */
 
 /** @} */

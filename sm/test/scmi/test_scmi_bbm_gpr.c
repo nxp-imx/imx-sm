@@ -100,7 +100,7 @@ void TEST_ScmiBbmGpr(void)
     /* Loop over BBM test resources */
     status = TEST_ConfigFirstGet(TEST_GPR, &agentId,
         &channel, &resource, &lmId);
-    while (status == SCMI_ERR_SUCCESS)
+    while (status == SM_ERR_SUCCESS)
     {
         uint8_t perm = g_scmiAgentConfig[agentId].gprPerms[resource];
 

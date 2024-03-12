@@ -44,8 +44,8 @@
 
 /* Local defines */
 
-#define BASE(X)         (((X) >> 4U) & 0xFU)
-#define METAL(X)        (((X) >> 0U) & 0xFU)
+#define TMP_BASE(X)     (((X) >> 4U) & 0xFU)
+#define TMP_METAL(X)    (((X) >> 0U) & 0xFU)
 
 #define MINOR_BASE(X)   (((X) & 0xFU) << 4U)
 #define MINOR_METAL(X)  (((X) & 0xFU) << 0U)
@@ -85,6 +85,7 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     {
         uint32_t tmpMinor;
         uint32_t fuseMinor;
+        uint32_t newVal;
 
         /* Copy name */
         DEV_SM_StrCpy(s_siName, "i.MX9596 A0", 15U);
@@ -98,14 +99,18 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         tmpMinor = MAX(tmpMinor, fuseMinor);
 
         /* Update name */
-        s_siName[9] = 'A' + (char) BASE(tmpMinor);
-        s_siName[10] = '0' + (char) METAL(tmpMinor);
+        newVal = TMP_BASE(tmpMinor);
+        s_siName[9] = 'A' + ((uint8_t) newVal);
+        newVal = TMP_METAL(tmpMinor);
+        s_siName[10] = '0' + ((uint8_t) newVal);
 
         /* Update part num */
         if (*partNum != 0U)
         {
-            s_siName[6] = '0' + (char) PN_DESIG(*partNum);
-            s_siName[7] = '0' + (char) PN_CORES(*partNum);
+            newVal = PN_DESIG(*partNum);
+            s_siName[6] = '0' + ((uint8_t) newVal);
+            newVal = PN_CORES(*partNum);
+            s_siName[7] = '0' + ((uint8_t) newVal);
         }
 
         /* Mark updated */

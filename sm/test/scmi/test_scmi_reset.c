@@ -122,7 +122,7 @@ void TEST_ScmiReset(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_ResetDomainAttributes(SM_SCMI_NUM_CHN, 0U,
-            NULL, NULL, NULL), SM_ERR_INVALID_PARAMETERS);
+            NULL, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Branch -- Nullpointer */
         CHECK(SCMI_ResetDomainAttributes(SM_TEST_DEFAULT_CHN, 0U,
@@ -140,14 +140,14 @@ void TEST_ScmiReset(void)
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_Reset(SM_SCMI_NUM_CHN, 0U,
-            flags, SCMI_RESET_ARCH_COLD), SM_ERR_INVALID_PARAMETERS);
+            flags, SCMI_RESET_ARCH_COLD), SCMI_ERR_INVALID_PARAMETERS);
     }
 
 
     /* Loop over reset test domains */
     status = TEST_ConfigFirstGet(TEST_RST, &agentId,
         &channel, &domainId, &lmId);
-    while(status == SCMI_ERR_SUCCESS)
+    while (status == SM_ERR_SUCCESS)
     {
         uint8_t perm = g_scmiAgentConfig[agentId].rstPerms[domainId];
 
