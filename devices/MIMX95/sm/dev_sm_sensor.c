@@ -395,7 +395,7 @@ int32_t DEV_SM_SensorEnable(uint32_t sensorId, bool enable,
         else
         {
             /* Check if A55 power is on */
-            if (SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
+            if (SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd) || !enable)
             {
                 /* Record sensor enable */
                 s_tmpsnsEnb[sensorId] = enable;

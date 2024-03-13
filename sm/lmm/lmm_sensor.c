@@ -96,8 +96,43 @@ int32_t LMM_SensorTripPointSet(uint32_t lmId, uint32_t sensorId,
 int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
     bool timestampReporting)
 {
-    /* Just passthru to board/device */
-    return SM_SENSORENABLE(sensorId, enable, timestampReporting);
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check parameters */
+    if (lmId >= SM_NUM_LM)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Check parameters */
+    if ((status == SM_ERR_SUCCESS) && (sensorId >= SM_NUM_SENSOR))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        static bool s_sensorState[SM_NUM_SENSOR][SM_NUM_LM];
+        bool newEnable = false;
+
+        /* Record new state */
+        s_sensorState[sensorId][lmId] = enable;
+
+        /* Aggregate sensor enable */
+        for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
+        {
+            if (s_sensorState[sensorId][lm])
+            {
+                newEnable = true;
+            }
+        }
+
+        /* Inform device of sensor state, device will check if changed */
+        status = SM_SENSORENABLE(sensorId, newEnable, timestampReporting);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

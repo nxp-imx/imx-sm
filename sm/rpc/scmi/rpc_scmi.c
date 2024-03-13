@@ -139,16 +139,43 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
 
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t initCount[SM_NUM_AGENT] = { 0 };
+        /* Init each agent for instance */
+        for (uint32_t agentId = 0U; agentId < SM_NUM_AGENT; agentId++)
+        {
+            /* Agent belong to instance? */
+            if (g_scmiAgentConfig[agentId].scmiInst == scmiInst)
+            {
+                status = RPC_SCMI_AgentInit(agentId);
+            }
+        }
+    }
 
-        /* Init transport for each instance channel */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Init SCMI agent                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t RPC_SCMI_AgentInit(uint32_t agentId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check agent */
+    if (agentId >= SM_NUM_AGENT)
+    {
+        status = SM_ERR_OUT_OF_RANGE;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        uint32_t initCount = 0U;
+
+        /* Init transport for each agent channel */
         for (uint32_t scmiChannel = 0U; scmiChannel < SM_SCMI_NUM_CHN;
             scmiChannel++)
         {
-            uint32_t agentId = g_scmiChannelConfig[scmiChannel].agentId;
-
-            /* Agent belong to instance? */
-            if (g_scmiAgentConfig[agentId].scmiInst == scmiInst)
+            /* Channel belong to agent? */
+            if (g_scmiChannelConfig[scmiChannel].agentId == agentId)
             {
                 bool noIrq = (g_scmiChannelConfig[scmiChannel].type
                     == SM_SCMI_CHN_P2A);
@@ -172,7 +199,7 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
                 }
 
                 /* First channel for this agent? */
-                if (initCount[agentId] == 0U)
+                if (initCount == 0U)
                 {
                     /* Reset P2A queues */
                     s_queue[agentId][SCMI_NOTIFY_Q].head = 0U;
@@ -193,7 +220,7 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
                         /* Init SMT channel */
                         status = RPC_SMT_Init(
                             g_scmiChannelConfig[scmiChannel].xportChannel,
-                            noIrq, initCount[agentId]);
+                            noIrq, initCount);
                         break;
                     default:
                         status = SM_ERR_INVALID_PARAMETERS;
@@ -201,7 +228,7 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
                 }
 
                 /* Increment init count for an agent */
-                initCount[agentId]++;
+                initCount++;
             }
         }
     }
@@ -407,26 +434,23 @@ int32_t RPC_SCMI_ProtocolListGet(uint32_t skip, uint32_t numWords,
 /*--------------------------------------------------------------------------*/
 int32_t RPC_SCMI_Reset(uint8_t scmiInst)
 {
-    int32_t status;
-
-    /* Reset instance communication */
-    status = RPC_SCMI_Init(scmiInst);
+    int32_t status = SM_ERR_SUCCESS;
 
     /* Reset all agents of this instance */
     for (uint32_t agentId = 0U; agentId < SM_SCMI_NUM_AGNT; agentId++)
     {
-        /* Exit on error */
-        if (status != SM_ERR_SUCCESS)
-        {
-            break;
-        }
-
         /* Reset SCMI state */
         if (g_scmiAgentConfig[agentId].scmiInst == scmiInst)
         {
             /* Reset agent */
             status = RPC_SCMI_BaseDispatchReset(g_scmiConfig[scmiInst].lmId,
                 agentId, true);
+        }
+
+        /* Exit on error */
+        if (status != SM_ERR_SUCCESS)
+        {
+            break;
         }
     }
 

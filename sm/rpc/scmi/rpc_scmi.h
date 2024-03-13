@@ -177,6 +177,8 @@ typedef struct
  */
 int32_t RPC_SCMI_Init(uint8_t scmiInst);
 
+int32_t RPC_SCMI_AgentInit(uint32_t agentId);
+
 /*!
  * Dispatch SCMI request.
  *

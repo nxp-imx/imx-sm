@@ -256,7 +256,7 @@ static int32_t BaseDiscoverAgent(const scmi_caller_t *caller,
 static int32_t BaseSetDevicePermissions(const scmi_caller_t *caller,
     const msg_rbase9_t *in, const scmi_msg_status_t *out);
 static int32_t BaseResetAgentConfiguration(const scmi_caller_t *caller,
-    const msg_rbase11_t *in, const scmi_msg_status_t *out);
+    const msg_rbase11_t *in, const scmi_msg_status_t *out, uint32_t *len);
 static int32_t BaseNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rbase16_t *in, const scmi_msg_status_t *out);
 static int32_t BaseResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -328,7 +328,8 @@ int32_t RPC_SCMI_BaseDispatchCommand(scmi_caller_t *caller,
         case COMMAND_BASE_RESET_AGENT_CONFIGURATION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = BaseResetAgentConfiguration(caller,
-                (const msg_rbase11_t*) in, (const scmi_msg_status_t*) out);
+                (const msg_rbase11_t*) in, (const scmi_msg_status_t*) out,
+                &lenOut);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -870,7 +871,7 @@ static int32_t BaseSetDevicePermissions(const scmi_caller_t *caller,
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t BaseResetAgentConfiguration(const scmi_caller_t *caller,
-    const msg_rbase11_t *in, const scmi_msg_status_t *out)
+    const msg_rbase11_t *in, const scmi_msg_status_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -911,6 +912,12 @@ static int32_t BaseResetAgentConfiguration(const scmi_caller_t *caller,
                     permissionsReset);
             }
         }
+    }
+
+    /* May be nothing to return result to */
+    if ((status == SM_ERR_SUCCESS) && (caller->instAgentId == in->agentId))
+    {
+        *len = 0U;
     }
 
     /* Return status */
@@ -999,9 +1006,15 @@ static int32_t BaseResetAgentConfig(uint32_t lmId, uint32_t agentId,
     }
 #endif
 
+    /* Reset agent communication */
+    status = RPC_SCMI_AgentInit(agentId);
+
     /* Reset sensor protocol */
-    status = RPC_SCMI_SensorDispatchReset(lmId, agentId,
-        permissionsReset);
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = RPC_SCMI_SensorDispatchReset(lmId, agentId,
+            permissionsReset);
+    }
 
     /* Reset CPU protocol */
     if (status == SM_ERR_SUCCESS)

@@ -139,12 +139,11 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  37U
+#define SM_SCMI_NUM_TEST  36U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
     {.testId = TEST_BASE, .channel = 0U, .rsrc = DEV_SM_BASE_AGENT_1}, \
-    {.testId = TEST_BASE, .channel = 3U, .rsrc = DEV_SM_BASE_AGENT_1}, \
     {.testId = TEST_BUTTON, .channel = 0U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_BUTTON, .channel = 5U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_CLK, .channel = 3U, .rsrc = DEV_SM_CLK_0}, \

@@ -478,6 +478,8 @@ int32_t RPC_SCMI_CpuDispatchReset(uint32_t lmId, uint32_t agentId,
 /* Custom Protocol Implementation                                           */
 /*==========================================================================*/
 
+static uint8_t s_cpuAgent[SM_NUM_CPU];
+
 /*--------------------------------------------------------------------------*/
 /* Get protocol version                                                     */
 /*                                                                          */
@@ -852,6 +854,10 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
         uint64_t resetVector = (((uint64_t) in->resetVectorHigh) << 32U)
             | (uint64_t) in->resetVectorLow;
 
+        /* Mark owning agent */
+        s_cpuAgent[in->cpuId] = ((uint8_t) caller->agentId) + 1U;
+
+        /* Update vector */
         status = LMM_CpuResetVectorSet(caller->lmId, in->cpuId,
             resetVector, boot, start, resume, table);
     }
@@ -1352,11 +1358,11 @@ static int32_t CpuResetAgentConfig(uint32_t lmId, uint32_t agentId,
     /* Loop over all CPUs */
     for (uint32_t cpuId = 0U; cpuId < SM_NUM_CPU; cpuId++)
     {
-        /* Reset rate */
-        if (g_scmiAgentConfig[agentId].cpuPerms[cpuId]
-            >= SM_SCMI_PERM_EXCLUSIVE)
+        /* Reset vector */
+        if (s_cpuAgent[cpuId] == (((uint8_t) agentId) + 1U))
         {
             (void) LMM_CpuResetVectorReset(lmId, cpuId);
+            s_cpuAgent[cpuId] = 0U;
         }
     }
 

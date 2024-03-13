@@ -60,7 +60,9 @@
         .scmiInst = 0U, \
         .domId = 3U, \
         .secure = 0U, \
+        .basePerms[DEV_SM_BASE_AGENT_0] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
+        .basePerms[DEV_SM_BASE_AGENT_2] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \
@@ -557,7 +559,9 @@
         .scmiInst = 0U, \
         .domId = 3U, \
         .secure = 1U, \
+        .basePerms[DEV_SM_BASE_AGENT_0] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
+        .basePerms[DEV_SM_BASE_AGENT_2] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \
@@ -1045,7 +1049,9 @@
         .scmiInst = 0U, \
         .domId = 3U, \
         .secure = 0U, \
+        .basePerms[DEV_SM_BASE_AGENT_0] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
+        .basePerms[DEV_SM_BASE_AGENT_2] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \

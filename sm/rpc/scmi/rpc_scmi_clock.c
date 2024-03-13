@@ -526,6 +526,7 @@ int32_t RPC_SCMI_ClockDispatchReset(uint32_t lmId, uint32_t agentId,
 
 /* Local variables */
 
+static uint8_t s_clockAgent[SM_NUM_CLOCK];
 static uint32_t s_clockState[SM_NUM_CLOCK];
 
 /* Local functions */
@@ -1017,6 +1018,10 @@ static int32_t ClockRateSet(const scmi_caller_t *caller,
         uint64_t lmRate = (((uint64_t) in->rate.upper) << 32U)
             | (uint64_t) in->rate.lower;
 
+        /* Mark owning agent */
+        s_clockAgent[in->clockId] = ((uint8_t) caller->agentId) + 1U;
+
+        /* Set rate */
         status = LMM_ClockRateSet(caller->lmId, in->clockId, lmRate,
             roundSel);
     }
@@ -1424,6 +1429,10 @@ static int32_t ClockParentSet(const scmi_caller_t *caller,
     /* Set clock parent */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Mark owning agent */
+        s_clockAgent[in->clockId] = ((uint8_t) caller->agentId) + 1U;
+
+        /* Set parent */
         status = LMM_ClockParentSet(caller->lmId, in->clockId,
             in->parentId);
     }
@@ -1634,10 +1643,10 @@ static int32_t ClockResetAgentConfig(uint32_t lmId, uint32_t agentId,
         }
 
         /* Reset rate */
-        if (g_scmiAgentConfig[agentId].clkPerms[clockId]
-            >= SM_SCMI_PERM_EXCLUSIVE)
+        if (s_clockAgent[clockId] == (((uint8_t) agentId) + 1U))
         {
             (void) LMM_ClockReset(lmId, clockId);
+            s_clockAgent[clockId] = 0U;
         }
     }
 
