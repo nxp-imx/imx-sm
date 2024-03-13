@@ -176,7 +176,8 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
 
     [RST_LINE_A55P_NPRESET].lineMask =
         SRC_XSPR_IRST_REQ_CTRL_RSTR_0_IRST_0_MASK,
-    [RST_LINE_A55P_NPRESET].lineReg = &SRC_XSPR_CORTEXMIX_PLATFORM->IRST_REQ_CTRL,
+    [RST_LINE_A55P_NPRESET].lineReg =
+        &SRC_XSPR_CORTEXMIX_PLATFORM->IRST_REQ_CTRL,
     [RST_LINE_A55P_NPRESET].assertLow = false,
     [RST_LINE_A55P_NPRESET].toggleUsec = 10U,
 
@@ -400,7 +401,7 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_BBSMMIX].statReg = &SRC_XSPR_BBSMMIX->RSTR_STAT,
     [RST_LINE_BBSMMIX].assertLow = false,
     [RST_LINE_BBSMMIX].toggleUsec = 10U,
-        
+
     [RST_LINE_CAMERAMIX].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_0_MASK,
     [RST_LINE_CAMERAMIX].lineReg = &SRC_XSPR_CAMERAMIX->SLICE_SW_CTRL,

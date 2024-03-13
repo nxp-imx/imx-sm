@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -88,7 +88,7 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         uint32_t newVal;
 
         /* Copy name */
-        DEV_SM_StrCpy(s_siName, "i.MX9596 A0", 15U);
+        DEV_SM_StrCpy(s_siName, "i.MX95 A0", 15U);
 
         /* Update minor version */
         tmpMinor = (*deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
@@ -100,18 +100,9 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
 
         /* Update name */
         newVal = TMP_BASE(tmpMinor);
-        s_siName[9] = 'A' + ((uint8_t) newVal);
+        s_siName[7] = 'A' + ((uint8_t) newVal);
         newVal = TMP_METAL(tmpMinor);
-        s_siName[10] = '0' + ((uint8_t) newVal);
-
-        /* Update part num */
-        if (*partNum != 0U)
-        {
-            newVal = PN_DESIG(*partNum);
-            s_siName[6] = '0' + ((uint8_t) newVal);
-            newVal = PN_CORES(*partNum);
-            s_siName[7] = '0' + ((uint8_t) newVal);
-        }
+        s_siName[8] = '0' + ((uint8_t) newVal);
 
         /* Mark updated */
         s_updated = true;
@@ -120,6 +111,7 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     /* Return name */
     *siNameAddr = s_siName;
 
+    /* Return result */
     return status;
 }
 
@@ -147,6 +139,7 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
         status = SM_ERR_NOT_FOUND;
     }
 
+    /* Return result */
     return status;
 }
 

@@ -816,7 +816,6 @@ static bool CLOCK_SourcePdIsOn(uint32_t sourceIdx)
             pdOn = SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_DISPLAY);
             break;
 
-
         default:
             ; /* Intentional empty default */
             break;

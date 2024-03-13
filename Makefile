@@ -154,7 +154,7 @@ ifeq ($(BUILD_EMU), 1)
 	FLAGS += -DBUILD_EMU
 endif
 
-img : $(TARGETS)
+img : cfg.exists $(TARGETS)
 
 all: clean img
 
@@ -163,6 +163,9 @@ all: clean img
 DEPS := $(OBJS:.o=.d)
 
 -include $(DEPS)
+
+cfg.exists:
+	@if [ ! -d "$(ROOT_DIR)/configs/$(CONFIG)" ]; then (echo "Incorrect/missing $(CONFIG) config"; exit 1); fi
 
 $(OUT)/%.o : %.c $(OUT)/build_info.h
 	@echo "Compiling $<"

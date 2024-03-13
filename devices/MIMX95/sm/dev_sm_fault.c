@@ -126,6 +126,7 @@ int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
     /* Not asserted */
     *state = false;
 
+    /* Return status */
     return status;
 }
 
