@@ -400,7 +400,7 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
 
     /* Display the cfg info */
     cfgName = LMM_CfgInfoGet(&mSel);
-    printf("SM Config     = %s, %u\n", cfgName, mSel);
+    printf("SM Config     = %s, mSel=%u\n", cfgName, mSel);
 
     printf("Platform      = %s\n", SCMI_SUB_VENDOR);
 
