@@ -75,11 +75,13 @@ void TEST_All(void)
     TEST_DevSmSystem();
     TEST_DevSmRdc();
     TEST_DevSmPin();
+    TEST_DevSmFault();
     TEST_DevSm();
 
     /* Run board SM tests */
 #ifdef SIMU
     TEST_BrdSmSensor();
+    TEST_BrdSm();
 #endif
 
     /* Run LMM tests */
@@ -87,7 +89,9 @@ void TEST_All(void)
     TEST_LmmPerf();
     TEST_LmmSys();
     TEST_LmmCpu();
+    TEST_LmmFuSa();
     TEST_LmmVoltage();
+    TEST_LmmPower();
 #endif
 
     /* Run SCMI tests */

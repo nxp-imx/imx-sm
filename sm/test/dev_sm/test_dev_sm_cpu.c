@@ -82,6 +82,27 @@ void TEST_DevSmCpu(void)
             SM_ERR_NOT_FOUND);
     }
 
+    /* CPU Hold */
+    {
+        /* Invalid cpuId */
+        printf("DEV_SM_CpuHold(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuHold(DEV_SM_NUM_CPU),
+            SM_ERR_NOT_FOUND);
+    }
+
+#ifdef SIMU
+    /* CPU InfoGet */
+    {
+	uint32_t runmode = 0U, sleepmode = 0U;
+	uint64_t vector = 0UL;
+
+        /* Invalid cpuId */
+        printf("DEV_SM_CpuInfoGet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuInfoGet(DEV_SM_NUM_CPU, &runmode, &sleepmode,
+				&vector), SM_ERR_NOT_FOUND);
+    }
+#endif
+
     /* CPU Stop */
     {
         /* Invalid cpuId */
@@ -113,20 +134,19 @@ void TEST_DevSmCpu(void)
 
     /* Sleep Mode Set */
     {
-        uint32_t sleepMode = 0U;
+        uint32_t sleepMode = 0U, sleepflag = 0U;
 
         /* Invalid cpuId */
         printf("DEV_SM_CpuSleepModeSet(%u)\n", DEV_SM_NUM_CPU);
-        NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_NUM_CPU, sleepMode, 0U),
+        NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_NUM_CPU, sleepMode, sleepflag),
             SM_ERR_NOT_FOUND);
 
-#if 0
-        /* Invalid Sleep Mode
-            July 18, 2023 -- 0U <= x <= 4U are valid */
+        /* Invalid Sleep Mode */
         sleepMode = 5U;
 
+#ifdef SIMU
         printf("DEV_SM_CpuSleepModeSet(%u)\n", 0U);
-        NECHECK(DEV_SM_CpuSleepModeSet(0U, sleepMode),
+        NECHECK(DEV_SM_CpuSleepModeSet(0U, sleepMode, sleepflag),
             SM_ERR_INVALID_PARAMETERS);
 #endif
     }
@@ -151,6 +171,29 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuNonIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuNonIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
             maxVal), SM_ERR_NOT_FOUND);
+    }
+
+    /* Set CPU power domain LPM */
+    {
+        uint32_t domainID = 0U;
+        uint32_t lpmsetting = 0U;
+        uint32_t retmask = 0x0U;
+
+        /* Invalid cpuId */
+        printf("DEV_SM_CpuPdLpmConfigSet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuPdLpmConfigSet(DEV_SM_NUM_CPU, domainID,
+            lpmsetting, retmask), SM_ERR_NOT_FOUND);
+    }
+
+    /* Set CPU power peripheral LPM */
+    {
+        uint32_t perID = 0U;
+        uint32_t lpmsetting = 0U;
+
+        /* Invalid cpuId */
+        printf("DEV_SM_CpuPerLpmConfigSet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuPerLpmConfigSet(DEV_SM_NUM_CPU, perID,
+            lpmsetting), SM_ERR_NOT_FOUND);
     }
 
     printf("\n");

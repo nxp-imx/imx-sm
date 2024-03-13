@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -77,6 +77,59 @@ void TEST_DevSmSystem(void)
         CHECK(DEV_SM_SystemShutdown());
     }
 
+    /*System Init Coverage */
+    {
+        printf("DEV_SM_SystemInit()");
+        CHECK(DEV_SM_SystemInit());
+    }
+
+    /*SystemShutdownRecSet Coverage */
+    {
+        dev_sm_rst_rec_t shutdownRec = {0};
+
+        printf("DEV_SM_SystemShutdownRecSet()");
+        DEV_SM_SystemShutdownRecSet(shutdownRec);
+    }
+
+    /*Complete System Reset Processing Coverage*/
+    {
+        dev_sm_rst_rec_t rst = {0};
+
+        printf("DEV_SM_SystemRstComp()");
+        CHECK(DEV_SM_SystemRstComp(&rst));
+    }
+
+    /*System Error Coverage */
+    {
+        uint32_t status = 0, pc = 0x800U;
+        printf("DEV_SM_SystemError()");
+        DEV_SM_SystemError(status, pc);
+    }
+
+    /*System Idle Coverage */
+    {
+        printf("DEV_SM_SystemError()");
+        CHECK(DEV_SM_SystemIdle());
+    }
+
+    /*Syslog dump Coverage */
+    {
+        uint32_t flags = 0x0U;
+        printf("DEV_SM_SyslogDump()");
+        CHECK(DEV_SM_SyslogDump(flags));
+    }
+
+    /*Fuse Word Address Get Coverage */
+    {
+        uint32_t fuseWord = 0x0U, addr = 0x0U;
+        printf("DEV_SM_FuseInfoGet()");
+        NECHECK(DEV_SM_FuseInfoGet(fuseWord, &addr), SM_ERR_NOT_SUPPORTED);
+    }
+
+    /* trigger software interrupt test */
+    {
+        SWI_Trigger();
+    }
 #endif
 
     printf("\n");

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -33,16 +33,20 @@
 */
 
 /*==========================================================================*/
-/* Unit test for the device SM System API.                                  */
+/* Unit test for the device SM CPU API.                                     */
 /*==========================================================================*/
+
+/* LM_00010 */
 
 /* Include Config */
 
 /* Includes */
 
 #include "test.h"
-#include "lmm.h"
 #include "dev_sm_api.h"
+#include "dev_sm_system_api.h"
+#include "lmm_sys.h"
+#include "lmm_fusa.h"
 #include "sm.h"
 
 /* Local defines */
@@ -54,53 +58,32 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test device SM Sys                                                       */
+/* Test device SM CPU                                                       */
 /*--------------------------------------------------------------------------*/
-void TEST_LmmSys(void)
+void TEST_LmmFuSa(void)
 {
-    /* LM_00010 LM tests */
-    printf("**** LMM Sys API Tests ***\n\n");
-
-    /* Test API bounds */
-    printf("\n**** LMM Sys API Err Tests ***\n\n");
-
-    /* System Model SelSet */
-    {
-        printf("LMM_SystemModeSelSet(SM_LM_NUM_MSEL)\n");
-        NECHECK(LMM_SystemModeSelSet(SM_LM_NUM_MSEL),
-            SM_ERR_INVALID_PARAMETERS);
-    }
+    /* LM tests */
+    printf("**** LMM FuSa API Tests ***\n\n");
 
 #ifdef SIMU
-    /* SystemRstComp */
+    uint32_t status = 0U;
+    /* Recover from global error */
     {
-        lmm_rst_rec_t rst_rec_t = {0};
-        printf("LMM_SystemRstComp\n");
-        CHECK(LMM_SystemRstComp(&rst_rec_t));
+        LMM_FusaGlobalRecovery(status);
     }
-
-    /* SystemLmCheck */
+    /* Report assertion error */
     {
-        printf("LMM_SystemLmCheck\n");
-        CHECK(LMM_SystemLmCheck(1));
+        LMM_FuSaAssertionFailure(status);
     }
-
-    /* SystemLmWake */
+    /* Report exception */
     {
-        uint32_t lmId = 1, agentId = 1, wakeLm = 2;
-        printf("LMM_SystemLmWake\n");
-        CHECK(LMM_SystemLmWake(lmId, agentId, wakeLm));
-    }
-
-    /* SystemGrpBoot */
-    {
-        uint32_t lmId = 1, agentId = 1;
-        lmm_rst_rec_t bootRec = {0};
-        uint8_t group = 1;
-        printf("LMM_SystemGrpBoot\n");
-        CHECK(LMM_SystemGrpBoot(lmId, agentId, &bootRec, group));
+        dev_sm_rst_rec_t rst_rec = {0};
+        LMM_FuSaExceptionHandler(&rst_rec);
     }
 #endif
+    /* Test API bounds */
+    printf("\n**** LMM FuSa API Err Tests ***\n\n");
+
     printf("\n");
 }
 

@@ -1098,7 +1098,7 @@ static int32_t PinctrlRelease(const scmi_caller_t *caller,
         && (g_scmiAgentConfig[caller->agentId].pinPerms[in->identifier]
         < SM_SCMI_PERM_EXCLUSIVE))
     {
-        status = SM_ERR_INVALID_PARAMETERS;
+        status = SM_ERR_DENIED;
     }
 
     /* Return status */

@@ -141,11 +141,37 @@
     }
 
 /*--------------------------------------------------------------------------*/
+/* LM3 SMT Config (TEST)                                                    */
+/*--------------------------------------------------------------------------*/
+
+/*! Config for SMT channel 7 */
+#define SM_SMT_CHN7_CONFIG \
+    { \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcChannel = 7U, \
+        .mbType = SM_MB_LOOPBACK, \
+        .mbInst = 3U, \
+        .mbDoorbell = 0U, \
+        .crc = SM_SMT_CRC_J1850, \
+    }
+
+/*! Config for SMT channel 8 */
+#define SM_SMT_CHN8_CONFIG \
+    { \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcChannel = 8U, \
+        .mbType = SM_MB_LOOPBACK, \
+        .mbInst = 3U, \
+        .mbDoorbell = 1U, \
+        .crc = SM_SMT_CRC_J1850, \
+    }
+
+/*--------------------------------------------------------------------------*/
 /* SMT Config                                                               */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of SMT channels */
-#define SM_NUM_SMT_CHN  7U
+#define SM_NUM_SMT_CHN  9U
 
 /*! Config data array for SMT channels */
 #define SM_SMT_CHN_CONFIG_DATA \
@@ -155,11 +181,15 @@
     SM_SMT_CHN3_CONFIG, \
     SM_SMT_CHN4_CONFIG, \
     SM_SMT_CHN5_CONFIG, \
-    SM_SMT_CHN6_CONFIG
+    SM_SMT_CHN6_CONFIG, \
+    SM_SMT_CHN7_CONFIG, \
+    SM_SMT_CHN8_CONFIG
 
 /* Mailbox and CRC types to support */
 /*! Config for MB_LOOPBACK USE */
 #define USES_MB_LOOPBACK
+/*! Config for J1850 CRC USE */
+#define USES_CRC_J1850
 /*! Config for CRC32 CRC USE */
 #define USES_CRC_CRC32
 /*! Config for XOR CRC USE */

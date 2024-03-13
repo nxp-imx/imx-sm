@@ -95,17 +95,31 @@
     }
 
 /*--------------------------------------------------------------------------*/
+/* LM3 MB_LOOPBACK Config (TEST)                                            */
+/*--------------------------------------------------------------------------*/
+
+/*! Config for LOOPBACK3 MB */
+#define SM_MB_LOOPBACK3_CONFIG \
+    { \
+        .xportType[0] = SM_XPORT_SMT, \
+        .xportChannel[0] = 7U, \
+        .xportType[1] = SM_XPORT_SMT, \
+        .xportChannel[1] = 8U, \
+    }
+
+/*--------------------------------------------------------------------------*/
 /* MB LOOPBACK Config                                                       */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of LOOPBACK MB */
-#define SM_NUM_MB_LOOPBACK  3U
+#define SM_NUM_MB_LOOPBACK  4U
 
 /*! Config data array for LOOPBACK MB */
 #define SM_MB_LOOPBACK_CONFIG_DATA \
     SM_MB_LOOPBACK0_CONFIG, \
     SM_MB_LOOPBACK1_CONFIG, \
-    SM_MB_LOOPBACK2_CONFIG
+    SM_MB_LOOPBACK2_CONFIG, \
+    SM_MB_LOOPBACK3_CONFIG
 
 #endif /* CONFIG_MB_LOOPBACK_H */
 

@@ -94,6 +94,15 @@ void TEST_ScmiLmm(void)
         printf("  numLm=%u\n", numLm);
     }
 
+    /* Test SCMI_LmmNegotiateProtocolVersion */
+    {
+        uint32_t version = 1234U;
+
+        printf(" SCMI_LmmNegotiateProtocolVersion\n");
+        NECHECK( SCMI_LmmNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN, version),
+            SCMI_ERR_NOT_SUPPORTED);
+    }
+
     /* Test LMM message attributes */
     {
         uint32_t attributes = 0U;
@@ -142,6 +151,16 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_INVALID_PARAMETERS);
     }
 
+    /* LmmSuspend -- Invalid lm */
+    {
+        printf("SCMI_LmmSuspend(%u, %u)\n", SM_TEST_DEFAULT_CHN, numLm);
+        NECHECK(SCMI_LmmSuspend(SM_TEST_DEFAULT_CHN, numLm),
+            SCMI_ERR_NOT_FOUND);
+
+        NECHECK(SCMI_LmmSuspend(SM_SCMI_NUM_CHN, numLm),
+            SCMI_ERR_INVALID_PARAMETERS);
+    }
+
     /* LmmShutdown -- Invalid lm */
     {
         uint32_t flags = 0U;
@@ -182,6 +201,15 @@ void TEST_ScmiLmm(void)
             SCMI_ERR_INVALID_PARAMETERS);
     }
 
+    /* LmmPowerOn Invalid lm Invalid channel */
+    {
+        printf("SCMI_LmmPowerOn(%u, %u)\n", SM_TEST_DEFAULT_CHN, numLm);
+        NECHECK(SCMI_LmmPowerOn(SM_TEST_DEFAULT_CHN, numLm), SCMI_ERR_NOT_FOUND);
+
+        printf("SCMI_LmmPowerOn(%u, %u)\n", SM_SCMI_NUM_CHN, numLm);
+        NECHECK(SCMI_LmmPowerOn(SM_SCMI_NUM_CHN, numLm), SCMI_ERR_INVALID_PARAMETERS);
+    }
+
     /* Invalid notification */
     {
         scmi_msg_id_t msgId =
@@ -193,6 +221,18 @@ void TEST_ScmiLmm(void)
 
         printf("RPC_SCMI_LmmDispatchNotification()\n");
         NCHECK(RPC_SCMI_LmmDispatchNotification(msgId, &trigger));
+    }
+
+    /* LmmShutdown Invalid lm Invalid domain*/
+    {
+        uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo = 0U;
+        printf("SCMI_LmmResetReason(%u, %u)\n", SM_TEST_DEFAULT_CHN, numLm);
+        NECHECK(SCMI_LmmResetReason(SM_TEST_DEFAULT_CHN, numLm, &bootFlags,
+            &shutdownFlags, &extInfo), SCMI_ERR_NOT_FOUND);
+
+        printf("SCMI_LmmResetReason(%u, %u)\n", SM_SCMI_NUM_CHN, numLm);
+        NECHECK(SCMI_LmmResetReason(SM_SCMI_NUM_CHN, numLm, &bootFlags,
+            &shutdownFlags, &extInfo), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Loop over power test domains */
@@ -384,8 +424,12 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
         CHECK(SCMI_LmmBoot(channel, lm));
         printf("SCMI_LmmReset(%u, %u, false)\n", channel, lm);
         CHECK(SCMI_LmmReset(channel, lm, flags));
+        printf("SCMI_LmmSuspend(%u, %u)\n", channel, lm);
+        CHECK(SCMI_LmmSuspend(channel, lm));
         printf("SCMI_LmmShutdown(%u, %u)\n", channel, lm);
         CHECK(SCMI_LmmShutdown(channel, lm, flags));
+        printf("SCMI_LmmPowerOn(%u, %u)\n", channel, lm);
+        CHECK(SCMI_LmmPowerOn(channel, lm));
 
         /* LmmBoot -- Call on Self */
         {
@@ -408,6 +452,13 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
                 SCMI_ERR_INVALID_PARAMETERS);
         }
 
+        /* LmmShutdown */
+        {
+            uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo =0U;
+            printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
+            CHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
+                &shutdownFlags, &extInfo));
+        }
         /* LM_00020 Reset Config */
 #ifdef SIMU
         if (pass)
@@ -426,8 +477,20 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
         NECHECK(SCMI_LmmBoot(channel, lm), SCMI_ERR_DENIED);
         printf("SCMI_LmmReset(%u, %u, false)\n", channel, lm);
         NECHECK(SCMI_LmmReset(channel, lm, flags), SCMI_ERR_DENIED);
+        printf("SCMI_LmmSuspend(%u, %u)\n", channel, lm);
+        NECHECK(SCMI_LmmSuspend(channel, lm), SCMI_ERR_DENIED);
         printf("SCMI_LmmShutdown(%u, %u)\n", channel, lm);
         NECHECK(SCMI_LmmShutdown(channel, lm, flags), SCMI_ERR_DENIED);
+        printf("SCMI_LmmPowerOn(%u, %u)\n", channel, lm);
+        NECHECK(SCMI_LmmPowerOn(channel, lm), SCMI_ERR_DENIED);
+
+        /* LmmShutdown */
+        {
+            uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo =0U;
+            printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
+            NECHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
+                &shutdownFlags, &extInfo), SCMI_ERR_DENIED);
+        }
     }
 }
 

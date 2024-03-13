@@ -217,9 +217,83 @@ static void TEST_ScmiSystemSet(bool pass, uint32_t channel)
         CHECK(SCMI_SysProtocolMessageAttributes(channel,
             SCMI_MSG_SYSTEM_POWER_STATE_SET, &attributes));
 
+        printf("SCMI_SystemPowerStateSet(%u, STATE_COLD_RESET)\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_COLD_RESET));
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_WARM_RESET\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_WARM_RESET));
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_POWERUP)\n", channel);
+        NECHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_POWER_UP), SM_ERR_NOT_SUPPORTED);
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_SUSPEND)\n", channel);
+        NECHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_SUSPEND), SM_ERR_NOT_SUPPORTED);
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_WAKE)\n", channel);
+        NECHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_WAKE), SM_ERR_NOT_SUPPORTED);
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_FULL_SHUTDOWN)\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_FULL_SHUTDOWN));
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_FULL_RESET)\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_FULL_RESET));
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_FULL_SUSPEND)\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_FULL_SUSPEND));
+
+        {
+            printf("SCMI_SystemPowerStateNotify(%u, true)\n", 0U);
+            XCHECK(1, SCMI_SystemPowerStateNotify(0,
+                SCMI_SYS_NOTIFY_ENABLE(1U)));
+
+        }
+        printf("SCMI_SystemPowerStateSet(%u, STATE_FULL_WAKE)\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_FULL_WAKE));
+
+        {
+            uint32_t agent_Id = 0U, flag = 0U, systemstate = 0U, timeout = 0U;
+
+            CHECK(SCMI_SystemPowerStateNotifier(1, &agent_Id, &flag, &systemstate, &timeout));
+            printf("SCMI_SystemPowerStateSet(%u, STATE_GRP_SHUTDOWN)\n", channel);
+            CHECK(SCMI_SystemPowerStateSet(channel, flags,
+                SCMI_SYS_STATE_GRP_SHUTDOWN));
+
+            printf("SCMI_SystemPowerStateNotify(%u, true)\n", 0U);
+            XCHECK(1, SCMI_SystemPowerStateNotify(0,
+                SCMI_SYS_NOTIFY_ENABLE(0U)));
+
+        }
+        printf("SCMI_SystemPowerStateSet(%u, STATE_GRP_RESET)\n", channel);
+        NECHECK(SCMI_SystemPowerStateSet(channel, flags,
+            SCMI_SYS_STATE_GRP_RESET), SM_ERR_NOT_SUPPORTED);
+
+        printf("SCMI_SystemPowerStateSet(%u, STATE_MODE)\n", channel);
+        CHECK(SCMI_SystemPowerStateSet(channel, flags,
+            (SCMI_SYS_STATE_MODE | SCMI_SYS_STATE_GRP_SHUTDOWN)));
+
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_SystemPowerStateSet(SM_SCMI_NUM_CHN, flags,
             SCMI_SYS_STATE_SHUTDOWN), SCMI_ERR_INVALID_PARAMETERS);
+
+        printf("SCMI_SystemPowerStateSet(%u, INVALID_STATE\n", channel);
+        NECHECK(SCMI_SystemPowerStateSet(channel, flags,
+            (SCMI_SYS_STATE_GRP_RESET + 1)), SM_ERR_INVALID_PARAMETERS);
+
+        /* NegotiateProtocolVersion */
+        {
+            uint32_t version = 0x1234;
+            NECHECK(SCMI_SysNegotiateProtocolVersion(channel,
+                version), SM_ERR_NOT_SUPPORTED);
+        }
     }
     /* ACCESS DENIED */
     else

@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device faults */
-#define DEV_SM_NUM_FAULT  9U
+#define DEV_SM_NUM_FAULT  12U
 
 /*!
  * @name Device fault indexes
@@ -68,7 +68,10 @@
 #define DEV_SM_FAULT_5       5U  /*!< Test fault 5 */
 #define DEV_SM_FAULT_6       6U  /*!< Test fault 6 */
 #define DEV_SM_FAULT_7       7U  /*!< Test fault 7 */
-#define DEV_SM_FAULT_SM_ERR  8U  /*!< SM error */
+#define DEV_SM_FAULT_8       8U  /*!< Test fault 8 */
+#define DEV_SM_FAULT_9       9U  /*!< Test fault 9 */
+#define DEV_SM_FAULT_10      10U /*!< Test fault 10 */
+#define DEV_SM_FAULT_SM_ERR  11U  /*!< SM error */
 /** @} */
 
 /*! Default init for fault record */

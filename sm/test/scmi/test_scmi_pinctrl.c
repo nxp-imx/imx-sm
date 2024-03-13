@@ -312,6 +312,15 @@ void TEST_ScmiPinctrl(void)
             0U, attributes, configs), SCMI_ERR_NOT_FOUND);
     }
 
+    /* PinctrlNegotiateProtocolVersion */
+    {
+        uint32_t version = 0x1234U;
+        printf("SCMI_PinctrlNegotiateProtocolVersion(%u, %x)\n", SM_TEST_DEFAULT_CHN,
+            version);
+        NECHECK(SCMI_PinctrlNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN, version),
+            SM_ERR_NOT_SUPPORTED);
+    }
+
     int32_t status = 0;
     uint32_t agentId, channel, identifier, lmId = 0U;
 
@@ -470,6 +479,14 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
             identifier, attributes);
         CHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
             attributes, configs));
+        uint32_t flags = 0x0U;
+        printf("SCMI_PinctrlRequest(%u, %u)\n", channel,
+            identifier);
+        CHECK(SCMI_PinctrlRequest(channel, identifier, flags));
+
+        printf("SCMI_PinctrlRelease(%u, %u)\n", channel,
+            identifier);
+        CHECK(SCMI_PinctrlRelease(channel, identifier, flags));
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_PinctrlSettingsConfigure(SM_SCMI_NUM_CHN, identifier,
@@ -516,6 +533,13 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
 
         NECHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
             attributes, configs), SCMI_ERR_DENIED);
+
+        uint32_t flags = 0x0U;
+        printf("SCMI_PinctrlRequest(%u, %u)\n", channel, identifier);
+        NECHECK(SCMI_PinctrlRequest(channel, identifier, flags), SCMI_ERR_DENIED);
+
+        printf("SCMI_PinctrlRelease(%u, %u)\n", channel, identifier);
+        NECHECK(SCMI_PinctrlRelease(channel, identifier, flags), SCMI_ERR_DENIED);
     }
 
     /* Reset */

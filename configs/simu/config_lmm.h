@@ -89,8 +89,23 @@
         .rpcType = SM_RPC_SCMI, \
         .rpcInst = 1U, \
         .boot[0] = 3U, \
-        .start = 3U, \
-        .stop = 3U, \
+        .safeType = LMM_SAFE_TYPE_SEENV, \
+        .start = 5U, \
+        .stop = 5U, \
+    }
+
+/*--------------------------------------------------------------------------*/
+/* LM3 Config (TEST)                                                        */
+/*--------------------------------------------------------------------------*/
+
+/*! Config for LM3 */
+#define SM_LM3_CONFIG \
+    { \
+        .name = "TEST", \
+        .rpcType = SM_RPC_SCMI, \
+        .rpcInst = 2U, \
+        .boot[0] = 4U, \
+        .safeType = LMM_SAFE_TYPE_SEENV, \
     }
 
 /*--------------------------------------------------------------------------*/
@@ -98,51 +113,57 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of LM */
-#define SM_NUM_LM  3U
+#define SM_NUM_LM  4U
 
 /*! Config data array for LM */
 #define SM_LM_CONFIG_DATA \
     SM_LM0_CONFIG, \
     SM_LM1_CONFIG, \
-    SM_LM2_CONFIG
+    SM_LM2_CONFIG, \
+    SM_LM3_CONFIG
 
 /*! Number of  mSel */
 #define SM_LM_NUM_MSEL  1U
 
 /*! Number of  S-EENV */
-#define SM_LM_NUM_SEENV  1U
+#define SM_LM_NUM_SEENV  4U
 
 /*! Config name */
 #define SM_LM_CFG_NAME  "simu"
 
 /*! Default LM for monitor */
-#define SM_LM_DEFAULT  2U
+#define SM_LM_DEFAULT  3U
 
 /*--------------------------------------------------------------------------*/
 /* LM Start/Stop Lists                                                      */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of start */
-#define SM_LM_NUM_START  5U
+#define SM_LM_NUM_START  7U
 
 /*! LM start list */
 #define SM_LM_START_DATA \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_4}, \
+    {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CLK, .rsrc = DEV_SM_CLK_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_1}, \
+    {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_1}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_2}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_0, \
      .numArg = 1, .arg[0] = 3U,}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_2},
 
 /*! Config for number of stop */
-#define SM_LM_NUM_STOP  4U
+#define SM_LM_NUM_STOP  7U
 
 /*! LM stop list */
 #define SM_LM_STOP_DATA \
+    {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CLK, .rsrc = DEV_SM_CLK_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_1}, \
+    {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_4}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_2}, \
-    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_2},
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_2}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_0},
 
 /*--------------------------------------------------------------------------*/
 /* LM Fault Lists                                                           */
@@ -152,6 +173,9 @@
 #define SM_LM_FAULT_DATA \
     [DEV_SM_FAULT_0] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_1] = {.reaction = LMM_REACT_SYS_SHUTDOWN, .lm = 0U}, \
+    [DEV_SM_FAULT_8] = {.reaction = LMM_REACT_GRP_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_9] = {.reaction = LMM_REACT_GRP_SHUTDOWN, .lm = 0U}, \
+    [DEV_SM_FAULT_10] = {.reaction = LMM_REACT_BOARD, .lm = 0U}, \
     [DEV_SM_FAULT_2] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_3] = {.reaction = LMM_REACT_LM_SHUTDOWN, .lm = 1U}, \
     [DEV_SM_FAULT_6] = {.reaction = LMM_REACT_FUSA, .lm = 1U}, \

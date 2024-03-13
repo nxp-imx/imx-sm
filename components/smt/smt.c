@@ -244,6 +244,10 @@ int32_t SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
                 buf->impCrc = CRC_Crc32((const uint8_t*) &buf->header,
                     len);
                 break;
+            case SMT_CRC_J1850:
+                buf->impCrc = CRC_J1850((const uint8_t*) &buf->header,
+                    len);
+                break;
             default:
                 ; /* Intentional empty while */
                 break;
@@ -327,6 +331,12 @@ int32_t SMT_Rx(uint32_t smtChannel, uint32_t *len, bool callee)
                 break;
             case SMT_CRC_CRC32:
                 if (buf->impCrc != CRC_Crc32((const uint8_t*) msgRx, *len))
+                {
+                    status = SMT_ERR_CRC_ERROR;
+                }
+                break;
+            case SMT_CRC_J1850:
+                if (buf->impCrc != CRC_J1850((const uint8_t*) msgRx, *len))
                 {
                     status = SMT_ERR_CRC_ERROR;
                 }

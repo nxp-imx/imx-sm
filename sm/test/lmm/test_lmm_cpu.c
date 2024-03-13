@@ -45,6 +45,7 @@
 #include "test.h"
 #include "dev_sm_api.h"
 #include "sm.h"
+#include "lmm_cpu.h"
 
 /* Local defines */
 
@@ -62,8 +63,30 @@ void TEST_LmmCpu(void)
     /* LM tests */
     printf("**** LMM CPU API Tests ***\n\n");
 
+    uint32_t LmId = 0U, CpuId = 0U;
+
     /* Test API bounds */
     printf("\n**** LMM CPU API Err Tests ***\n\n");
+    /* CPU Hold Invalid CpuId */
+    {
+        CpuId = DEV_SM_NUM_CPU;
+        NECHECK(LMM_CpuHold(LmId, CpuId), SM_ERR_NOT_FOUND);
+    }
+
+    /* CPU Start Invalid CpuId */
+    {
+        NECHECK(LMM_CpuStart(LmId, CpuId), SM_ERR_NOT_FOUND);
+    }
+
+    /* CPU Start CPU Start flag not valid */
+    {
+        NECHECK(LMM_CpuStart(LmId, (CpuId - 1)), SM_ERR_MISSING_PARAMETERS);
+    }
+    /*CPU Hold test CPU start flag not set */
+    {
+        CpuId = 0U;
+        NECHECK(LMM_CpuHold(LmId, CpuId), SM_ERR_MISSING_PARAMETERS);
+    }
 
     printf("\n");
 }

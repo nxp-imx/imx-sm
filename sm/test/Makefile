@@ -33,12 +33,14 @@
 TEST_DIR = $(ROOT_DIR)/sm/test
 
 TEST_INCLUDE += \
-	-I$(TEST_DIR)
+	-I$(TEST_DIR) \
+	-I$(TEST_DIR)/inc \
+	-I$(TEST_DIR)/inc/$(SOC)
 
 TEST_VPATH += \
 	$(TEST_DIR) $(TEST_DIR)/dev $(TEST_DIR)/dev_sm $(TEST_DIR)/scmi \
 	$(TEST_DIR)/utilities $(TEST_DIR)/brd_sm $(TEST_DIR)/lmm \
-	$(TEST_DIR)/sm $(TEST_DIR)/drivers
+	$(TEST_DIR)/sm $(TEST_DIR)/drivers $(TEST_DIR)/src
 
 ifneq ($(T), NONE)
 OBJS += \
@@ -49,13 +51,16 @@ endif
 ifeq ($(T), all)
 	OBJS += \
 		$(OUT)/test_brd_sm_sensor.o     \
+		$(OUT)/test_brd_sm.o            \
 		$(OUT)/test_lmm_clock.o         \
 		$(OUT)/test_lmm_perf.o          \
 		$(OUT)/test_lmm_power.o         \
 		$(OUT)/test_lmm_sys.o           \
 		$(OUT)/test_lmm_cpu.o           \
+		$(OUT)/test_lmm_fusa.o          \
 		$(OUT)/test_lmm_voltage.o       \
 		$(OUT)/test_dev_sm_power.o      \
+		$(OUT)/test_dev_sm_fault.o      \
 		$(OUT)/test_dev_sm_sensor.o     \
 		$(OUT)/test_dev_sm_voltage.o    \
 		$(OUT)/test_dev_sm_perf.o       \

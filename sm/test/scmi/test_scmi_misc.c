@@ -137,6 +137,60 @@ void TEST_ScmiMisc(void)
             NULL, NULL, NULL));
     }
 
+    /* MiscReasonAttributes */
+    {
+        uint32_t reasonId = DEV_SM_REASON_POR;
+        uint32_t attributes = 0U;
+        uint8_t name[16];
+
+        printf("SCMI_MiscReasonAttributes(%u)\n", SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_MiscReasonAttributes(SM_TEST_DEFAULT_CHN, reasonId,
+            &attributes, &name[0]));
+    }
+
+    /* MiscSiInfo */
+    {
+        uint32_t deviceId = 0U, siRev = 0U, partNum = 0U;
+        uint8_t name[16];
+
+        printf("SCMI_MiscSiInfo(%u)\n", SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_MiscSiInfo(SM_TEST_DEFAULT_CHN, &deviceId, &siRev,
+            &partNum, &name[0]));
+        printf("SCMI_MiscSiInfo deviceId: %u siRev: %u partNum: %u name: %s\n",
+            deviceId, siRev, partNum, name);
+    }
+    /* MiscCfgInfo */
+    {
+        uint32_t mSel = 0U;
+        uint8_t cfgName[16];
+
+        printf("SCMI_MiscCfgInfo(%u)\n", SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_MiscCfgInfo(SM_TEST_DEFAULT_CHN, &mSel,
+            &cfgName[0]));
+        printf("SCMI_MiscCfgInfo mSel: %u cfgName: %s\n",
+            mSel, cfgName);
+    }
+
+    /* MiscSyslog */
+    {
+        uint32_t flags = 0x0U, logIndex = 0U;
+        uint32_t numLogFlags = 0U;
+        uint32_t sysLog[16];
+
+        printf("SCMI_MiscSyslog(%u)\n", SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_MiscSyslog(SM_TEST_DEFAULT_CHN, flags, logIndex,
+            &numLogFlags, &sysLog[0]));
+        printf("SCMI_MiscSyslog: sysLogFlags: %u sysLog: %s\n",
+            numLogFlags, (uint8_t *)sysLog);
+    }
+
+    /* MiscNegotiateProtocolVersion */
+    {
+        uint32_t version = 0x1234U;
+        printf("SCMI_MiscNegotiateProtocolVersion(%u)\n", SM_TEST_DEFAULT_CHN);
+        NECHECK(SCMI_MiscNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN, version),
+            SM_ERR_NOT_SUPPORTED);
+    }
     /* RPC_00370 Test ROM data */
     {
         uint32_t numPassover = 0U;

@@ -356,6 +356,10 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
                     buf->impCrc = CRC_Crc32((const uint8_t*) &buf->header,
                         len);
                     break;
+                case SM_SMT_CRC_J1850:
+                    buf->impCrc = CRC_J1850((const uint8_t*) &buf->header,
+                        len);
+                    break;
                 default:
                     ; /* Intentional empty while */
                     break;
@@ -456,6 +460,13 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
                     break;
                 case SM_SMT_CRC_CRC32:
                     if (buf->impCrc != CRC_Crc32((const uint8_t*) msgRx,
+                        *len))
+                    {
+                        status = SM_ERR_CRC_ERROR;
+                    }
+                    break;
+                case SM_SMT_CRC_J1850:
+                    if (buf->impCrc != CRC_J1850((const uint8_t*) msgRx,
                         *len))
                     {
                         status = SM_ERR_CRC_ERROR;

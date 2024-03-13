@@ -234,11 +234,13 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
     /* Adequate Set Permissions */
     if (pass)
     {
+
+#ifdef SIMU
         /* Test Power Set OFF */
-        printf("SCMI_PowerStateSet(%u, %u, 0, STATE_OFF)\n",
+        printf("SCMI_PowerStateSet(%u, %u, 0x1, STATE_OFF)\n",
             channel, domainId);
         CHECK(SCMI_PowerStateSet(channel, domainId,
-            0U, SCMI_POWER_DOMAIN_STATE_OFF));
+            0x0U, SCMI_POWER_DOMAIN_STATE_OFF));
 
         /* Get Power State OFF */
         {
@@ -278,7 +280,6 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
             BCHECK(powerState == SCMI_POWER_DOMAIN_STATE_ON);
         }
 
-#ifdef SIMU
 
         /* Reset */
         printf("LMM_SystemLmBoot(%u, %u)\n", 0U, lmId);

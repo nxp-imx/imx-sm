@@ -61,6 +61,7 @@
         .domId = 4U, \
         .secure = 0U, \
         .seenvId = 1U, \
+        .basePerms[DEV_SM_BASE_DEV_TEST] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_0] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_1] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_2] = SM_SCMI_PERM_ALL, \
@@ -71,6 +72,7 @@
         .gprPerms[DEV_SM_GPR_0] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_1] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_4] = SM_SCMI_PERM_ALL, \
+        .perlpiPerms[DEV_SM_PERLPI_RESV] = SM_SCMI_PERM_ALL, \
         .sensorPerms[DEV_SM_SENSOR_0] = SM_SCMI_PERM_ALL, \
         .sysPerms = SM_SCMI_PERM_EXCLUSIVE, \
     }
@@ -125,7 +127,7 @@
         .scmiInst = 1U, \
         .domId = 3U, \
         .secure = 1U, \
-        .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_PRIV, \
+        .seenvId = 2U, \
         .basePerms[DEV_SM_BASE_DEV_TEST] = SM_SCMI_PERM_PRIV, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_0] = SM_SCMI_PERM_GET, \
@@ -143,6 +145,7 @@
         .pdPerms[DEV_SM_PD_5] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_0] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_1] = SM_SCMI_PERM_SET, \
+        .perlpiPerms[DEV_SM_PERLPI_RESV] = SM_SCMI_PERM_ALL, \
         .rstPerms[DEV_SM_RST_1] = SM_SCMI_PERM_ALL, \
         .sensorPerms[DEV_SM_SENSOR_1] = SM_SCMI_PERM_ALL, \
         .sysPerms = SM_SCMI_PERM_ALL, \
@@ -178,6 +181,8 @@
         .scmiInst = 1U, \
         .domId = 3U, \
         .secure = 0U, \
+        .seenvId = 3U, \
+        .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_2] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_0] = SM_SCMI_PERM_ALL, \
@@ -185,6 +190,7 @@
         .lmmPerms[1] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[2] = SM_SCMI_PERM_GET, \
         .pdPerms[DEV_SM_PD_6] = SM_SCMI_PERM_ALL, \
+        .perlpiPerms[DEV_SM_PERLPI_RESV] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_0] = SM_SCMI_PERM_ALL, \
         .rstPerms[DEV_SM_RST_2] = SM_SCMI_PERM_ALL, \
         .rtcPerms[BRD_SM_RTC_PMIC] = SM_SCMI_PERM_ALL, \
@@ -224,24 +230,71 @@
     }
 
 /*--------------------------------------------------------------------------*/
+/* SCMI AGENT3 Config (TEST-NS)                                             */
+/*--------------------------------------------------------------------------*/
+
+/*! Config for SCMI agent 3 */
+#define SM_SCMI_AGNT3_CONFIG \
+    { \
+        .name = "TEST-NS", \
+        .scmiInst = 2U, \
+        .domId = 16U, \
+        .secure = 0U, \
+        .seenvId = 4U, \
+        .cpuPerms[DEV_SM_CPU_2] = SM_SCMI_PERM_ALL, \
+        .perlpiPerms[DEV_SM_PERLPI_RESV] = SM_SCMI_PERM_ALL, \
+    }
+
+/*! Config for SCMI channel 7 */
+#define SM_SCMI_CHN7_CONFIG \
+    { \
+        .agentId = 3U, \
+        .type = SM_SCMI_CHN_A2P, \
+        .xportType = SM_XPORT_SMT, \
+        .xportChannel = 7U, \
+    }
+
+/*! Config for SCMI channel 8 */
+#define SM_SCMI_CHN8_CONFIG \
+    { \
+        .agentId = 3U, \
+        .type = SM_SCMI_CHN_P2A_NOTIFY, \
+        .xportType = SM_XPORT_SMT, \
+        .xportChannel = 8U, \
+    }
+
+/*--------------------------------------------------------------------------*/
+/* SCMI Instance 2 Config (TEST)                                            */
+/*--------------------------------------------------------------------------*/
+
+/*! Config for SCMI instance 2 */
+#define SM_SCMI2_CONFIG \
+    { \
+        .lmId = 3U, \
+        .numAgents = 1U, \
+        .firstAgent = 3U, \
+    }
+
+/*--------------------------------------------------------------------------*/
 /* SCMI Agent Config                                                        */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of SCMI agents */
-#define SM_SCMI_NUM_AGNT  3U
+#define SM_SCMI_NUM_AGNT  4U
 
 /*! Config data array for SCMI agents */
 #define SM_SCMI_AGNT_CONFIG_DATA \
     SM_SCMI_AGNT0_CONFIG, \
     SM_SCMI_AGNT1_CONFIG, \
-    SM_SCMI_AGNT2_CONFIG
+    SM_SCMI_AGNT2_CONFIG, \
+    SM_SCMI_AGNT3_CONFIG
 
 /*--------------------------------------------------------------------------*/
 /* SCMI Channel Config                                                      */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of SCMI channels */
-#define SM_SCMI_NUM_CHN  7U
+#define SM_SCMI_NUM_CHN  9U
 
 /*! Config data array for SCMI channels */
 #define SM_SCMI_CHN_CONFIG_DATA \
@@ -251,19 +304,22 @@
     SM_SCMI_CHN3_CONFIG, \
     SM_SCMI_CHN4_CONFIG, \
     SM_SCMI_CHN5_CONFIG, \
-    SM_SCMI_CHN6_CONFIG
+    SM_SCMI_CHN6_CONFIG, \
+    SM_SCMI_CHN7_CONFIG, \
+    SM_SCMI_CHN8_CONFIG
 
 /*--------------------------------------------------------------------------*/
 /* SCMI Config                                                              */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of SCMI instances */
-#define SM_NUM_SCMI  2U
+#define SM_NUM_SCMI  3U
 
 /*! Config data array for SCMI instances */
 #define SM_SCMI_CONFIG_DATA \
     SM_SCMI0_CONFIG, \
-    SM_SCMI1_CONFIG
+    SM_SCMI1_CONFIG, \
+    SM_SCMI2_CONFIG
 
 /*! Max words to buffer for notification messages */
 #define SM_SCMI_MAX_NOTIFY  24U

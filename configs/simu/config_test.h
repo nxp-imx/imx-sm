@@ -118,11 +118,31 @@
     }
 
 /*--------------------------------------------------------------------------*/
+/* LM3 Test Config (TEST)                                                   */
+/*--------------------------------------------------------------------------*/
+
+/*! Config for test channel 7 */
+#define SM_TEST_CHN7_CONFIG \
+    { \
+        .mbInst = 3U, \
+        .mbDoorbell = 0U, \
+        .agentId = 3U, \
+    }
+
+/*! Config for test channel 8 */
+#define SM_TEST_CHN8_CONFIG \
+    { \
+        .mbInst = 3U, \
+        .mbDoorbell = 1U, \
+        .agentId = 3U, \
+    }
+
+/*--------------------------------------------------------------------------*/
 /* Test Channel Config                                                      */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of test channels */
-#define SM_NUM_TEST_CHN  7U
+#define SM_NUM_TEST_CHN  9U
 
 /*! Config data array for test channels */
 #define SM_TEST_CHN_CONFIG_DATA \
@@ -132,24 +152,27 @@
     SM_TEST_CHN3_CONFIG, \
     SM_TEST_CHN4_CONFIG, \
     SM_TEST_CHN5_CONFIG, \
-    SM_TEST_CHN6_CONFIG
+    SM_TEST_CHN6_CONFIG, \
+    SM_TEST_CHN7_CONFIG, \
+    SM_TEST_CHN8_CONFIG
 
 /*--------------------------------------------------------------------------*/
 /* Test Config                                                              */
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  36U
+#define SM_SCMI_NUM_TEST  37U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
-    {.testId = TEST_BASE, .channel = 0U, .rsrc = DEV_SM_BASE_AGENT_1}, \
+    {.testId = TEST_BASE, .channel = 5U, .rsrc = DEV_SM_BASE_AGENT_1}, \
     {.testId = TEST_BUTTON, .channel = 0U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_BUTTON, .channel = 5U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_CLK, .channel = 3U, .rsrc = DEV_SM_CLK_0}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_2}, \
     {.testId = TEST_CPU, .channel = 0U, .rsrc = DEV_SM_CPU_1}, \
     {.testId = TEST_CPU, .channel = 3U, .rsrc = DEV_SM_CPU_2}, \
+    {.testId = TEST_CPU, .channel = 7U, .rsrc = DEV_SM_CPU_2}, \
     {.testId = TEST_CTRL, .channel = 3U, .rsrc = DEV_SM_CTRL_TEST}, \
     {.testId = TEST_CTRL, .channel = 5U, .rsrc = DEV_SM_CTRL_TEST}, \
     {.testId = TEST_GPR, .channel = 5U, .rsrc = DEV_SM_GPR_2}, \

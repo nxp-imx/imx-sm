@@ -51,8 +51,8 @@
 /* Local functions */
 
 static void TEST_ScmiBaseNone(uint32_t channel);
-static void TEST_ScmiBasePriv(bool pass, uint32_t channel,
-    uint32_t resource);
+static void TEST_ScmiBasePriv(bool pass, uint32_t channel, uint32_t resource,
+    uint32_t agentId);
 
 /*--------------------------------------------------------------------------*/
 /* Test SCMI base protocol                                                  */
@@ -200,7 +200,7 @@ void TEST_ScmiBase(void)
         TEST_ScmiBaseNone(channel);
 
         /* Test functions with PRIV perm required */
-        TEST_ScmiBasePriv(perm >= SM_SCMI_PERM_PRIV, channel, resource);
+        TEST_ScmiBasePriv(perm >= SM_SCMI_PERM_PRIV, channel, resource, agentId);
 
         /* Get next test case */
         status = TEST_ConfigNextGet(TEST_BASE, &agentId,
@@ -248,6 +248,10 @@ static void TEST_ScmiBaseNone(uint32_t channel)
         CHECK(SCMI_BaseDiscoverAgent(channel, &tempAgent, name));
         printf("   name=%s\n", name);
 
+        uint32_t version = 0x1234U;
+        printf("SCMI_BaseNegotiateProtocolVersion(%u)\n", channel);
+        NECHECK(SCMI_BaseNegotiateProtocolVersion(channel, version), SM_ERR_NOT_SUPPORTED);
+
         /* Invalid agent */
         tempAgent = 100000U;
         NECHECK(SCMI_BaseDiscoverAgent(channel, &tempAgent, name),
@@ -282,19 +286,18 @@ static void TEST_ScmiBaseNone(uint32_t channel)
 /*--------------------------------------------------------------------------*/
 /* Test SCMI base functions with PRIV access                                */
 /*--------------------------------------------------------------------------*/
-static void TEST_ScmiBasePriv(bool pass, uint32_t channel,
-    uint32_t resource)
+static void TEST_ScmiBasePriv(bool pass, uint32_t channel, uint32_t resource,
+    uint32_t agentId)
 {
-    uint32_t scmiInst = g_scmiAgentConfig[resource].scmiInst;
-    uint32_t agent = resource + 1U
-        - g_scmiConfig[scmiInst].firstAgent;
+    uint32_t scmiInst = g_scmiAgentConfig[agentId].scmiInst;
+    uint32_t agent =  resource + 1U - g_scmiConfig[scmiInst].firstAgent;
 
     /* Reset Agent Config */
     if (pass)
     {
-        printf("SCMI_BaseResetAgentConfiguration(%u, %u, 0)\n", agent,
+        printf("SCMI_BaseResetAgentConfiguration(%u %u 0)\n", channel,
             resource);
-        CHECK(SCMI_BaseResetAgentConfiguration(channel, agent, 0U));
+        CHECK(SCMI_BaseResetAgentConfiguration(channel, agent, 1U));
 
         /* Attempt to reset System Manager */
         NECHECK(SCMI_BaseResetAgentConfiguration(channel, 0U, 0U),

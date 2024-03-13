@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -32,64 +32,16 @@
 ** ###################################################################
 */
 
-/*==========================================================================*/
-/* Unit test for the device SM API.                                         */
-/*==========================================================================*/
-
-/* DEV_00010 */
-
-/* Include Config */
+#ifndef TEST_DEV_H
+#define TEST_DEV_H
 
 /* Includes */
 
-#include "test.h"
-#include "dev_sm.h"
+/* Defines */
 
 /* Local defines */
 
-/* Local types */
+/* Types */
 
-/* Local variables */
-
-/* Local functions */
-
-/*--------------------------------------------------------------------------*/
-/* Test device SM                                                           */
-/*--------------------------------------------------------------------------*/
-void TEST_DevSm(void)
-{
-
-    printf("**** Device SM BBM API Tests ***\n\n");
-
-#ifdef SIMU
-    printf("PowerUpPost(DEV_SM_PD_0)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_0));
-
-    printf("PowerUpPost(DEV_SM_PD_1)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_1));
-
-    printf("PowerUpPost(DEV_SM_PD_2)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_2));
-
-    printf("PowerUpPost(DEV_SM_PD_3)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_3));
-
-    printf("PowerUpPost(DEV_SM_PD_4)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_4));
-
-    printf("PowerUpPost(DEV_SM_PD_5)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_5));
-
-    printf("PowerUpPost(DEV_SM_PD_6)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_6));
-
-#endif
-    /* Test API bounds */
-    printf("\n**** Device SM BBM API Err Tests ***\n\n");
-
-    printf("PowerUpPost(DEV_SM_NUM_POWER)\n");
-    NECHECK(DEV_SM_PowerUpPost(DEV_SM_NUM_POWER), SM_ERR_NOT_FOUND);
-
-    printf("\n");
-}
+#endif /* TEST_DEV_H */
 
