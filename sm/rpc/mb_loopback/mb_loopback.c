@@ -51,11 +51,6 @@ static bool s_abortState[SM_NUM_MB_LOOPBACK];
 
 /* Local variables */
 
-static const mb_lb_config_t s_mbLbConfig[SM_NUM_MB_LOOPBACK] =
-{
-    SM_MB_LOOPBACK_CONFIG_DATA
-};
-
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
@@ -100,14 +95,23 @@ int32_t MB_LOOPBACK_DoorbellRing(uint8_t inst, uint8_t db)
         status = SM_ERR_OUT_OF_RANGE;
     }
 
-    switch (s_mbLbConfig[inst].xportType[db])
+    /* Directly call service */
+    if (status == SM_ERR_SUCCESS)
     {
-        case SM_XPORT_SMT:
-            RPC_SMT_Dispatch(s_mbLbConfig[inst].xportChannel[db]);
-            break;
-        default:
-            ; /* Intentional empty default */
-            break;
+        static const mb_lb_config_t s_mbLbConfig[SM_NUM_MB_LOOPBACK] =
+        {
+            SM_MB_LOOPBACK_CONFIG_DATA
+        };
+
+        switch (s_mbLbConfig[inst].xportType[db])
+        {
+            case SM_XPORT_SMT:
+                RPC_SMT_Dispatch(s_mbLbConfig[inst].xportChannel[db]);
+                break;
+            default:
+                ; /* Intentional empty default */
+                break;
+        }
     }
 
     /* Return status */
@@ -117,7 +121,7 @@ int32_t MB_LOOPBACK_DoorbellRing(uint8_t inst, uint8_t db)
 /*--------------------------------------------------------------------------*/
 /* Set abort status                                                         */
 /*--------------------------------------------------------------------------*/
-int32_t MB_LOOPBACK_AbortSet(uint8_t inst, bool abort)
+int32_t MB_LOOPBACK_AbortSet(uint8_t inst, bool state)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -127,10 +131,10 @@ int32_t MB_LOOPBACK_AbortSet(uint8_t inst, bool abort)
         status = SM_ERR_OUT_OF_RANGE;
     }
 
-    /* Ssave abort state */
+    /* Save abort state */
     if (status == SM_ERR_SUCCESS)
     {
-        s_abortState[inst] = abort;
+        s_abortState[inst] = state;
     }
 
     /* Return status */
@@ -158,10 +162,14 @@ int32_t MB_LOOPBACK_IsAborted(uint8_t inst, uint8_t db)
         status = SM_ERR_OUT_OF_RANGE;
     }
 
-    /* Aborted? */
-    if (s_abortState[inst])
+    /* Valid parameters? */
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_ABORT_ERROR;
+        /* Aborted? */
+        if (s_abortState[inst])
+        {
+            status = SM_ERR_ABORT_ERROR;
+        }
     }
 
     /* Return status */

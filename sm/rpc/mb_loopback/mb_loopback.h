@@ -102,13 +102,13 @@ int32_t MB_LOOPBACK_DoorbellRing(uint8_t inst, uint8_t db);
  * Set abort status.
  *
  * @param[in]     inst        Instance to ring
- * @param[in]     abort       True = abort asserted
+ * @param[in]     state       True = abort asserted
  *
  * Directly sets the abort state.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t MB_LOOPBACK_AbortSet(uint8_t inst, bool abort);
+int32_t MB_LOOPBACK_AbortSet(uint8_t inst, bool state);
 
 /*!
  * Get doorbell state and clear.
