@@ -74,16 +74,17 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
 /*--------------------------------------------------------------------------*/
 uint64_t DEV_SM_Usec64Get(void)
 {
-    struct timeval tv;
+    struct timeval tv = { 0 };
 
-    gettimeofday(&tv,NULL);
+    (void) gettimeofday(&tv, NULL);
 
-    return (tv.tv_sec * 1000000ULL) + tv.tv_usec;
+    return (tv.tv_sec * 1000000LL) + tv.tv_usec;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Get address of a fuse word                                               */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_8_13_violation:FALSE]
 int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 {
     return SM_ERR_NOT_SUPPORTED;

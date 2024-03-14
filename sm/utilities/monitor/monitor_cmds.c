@@ -1043,7 +1043,7 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
     /* Check argument */
     if (argc != 0)
     {
-         int32_t arg = 0;
+        int32_t arg = 0;
 
         if (argc > 1)
         {

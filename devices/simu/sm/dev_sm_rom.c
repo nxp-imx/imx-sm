@@ -63,38 +63,6 @@
 
 /* Local variables */
 
-/* Storage for fake handover data */
-static rom_handover_t s_romHandover =
-{
-    .barker = HANDOVER_BARKER,
-    .ver = HANDOVER_VER,
-    .size = HANDOVER_SIZE,
-    .num = 3U,
-    .img[0] =
-    {
-        .flags = DEV_SM_CPU_1,
-        .addr = 0x12345678U
-    },
-    .img[1] =
-    {
-        .flags = (DEV_SM_ROM_IMG_DATA << 8U),
-        .addr = 0xDEADBEEFU
-    },
-    .img[2] =
-    {
-        .flags = DEV_SM_CPU_2,
-        .addr = 0x12345678U
-    }
-};
-
-/* Storage for fake passover data */
-static rom_passover_t s_romPassover =
-{
-    .tag = PASSOVER_TAG,
-    .size = PASSOVER_SIZE,
-    .ver = PASSOVER_VER
-};
-
 static uint32_t s_imageIdx = 0U;
 
 /*--------------------------------------------------------------------------*/
@@ -102,6 +70,30 @@ static uint32_t s_imageIdx = 0U;
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover)
 {
+    /* Storage for fake handover data */
+    static const rom_handover_t s_romHandover =
+    {
+        .barker = HANDOVER_BARKER,
+        .ver = HANDOVER_VER,
+        .size = HANDOVER_SIZE,
+        .num = 3U,
+        .img[0] =
+        {
+            .flags = DEV_SM_CPU_1,
+            .addr = 0x12345678U
+        },
+        .img[1] =
+        {
+            .flags = (DEV_SM_ROM_IMG_DATA << 8U),
+            .addr = 0xDEADBEEFU
+        },
+        .img[2] =
+        {
+            .flags = DEV_SM_CPU_2,
+            .addr = 0x12345678U
+        }
+    };
+
     /* Return pointer to data */
     *handover = &s_romHandover;
 
@@ -114,6 +106,14 @@ int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_RomPassoverGet(const rom_passover_t **passover)
 {
+    /* Storage for fake passover data */
+    static const rom_passover_t s_romPassover =
+    {
+        .tag = PASSOVER_TAG,
+        .size = PASSOVER_SIZE,
+        .ver = PASSOVER_VER
+    };
+
     /* Return pointer to data */
     *passover = &s_romPassover;
 

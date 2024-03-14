@@ -64,6 +64,7 @@ static lmm_seenv_info_t s_seenvInfo[SM_LM_NUM_SEENV] = { 0U };
 /*--------------------------------------------------------------------------*/
 /* Init LMM FuSa management                                                 */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_8_13_violation:FALSE]
 int32_t LMM_FusaInit(uint32_t *mSel)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -225,7 +226,9 @@ int32_t LMM_FusaScheckTestExec(const lmm_fusa_id_t *caller,
 /*--------------------------------------------------------------------------*/
 /* Complete fault handling                                                  */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_8_13_violation:FALSE]
 int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
+    // coverity[misra_c_2012_rule_8_13_violation:FALSE]
     uint32_t *lm)
 {
     int32_t status = SM_ERR_SUCCESS;

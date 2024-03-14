@@ -333,6 +333,7 @@ void LMM_ErrorDump(void)
     }
 
     /* Dump device/board errors */
+    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     SM_ERRORDUMP();
 }
 

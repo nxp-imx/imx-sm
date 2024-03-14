@@ -104,15 +104,19 @@ typedef struct
 } ele_msg_resp_t;
 
 typedef union
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 {
     msg_hdr_t hdr;
     uint32_t word[ELE_MSG_MAX_SIZE];
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 } ele_mu_msg_t;
 
 typedef union
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 {
     msg_hdr_t hdr;
     uint32_t word[ELE_MSG_MIN_SIZE];
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 } ele_mu_min_t;
 
 /* Local Functions */
@@ -126,6 +130,7 @@ static void ELE_ErrXlate(int32_t *err, uint32_t resp);
 
 /* Local Variables */
 
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 static ele_mu_msg_t s_msgMax;
 static bool s_aborted = false;
 static uint32_t s_eleErrno = 0U;
@@ -290,6 +295,7 @@ void ELE_FwVersionGet(uint32_t *version, uint32_t *commit, bool *dirty,
 uint32_t ELE_EventGet(uint8_t idx)
 {
     int32_t status = SM_ERR_SUCCESS;
+    // coverity[misra_c_2012_rule_19_2_violation:FALSE]
     static ele_mu_msg_t s_msgEnv;
     static uint32_t s_numEvents = 0U;
     uint32_t event;
@@ -666,6 +672,7 @@ int32_t ELE_Ind2Err(ele_msg_ind_t ind)
 /*--------------------------------------------------------------------------*/
 /* Call ELE function                                                        */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -720,6 +727,7 @@ static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
 /*--------------------------------------------------------------------------*/
 /* Send MU message to ELE                                                   */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 static void ELE_MuTx(ele_mu_msg_t *msg)
 {
     const uint32_t *buf = (const uint32_t*) msg;
@@ -751,6 +759,7 @@ static void ELE_MuTx(ele_mu_msg_t *msg)
 /*--------------------------------------------------------------------------*/
 /* Receive MU message from ELE                                              */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
     ele_cmd_type_t cmd)
 {

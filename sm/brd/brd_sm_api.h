@@ -73,6 +73,7 @@
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
+// coverity[misra_c_2012_directive_4_6_violation:FALSE]
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel);
 
 /*!

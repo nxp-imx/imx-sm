@@ -117,6 +117,7 @@
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_directive_4_6_violation:FALSE]
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 {
     int32_t status;
@@ -191,6 +192,7 @@ void BRD_SM_Exit(int32_t status, uint32_t pc)
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 #else
     SM_SYSTEMERROR(status, pc);
+    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     SystemExit();
 #endif
 
@@ -222,6 +224,7 @@ int32_t BRD_SM_Custom(int32_t argc, const char * const argv[])
 /* Get fault reaction                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
+    // coverity[misra_c_2012_rule_8_13_violation:FALSE]
     uint32_t *reaction, uint32_t *lm)
 {
     int32_t status = SM_ERR_SUCCESS;

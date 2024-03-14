@@ -194,7 +194,7 @@ int32_t DEV_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
     if (domainId < DEV_SM_NUM_VOLT)
     {
         /* Set level */
-        status = BRD_SM_SupplyLevelSet(domainId, voltageLevel);
+        status = BRD_SM_SupplyLevelSet(domainId, (uint32_t) voltageLevel);
     }
     else
     {

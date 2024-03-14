@@ -29,14 +29,14 @@
 #define BOARD_SYSTICK_CLK_ROOT  CLOCK_ROOT_M33SYSTICK   /* Dedicated CCM root */
 
 /* SM WDOG */
-#define BOARD_WDOG_BASE_PTR         WDOG1
-#define BOARD_WDOG_IRQn             WDOG1_IRQn
+#define BOARD_WDOG_BASE_PTR         WDOG2
+#define BOARD_WDOG_IRQn             WDOG2_IRQn
 #define BOARD_WDOG_CLK_SRC          kWDOG32_ClockSource1  /* lpo_clk @ 32K */
 #define BOARD_WDOG_TIMEOUT          0xFFFFU  /* 65535 ticks @ 32K = 2 sec */
-#define BOARD_WDOG_SRMASK           (1UL << RST_REASON_WDOG1)
-#define BOARD_WDOG_ANY_INIT         ~(BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG1_MASK)
-#define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG1_MASK
-#define BOARD_WDOG_IPG_DEBUG        BLK_CTRL_NS_AONMIX_IPG_DEBUG_CM33_WDOG1_MASK
+#define BOARD_WDOG_SRMASK           (1UL << RST_REASON_WDOG2)
+#define BOARD_WDOG_ANY_INIT         ~(BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK)
+#define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK
+#define BOARD_WDOG_IPG_DEBUG        BLK_CTRL_NS_AONMIX_IPG_DEBUG_CM33_WDOG2_MASK
 
 /* SM handlers configuration */
 #define BOARD_HANDLER_PRIO_PREEMPT_CRITICAL         0U    // Highest premptive
@@ -118,10 +118,6 @@ static board_uart_config_t const s_uartConfig =
     .baud = BOARD_DEBUG_UART_BAUDRATE,
     .inst = BOARD_DEBUG_UART_INSTANCE
 };
-
-/*******************************************************************************
- * Functions
- ******************************************************************************/
 
 /*******************************************************************************
  * Code

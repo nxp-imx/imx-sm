@@ -47,9 +47,9 @@
 
 /* Local variables */
 
-uint32_t s_pinMux[DEV_SM_NUM_PIN];
-uint32_t s_pinConfig[DEV_SM_NUM_PIN];
-uint32_t s_pinDaisy[DEV_SM_NUM_DAISY];
+static uint32_t s_pinMux[DEV_SM_NUM_PIN];
+static uint32_t s_pinConfig[DEV_SM_NUM_PIN];
+static uint32_t s_pinDaisy[DEV_SM_NUM_DAISY];
 
 /*--------------------------------------------------------------------------*/
 /* Return pin name                                                          */

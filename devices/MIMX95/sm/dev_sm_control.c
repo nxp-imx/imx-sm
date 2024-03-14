@@ -154,6 +154,7 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
 /* Do a control action                                                      */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
+    // coverity[misra_c_2012_rule_8_13_violation:FALSE]
     uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn)
 {
     int32_t status = SM_ERR_SUCCESS;

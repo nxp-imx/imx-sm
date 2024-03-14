@@ -164,15 +164,15 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
         {
             if (sensorId == DEV_SM_SENSOR_0)
             {
-                *sensorValue = (raw0 * 100) / 64;
+                *sensorValue = (((int64_t) raw0) * 100LL) / 64LL;
             }
             else if (sensorId == DEV_SM_SENSOR_1)
             {
-                *sensorValue = (raw1 * 100) / 64;
+                *sensorValue = (((int64_t) raw1) * 100LL) / 64LL;
             }
             else
             {
-                *sensorValue = 2530;
+                *sensorValue = 2530LL;
             }
 
             /* No timestamp support */

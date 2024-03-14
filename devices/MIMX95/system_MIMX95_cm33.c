@@ -93,6 +93,7 @@ void SystemInit(void)
     /* Enable FRO */
     FRO->CSR.SET = FRO_CSR_FROEN_MASK;
 
+    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     SystemInitHook();
 }
 
@@ -100,6 +101,7 @@ void SystemInit(void)
    -- SystemInitHook()
    ---------------------------------------------------------------------------- */
 
+// coverity[misra_c_2012_rule_1_2_violation:FALSE]
 __attribute__((weak)) void SystemInitHook(void)
 {
     /* Void implementation of the weak function. */
@@ -134,6 +136,8 @@ void SystemDebugWaitAttach(void)
         /* Kick the dog */
         BOARD_WdogRefresh();
     }
+
+    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
     __BKPT(0);
 }
 

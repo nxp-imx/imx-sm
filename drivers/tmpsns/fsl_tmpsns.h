@@ -44,7 +44,7 @@ typedef struct
 /*!
  * @brief TMPSNS status flags.
  */
-enum tmpsns_status_flags
+enum
 {
     kTMPSNS_Idle = TMPSNS_STAT1_IDLE(1U),           /*!< Conversion/idle */
     kTMPSNS_DRrdy1If = TMPSNS_STAT1_DRDY1_IF(1U),   /*!< Data event */
@@ -61,7 +61,7 @@ enum tmpsns_status_flags
 /*!
  * @brief TMPSNS interrupt source to enable.
  */
-enum tmpsns_interrupt_enable
+enum
 {
     kTMPSNS_Thr0IE = TMPSNS_CTRL0_THR0_IE(1U),      /*!< THR0 interrupt */
     kTMPSNS_Thr1IE = TMPSNS_CTRL0_THR1_IE(1U),      /*!< THR1 interrupt */
@@ -71,7 +71,7 @@ enum tmpsns_interrupt_enable
 /*!
  * @brief TMPSNS threshold modes.
  */
-enum tmpsns_thr_modes
+enum
 {
     kTMPSNS_ThrModeLow = 0U,          /*!< Less than or equal to threshold */
     kTMPSNS_ThrModeHigh = 1U,         /*!< Greater than threshold */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -101,8 +101,9 @@
     BRD_SM_REC_VLD_MASK)
 
 /* Performance parameters */
-#define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_NOM  /* Boot perf level */
+#define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf level */
 #define BOARD_PERF_LEVEL  DEV_SM_PERF_LVL_ODV  /* Target perf level */
+#define BOARD_PERF_VDROP  20000                /* Perf voltage drop */
 
 /* Local types */
 
@@ -120,6 +121,7 @@ static uint8_t s_voltMode[DEV_SM_NUM_VOLT] =
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_directive_4_6_violation:FALSE]
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 {
     int32_t status;
@@ -148,6 +150,15 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 
     /* Init the device */
     status = DEV_SM_Init(BOARD_BOOT_LEVEL, BOARD_PERF_LEVEL);
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Disallow ANA TMPSNS to generate internal warm reset */
+        SRC_GEN->SRMASK |= BIT32(RST_REASON_TEMPSENSE);
+
+        /* Switch WDOG to FCCU mode */
+        BOARD_WdogModeSet(BOARD_WDOG_MODE_FCCU);
+    }
 
     /* Configure ISO controls based on feature fuses */
     uint32_t ipIsoMask = 0U;
@@ -181,10 +192,18 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /*--------------------------------------------------------------------------*/
 void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
+#if defined(MONITOR) || defined(RUN_TEST)
     printf("exit %d, 0x%08X\n", status, pc);
 
+    /* Disable watchdog */
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
+#else
+    SM_SYSTEMERROR(status, pc);
+    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     SystemExit();
+#endif
 
+    /* Hang */
     while (true)
     {
         ; /* Intentional empty while */
@@ -212,6 +231,7 @@ int32_t BRD_SM_Custom(int32_t argc, const char * const argv[])
 /* Get fault reaction                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
+    // coverity[misra_c_2012_rule_8_13_violation:FALSE]
     uint32_t *reaction, uint32_t *lm)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -407,7 +427,7 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Reset device                                                             */
+/* Reset board                                                              */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SystemReset(void)
 {
@@ -468,19 +488,14 @@ int32_t BRD_SM_SupplyModeSet(uint32_t domain, uint8_t voltMode)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domain == DEV_SM_VOLT_SOC)
+    /* Save for tests */
+    if (domain < DEV_SM_NUM_VOLT)
     {
-        /* VDD_SOC always on */
-        status = SM_ERR_INVALID_PARAMETERS;
-    }
-    else if (domain == DEV_SM_VOLT_ARM)
-    {
-        /* VDD_ARM fixed in this API */
-        status = SM_ERR_INVALID_PARAMETERS;
+        s_voltMode[domain] = voltMode;
     }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        status = SM_ERR_HARDWARE_ERROR;
     }
 
     /* Return status */
@@ -494,25 +509,14 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domain == DEV_SM_VOLT_SOC)
+    /* Load for tests */
+    if (domain < DEV_SM_NUM_VOLT)
     {
-        /* VDD_SOC always on */
-        *voltMode = DEV_SM_VOLT_MODE_ON;
-    }
-    else if (domain == DEV_SM_VOLT_ARM)
-    {
-        if (SRC_MixIsPwrSwitchOn(PWR_MIX_SLICE_IDX_A55P))
-        {
-            *voltMode = DEV_SM_VOLT_MODE_ON;
-        }
-        else
-        {
-            *voltMode = DEV_SM_VOLT_MODE_OFF;
-        }
+        *voltMode = s_voltMode[domain];
     }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        status = SM_ERR_HARDWARE_ERROR;
     }
 
     /* Return status */

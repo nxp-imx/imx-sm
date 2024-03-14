@@ -64,6 +64,7 @@
 
 /* Include SM device API */
 
+// coverity[misra_c_2012_rule_20_1_violation:FALSE]
 #include "dev_sm_rdc_api.h"
 
 #endif /* DEV_SM_RDC_H */

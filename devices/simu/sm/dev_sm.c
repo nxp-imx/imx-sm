@@ -39,6 +39,7 @@
 /* Includes */
 
 #include "sm.h"
+// coverity[misra_c_2012_rule_21_5_violation:FALSE]
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
@@ -62,29 +63,37 @@ static void DEV_SM_Tick(union sigval timer_data);
 int32_t DEV_SM_Init(void)
 {
     int32_t status;
-    struct sigevent signalEvent;
-    timer_t timer;
-    struct itimerspec timerPeriod;
+    struct sigevent signalEvent = { 0 };
+    timer_t timer = NULL;
+    struct itimerspec timerPeriod = { 0 };
+    uint32_t prot = (((uint32_t) PROT_READ)
+        | ((uint32_t) PROT_WRITE));
+    uint32_t flags = (((uint32_t) MAP_PRIVATE)
+        | ((uint32_t) MAP_ANONYMOUS));
 
     /* Create a POSIX timer */
     signalEvent.sigev_notify = SIGEV_THREAD;
-    signalEvent.sigev_notify_function = DEV_SM_Tick;
+    signalEvent.sigev_notify_function = &DEV_SM_Tick;
     signalEvent.sigev_value.sival_ptr = NULL;
+    // coverity[misra_c_2012_rule_19_2_violation:FALSE]
     signalEvent.sigev_notify_attributes = NULL;
-    timer_create(CLOCK_MONOTONIC, &signalEvent, &timer);
+    (void) timer_create(CLOCK_MONOTONIC, &signalEvent, &timer);
 
     /* Configure timer for 1 second periodic */
-    timerPeriod.it_value.tv_sec = 1U;
-    timerPeriod.it_value.tv_nsec = 0U;
-    timerPeriod.it_interval.tv_sec = 1U;
-    timerPeriod.it_interval.tv_nsec = 0U;
+    timerPeriod.it_value.tv_sec = 1;
+    timerPeriod.it_value.tv_nsec = 0;
+    timerPeriod.it_interval.tv_sec = 1;
+    timerPeriod.it_interval.tv_nsec = 0;
 
     /* Start timer */
-    timer_settime(timer, 0U, &timerPeriod, NULL);
+    (void) timer_settime(timer, 0, &timerPeriod, NULL);
 
     /* Allocate DDR */
-    (void) mmap((void*) 0x80000000, 0x10000, PROT_READ | PROT_WRITE,
-        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    // coverity[misra_c_2012_directive_4_12_violation:FALSE]
+    // coverity[misra_c_2012_rule_11_6_violation:FALSE]
+    // coverity[misra_c_2012_directive_4_6_violation:FALSE]
+    (void) mmap((void*) 0x80000000U, 0x10000, (int) prot, (int) flags,
+        -1, 0);
 
     /* Init fault handling */
     status = DEV_SM_FaultInit();
@@ -174,6 +183,7 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
 /*--------------------------------------------------------------------------*/
 /* Timer tick                                                               */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_19_2_violation:FALSE]
 static void DEV_SM_Tick(union sigval timer_data)
 {
     /* Call board tick */

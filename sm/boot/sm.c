@@ -55,6 +55,7 @@
 /* Local variables */
 
 /*! Boot times */
+// coverity[misra_c_2012_rule_8_9_violation:FALSE]
 uint64_t g_bootTime[SM_BT_SUB + 1U];
 
 /* Local functions */

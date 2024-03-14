@@ -579,6 +579,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
+            // coverity[misra_c_2012_rule_1_2_violation:FALSE]
             __WFI();
             __ISB();
 
@@ -731,6 +732,7 @@ int32_t DEV_SM_SystemIdle(void)
         {
             (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
             __DSB();
+            // coverity[misra_c_2012_rule_1_2_violation:FALSE]
             __WFI();
             __ISB();
         }
