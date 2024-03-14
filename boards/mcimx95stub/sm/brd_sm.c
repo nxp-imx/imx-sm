@@ -109,6 +109,11 @@
 /* Local variables */
 
 static uint32_t s_voltLevel[DEV_SM_NUM_VOLT];
+static uint8_t s_voltMode[DEV_SM_NUM_VOLT] =
+{
+    DEV_SM_VOLT_MODE_ON,
+    DEV_SM_VOLT_MODE_ON
+};
 
 /* Local functions */
 
@@ -409,12 +414,13 @@ int32_t BRD_SM_SystemReset(void)
     int32_t status = SM_ERR_SUCCESS;
 
     printf("Reset - spinning...");
-    while(true)
+    while (true)
     {
         ; /* Intentional empty while */
     }
 
     /* Return status */
+    // coverity[misra_c_2012_rule_2_1_violation:FALSE]
     return status;
 }
 
@@ -427,12 +433,13 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 
     printf("  Reset to stage %u, container %u - spinning...\n", stage,
         container);
-    while(true)
+    while (true)
     {
         ; /* Intentional empty while */
     }
 
     /* Return status */
+    // coverity[misra_c_2012_rule_2_1_violation:FALSE]
     return status;
 }
 
@@ -444,12 +451,13 @@ int32_t BRD_SM_SystemShutdown(void)
     int32_t status = SM_ERR_SUCCESS;
 
     printf("Shutdown - spinning...\n");
-    while(true)
+    while (true)
     {
         ; /* Intentional empty while */
     }
 
     /* Return status */
+    // coverity[misra_c_2012_rule_2_1_violation:FALSE]
     return status;
 }
 

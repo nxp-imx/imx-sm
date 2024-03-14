@@ -162,10 +162,12 @@ void BOARD_ConfigMPU(void)
     ARM_MPU_Disable();
 
     /* Attr0: Device-nGnRnE */
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
     ARM_MPU_SetMemAttr(0U, ARM_MPU_ATTR(ARM_MPU_ATTR_DEVICE,
         ARM_MPU_ATTR_DEVICE));
 
     /* Attr1: Normal memory, Outer non-cacheable, Inner non-cacheable */
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
     ARM_MPU_SetMemAttr(1U, ARM_MPU_ATTR(ARM_MPU_ATTR_NON_CACHEABLE,
         ARM_MPU_ATTR_NON_CACHEABLE));
 
@@ -314,6 +316,7 @@ void BOARD_InitHandlers(void)
     for (int32_t irq = ((int32_t) SVCall_IRQn); irq < ((int32_t)
         NUMBER_OF_INT_VECTORS); irq++)
     {
+        // coverity[misra_c_2012_rule_10_5_violation:FALSE]
         NVIC_SetPriority((IRQn_Type) irq,
             BOARD_HANDLER_PRIO_NOPREEMPT_NORMAL);
     }

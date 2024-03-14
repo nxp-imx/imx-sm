@@ -739,7 +739,7 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
         for (index = 0U; index < PINCTRL_MAX_CONFIGS; index++)
         {
             uint32_t type;
-            uint32_t value;
+            uint32_t value = 0U;
 
             /* Break out if done */
             if ((index + skipConfigs) >= maxConfigs)
