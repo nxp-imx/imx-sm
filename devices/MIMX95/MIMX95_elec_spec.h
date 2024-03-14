@@ -49,6 +49,7 @@
 /* Defines */
 
 /* Base definitions for clock rates */
+#define ES_24000KHZ                 24000U
 #define ES_133333KHZ                133333U
 #define ES_166667KHZ                166667U
 #define ES_200000KHZ                200000U

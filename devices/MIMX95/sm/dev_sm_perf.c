@@ -183,8 +183,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgEle[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_400MHZ,    /* root parent */
-        .rootDiv = 3U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -208,7 +208,7 @@ static dev_sm_perf_desc_t const s_perfDescEle[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_ELE,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -237,8 +237,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgM33[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 6U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -262,7 +262,7 @@ static dev_sm_perf_desc_t const s_perfDescM33[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_M33,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -291,8 +291,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeup[DEV_SM_NUM_PERF_LVL_SOC]
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 5U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -316,8 +316,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupV2X[DEV_SM_NUM_PERF_LVL_S
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_800MHZ,    /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -341,8 +341,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupPer[DEV_SM_NUM_PERF_LVL_S
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_800MHZ,    /* root parent */
-        .rootDiv = 3U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -366,7 +366,7 @@ static dev_sm_perf_desc_t const s_perfDescWakeup[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_WAKEUP,                 /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -395,8 +395,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgM7[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_800MHZ,    /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -420,7 +420,7 @@ static dev_sm_perf_desc_t const s_perfDescM7[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_M7,                     /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -447,8 +447,8 @@ static dev_sm_perf_desc_t const s_perfDescM7[DEV_SM_NUM_PERF_LVL_SOC] =
 /* Setpoint clock root configuration for DRAM (LPDDR5) */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp5 =
 {
-    .parent = DEV_SM_PERF_PARENT_800MHZ,        /* root parent */
-    .rootDiv = 2U                               /* root divider */
+    .parent = DEV_SM_PERF_PARENT_667MHZ,        /* root parent */
+    .rootDiv = 1U                               /* root divider */
 };
 
 /* Setpoint PLL configuration for DRAM (LPDDR5) */
@@ -488,7 +488,7 @@ static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_400000KHZ,                      /* KHz */
+        .value = ES_666667KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -515,8 +515,8 @@ static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
 /* Setpoint clock root configuration for DRAM (LPDDR4X) */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
 {
-    .parent = DEV_SM_PERF_PARENT_800MHZ,        /* root parent */
-    .rootDiv = 4U                               /* root divider */
+    .parent = DEV_SM_PERF_PARENT_667MHZ,        /* root parent */
+    .rootDiv = 1U                               /* root divider */
 };
 
 /* Setpoint PLL configuration for DRAM (LPDDR4X) */
@@ -556,7 +556,7 @@ static dev_sm_perf_desc_t const s_perfDescDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_200000KHZ,                      /* KHz */
+        .value = ES_666667KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -585,8 +585,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgHsio[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 4U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -610,7 +610,7 @@ static dev_sm_perf_desc_t const s_perfDescHsio[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_HSIO,                   /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -639,8 +639,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgNpu[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -664,7 +664,7 @@ static dev_sm_perf_desc_t const s_perfDescNpu[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_NPU,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -693,8 +693,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgNoc[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_800MHZ,    /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -718,7 +718,7 @@ static dev_sm_perf_desc_t const s_perfDescNoc[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_NOC,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -747,8 +747,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgGpu[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -772,7 +772,7 @@ static dev_sm_perf_desc_t const s_perfDescGpu[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_GPU,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -801,8 +801,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgVpu[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 3U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -825,8 +825,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgVpuJpeg[DEV_SM_NUM_PERF_LVL_SOC
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 4U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -850,7 +850,7 @@ static dev_sm_perf_desc_t const s_perfDescVpu[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_VPU,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -879,8 +879,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCam[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_800MHZ,    /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -904,8 +904,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC]
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 3U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -929,8 +929,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCamCm0[DEV_SM_NUM_PERF_LVL_SOC]
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 5U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -954,7 +954,7 @@ static dev_sm_perf_desc_t const s_perfDescCam[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_CAM,                    /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -983,8 +983,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDisp[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_800MHZ,    /* root parent */
-        .rootDiv = 2U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -1008,8 +1008,8 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDispOcram[DEV_SM_NUM_PERF_LVL_S
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
-        .rootDiv = 5U,                          /* root divider */
+        .parent = DEV_SM_CLK_OSC24M,            /* root parent */
+        .rootDiv = 1U,                          /* root divider */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -1033,7 +1033,7 @@ static dev_sm_perf_desc_t const s_perfDescDisp[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = ES_LOW_KHZ_DISP,                   /* KHz */
+        .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1060,8 +1060,8 @@ static dev_sm_perf_desc_t const s_perfDescDisp[DEV_SM_NUM_PERF_LVL_SOC] =
 /* Setpoint clock root configuration for A55 */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 {
-    .parent = DEV_SM_PERF_PARENT_667MHZ,    /* root parent */
-    .rootDiv = 1U                           /* root divider */
+    .parent = DEV_SM_PERF_PARENT_1000MHZ,   /* root parent */
+    .rootDiv = 2U                           /* root divider */
 };
 
 /* Setpoint PLL configuration for A55 */
@@ -1160,7 +1160,7 @@ static dev_sm_perf_desc_t const s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1260,7 +1260,7 @@ static dev_sm_perf_desc_t const s_perfDescA55P[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1295,7 +1295,7 @@ static dev_sm_perf_desc_t const s_perfDescA55C0[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1330,7 +1330,7 @@ static dev_sm_perf_desc_t const s_perfDescA55C1[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1365,7 +1365,7 @@ static dev_sm_perf_desc_t const s_perfDescA55C2[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1400,7 +1400,7 @@ static dev_sm_perf_desc_t const s_perfDescA55C3[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1435,7 +1435,7 @@ static dev_sm_perf_desc_t const s_perfDescA55C4[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
@@ -1470,7 +1470,7 @@ static dev_sm_perf_desc_t const s_perfDescA55C5[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
-        .value = 667000U,                           /* KHz */
+        .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = 0U,                              /* uS */
     },
