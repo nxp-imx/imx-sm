@@ -276,7 +276,7 @@ void LMM_FusaExit(const lmm_rst_rec_t *shutdownRec);
 /*!
  * Request global error recovery.
  *
- * @param[in]     shutdownRec Shutdown record to store
+ * @param[in]     status      Status code to report
  *
  * Use to report an internal FuSa error condition. Results in a full
  * system reset with a ::DEV_SM_REASON_FUSA_SRECO reset reason.
