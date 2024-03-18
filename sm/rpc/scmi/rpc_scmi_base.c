@@ -855,6 +855,7 @@ static int32_t BaseSetDevicePermissions(const scmi_caller_t *caller,
 /*   settings refer to Device, Power Domain, Performance Domain, Clocks,    */
 /*   Sensors and other settings configured by the agent specified by \a     */
 /*   agentId                                                                */
+/* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the BASE_RESET_AGENT_CONFIGURATION message. Platform handler     */
 /* for SCMI_BaseResetAgentConfiguration(). Requires access greater than or  */

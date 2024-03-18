@@ -145,6 +145,7 @@ and some of the optional messages are supported.
 | Cpu | 0x82 | [CPU_NON_IRQ_WAKE_SET](@ref SCMI_PROTO_CPU_CPU_NON_IRQ_WAKE_SET) | 0x9 | EXCLUSIVE |
 | Cpu | 0x82 | [CPU_PD_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_PD_LPM_CONFIG_SET) | 0xA | EXCLUSIVE |
 | Cpu | 0x82 | [CPU_PER_LPM_CONFIG_SET](@ref SCMI_PROTO_CPU_CPU_PER_LPM_CONFIG_SET) | 0xB | EXCLUSIVE |
+| Cpu | 0x82 | [CPU_INFO_GET](@ref SCMI_PROTO_CPU_CPU_INFO_GET) | 0xC |  |
 | Cpu | 0x82 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_CPU_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Fusa | 0x83 | [PROTOCOL_VERSION](@ref SCMI_PROTO_FUSA_PROTOCOL_VERSION) | 0x0 |  |
 | Fusa | 0x83 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_FUSA_PROTOCOL_ATTRIBUTES) | 0x1 |  |
@@ -2741,6 +2742,32 @@ See SCMI_CpuPerLpmConfigSet() for details.
     | uint32         | header (type=0, proto=0x82, msg=0xB                          |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Cpu: CPU_INFO_GET ## {#SCMI_PROTO_CPU_CPU_INFO_GET}
+
+See SCMI_CpuInfoGet() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x82, msg=0xC                          |
+    ---------------------------------------------------------------------------------
+    | uint32         | cpu_id                                                       |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x82, msg=0xC                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | run_mode                                                     |
+    ---------------------------------------------------------------------------------
+    | uint32         | sleep_mode                                                   |
+    ---------------------------------------------------------------------------------
+    | uint32         | reset_vector_low                                             |
+    ---------------------------------------------------------------------------------
+    | uint32         | reset_vector_high                                            |
     ---------------------------------------------------------------------------------
 
 ## Cpu: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_CPU_NEGOTIATE_PROTOCOL_VERSION}
