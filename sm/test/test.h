@@ -56,6 +56,8 @@
 
 /* Defines */
 
+#ifdef INC_LIBC
+
 /*!
  * Wrapper for a check with exit and error report on fail.
  *
@@ -154,11 +156,111 @@
             SM_Error(lstat); \
         } \
         if ((!(X)) && (lstat != (Z))) \
-        {  \
+        { \
             printf("  error @ line %d: %d\n", __LINE__, lstat); \
             SM_Error(SM_ERR_TEST); \
         } \
     }
+
+#else
+
+/*!
+ * Wrapper for a check with exit and error report on fail.
+ *
+ * @param[in]     X  Condition to check
+ */
+#define CHECK(X) \
+    { \
+        int32_t lstat = (X); \
+        if (lstat != SM_ERR_SUCCESS) \
+        { \
+            SM_Error(lstat); \
+        } \
+    }
+
+/*!
+ * Wrapper for a check with exit and error report on fail.
+ *
+ * @param[in]     X  Condition to check
+ */
+#define BCHECK(X) \
+    { \
+        if (!(X)) \
+        { \
+            SM_Error(SM_ERR_TEST); \
+        } \
+    }
+
+/*!
+ * Wrapper for a check with exit and error report on success.
+ *
+ * @param[in]     X  Condition to check
+ */
+#define NCHECK(X) \
+    { \
+        int32_t lstat = (X); \
+        if (lstat == SM_ERR_SUCCESS) \
+        { \
+            SM_Error(SM_ERR_TEST); \
+        } \
+    }
+
+/*!
+ * Wrapper for a check with exit and error report.
+ *
+ * @param[in]     X  Polarity of check
+ * @param[in]     Y  Condition to check
+ */
+#define XCHECK(X,Y) \
+    { \
+        int32_t lstat = (Y); \
+        if ((X) && (lstat != SM_ERR_SUCCESS)) \
+        { \
+            SM_Error(lstat); \
+        } \
+        if ((!(X)) && (lstat == SM_ERR_SUCCESS)) \
+        { \
+            SM_Error(SM_ERR_TEST); \
+        } \
+    }
+
+/*!
+ * Wrapper for a check with exit and error report on success.
+ *
+ * @param[in]     X  Condition to check
+ * @param[in]     Y  Desired Error Code
+ */
+#define NECHECK(X,Y) \
+    { \
+        int32_t lstat = (X); \
+        if (lstat != (Y)) \
+        { \
+            SM_Error(SM_ERR_TEST); \
+        } \
+    }
+
+/*!
+ * Wrapper to check if an agent has access and returns the proper
+ * error code.
+ *
+ * @param[in]     X  Access Rights
+ * @param[in]     Y  Condition to check
+ * @param[in]     Z  Desired Error Code
+ */
+#define XECHECK(X,Y,Z) \
+    { \
+        int32_t lstat = (Y); \
+        if ((X) && (lstat != SM_ERR_SUCCESS)) \
+        { \
+            SM_Error(lstat); \
+        } \
+        if ((!(X)) && (lstat != (Z))) \
+        { \
+            SM_Error(SM_ERR_TEST); \
+        } \
+    }
+
+#endif
 
 /* Types */
 
