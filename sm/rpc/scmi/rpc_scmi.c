@@ -140,7 +140,7 @@ int32_t RPC_SCMI_Init(uint8_t scmiInst)
     if (status == SM_ERR_SUCCESS)
     {
         /* Init each agent for instance */
-        for (uint32_t agentId = 0U; agentId < SM_NUM_AGENT; agentId++)
+        for (uint32_t agentId = 0U; agentId < SM_SCMI_NUM_AGNT; agentId++)
         {
             /* Agent belong to instance? */
             if (g_scmiAgentConfig[agentId].scmiInst == scmiInst)
@@ -161,7 +161,7 @@ int32_t RPC_SCMI_AgentInit(uint32_t agentId)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check agent */
-    if (agentId >= SM_NUM_AGENT)
+    if (agentId >= SM_SCMI_NUM_AGNT)
     {
         status = SM_ERR_OUT_OF_RANGE;
     }

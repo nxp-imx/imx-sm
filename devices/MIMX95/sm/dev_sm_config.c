@@ -112,8 +112,10 @@ int32_t DEV_SM_A55pConfigLoad(void)
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_WAKEUP)))
     {
         /* Power on temp sensor */
-        DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_A55);
-        s_tempSensorA55Enabled = true;
+        if (DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_A55) == SM_ERR_SUCCESS)
+        {
+            s_tempSensorA55Enabled = true;
+        }
     }
 
     /* Query A55 CPU wake list */
@@ -135,10 +137,10 @@ int32_t DEV_SM_A55pConfigLoad(void)
     }
 
     /* Clear A55 wake list */
-    DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, 0U);
+    (void) DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, 0U);
 
     /* Process perpheral low-power interfaces */
-    CPU_PerLpiProcess(DEV_SM_CPU_A55P, CPU_SLEEP_MODE_RUN);
+    (void) CPU_PerLpiProcess(DEV_SM_CPU_A55P, CPU_SLEEP_MODE_RUN);
 
     /* Return status */
     return status;
@@ -459,7 +461,7 @@ int32_t DEV_SM_M7ConfigLoad(void)
 #endif
 
     /* Process perpheral low-power interfaces */
-    CPU_PerLpiProcess(DEV_SM_CPU_M7P, CPU_SLEEP_MODE_RUN);
+    (void) CPU_PerLpiProcess(DEV_SM_CPU_M7P, CPU_SLEEP_MODE_RUN);
 
     /* Return status */
     return status;
@@ -530,8 +532,10 @@ int32_t DEV_SM_NocConfigLoad(void)
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_WAKEUP)))
     {
         /* Power on temp sensor */
-        DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_A55);
-        s_tempSensorA55Enabled = true;
+        if (DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_A55) == SM_ERR_SUCCESS)
+        {
+            s_tempSensorA55Enabled = true;
+        }
     }
 
     /* Return status */
@@ -635,8 +639,10 @@ int32_t DEV_SM_WkupConfigLoad(void)
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_NOC)))
     {
         /* Power on temp sensor */
-        DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_A55);
-        s_tempSensorA55Enabled = true;
+        if (DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_A55) == SM_ERR_SUCCESS)
+        {
+            s_tempSensorA55Enabled = true;
+        }
     }
 
     /* Return status */
@@ -761,7 +767,7 @@ int32_t DEV_SM_A55pPowerDownPre(void)
     uint32_t sleepMode;
     if (CPU_SleepModeGet(DEV_SM_CPU_A55P, &sleepMode))
     {
-        CPU_PerLpiProcess(DEV_SM_CPU_A55P, sleepMode);
+        (void) CPU_PerLpiProcess(DEV_SM_CPU_A55P, sleepMode);
     }
 
     /* Move A55 perf level to a setpoint that does not require ARM_PLL */
@@ -821,7 +827,7 @@ int32_t DEV_SM_M7PowerDownPre(void)
     uint32_t sleepMode;
     if (CPU_SleepModeGet(DEV_SM_CPU_M7P, &sleepMode))
     {
-        CPU_PerLpiProcess(DEV_SM_CPU_M7P, sleepMode);
+        (void) CPU_PerLpiProcess(DEV_SM_CPU_M7P, sleepMode);
     }
 
     return status;

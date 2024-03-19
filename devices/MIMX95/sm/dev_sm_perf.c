@@ -1824,7 +1824,7 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
             /* Update current setpoint upon success */
             if (status == SM_ERR_SUCCESS)
             {
-                DEV_SM_PerfCurrentUpdate(domainId, perfLevel);
+                status = DEV_SM_PerfCurrentUpdate(domainId, perfLevel);
             }
             domainId++;
         }

@@ -296,7 +296,11 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
                 status = DEV_SM_M7PowerDownPre();
                 break;
             default:
-                status = SM_ERR_NOT_FOUND;
+                /* Only return error if domain out of range */
+                if (domainId >= DEV_SM_NUM_POWER)
+                {
+                    status = SM_ERR_NOT_FOUND;
+                }
                 break;
         }
     }

@@ -180,7 +180,7 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
                 {
                     if (SRC_MixSoftPowerUp(domainId))
                     {
-                        DEV_SM_PowerUpPost(domainId);
+                        status = DEV_SM_PowerUpPost(domainId);
                     }
                 }
                 else
@@ -191,8 +191,10 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
             case DEV_SM_POWER_STATE_OFF:
                 if (!PWR_AnyChildPowered(domainId))
                 {
-                    DEV_SM_PowerDownPre(domainId);
-                    SRC_MixSoftPowerDown(domainId);
+                    if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
+                    {
+                        SRC_MixSoftPowerDown(domainId);
+                    }
                 }
                 else
                 {
