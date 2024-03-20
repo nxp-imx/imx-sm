@@ -306,13 +306,6 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
 
         CHECK(SCMI_ClockConfigGet(channel, clockId, flagConfigGet,
             NULL, NULL, NULL));
-
-        /* Invalid parameter check for ConfigGet*/
-        printf("SCMI_ClockConfigGet(%u, %u)\n", channel, clockId);
-        NECHECK(SCMI_ClockConfigGet(channel, clockId,
-            SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG(2U),
-            &attributesConfigGet, &config, &extendedConfigVal),
-            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     {

@@ -74,6 +74,18 @@
 #define CLOCK_ROUND_UP    1U
 #define CLOCK_ROUND_AUTO  2U
 
+/* SCMI clock state */
+#define CLOCK_STATE_DISABLE  0U
+#define CLOCK_STATE_ENABLE   1U
+#define CLOCK_STATE_RESV     2U
+#define CLOCK_STATE_NA       3U
+
+/* SCMI extended clock config */
+#define CLOCK_EXT_NONE   0x0U
+#define CLOCK_EXT_DUTY   0x1U
+#define CLOCK_EXT_PHASE  0x2U
+#define CLOCK_EXT_SSC    0x80U
+
 /* Local macros */
 
 /* SCMI clock protocol attributes */
@@ -1113,7 +1125,7 @@ static int32_t ClockRateGet(const scmi_caller_t *caller,
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - CLOCK_CONFIG_SET_EXT_CONFIG() - Extended config type                   */
-/* - CLOCK_CONFIG_SET_ENABLE() - Enable/Disable                             */
+/* - CLOCK_CONFIG_SET_ENABLE() - Enable/disable state                       */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the clock configuration has been set successfully.  */
@@ -1131,11 +1143,18 @@ static int32_t ClockConfigSet(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t agentId = caller->agentId;
-    uint32_t ext = CLOCK_CONFIG_SET_EXT_CONFIG(in->attributes);
-    uint32_t enable = CLOCK_CONFIG_SET_ENABLE(in->attributes);
+    uint32_t extId = CLOCK_CONFIG_SET_EXT_CONFIG(in->attributes);
+    uint32_t state = CLOCK_CONFIG_SET_ENABLE(in->attributes);
 
     /* Check request length */
     if (caller->lenCopy < (sizeof(*in) - sizeof(uint32_t)))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check request length with extended data */
+    if ((status == SM_ERR_SUCCESS) && (extId != CLOCK_EXT_NONE)
+        && (caller->lenCopy < sizeof(*in)))
     {
         status = SM_ERR_PROTOCOL_ERROR;
     }
@@ -1147,30 +1166,50 @@ static int32_t ClockConfigSet(const scmi_caller_t *caller,
     }
 
     /* Check extended config */
-    if ((status == SM_ERR_SUCCESS) && (ext != 0U))
+    if ((status == SM_ERR_SUCCESS) && (state == CLOCK_STATE_NA)
+        && (extId == CLOCK_EXT_NONE))
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
-    /* Check extended update */
-    if ((status == SM_ERR_SUCCESS) && (enable > 1U))
+    /* Check for valid enable */
+    if ((status == SM_ERR_SUCCESS) && (state == CLOCK_STATE_RESV))
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
-    /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
-        < SM_SCMI_PERM_SET))
+    /* Extended update? */
+    if ((status == SM_ERR_SUCCESS) && (extId != CLOCK_EXT_NONE))
     {
-        status = SM_ERR_DENIED;
+        /* Check permissions */
+        if (g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+            < SM_SCMI_PERM_EXCLUSIVE)
+        {
+            status = SM_ERR_DENIED;
+        }
+        else
+        {
+            /* Set extended data */
+            status = LMM_ClockExtendedSet(caller->lmId, in->clockId, extId,
+                in->extendedConfigVal);
+        }
     }
 
-    /* Update tracking */
-    if (status == SM_ERR_SUCCESS)
+    /* Enable update? */
+    if ((status == SM_ERR_SUCCESS) && (state <= CLOCK_STATE_ENABLE))
     {
-        status = ClockConfigUpdate(caller->lmId, agentId, in->clockId,
-            enable == 1U);
+        /* Check permissions */
+        if (g_scmiAgentConfig[caller->agentId].clkPerms[in->clockId]
+            < SM_SCMI_PERM_SET)
+        {
+            status = SM_ERR_DENIED;
+        }
+        else
+        {
+            /* Update enable tracking */
+            status = ClockConfigUpdate(caller->lmId, agentId,
+                in->clockId, state == CLOCK_STATE_ENABLE);
+        }
     }
 
     /* Return status */
@@ -1219,8 +1258,9 @@ static int32_t ClockConfigGet(const scmi_caller_t *caller,
     const msg_rclock11_t *in, msg_tclock11_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t ext = CLOCK_CONFIG_FLAGS_EXT_CONFIG(in->flags);
+    uint32_t extId = CLOCK_CONFIG_FLAGS_EXT_CONFIG(in->flags);
     bool enabled;
+    uint32_t extendedConfigVal = 0U;
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -1234,26 +1274,30 @@ static int32_t ClockConfigGet(const scmi_caller_t *caller,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Check extended config */
-    if ((status == SM_ERR_SUCCESS) && (ext != 0U))
-    {
-        status = SM_ERR_INVALID_PARAMETERS;
-    }
-
     /* Get clock enable status */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Get clock state */
         status = LMM_ClockIsEnabled(caller->lmId, in->clockId, &enabled);
+    }
+
+    /* Get extended info */
+    if ((status == SM_ERR_SUCCESS) && (extId != CLOCK_EXT_NONE))
+    {
+        /* Get extended clock data */
+        status = LMM_ClockExtendedGet(caller->lmId, in->clockId, extId,
+            &extendedConfigVal);
     }
 
     /* Return results */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t getEnabled = enabled ? 1UL : 0UL;
+        uint32_t getEnabled = enabled ? CLOCK_STATE_ENABLE
+            : CLOCK_STATE_DISABLE;
 
         out->attributes = 0U;
         out->config = CLOCK_CONFIG_GET_ENABLE(getEnabled);
-        out->extendedConfigVal = 0U;
+        out->extendedConfigVal = extendedConfigVal;
     }
 
     /* Return status */

@@ -52,28 +52,36 @@
 #define COMMAND_PROTOCOL_ATTRIBUTES          0x1U
 #define COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES  0x2U
 #define COMMAND_PINCTRL_ATTRIBUTES           0x3U
-#define COMMAND_PINCTRL_CONFIG_GET           0x5U
-#define COMMAND_PINCTRL_CONFIG_SET           0x6U
-#define COMMAND_PINCTRL_FUNCTION_SELECT      0x7U
-#define COMMAND_PINCTRL_REQUEST              0x8U
-#define COMMAND_PINCTRL_RELEASE              0x9U
+#define COMMAND_PINCTRL_SETTINGS_GET         0x5U
+#define COMMAND_PINCTRL_SETTINGS_CONFIGURE   0x6U
+#define COMMAND_PINCTRL_REQUEST              0x7U
+#define COMMAND_PINCTRL_RELEASE              0x8U
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x103EFUL
+#define COMMAND_SUPPORTED_MASK               0x101EFUL
 
 /* SCMI max pin control argument lengths */
 #define PINCTRL_MAX_NAME       16U
-#define PINCTRL_MAX_CONFIGS    SCMI_ARRAY(8U, pin_config_t)
+#define PINCTRL_MAX_CONFIGS    SCMI_ARRAY(12U, pin_config_t)
 #define PINCTRL_MAX_CONFIGS_T  SCMI_ARRAY(8U, pin_config_t)
 
 /* SCMI pin control selectors */
 #define PINCTRL_SEL_PIN    0U
 #define PINCTRL_SEL_GROUP  1U
+#define PINCTRL_SEL_FUNC   2U
 
 /* SCMI pin control types */
 #define PINCTRL_TYPE_MUX        192U
 #define PINCTRL_TYPE_CONFIG     193U
 #define PINCTRL_TYPE_DAISY_ID   194U
 #define PINCTRL_TYPE_DAISY_CFG  195U
+
+/* SCMI pin control selectors */
+#define PINCTRL_CONFIG_FLAG_TYPE  0U
+#define PINCTRL_CONFIG_FLAG_ALL   1U
+#define PINCTRL_CONFIG_FLAG_NONE  2U
+
+/* SCMI pin control selectors */
+#define PINCTRL_FUNC_NONE  0xFFFFFFFFU
 
 /* Local macros */
 
@@ -89,10 +97,12 @@
 
 /* SCMI pin attributes */
 #define PINCTRL_ATTR_EXT_NAME(x)  (((x) & 0x1U) << 31U)
+#define PINCTRL_ATTR_GPIO(x)      (((x) & 0x1U) << 17U)
+#define PINCTRL_ATTR_PIN_ONLY(x)  (((x) & 0x1U) << 16U)
 #define PINCTRL_ATTR_NUM(x)       (((x) & 0xFFFFU) << 0U)
 
 /* SCMI pin control get attributes */
-#define PINCTRL_GET_ATTR_GET_ALL(x)       (((x) & 0x40000U) >> 18U)
+#define PINCTRL_GET_ATTR_CONFIG(x)        (((x) & 0xC0000U) >> 18U)
 #define PINCTRL_GET_ATTR_SELECTOR(x)      (((x) & 0x30000U) >> 16U)
 #define PINCTRL_GET_ATTR_SKIP_CONFIGS(x)  (((x) & 0xFF00U) >> 8U)
 #define PINCTRL_GET_ATTR_CONFIG_TYPE(x)   (((x) & 0xFFU) >> 0U)
@@ -102,6 +112,7 @@
 #define PINCTRL_NUM_CONFIG_FLAGS_NUM_CONFIGS(x)      (((x) & 0xFFU) << 0U)
 
 /* SCMI pin control set attributes */
+#define PINCTRL_SET_ATTR_FUNCTION(x)     (((x) & 0x400U) >> 10U)
 #define PINCTRL_SET_ATTR_NUM_CONFIGS(x)  (((x) & 0x3FCU) >> 2U)
 #define PINCTRL_SET_ATTR_SELECTOR(x)     (((x) & 0x3U) >> 0U)
 
@@ -184,7 +195,7 @@ typedef struct
     uint8_t name[PINCTRL_MAX_NAME];
 } msg_tpinctrl3_t;
 
-/* Request type for PinctrlConfigGet() */
+/* Request type for PinctrlSettingsGet() */
 typedef struct
 {
     /* Header word */
@@ -195,44 +206,35 @@ typedef struct
     uint32_t attributes;
 } msg_rpinctrl5_t;
 
-/* Response type for PinctrlConfigGet() */
+/* Response type for PinctrlSettingsGet() */
 typedef struct
 {
     /* Header word */
     uint32_t header;
     /* Return status */
     int32_t status;
+    /* Function select */
+    uint32_t functionSelected;
     /* Number of configs */
     uint32_t numConfigs;
     /* Array of configurations */
     pin_config_t configs[PINCTRL_MAX_CONFIGS];
 } msg_tpinctrl5_t;
 
-/* Request type for PinctrlConfigSet() */
+/* Request type for PinctrlSettingsConfigure() */
 typedef struct
 {
     /* Header word */
     uint32_t header;
     /* Identifier for the pin or group */
     uint32_t identifier;
+    /* Function ID */
+    uint32_t functionId;
     /* Pin control get attributes */
     uint32_t attributes;
     /* Array of configurations */
     pin_config_t configs[PINCTRL_MAX_CONFIGS_T];
 } msg_rpinctrl6_t;
-
-/* Request type for PinctrlFunctionSelect() */
-typedef struct
-{
-    /* Header word */
-    uint32_t header;
-    /* Identifier for the pin or group */
-    uint32_t identifier;
-    /* Identifier for the function to enable for the pin or group */
-    uint32_t functionId;
-    /* Selector */
-    uint32_t flags;
-} msg_rpinctrl7_t;
 
 /* Request type for PinctrlRequest() */
 typedef struct
@@ -243,7 +245,7 @@ typedef struct
     uint32_t identifier;
     /* Selector */
     uint32_t flags;
-} msg_rpinctrl8_t;
+} msg_rpinctrl7_t;
 
 /* Request type for PinctrlRelease() */
 typedef struct
@@ -254,7 +256,7 @@ typedef struct
     uint32_t identifier;
     /* Selector */
     uint32_t flags;
-} msg_rpinctrl9_t;
+} msg_rpinctrl8_t;
 
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
@@ -275,16 +277,14 @@ static int32_t PinctrlProtocolMessageAttributes(const scmi_caller_t *caller,
     const msg_rpinctrl2_t *in, msg_tpinctrl2_t *out);
 static int32_t PinctrlAttributes(const scmi_caller_t *caller,
     const msg_rpinctrl3_t *in, msg_tpinctrl3_t *out);
-static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
+static int32_t PinctrlSettingsGet(const scmi_caller_t *caller,
     const msg_rpinctrl5_t *in, msg_tpinctrl5_t *out, uint32_t *len);
-static int32_t PinctrlConfigSet(const scmi_caller_t *caller,
+static int32_t PinctrlSettingsConfigure(const scmi_caller_t *caller,
     const msg_rpinctrl6_t *in, const scmi_msg_status_t *out);
-static int32_t PinctrlFunctionSelect(const scmi_caller_t *caller,
-    const msg_rpinctrl7_t *in, const scmi_msg_status_t *out);
 static int32_t PinctrlRequest(const scmi_caller_t *caller,
-    const msg_rpinctrl8_t *in, const scmi_msg_status_t *out);
+    const msg_rpinctrl7_t *in, const scmi_msg_status_t *out);
 static int32_t PinctrlRelease(const scmi_caller_t *caller,
-    const msg_rpinctrl9_t *in, const scmi_msg_status_t *out);
+    const msg_rpinctrl8_t *in, const scmi_msg_status_t *out);
 static int32_t PinctrlNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rpinctrl16_t *in, const scmi_msg_status_t *out);
 static int32_t PinctrlResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -328,29 +328,24 @@ int32_t RPC_SCMI_PinctrlDispatchCommand(scmi_caller_t *caller,
             status = PinctrlAttributes(caller, (const msg_rpinctrl3_t*) in,
                 (msg_tpinctrl3_t*) out);
             break;
-        case COMMAND_PINCTRL_CONFIG_GET:
+        case COMMAND_PINCTRL_SETTINGS_GET:
             lenOut = sizeof(msg_tpinctrl5_t);
-            status = PinctrlConfigGet(caller, (const msg_rpinctrl5_t*) in,
+            status = PinctrlSettingsGet(caller, (const msg_rpinctrl5_t*) in,
                 (msg_tpinctrl5_t*) out, &lenOut);
             break;
-        case COMMAND_PINCTRL_CONFIG_SET:
+        case COMMAND_PINCTRL_SETTINGS_CONFIGURE:
             lenOut = sizeof(const scmi_msg_status_t);
-            status = PinctrlConfigSet(caller, (const msg_rpinctrl6_t*) in,
-                (const scmi_msg_status_t*) out);
-            break;
-        case COMMAND_PINCTRL_FUNCTION_SELECT:
-            lenOut = sizeof(const scmi_msg_status_t);
-            status = PinctrlFunctionSelect(caller,
-                (const msg_rpinctrl7_t*) in, (const scmi_msg_status_t*) out);
+            status = PinctrlSettingsConfigure(caller,
+                (const msg_rpinctrl6_t*) in, (const scmi_msg_status_t*) out);
             break;
         case COMMAND_PINCTRL_REQUEST:
             lenOut = sizeof(const scmi_msg_status_t);
-            status = PinctrlRequest(caller, (const msg_rpinctrl8_t*) in,
+            status = PinctrlRequest(caller, (const msg_rpinctrl7_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_PINCTRL_RELEASE:
             lenOut = sizeof(const scmi_msg_status_t);
-            status = PinctrlRelease(caller, (const msg_rpinctrl9_t*) in,
+            status = PinctrlRelease(caller, (const msg_rpinctrl8_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
@@ -531,8 +526,12 @@ static int32_t PinctrlProtocolMessageAttributes(const scmi_caller_t *caller,
 /*                                                                          */
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
-/* - in->identifier: Identifier for the pin, group, or function             */
-/* - in->flags: Selector: Whether the identifier field selects a pin, a     */
+/* - in->identifier: Identifier for the pin, group, or function.            */
+/*   Identifiers are limited to 16 bits, and the upper 16 bits of this      */
+/*   field are ignored by the platform                                      */
+/* - in->flags: Selector:                                                   */
+/*   Bits[31:2] Reserved, must be zero.                                     */
+/*   Bits[1:0] Selector: Whether the identifier field selects a pin, a      */
 /*   group, or a function.                                                  */
 /*   0 - Pin                                                                */
 /*   1 - Group                                                              */
@@ -545,28 +544,46 @@ static int32_t PinctrlProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   Bit[31] Extended name.                                                 */
 /*   If set to 1, the name is greater than 16 bytes.                        */
 /*   If set to 0, extended name is not supported.                           */
-/*   Bits[30:16] Reserved, must be zero.                                    */
+/*   Bits[30:18] Reserved, must be zero.                                    */
+/*   Bit[17] GPIO function descriptor                                       */
+/*   Set to 0 if Bits[1:0] of the flags field in the command is set to 2,   */
+/*   and the function does not support GPIO functionality.                  */
+/*   Set to 1 if Bits[1:0] of the flags field in the command is set to 2,   */
+/*   and the function supports GPIO functionality.                          */
+/*   The agent should ignore the value of this bit if Bits[1:0] of flags    */
+/*   field in the command is set to 0 or 1.                                 */
+/*   This value of bit must not be 1 for more than one function associated  */
+/*   with a pin or a group.                                                 */
+/*   Bit[16] Pin-only function descriptor.                                  */
+/*   Set to 0 if Bits[1:0] of the flags field in the command is set to 2,   */
+/*   and the function is only supported by groups.                          */
+/*   Set to 1 if Bits[1:0] of the flags field in the command is set to 2,   */
+/*   the function is a single-pin function, and it is not supported by any  */
+/*   group. The function is only supported by individual pins.              */
+/*   The agent should ignore the value of this bit if Bits[1:0] of flags    */
+/*   field in the command is set to 0 or 1.                                 */
 /*   Bits[15:0] Number of pins or groups.                                   */
-/*   - Set to 0, if Bits[1:0] of flags field in the function is set to 0.   */
+/*   - Set to 1, if Bits[1:0] of flags field in the command is set to 0.    */
 /*   - Set to the number of pins in the group, if Bits[1:0] of flags field  */
-/*   in the function is set to 1.                                           */
-/*   - Set to the number of groups associated with the function, if         */
-/*   Bits[1:0]                                                              */
-/*   Bit[30] Extended pin control name.                                     */
-/*   If set to 1, the pin control name is greater than 16 bytes.            */
-/*   If set to 0, extended pin control name is not supported.               */
-/*   Bits[29:0] Reserved, must be zero                                      */
+/*   in the command is set to 1.                                            */
+/*   - Set to the number of pins which can support the function, if         */
+/*   Bits[1:0] of flags field in the command is set to 2 and Bit[16] of     */
+/*   attributes field is set to 1.                                          */
+/*   - Set to the number of groups which can support the function in all    */
+/*   other cases.                                                           */
 /* - out->name: Null-terminated ASCII string of up to 16 bytes in length    */
 /*   describing the pin, group, or function name. When Bit[31] of           */
 /*   attributes field is set to 1, this field contains the lower 15 bytes   */
 /*   of the NULL terminated name                                            */
 /*                                                                          */
 /* Process the PINCTRL_ATTRIBUTES message. Platform handler for             */
-/* SCMI_PinctrlAttributes(). See section 4.11.2.6 in the SCMI spec.         */
+/* SCMI_PinctrlAttributes(). See section 4.11.2.5 in the SCMI spec.         */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_FLAGS_SELECTOR() - Selector                                    */
 /* - PINCTRL_ATTR_EXT_NAME() - Extended name                                */
+/* - PINCTRL_ATTR_GPIO() - GPIO function descriptor                         */
+/* - PINCTRL_ATTR_PIN_ONLY() - Pin-only function descriptor                 */
 /* - PINCTRL_ATTR_NUM() - Number of pins or groups                          */
 /*                                                                          */
 /* Return errors:                                                           */
@@ -611,8 +628,10 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
     {
         /* No notifications */
         out->attributes
-            = PINCTRL_ATTR_NUM(0UL)
-            | PINCTRL_ATTR_EXT_NAME(0UL);
+            = PINCTRL_ATTR_EXT_NAME(0UL)
+            | PINCTRL_ATTR_GPIO(0UL)
+            | PINCTRL_ATTR_PIN_ONLY(0UL)
+            | PINCTRL_ATTR_NUM(1UL);
 
         /* Copy out name */
         RPC_SCMI_StrCpy(out->name, nameAddr, PINCTRL_MAX_NAME);
@@ -629,14 +648,17 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
 /* - caller: Caller info                                                    */
 /* - in->identifier: Identifier for the pin or group                        */
 /* - in->attributes: Pin control set attributes:                            */
-/*   Bits[31:19] Reserved, must be zero.                                    */
-/*   Bit[18] Get all configs.                                               */
+/*   Bits[31:20] Reserved, must be zero.                                    */
+/*   Bit[19:18] Config flag.                                                */
 /*   When set to 0, only the configuration value for the configuration      */
 /*   type specified by Bits[7:0] needs to be returned.                      */
 /*   When set to 1, configuration values for all relevant configuration     */
 /*   types associated with the pin or group need to be returned. The        */
 /*   returned configuration array is sorted in numerically increasing       */
 /*   order of config types.                                                 */
+/*   When set to 2, no configuration values need to be returned. The        */
+/*   command only returns the function selected for the pin or the group.   */
+/*   All other values are reserved for future use.                          */
 /*   Bits[17:16] Selector: Whether the identifier field refers to a pin or  */
 /*   a group.                                                               */
 /*   0 - Pin                                                                */
@@ -645,29 +667,36 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
 /*   Bits[15:8] skipConfigs                                                 */
 /*   The number of configuration types to skip over, before returning the   */
 /*   first configuration type and value in the return configuration array.  */
-/*   This field is ignored if Bit[18] is set to 0.                          */
+/*   This field is ignored if Bit[19:18] is set to 0 or 2.                  */
 /*   Bits[7:0] ConfigType: The type of config.                              */
-/*   This field is ignored if Bit[18] is set to 1                           */
+/*   This field is ignored if Bit[19:18] is set to 1 or 2                   */
+/* - out->functionSelected: Function select:                                */
+/*   The function currently selected to be enabled by the pin or group      */
+/*   specified in the input identifier field.                               */
+/*   This field is set to 0xFFFFFFFF if no function is currently enabled    */
+/*   by the pin or group specified                                          */
 /* - out->numConfigs: Number of configs:                                    */
 /*   Bits[31:24] Number of remaining configurations.                        */
 /*   Bits[23:8] Reserved, must be zero.                                     */
 /*   Bits[7:0] Number of configurations that are returned by this call.     */
-/*   This field should be ignored if Bit[18] (Get all configs) of the       */
-/*   attributes field of the function was set to 0                          */
+/*   This field should be set to 0 if Bit[19:18] of the attributes field    */
+/*   of the command was set to 2.                                           */
+/*   This field should be set to 1 if Bit[19:18] of the attributes field    */
+/*   of the command was set to 0                                            */
 /* - out->configs: Array of configurations: sorted in numerically           */
 /*   increasing config type order.                                          */
-/*   Size is specified by Bits[7:0] of the numConfigs field if Bit[18]      */
-/*   (Get all configs) of the attributes field of the function was set to   */
-/*   1. Else size must be 1.                                                */
+/*   This field should be ignored if Bit[19:18] of the attributes field of  */
+/*   the command was set to 2.                                              */
+/*   Size is specified by Bits[7:0] of the numConfigs field.                */
 /*   Each array entry is composed of two 32-bit words containing the type   */
 /*   and value                                                              */
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
-/* Process the PINCTRL_CONFIG_GET message. Platform handler for             */
-/* SCMI_PinctrlConfigGet(). See section 4.11.2.7 in the SCMI spec.          */
+/* Process the PINCTRL_SETTINGS_GET message. Platform handler for           */
+/* SCMI_PinctrlSettingsGet(). See section 4.11.2.7 in the SCMI spec.        */
 /*                                                                          */
 /*  Access macros:                                                          */
-/* - PINCTRL_GET_ATTR_GET_ALL() - Get all configs                           */
+/* - PINCTRL_GET_ATTR_CONFIG() - Config flag                                */
 /* - PINCTRL_GET_ATTR_SELECTOR() - Selector                                 */
 /* - PINCTRL_GET_ATTR_SKIP_CONFIGS() - Skip Configs                         */
 /* - PINCTRL_GET_ATTR_CONFIG_TYPE() - ConfigType                            */
@@ -686,11 +715,11 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
 /* - SM_ERR_NOT_SUPPORTED: if the request is not supported.                 */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
-static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
+static int32_t PinctrlSettingsGet(const scmi_caller_t *caller,
     const msg_rpinctrl5_t *in, msg_tpinctrl5_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t all = PINCTRL_GET_ATTR_GET_ALL(in->attributes);
+    uint32_t cfg = PINCTRL_GET_ATTR_CONFIG(in->attributes);
     uint32_t sel = PINCTRL_GET_ATTR_SELECTOR(in->attributes);
     uint32_t skipConfigs = PINCTRL_GET_ATTR_SKIP_CONFIGS(in->attributes);
     uint32_t maxConfigs = 2U;
@@ -723,11 +752,17 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
     }
 
     /* Get only one */
-    if (all == 0U)
+    if (cfg == PINCTRL_CONFIG_FLAG_TYPE)
     {
         skipConfigs = 0U;
         configList[0] = PINCTRL_GET_ATTR_CONFIG_TYPE(in->attributes);
         maxConfigs = 1U;
+    }
+
+    /* Get none */
+    if (cfg == PINCTRL_CONFIG_FLAG_NONE)
+    {
+        maxConfigs = 0U;
     }
 
     /* Get configs? */
@@ -777,15 +812,18 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
         }
 
         /* Update length */
-        *len = (3U * sizeof(uint32_t))
+        *len = (4U * sizeof(uint32_t))
             + (out->numConfigs * sizeof(pin_config_t));
 
         /* Append remaining levels */
-        if (all != 0U)
+        if (cfg != PINCTRL_CONFIG_FLAG_TYPE)
         {
             out->numConfigs |= PINCTRL_NUM_CONFIG_FLAGS_REMAING_CONFIGS(
                 maxConfigs - (index + skipConfigs));
         }
+
+        /* Update function */
+        out->functionSelected = PINCTRL_FUNC_NONE;
     }
 
     /* Return status */
@@ -798,8 +836,21 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - in->identifier: Identifier for the pin or group                        */
+/* - in->functionId: Function ID:                                           */
+/*   Identifier for the function selected to be enabled for the selected    */
+/*   pin or group.                                                          */
+/*   This field is set to 0xFFFFFFFF if no function should be enabled by    */
+/*   the pin or group.                                                      */
+/*   This value of this field is ignored by the platform if Bit[10] of the  */
+/*   attributes field is set to 0                                           */
 /* - in->attributes: Pin control get attributes:                            */
-/*   Bits[31:10] Reserved, must be zero.                                    */
+/*   Bits[31:11] Reserved, must be zero.                                    */
+/*   Bit[10] Function valid.                                                */
+/*   When set to 0, the function selection for the pin or group does not    */
+/*   need to change. The platform ignores the value of the function_id      */
+/*   field.                                                                 */
+/*   When set to 1, the function selection for the pin or group needs to    */
+/*   change and is specified by the function_id field.                      */
 /*   Bits[9:2] Number of configurations to set.                             */
 /*   The maximum value of this field is limited by the transport used. The  */
 /*   agent needs to specify this field such that the entire function can    */
@@ -815,11 +866,12 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
 /*   Each array entry is composed of two 32-bit words containing the type   */
 /*   and value                                                              */
 /*                                                                          */
-/* Process the PINCTRL_CONFIG_SET message. Platform handler for             */
-/* SCMI_PinctrlConfigSet(). Requires access greater than or equal to        */
-/* EXCLUSIVE. See section 4.11.2.8 in the SCMI spec.                        */
+/* Process the PINCTRL_SETTINGS_CONFIGURE message. Platform handler for     */
+/* SCMI_PinctrlSettingsConfigure(). Requires access greater than or equal   */
+/* to EXCLUSIVE. See section 4.11.2.8 in the SCMI spec.                     */
 /*                                                                          */
 /*  Access macros:                                                          */
+/* - PINCTRL_SET_ATTR_FUNCTION() - Function ID valid                        */
 /* - PINCTRL_SET_ATTR_NUM_CONFIGS() - Number of configurations to set       */
 /* - PINCTRL_SET_ATTR_SELECTOR() - Selector                                 */
 /*                                                                          */
@@ -836,7 +888,7 @@ static int32_t PinctrlConfigGet(const scmi_caller_t *caller,
 /*   configuration of this pin or group.                                    */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
-static int32_t PinctrlConfigSet(const scmi_caller_t *caller,
+static int32_t PinctrlSettingsConfigure(const scmi_caller_t *caller,
     const msg_rpinctrl6_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -925,62 +977,6 @@ static int32_t PinctrlConfigSet(const scmi_caller_t *caller,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Select a function for a pin                                              */
-/*                                                                          */
-/* Parameters:                                                              */
-/* - caller: Caller info                                                    */
-/* - in->identifier: Identifier for the pin or group                        */
-/* - in->functionId: Identifier for the function to enable for the pin or   */
-/*   group                                                                  */
-/* - in->flags: Selector: Whether the identifier field selects a pin, a     */
-/*   group, or a function.                                                  */
-/*   0 - Pin                                                                */
-/*   1 - Group                                                              */
-/*   2 - Function                                                           */
-/*   All other values are reserved for future use                           */
-/*                                                                          */
-/* Process the PINCTRL_FUNCTION_SELECT message. Platform handler for        */
-/* SCMI_PinctrlFunctionSelect(). Requires access greater than or equal to   */
-/* EXCLUSIVE. See section 4.11.2.9 in the SCMI spec.                        */
-/*                                                                          */
-/*  Access macros:                                                          */
-/* - PINCTRL_FLAGS_SELECTOR() - Selector                                    */
-/*                                                                          */
-/* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the function was successfully enabled.              */
-/* - SM_ERR_NOT_FOUND: if the identifier field does not point to a valid    */
-/*   pin or group, or if the function_id field does not point to a valid    */
-/*   function.                                                              */
-/* - SM_ERR_INVALID_PARAMETERS: if the input parameters specify             */
-/*   incorrect or illegal values.                                           */
-/* - SM_ERR_NOT_SUPPORTED: if the configuration requested by this           */
-/*   function is not supported by the pin or group.                         */
-/* - SM_ERR_DENIED: if the calling agent is not allowed to enable this      */
-/*   function on this pin.                                                  */
-/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
-/*--------------------------------------------------------------------------*/
-static int32_t PinctrlFunctionSelect(const scmi_caller_t *caller,
-    const msg_rpinctrl7_t *in, const scmi_msg_status_t *out)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Check request length */
-    if (caller->lenCopy < sizeof(*in))
-    {
-        status = SM_ERR_PROTOCOL_ERROR;
-    }
-
-    /* Not supported */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = SM_ERR_NOT_SUPPORTED;
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Request a pin                                                            */
 /*                                                                          */
 /* Parameters:                                                              */
@@ -994,7 +990,7 @@ static int32_t PinctrlFunctionSelect(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the PINCTRL_REQUEST message. Platform handler for                */
 /* SCMI_PinctrlRequest(). Requires access greater than or equal to          */
-/* EXCLUSIVE. See section 4.11.2.10 in the SCMI spec.                       */
+/* EXCLUSIVE. See section 4.11.2.9 in the SCMI spec.                        */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - PINCTRL_FLAGS_SELECTOR() - Selector                                    */
@@ -1012,7 +1008,7 @@ static int32_t PinctrlFunctionSelect(const scmi_caller_t *caller,
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t PinctrlRequest(const scmi_caller_t *caller,
-    const msg_rpinctrl8_t *in, const scmi_msg_status_t *out)
+    const msg_rpinctrl7_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t sel = PINCTRL_FLAGS_SELECTOR(in->flags);
@@ -1060,7 +1056,7 @@ static int32_t PinctrlRequest(const scmi_caller_t *caller,
 /*   All other values are reserved for future use                           */
 /*                                                                          */
 /* Process the PINCTRL_RELEASE message. Platform handler for                */
-/* SCMI_PinctrlRelease(). See section 4.11.2.11 in the SCMI spec.           */
+/* SCMI_PinctrlRelease(). See section 4.11.2.10 in the SCMI spec.           */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if exclusive control of the pin or group was           */
@@ -1072,7 +1068,7 @@ static int32_t PinctrlRequest(const scmi_caller_t *caller,
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t PinctrlRelease(const scmi_caller_t *caller,
-    const msg_rpinctrl9_t *in, const scmi_msg_status_t *out)
+    const msg_rpinctrl8_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t sel = PINCTRL_FLAGS_SELECTOR(in->flags);

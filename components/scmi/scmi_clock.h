@@ -108,6 +108,34 @@
 #define SCMI_CLOCK_ROUND_AUTO  2U
 /** @} */
 
+/*!
+ * @name SCMI clock state
+ */
+/** @{ */
+/*! Disable clock */
+#define SCMI_CLOCK_STATE_DISABLE  0U
+/*! Enable clock */
+#define SCMI_CLOCK_STATE_ENABLE   1U
+/*! Reserved for future use */
+#define SCMI_CLOCK_STATE_RESV     2U
+/*! No state change */
+#define SCMI_CLOCK_STATE_NA       3U
+/** @} */
+
+/*!
+ * @name SCMI extended clock config
+ */
+/** @{ */
+/*! Not used */
+#define SCMI_CLOCK_EXT_NONE   0x0U
+/*! Duty in percent */
+#define SCMI_CLOCK_EXT_DUTY   0x1U
+/*! Phase in mrad */
+#define SCMI_CLOCK_EXT_PHASE  0x2U
+/*! Spread spectrum */
+#define SCMI_CLOCK_EXT_SSC    0x80U
+/** @} */
+
 /* Macros */
 
 /*!
@@ -171,7 +199,7 @@
 /** @{ */
 /*! Extended config type */
 #define SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(x)  (((x) & 0xFFU) << 16U)
-/*! Enable/Disable */
+/*! Enable/disable state */
 #define SCMI_CLOCK_CONFIG_SET_ENABLE(x)      (((x) & 0x3U) << 0U)
 /** @} */
 
@@ -599,7 +627,7 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
  *
  * Access macros:
  * - ::SCMI_CLOCK_CONFIG_SET_EXT_CONFIG() - Extended config type
- * - ::SCMI_CLOCK_CONFIG_SET_ENABLE() - Enable/Disable
+ * - ::SCMI_CLOCK_CONFIG_SET_ENABLE() - Enable/disable state
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *

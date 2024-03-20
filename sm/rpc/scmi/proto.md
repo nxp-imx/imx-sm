@@ -99,11 +99,10 @@ and some of the optional messages are supported.
 | Pinctrl | 0x19 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_PINCTRL_PROTOCOL_ATTRIBUTES) | 0x1 |  |
 | Pinctrl | 0x19 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_PINCTRL_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  |
 | Pinctrl | 0x19 | [PINCTRL_ATTRIBUTES](@ref SCMI_PROTO_PINCTRL_PINCTRL_ATTRIBUTES) | 0x3 |  |
-| Pinctrl | 0x19 | [PINCTRL_CONFIG_GET](@ref SCMI_PROTO_PINCTRL_PINCTRL_CONFIG_GET) | 0x5 |  |
-| Pinctrl | 0x19 | [PINCTRL_CONFIG_SET](@ref SCMI_PROTO_PINCTRL_PINCTRL_CONFIG_SET) | 0x6 | EXCLUSIVE |
-| Pinctrl | 0x19 | [PINCTRL_FUNCTION_SELECT](@ref SCMI_PROTO_PINCTRL_PINCTRL_FUNCTION_SELECT) | 0x7 | EXCLUSIVE |
-| Pinctrl | 0x19 | [PINCTRL_REQUEST](@ref SCMI_PROTO_PINCTRL_PINCTRL_REQUEST) | 0x8 | EXCLUSIVE |
-| Pinctrl | 0x19 | [PINCTRL_RELEASE](@ref SCMI_PROTO_PINCTRL_PINCTRL_RELEASE) | 0x9 |  |
+| Pinctrl | 0x19 | [PINCTRL_SETTINGS_GET](@ref SCMI_PROTO_PINCTRL_PINCTRL_SETTINGS_GET) | 0x5 |  |
+| Pinctrl | 0x19 | [PINCTRL_SETTINGS_CONFIGURE](@ref SCMI_PROTO_PINCTRL_PINCTRL_SETTINGS_CONFIGURE) | 0x6 | EXCLUSIVE |
+| Pinctrl | 0x19 | [PINCTRL_REQUEST](@ref SCMI_PROTO_PINCTRL_PINCTRL_REQUEST) | 0x7 | EXCLUSIVE |
+| Pinctrl | 0x19 | [PINCTRL_RELEASE](@ref SCMI_PROTO_PINCTRL_PINCTRL_RELEASE) | 0x8 |  |
 | Pinctrl | 0x19 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_PINCTRL_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Lmm | 0x80 | [PROTOCOL_VERSION](@ref SCMI_PROTO_LMM_PROTOCOL_VERSION) | 0x0 |  |
 | Lmm | 0x80 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_LMM_PROTOCOL_ATTRIBUTES) | 0x1 |  |
@@ -1816,9 +1815,9 @@ See SCMI_PinctrlAttributes() for details.
     | uint8          | name[16]                                                     |
     ---------------------------------------------------------------------------------
 
-## Pinctrl: PINCTRL_CONFIG_GET ## {#SCMI_PROTO_PINCTRL_PINCTRL_CONFIG_GET}
+## Pinctrl: PINCTRL_SETTINGS_GET ## {#SCMI_PROTO_PINCTRL_PINCTRL_SETTINGS_GET}
 
-See SCMI_PinctrlConfigGet() for details.
+See SCMI_PinctrlSettingsGet() for details.
 
     Send
     ---------------------------------------------------------------------------------
@@ -1834,21 +1833,25 @@ See SCMI_PinctrlConfigGet() for details.
     | uint32         | header (type=0, proto=0x99/0x19, msg=0x5                     |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | function_selected                                            |
     ---------------------------------------------------------------------------------
     | uint32         | num_configs                                                  |
     ---------------------------------------------------------------------------------
     | PIN_CONFIG     | configs[N]                                                   |
     ---------------------------------------------------------------------------------
 
-## Pinctrl: PINCTRL_CONFIG_SET ## {#SCMI_PROTO_PINCTRL_PINCTRL_CONFIG_SET}
+## Pinctrl: PINCTRL_SETTINGS_CONFIGURE ## {#SCMI_PROTO_PINCTRL_PINCTRL_SETTINGS_CONFIGURE}
 
-See SCMI_PinctrlConfigSet() for details.
+See SCMI_PinctrlSettingsConfigure() for details.
 
     Send
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x99/0x19, msg=0x6                     |
     ---------------------------------------------------------------------------------
     | uint32         | identifier                                                   |
+    ---------------------------------------------------------------------------------
+    | uint32         | function_id                                                  |
     ---------------------------------------------------------------------------------
     | uint32         | attributes                                                   |
     ---------------------------------------------------------------------------------
@@ -1858,28 +1861,6 @@ See SCMI_PinctrlConfigSet() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x99/0x19, msg=0x6                     |
-    ---------------------------------------------------------------------------------
-    | int32          | status                                                       |
-    ---------------------------------------------------------------------------------
-
-## Pinctrl: PINCTRL_FUNCTION_SELECT ## {#SCMI_PROTO_PINCTRL_PINCTRL_FUNCTION_SELECT}
-
-See SCMI_PinctrlFunctionSelect() for details.
-
-    Send
-    ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x99/0x19, msg=0x7                     |
-    ---------------------------------------------------------------------------------
-    | uint32         | identifier                                                   |
-    ---------------------------------------------------------------------------------
-    | uint32         | function_id                                                  |
-    ---------------------------------------------------------------------------------
-    | uint32         | flags                                                        |
-    ---------------------------------------------------------------------------------
-
-    Receive
-    ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x99/0x19, msg=0x7                     |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -1890,7 +1871,7 @@ See SCMI_PinctrlRequest() for details.
 
     Send
     ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x99/0x19, msg=0x8                     |
+    | uint32         | header (type=0, proto=0x99/0x19, msg=0x7                     |
     ---------------------------------------------------------------------------------
     | uint32         | identifier                                                   |
     ---------------------------------------------------------------------------------
@@ -1899,7 +1880,7 @@ See SCMI_PinctrlRequest() for details.
 
     Receive
     ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x99/0x19, msg=0x8                     |
+    | uint32         | header (type=0, proto=0x99/0x19, msg=0x7                     |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------
@@ -1910,7 +1891,7 @@ See SCMI_PinctrlRelease() for details.
 
     Send
     ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x99/0x19, msg=0x9                     |
+    | uint32         | header (type=0, proto=0x99/0x19, msg=0x8                     |
     ---------------------------------------------------------------------------------
     | uint32         | identifier                                                   |
     ---------------------------------------------------------------------------------
@@ -1919,7 +1900,7 @@ See SCMI_PinctrlRelease() for details.
 
     Receive
     ---------------------------------------------------------------------------------
-    | uint32         | header (type=0, proto=0x99/0x19, msg=0x9                     |
+    | uint32         | header (type=0, proto=0x99/0x19, msg=0x8                     |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------

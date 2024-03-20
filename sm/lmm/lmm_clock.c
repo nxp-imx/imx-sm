@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -232,5 +232,23 @@ int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent)
 {
     /* Not shared, just passthru to device */
     return SM_CLOCKPARENTGET(clockId, parent);
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set an LM extended clock data value                                      */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
+    uint32_t value)
+{
+    return SM_ERR_INVALID_PARAMETERS;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get an LM extended clock data value                                      */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_ClockExtendedGet(uint32_t lmId, uint32_t clockId, uint32_t extId,
+uint32_t *value)
+{
+    return SM_ERR_INVALID_PARAMETERS;
 }
 

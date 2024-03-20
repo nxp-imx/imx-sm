@@ -205,8 +205,9 @@ int32_t SCMI_PinctrlAttributes(uint32_t channel, uint32_t identifier,
 /*--------------------------------------------------------------------------*/
 /* Get pin configuration                                                    */
 /*--------------------------------------------------------------------------*/
-int32_t SCMI_PinctrlConfigGet(uint32_t channel, uint32_t identifier,
-    uint32_t attributes, uint32_t *numConfigs, scmi_pin_config_t *configs)
+int32_t SCMI_PinctrlSettingsGet(uint32_t channel, uint32_t identifier,
+    uint32_t attributes, uint32_t *functionSelected, uint32_t *numConfigs,
+    scmi_pin_config_t *configs)
 {
     int32_t status;
     uint32_t header;
@@ -217,6 +218,7 @@ int32_t SCMI_PinctrlConfigGet(uint32_t channel, uint32_t identifier,
     {
         uint32_t header;
         int32_t status;
+        uint32_t functionSelected;
         uint32_t numConfigs;
         scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS];
     } msg_rpinctrld5_t;
@@ -245,7 +247,7 @@ int32_t SCMI_PinctrlConfigGet(uint32_t channel, uint32_t identifier,
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_PINCTRL_CONFIG_GET, sizeof(msg_tpinctrld5_t),
+            SCMI_MSG_PINCTRL_SETTINGS_GET, sizeof(msg_tpinctrld5_t),
             &header);
     }
 
@@ -260,6 +262,12 @@ int32_t SCMI_PinctrlConfigGet(uint32_t channel, uint32_t identifier,
     if (status == SCMI_ERR_SUCCESS)
     {
         const msg_rpinctrld5_t *msgRx = (const msg_rpinctrld5_t*) msg;
+
+        /* Extract functionSelected */
+        if (functionSelected != NULL)
+        {
+            *functionSelected = msgRx->functionSelected;
+        }
 
         /* Extract numConfigs */
         if (numConfigs != NULL)
@@ -285,63 +293,9 @@ int32_t SCMI_PinctrlConfigGet(uint32_t channel, uint32_t identifier,
 /*--------------------------------------------------------------------------*/
 /* Set pin configuration                                                    */
 /*--------------------------------------------------------------------------*/
-int32_t SCMI_PinctrlConfigSet(uint32_t channel, uint32_t identifier,
-    uint32_t attributes, const scmi_pin_config_t *configs)
-{
-    int32_t status;
-    uint32_t header;
-    void *msg;
-
-    /* Acquire lock */
-    SCMI_A2P_LOCK(channel);
-
-    /* Init buffer */
-    status = SCMI_BufInit(channel, &msg);
-
-    /* Send request */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        /* Request message structure */
-        typedef struct
-        {
-            uint32_t header;
-            uint32_t identifier;
-            uint32_t attributes;
-            scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS_T];
-        } msg_tpinctrld6_t;
-        msg_tpinctrld6_t *msgTx = (msg_tpinctrld6_t*) msg;
-
-        /* Fill in parameters */
-        msgTx->identifier = identifier;
-        msgTx->attributes = attributes;
-
-        SCMI_MemCpy((uint8_t*) &msgTx->configs, (const uint8_t*) configs,
-            (SCMI_PINCTRL_NUM_CONFIGS_T * sizeof(scmi_pin_config_t)));
-
-        /* Send message */
-        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_PINCTRL_CONFIG_SET, sizeof(msg_tpinctrld6_t),
-            &header);
-    }
-
-    /* Receive response */
-    if (status == SCMI_ERR_SUCCESS)
-    {
-        status = SCMI_A2pRx(channel, sizeof(msg_status_t), header);
-    }
-
-    /* Release lock */
-    SCMI_A2P_UNLOCK(channel);
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Select a function for a pin                                              */
-/*--------------------------------------------------------------------------*/
-int32_t SCMI_PinctrlFunctionSelect(uint32_t channel, uint32_t identifier,
-    uint32_t functionId, uint32_t flags)
+int32_t SCMI_PinctrlSettingsConfigure(uint32_t channel, uint32_t identifier,
+    uint32_t functionId, uint32_t attributes,
+    const scmi_pin_config_t *configs)
 {
     int32_t status;
     uint32_t header;
@@ -362,18 +316,22 @@ int32_t SCMI_PinctrlFunctionSelect(uint32_t channel, uint32_t identifier,
             uint32_t header;
             uint32_t identifier;
             uint32_t functionId;
-            uint32_t flags;
-        } msg_tpinctrld7_t;
-        msg_tpinctrld7_t *msgTx = (msg_tpinctrld7_t*) msg;
+            uint32_t attributes;
+            scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS_T];
+        } msg_tpinctrld6_t;
+        msg_tpinctrld6_t *msgTx = (msg_tpinctrld6_t*) msg;
 
         /* Fill in parameters */
         msgTx->identifier = identifier;
         msgTx->functionId = functionId;
-        msgTx->flags = flags;
+        msgTx->attributes = attributes;
+
+        SCMI_MemCpy((uint8_t*) &msgTx->configs, (const uint8_t*) configs,
+            (SCMI_PINCTRL_NUM_CONFIGS_T * sizeof(scmi_pin_config_t)));
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_PINCTRL_FUNCTION_SELECT, sizeof(msg_tpinctrld7_t),
+            SCMI_MSG_PINCTRL_SETTINGS_CONFIGURE, sizeof(msg_tpinctrld6_t),
             &header);
     }
 
@@ -415,8 +373,8 @@ int32_t SCMI_PinctrlRequest(uint32_t channel, uint32_t identifier,
             uint32_t header;
             uint32_t identifier;
             uint32_t flags;
-        } msg_tpinctrld8_t;
-        msg_tpinctrld8_t *msgTx = (msg_tpinctrld8_t*) msg;
+        } msg_tpinctrld7_t;
+        msg_tpinctrld7_t *msgTx = (msg_tpinctrld7_t*) msg;
 
         /* Fill in parameters */
         msgTx->identifier = identifier;
@@ -424,7 +382,7 @@ int32_t SCMI_PinctrlRequest(uint32_t channel, uint32_t identifier,
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_PINCTRL_REQUEST, sizeof(msg_tpinctrld8_t), &header);
+            SCMI_MSG_PINCTRL_REQUEST, sizeof(msg_tpinctrld7_t), &header);
     }
 
     /* Receive response */
@@ -465,8 +423,8 @@ int32_t SCMI_PinctrlRelease(uint32_t channel, uint32_t identifier,
             uint32_t header;
             uint32_t identifier;
             uint32_t flags;
-        } msg_tpinctrld9_t;
-        msg_tpinctrld9_t *msgTx = (msg_tpinctrld9_t*) msg;
+        } msg_tpinctrld8_t;
+        msg_tpinctrld8_t *msgTx = (msg_tpinctrld8_t*) msg;
 
         /* Fill in parameters */
         msgTx->identifier = identifier;
@@ -474,7 +432,7 @@ int32_t SCMI_PinctrlRelease(uint32_t channel, uint32_t identifier,
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
-            SCMI_MSG_PINCTRL_RELEASE, sizeof(msg_tpinctrld9_t), &header);
+            SCMI_MSG_PINCTRL_RELEASE, sizeof(msg_tpinctrld8_t), &header);
     }
 
     /* Receive response */

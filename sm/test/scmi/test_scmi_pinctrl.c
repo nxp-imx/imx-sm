@@ -226,83 +226,86 @@ void TEST_ScmiPinctrl(void)
 
     /* Config Get -- invalids */
     {
-        uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
+        uint32_t attributes
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_TYPE);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
         /* NOT FOUND */
-        NECHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, SM_NUM_PIN,
-            attributes, &numConfigs, configs), SCMI_ERR_NOT_FOUND);
+        NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, SM_NUM_PIN,
+            attributes, NULL, &numConfigs, configs), SCMI_ERR_NOT_FOUND);
 
         /* INVALID PARAMETERS */
-        attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL) |
-            SCMI_PINCTRL_GET_ATTR_SELECTOR(3UL);
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL)
+            | SCMI_PINCTRL_GET_ATTR_SELECTOR(3UL);
 
-        NECHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, 0U,
-            attributes, &numConfigs, configs), SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U,
+            attributes, NULL, &numConfigs, configs),
+            SCMI_ERR_INVALID_PARAMETERS);
 
         /* NOT SUPPORTED -- Group */
-        attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL) |
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL) |
             SCMI_PINCTRL_GET_ATTR_SELECTOR(1UL);
 
-        NECHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, 0U,
-            attributes, &numConfigs, configs), SCMI_ERR_NOT_SUPPORTED);
+        NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U,
+            attributes, NULL, &numConfigs, configs), SCMI_ERR_NOT_SUPPORTED);
 
         /* NOT SUPPORTED -- Unsupported Custom Config */
-        attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(0UL)
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_TYPE)
             | SCMI_PINCTRL_GET_ATTR_SELECTOR(0UL)
             | SCMI_PINCTRL_GET_ATTR_CONFIG_TYPE(255UL);
 
-        NECHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, 0U,
-            attributes, &numConfigs, configs), SCMI_ERR_NOT_SUPPORTED);
+        NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U,
+            attributes, NULL, &numConfigs, configs), SCMI_ERR_NOT_SUPPORTED);
 
         /* Branch -- Invalid Channel */
-        attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
-        NECHECK(SCMI_PinctrlConfigGet(SM_SCMI_NUM_CHN, 0U,
-            attributes, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
+        NECHECK(SCMI_PinctrlSettingsGet(SM_SCMI_NUM_CHN, 0U,
+            attributes, NULL, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Branch -- Nullpointers */
-        CHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, 0U,
-            attributes, NULL, NULL));
+        CHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U,
+            attributes, NULL, NULL, NULL));
     }
 
     /* Config Set -- invalids */
     {
-        uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
+        uint32_t attributes
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
-        CHECK(SCMI_PinctrlConfigGet(SM_TEST_DEFAULT_CHN, 0U, attributes,
-            &numConfigs, configs));
+        CHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U, attributes,
+            NULL, &numConfigs, configs));
 
         /* INVALID PARAMETERS */
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(1U)
             | SCMI_PINCTRL_SET_ATTR_SELECTOR(3U);
 
-        NECHECK(SCMI_PinctrlConfigSet(SM_TEST_DEFAULT_CHN, 0U, attributes,
-            configs), SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_PinctrlSettingsConfigure(SM_TEST_DEFAULT_CHN, 0U, 0U,
+            attributes, configs), SCMI_ERR_INVALID_PARAMETERS);
 
         /* NOT SUPPORTED -- Group */
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(1U)
             | SCMI_PINCTRL_SET_ATTR_SELECTOR(1U);
 
-        NECHECK(SCMI_PinctrlConfigSet(SM_TEST_DEFAULT_CHN, 0U, attributes,
-            configs), SCMI_ERR_NOT_SUPPORTED);
+        NECHECK(SCMI_PinctrlSettingsConfigure(SM_TEST_DEFAULT_CHN, 0U, 0U,
+            attributes, configs), SCMI_ERR_NOT_SUPPORTED);
 
         /* NOT SUPPORTED -- Unsupported Custom Config */
         configs[0].type = 255U;
         configs[0].value = 0U;
 
-        NECHECK(SCMI_PinctrlConfigSet(SM_TEST_DEFAULT_CHN, 0U, attributes,
-            configs), SCMI_ERR_NOT_SUPPORTED);
+        NECHECK(SCMI_PinctrlSettingsConfigure(SM_TEST_DEFAULT_CHN, 0U,
+            0U, attributes, configs), SCMI_ERR_NOT_SUPPORTED);
 
         /* NOT FOUND */
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(1U)
             | SCMI_PINCTRL_SET_ATTR_SELECTOR(0U);
         configs[0].type = SCMI_PINCTRL_TYPE_MUX;
 
-        NECHECK(SCMI_PinctrlConfigSet(SM_TEST_DEFAULT_CHN, SM_NUM_PIN, attributes,
-            configs), SCMI_ERR_NOT_FOUND);
+        NECHECK(SCMI_PinctrlSettingsConfigure(SM_TEST_DEFAULT_CHN, SM_NUM_PIN,
+            0U, attributes, configs), SCMI_ERR_NOT_FOUND);
     }
 
     int32_t status = 0;
@@ -340,8 +343,10 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
     /* Config Get */
     {
         /* RETURN ALL CONFIGS ----------------------------------- */
-        uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
+        uint32_t attributes
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
         uint32_t numConfigs = 0U;
+        uint32_t functionSelected = 0U;
 
         /* DO    : Describe configs, unpackage data */
         /* WHILE : More configs to send            */
@@ -349,10 +354,10 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         {
             scmi_pin_config_t configs[10] = { 0 };
 
-            printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
+            printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
                 identifier, attributes);
-            CHECK(SCMI_PinctrlConfigGet(channel, identifier, attributes,
-                &numConfigs, configs));
+            CHECK(SCMI_PinctrlSettingsGet(channel, identifier, attributes,
+                &functionSelected, &numConfigs, configs));
 
             /* Ensure numConfigs returned */
             BCHECK(SCMI_PINCTRL_NUM_CONFIG_FLAGS_NUM_CONFIGS(numConfigs)
@@ -375,7 +380,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
             > 0U);
 
         /* RETURN ALL CONFIGS -- skip 1 ------------------------- */
-        attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL)
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL)
             | SCMI_PINCTRL_GET_ATTR_SKIP_CONFIGS(1UL);
         numConfigs = 0U;
 
@@ -385,10 +390,10 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         {
             scmi_pin_config_t configs[10] = { 0 };
 
-            printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
+            printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
                 identifier, attributes);
-            CHECK(SCMI_PinctrlConfigGet(channel, identifier, attributes,
-                &numConfigs, configs));
+            CHECK(SCMI_PinctrlSettingsGet(channel, identifier, attributes,
+                &functionSelected, &numConfigs, configs));
 
             /* Ensure numConfigs returned */
             BCHECK(SCMI_PINCTRL_NUM_CONFIG_FLAGS_NUM_CONFIGS(numConfigs)
@@ -411,14 +416,14 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
             > 0U);
 
         /* RETURN TYPE  ----------------------------------------- */
-        attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(0UL) |
-            SCMI_PINCTRL_GET_ATTR_CONFIG_TYPE(SCMI_PINCTRL_TYPE_MUX);
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_TYPE)
+            | SCMI_PINCTRL_GET_ATTR_CONFIG_TYPE(SCMI_PINCTRL_TYPE_MUX);
         scmi_pin_config_t configs[1] = { 0 };
 
-        printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
+        printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
             identifier, attributes);
-        CHECK(SCMI_PinctrlConfigGet(channel, identifier, attributes,
-            &numConfigs, configs));
+        CHECK(SCMI_PinctrlSettingsGet(channel, identifier, attributes,
+            &functionSelected, &numConfigs, configs));
 
         /* Print the configuration */
         printf("  configType=%u\n",
@@ -436,29 +441,32 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
     /* Adequate Access Permissions */
     if (pass)
     {
+        uint32_t functionSelected = 0U;
+
         /* Get the current Config */
-        uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
+        uint32_t attributes
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
-        printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
+        printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
             identifier, attributes);
-        CHECK(SCMI_PinctrlConfigGet(channel, identifier, attributes,
-            &numConfigs, configs));
+        CHECK(SCMI_PinctrlSettingsGet(channel, identifier, attributes,
+            &functionSelected, &numConfigs, configs));
 
         /* Set to the current config */
         uint32_t num = SCMI_PINCTRL_NUM_CONFIG_FLAGS_NUM_CONFIGS(numConfigs);
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(num) |
             SCMI_PINCTRL_GET_ATTR_SELECTOR(0UL);
 
-        printf("SCMI_PinctrlConfigSet(%u, %u, %u)\n", channel,
+        printf("SCMI_PinctrlSettingsConfigure(%u, %u, %u)\n", channel,
             identifier, attributes);
-        CHECK(SCMI_PinctrlConfigSet(channel, identifier, attributes,
-            configs));
+        CHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
+            attributes, configs));
 
         /* Branch -- Invalid Channel */
-        NECHECK(SCMI_PinctrlConfigSet(SM_SCMI_NUM_CHN, identifier,
-            attributes, configs), SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_PinctrlSettingsConfigure(SM_SCMI_NUM_CHN, identifier,
+            0U, attributes, configs), SCMI_ERR_INVALID_PARAMETERS);
 
 #ifdef SIMU
         num += 2;
@@ -472,45 +480,34 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(num) |
             SCMI_PINCTRL_SET_ATTR_SELECTOR(0U);
 
-        printf("SCMI_PinctrlConfigSet(%u, %u, %u)\n", channel,
+        printf("SCMI_PinctrlSettingsConfigure(%u, %u, %u)\n", channel,
             identifier, attributes);
-        CHECK(SCMI_PinctrlConfigSet(channel, identifier, attributes,
-            configs));
+        CHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
+            attributes, configs));
 #endif
-
-        uint32_t flags = SCMI_PINCTRL_FLAGS_SELECTOR(0U);
-
-        printf("SCMI_PinctrlFunctionSelect(%u, %u, %u)\n", channel,
-            identifier, attributes);
-        NECHECK(SCMI_PinctrlFunctionSelect(channel, identifier, 0U,
-            flags), SCMI_ERR_NOT_SUPPORTED);
-
-        /* Branch -- Invalid Channel */
-        flags = SCMI_PINCTRL_FLAGS_SELECTOR(1U);
-
-        NECHECK(SCMI_PinctrlFunctionSelect(SM_SCMI_NUM_CHN, identifier, 0U,
-            flags), SCMI_ERR_INVALID_PARAMETERS);
-
     }
     /* ACCESS DENIED */
     else
     {
-        uint32_t attributes = SCMI_PINCTRL_GET_ATTR_GET_ALL(1UL);
+        uint32_t functionSelected = 0U;
+
+        uint32_t attributes
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
-        printf("SCMI_PinctrlConfigGet(%u, %u, %u)\n", channel,
+        printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
             identifier, attributes);
-        CHECK(SCMI_PinctrlConfigGet(channel, identifier, attributes,
-            &numConfigs, configs));
+        CHECK(SCMI_PinctrlSettingsGet(channel, identifier, attributes,
+            &functionSelected, &numConfigs, configs));
 
         /* Set to the current config */
         uint32_t num = SCMI_PINCTRL_NUM_CONFIG_FLAGS_NUM_CONFIGS(numConfigs);
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(num) |
             SCMI_PINCTRL_GET_ATTR_SELECTOR(0UL);
 
-        NECHECK(SCMI_PinctrlConfigSet(channel, identifier, attributes,
-            configs), SCMI_ERR_DENIED);
+        NECHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
+            attributes, configs), SCMI_ERR_DENIED);
     }
 
     /* Reset */

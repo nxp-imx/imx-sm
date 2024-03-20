@@ -267,7 +267,7 @@ ID, can also be calculated from SoC RM info as:
     identifier = (IOMUX_mux_register_address - IOMUX_mux base_address) / 4
     daisy_index = (IOMUX_daisy_register_address - IOMUX_daisy base_address) / 4
 
-Note SCMI_PinctrlConfigGet() only returns the mux and config values as there is no daisy ID
+Note SCMI_PinctrlSettingsGet() only returns the mux and config values as there is no daisy ID
 passed in to be able to return that value based in identifier alone.
 
 Pin settings are not aggregated and setting their state is normally exclusive to one client.
