@@ -216,7 +216,7 @@ The required binaries can be obtained from the Yacto build. Replace any binaries
 (see @ref GUIDE_COMPILE for info on building the SM) and then build for a target and program
 an SDCARD:
 
-    make SOC=iMX95 flash_lpboot_sm_all
+    make SOC=iMX95 flash_all
     sudo dd if=iMX95/flash.bin of=/dev/sdc bs=1k seek=32 oflag=direct status=progress
     sync
 
@@ -224,13 +224,13 @@ There are many container targets and they can vary by board. See the mkimage [RE
 (https://bitbucket.sw.nxp.com/projects/IMX/repos/imx-mkimage/browse/README) for more info. Common
 ones include:
 
-| Target                 | Build          |
-|------------------------|----------------|
-| flash_lpboot_sm        | SM only        |
-| flash_lpboot_a55       | SM+AP          |
-| flash_lpboot_sm_m7     | SM+M7          |
-| flash_lpboot_sm_m7_ddr | SM+M7(DDR)     |
-| flash_lpboot_sm_all    | SM+AP+M7(DDR)  |
+| Target         | Build          |
+|----------------|----------------|
+| flash_lpboot   | SM only        |
+| flash_a55      | SM+AP          |
+| flash_m7       | SM+M7 (TCM)    |
+| flash_m7_ddr   | SM+M7(DDR)     |
+| flash_all      | SM+AP+M7(TCM)  |
 
 Note for DDR, LPDDR_TYPE=lpddr4x|lpdd5 OEI=YES are also required.
 
