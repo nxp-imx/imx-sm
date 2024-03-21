@@ -21,7 +21,8 @@ New Feature {#RN_CL_NEW}
 | [SM-29](https://jira.sw.nxp.com/projects/SM/issues/SM-29) | Add support for PLL spread spectrum mode |   | Y | Y |
 | [SM-31](https://jira.sw.nxp.com/projects/SM/issues/SM-31) | Create log for SUSPEND entry/exit |   | Y | Y |
 | [SM-32](https://jira.sw.nxp.com/projects/SM/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling |   | Y | Y |
-| [SM-92](https://jira.sw.nxp.com/projects/SM/issues/SM-92) | Add SCMI function to return the config name [[detail]](@ref RN_DETAIL_SM_92) |   | Y | Y |
+| [SM-92](https://jira.sw.nxp.com/projects/SM/issues/SM-92) | Add SCMI function to return config info [[detail]](@ref RN_DETAIL_SM_92) |   | Y | Y |
+| [SM-97](https://jira.sw.nxp.com/projects/SM/issues/SM-97) | Add SCMI CPU protocol message to get CPU info [[detail]](@ref RN_DETAIL_SM_97) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -36,11 +37,15 @@ Improvement {#RN_CL_IMP}
 | [SM-71](https://jira.sw.nxp.com/projects/SM/issues/SM-71) | Enable/disable VDD_ARM on AP LM boot/shutdown [[detail]](@ref RN_DETAIL_SM_71) |   | Y | Y |
 | [SM-74](https://jira.sw.nxp.com/projects/SM/issues/SM-74) | Support additional configs for system testing [[detail]](@ref RN_DETAIL_SM_74) |   | Y | Y |
 | [SM-76](https://jira.sw.nxp.com/projects/SM/issues/SM-76) | Misc. updates to SM configurations |   | Y | Y |
-| [SM-78](https://jira.sw.nxp.com/projects/SM/issues/SM-78) | Provide misc. control for ADC test voltage |   | Y | Y |
+| [SM-78](https://jira.sw.nxp.com/projects/SM/issues/SM-78) | Provide misc. control for ADC test voltage [[detail]](@ref RN_DETAIL_SM_78) |   | Y | Y |
 | [SM-82](https://jira.sw.nxp.com/projects/SM/issues/SM-82) | Create reset reason for SM error/exit [[detail]](@ref RN_DETAIL_SM_82) |   | Y | Y |
 | [SM-84](https://jira.sw.nxp.com/projects/SM/issues/SM-84) | Remove unnecessary SM clock permissions for the AP [[detail]](@ref RN_DETAIL_SM_84) |   | Y | Y |
 | [SM-86](https://jira.sw.nxp.com/projects/SM/issues/SM-86) | Fix MISRA violations that resulted from new scan rules |   | Y | Y |
 | [SM-87](https://jira.sw.nxp.com/projects/SM/issues/SM-87) | Improve unit test coverage |   | Y | Y |
+| [SM-93](https://jira.sw.nxp.com/projects/SM/issues/SM-93) | Add PERF_GPU to the GPU_PROT/NPROT resources [[detail]](@ref RN_DETAIL_SM_93) |   | Y | Y |
+| [SM-96](https://jira.sw.nxp.com/projects/SM/issues/SM-96) | Add cfg to support a NETC shared use-case [[detail]](@ref RN_DETAIL_SM_96) |   | Y | Y |
+| [SM-98](https://jira.sw.nxp.com/projects/SM/issues/SM-98) | Support SCMI agent reset when resources are shared [[detail]](@ref RN_DETAIL_SM_98) |   | Y | Y |
+| [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -49,7 +54,17 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes |   | Y | Y |
 | [SM-83](https://jira.sw.nxp.com/projects/SM/issues/SM-83) | IOMUXC header incorrectly overwrites the JTAG TDI mux [[detail]](@ref RN_DETAIL_SM_83) |   | Y | Y |
-| [SM-85](https://jira.sw.nxp.com/projects/SM/issues/SM-85) | Release of M7 CPUWAIT during M7MIX power down may result in unterminated transactions |   | Y | Y |
+| [SM-85](https://jira.sw.nxp.com/projects/SM/issues/SM-85) | Release of M7 CPUWAIT during M7MIX power down may result in unterminated transactions [[detail]](@ref RN_DETAIL_SM_85) |   | Y | Y |
+| [SM-95](https://jira.sw.nxp.com/projects/SM/issues/SM-95) | SCMI performance levels should avoid duplicate frequencies |   | Y | Y |
+
+Silicon Workaround {#RN_CL_REQ}
+------------
+
+These are a mix of silicon errata workarounds and recommended usage changes.
+
+| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|-------|---|---|
+| [SM-94](https://jira.sw.nxp.com/projects/SM/issues/SM-94) | Align to i.MX95 Rev 1 datasheet |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -91,6 +106,15 @@ Using this cfg files is identical to supported cfg files in the top-level config
 
  
 
+SM-78: Provide misc. control for ADC test voltage {#RN_DETAIL_SM_78}
+----------
+
+To enable the ADC self-test function in the ADC driver, The self-test function requires a bandgap voltage from the BBSM domain. There is a need to set the *snvs_clkrst_ctrl[7]* register of the *BLK_CTRL_BBSM* module to provide the bandgap voltage to ADC. Hence, provided a control (6) to configure the *snvs_clkrst_ctrl[7]* register of the *BLK_CTRL_BBSM* module. The value must be in the bit[7] position (e.g. 0x80). This also includes adding permissions in all cfg files so that the owner of the ADC also has access to this control.
+
+In addition, this change modifies the way board controls are indexed. Before they were added to the end of device controls. The problem is this requires their value change anytime new device controls are added. This was changed to move board controls to start at 0x8000. This remapping is handled in the SCMI code layer and does not impact the board port. It does require board controls indexes passed via SCMI from agents be changed this once but should not be something that has to occur in the future.
+
+Customers will need to update the indexes used in agent code. WiIl also need to regenerate their config headers from cfg files.
+
 SM-82: Create reset reason for SM error/exit {#RN_DETAIL_SM_82}
 ----------
 
@@ -106,8 +130,43 @@ SM-84: Remove unnecessary SM clock permissions for the AP {#RN_DETAIL_SM_84}
 
 Removed AP access to some SM clocks. Removed SM reservation of the same clocks. This was implemented prior to SCMI 3.2 BETA3 when Linux required the rights to enable these clocks. No longer required.
 
-SM-92: Add SCMI function to return the config name {#RN_DETAIL_SM_92}
+SM-85: Release of M7 CPUWAIT during M7MIX power down may result in unterminated transactions {#RN_DETAIL_SM_85}
 ----------
 
-Add a new SCMI misc protocol function to get the SM config (cfg) file name. Just the basename is returned, max of 16 characters. Also displayed in the debug monitor 'info command.
+SoC driver-level code for the SRC indiscriminately releases the associated CPUWAIT signal during MIX soft power down.  If the M7 landing zone is not valid, the release of CPUWAIT can cause unterminated transactions.
+
+The release of CPUWAIT during MIX soft power down is only required for A55.  The SRC driver code was updated to filter the CPUWAIT release based on CPU.
+
+SM-92: Add SCMI function to return config info {#RN_DETAIL_SM_92}
+----------
+
+Add a new SCMI misc protocol function to get the SM config (cfg) file name and mSel value. Just the basename is returned, max of 16 characters. Also displayed in the debug monitor 'info command.
+
+SM-93: Add PERF_GPU to the GPU_PROT/NPROT resources {#RN_DETAIL_SM_93}
+----------
+
+Updated the GPU_PROT and GPU_NPROT resource definitions used by the configtool to give the owners of these resources the ability to call SCMI performance protocol functions on the PERF_GPU performance domain. Customers will need to rerun the configtool on their cfg.
+
+SM-96: Add cfg to support a NETC shared use-case {#RN_DETAIL_SM_96}
+----------
+
+A new cfg file has been created to demonstrate a shared NETC use-case. In this use-case the M7 core owns NETC ENETC2 PSI, and I2C5/I2C7 which control the PHY. The AP core uses ENETC2 VSIs.
+
+Also, disabled KPA for the NETC shared use-case since SMMU won't be used for this case.
+
+During NETC VSI-PSI message communication, PSI side needs to have access to both PSI/VSI side memory so this cfg allows the M7 to read The AP core DDR memory.
+
+SM-97: Add SCMI CPU protocol message to get CPU info {#RN_DETAIL_SM_97}
+----------
+
+Added a new CPU_INFO_GET message and associated client API SCMI_CpuInfoGet(). This returns information about a CPU such as the run and sleep modes, reset address, etc.
+
+SM-98: Support SCMI agent reset when resources are shared {#RN_DETAIL_SM_98}
+----------
+
+When the AP LM contains both the AP core and M7 core (aux core use-case), the AP needs a way to reset the M7 SCMI state and MU. The SCMI base protocol contains such a function so long as the M7 is in another agent. The problem is this relies on knowing what state to reset based on access right configuration in the SM cfg.
+
+In some cfgs, some resources might be shared in such a way that access rights cannot be used. This change modifies the agent reset function to instead track which agent last accessed a shared resource (e.g. clock rate) and use that info to reset the state.
+
+ 
 
