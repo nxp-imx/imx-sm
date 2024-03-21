@@ -72,6 +72,11 @@ int32_t LMM_FusaInit(uint32_t *mSel)
     /* Save mSel Mode */
     s_mSelMode = *mSel;
 
+    /* Call SCST/SAF to check HW state */
+
+    /* Update F-EENV state */
+    s_feenvState = LMM_FUSA_FEENV_STATE_PRE_SAFETY;
+
     /* Return status */
     return status;
 }

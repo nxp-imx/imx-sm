@@ -426,7 +426,7 @@ void VFCCU_ALARM_ISR( void )
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_cVfccu_Irq_c_REF_0410 */
 /* @violates @ref eMcem_cVfccu_Irq_c_REF_2001 */
-/* #include "eMcem_MemMap.h" */
+#include "eMcem_MemMap.h"
 
 #ifdef __cplusplus
 }

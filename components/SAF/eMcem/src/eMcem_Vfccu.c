@@ -651,8 +651,6 @@ void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulato
         }
         else
         {
-            /* TODO: Enable CM7 FCCU clock firstly */
-            /* u32RegVal[u8SWRegIdx] = ( M7__A7_MCM.FCCU_SW_FAULTS.R ); */
 	        u32RegVal[u8SWRegIdx] = 0UL;
         }
     }

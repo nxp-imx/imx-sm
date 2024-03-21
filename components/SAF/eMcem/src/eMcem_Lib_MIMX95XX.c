@@ -262,11 +262,6 @@ Std_ReturnType eMcem_Vfccu_Init_Int( const eMcem_ConfigType *pConfigPtr )
 void eMcem_Init_Int( const eMcem_ConfigType *pConfigPtr )
 {
     (void)pConfigPtr;
-    /* Init the ERM */
-    /*eMcem_Erm_Init( pConfigPtr );*/
-
-    /* Init the SRAMC */
-    /*eMcem_Sramc_Init();*/
 }
 
 /**

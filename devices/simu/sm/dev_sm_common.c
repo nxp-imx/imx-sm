@@ -75,10 +75,15 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
 uint64_t DEV_SM_Usec64Get(void)
 {
     struct timeval tv = { 0 };
+    int64_t tm;
 
+    /* Get time */
     (void) gettimeofday(&tv, NULL);
 
-    return (tv.tv_sec * 1000000LL) + tv.tv_usec;
+    /* Convert to microseconds */
+    tm = (tv.tv_sec * 1000000LL) + tv.tv_usec;
+
+    return (uint64_t) tm;
 }
 
 /*--------------------------------------------------------------------------*/
