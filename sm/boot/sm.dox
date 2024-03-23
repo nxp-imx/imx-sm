@@ -74,6 +74,11 @@
  */
 
 /*!
+ * @defgroup ddr_driver DDR: DDR controller/Phy Driver
+ * @ingroup drivers
+ */
+
+/*!
  * @defgroup ele_driver ELE: EdgeLock Enclave Driver
  * @ingroup drivers
  */

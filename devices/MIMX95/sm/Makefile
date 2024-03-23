@@ -63,6 +63,7 @@ INCLUDE += \
 	-I$(DRIVER_DIR)/tmpsns  \
 	-I$(DRIVER_DIR)/wdog32 \
 	-I$(DRIVER_DIR)/cache/xcache \
+	-I$(DRIVER_DIR)/ddr \
 	-I$(COMPONENTS_DIR)/crc
 
 VPATH += \
@@ -85,6 +86,7 @@ VPATH += \
     $(DRIVER_DIR)/tmpsns  \
     $(DRIVER_DIR)/wdog32 \
     $(DRIVER_DIR)/cache/xcache \
+    $(DRIVER_DIR)/ddr \
     $(COMPONENTS_DIR)/crc
 
 SDK_OBJS = \
@@ -110,6 +112,7 @@ SDK_OBJS = \
 	$(OUT)/fsl_tmpsns.o  \
 	$(OUT)/fsl_wdog32.o \
 	$(OUT)/fsl_cache.o \
+	$(OUT)/fsl_ddr.o \
 	$(OUT)/crc.o
 
 SM_OBJS = \

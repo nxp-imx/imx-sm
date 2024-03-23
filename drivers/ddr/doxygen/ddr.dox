@@ -1,0 +1,9 @@
+/*!
+
+@defgroup ddr_driver DDR: DDR controller/Phy Driver
+@brief Device driver for a DDR controller/Phy
+@details Device driver implementing DDR retention function.
+
+*/
+
+
