@@ -38,7 +38,7 @@ TEST_INCLUDE += \
 TEST_VPATH += \
 	$(TEST_DIR) $(TEST_DIR)/dev $(TEST_DIR)/dev_sm $(TEST_DIR)/scmi \
 	$(TEST_DIR)/utilities $(TEST_DIR)/brd_sm $(TEST_DIR)/lmm \
-	$(TEST_DIR)/sm
+	$(TEST_DIR)/sm $(TEST_DIR)/drivers
 
 ifneq ($(T), NONE)
 OBJS += \
