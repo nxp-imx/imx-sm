@@ -39,6 +39,7 @@ Info Commands
 | btime                       | display boot time info                                       |
 | trdc.raw *rdc* [*did*]      | raw dump of TRDC *rdc*, limit to *did* if specified          |
 | trdc *rdc* [*did*]          | formatted dump of TRDC *rdc*, limit to *did* if specified    |
+| syslog [*flags*]            | display syslog, flags and log device specific                |
 
 System Commands
 ---------------

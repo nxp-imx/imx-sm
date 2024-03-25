@@ -72,6 +72,8 @@
 #define SCMI_MSG_MISC_SI_INFO              0xBU
 /*! Get build config name */
 #define SCMI_MSG_MISC_CFG_INFO             0xCU
+/*! Get system log */
+#define SCMI_MSG_MISC_SYSLOG               0xDU
 /*! Read control notification event */
 #define SCMI_MSG_MISC_CONTROL_EVENT        0x0U
 /** @} */
@@ -102,6 +104,8 @@
 #define SCMI_MISC_MAX_PASSOVER   SCMI_ARRAY(8U, uint32_t)
 /*! Max number of extended shutdown info words */
 #define SCMI_MISC_MAX_EXTINFO    SCMI_ARRAY(16U, uint32_t)
+/*! Max number syslog words */
+#define SCMI_MISC_MAX_SYSLOG     SCMI_ARRAY(8U, uint32_t)
 /** @} */
 
 /*!
@@ -120,6 +124,8 @@
 #define SCMI_MISC_NUM_PASSOVER  msgRx->numPassover
 /*! Actual number of extended shutdown info words returned */
 #define SCMI_MISC_NUM_EXTINFO   SCMI_MISC_SHUTDOWN_FLAG_EXT_LEN(msgRx->shutdownFlags)
+/*! Actual number of syslog words returned */
+#define SCMI_MISC_NUM_SYSLOG    SCMI_MISC_NUM_LOG_FLAGS_NUM_LOGS(msgRx->numLogFlags)
 /** @} */
 
 /*!
@@ -188,6 +194,16 @@
 #define SCMI_MISC_SHUTDOWN_FLAG_ERR_ID(x)   (((x) & 0x7FFF00U) >> 8U)
 /*! Reason */
 #define SCMI_MISC_SHUTDOWN_FLAG_REASON(x)   (((x) & 0xFFU) >> 0U)
+/** @} */
+
+/*!
+ * @name SCMI misc num log flags
+ */
+/** @{ */
+/*! Number of remaining log words */
+#define SCMI_MISC_NUM_LOG_FLAGS_REMAING_LOGS(x)  (((x) & 0xFFF00000U) >> 20U)
+/*! Number of log words that are returned by this call */
+#define SCMI_MISC_NUM_LOG_FLAGS_NUM_LOGS(x)      (((x) & 0xFFFU) >> 0U)
 /** @} */
 
 /* Functions */
@@ -537,6 +553,39 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
  */
 int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
     uint8_t *cfgName);
+
+/*!
+ * Get system log.
+ *
+ * @param[in]     channel      A2P channel for comms
+ * @param[in]     flags        Device specific flags that might impact the data
+ *                             returned or clearing of the data
+ * @param[in]     logIndex     Index to the first log word. Will be the first
+ *                             element in the return array
+ * @param[out]    numLogFlags  Descriptor for the log data returned by this
+ *                             call.<BR>
+ *                             Bits[31:20] Number of remaining log words.<BR>
+ *                             Bits[15:12] Reserved, must be zero.<BR>
+ *                             Bits[11:0] Number of log words that are returned
+ *                             by this call
+ * @param[out]    syslog       Log data array
+ *
+ * This function returns the system log. The format of this log is device
+ * specific.
+ *
+ * Access macros:
+ * - ::SCMI_MISC_NUM_LOG_FLAGS_REMAING_LOGS() - Number of remaining log words
+ * - ::SCMI_MISC_NUM_LOG_FLAGS_NUM_LOGS() - Number of log words that are
+ *   returned by this call
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the syslog returned sucessfully.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the syslog is not available.
+ */
+int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
+    uint32_t *numLogFlags, uint32_t *syslog);
 
 /*!
  * Negotiate the protocol version.

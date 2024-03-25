@@ -53,7 +53,6 @@
 
 static uint32_t s_powerMode = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
-static dev_sm_sys_sleep_rec_t s_sysSleepRecord;
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -340,37 +339,37 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     uint64_t sleepExitStart = sleepEntryStart;
 
     /* Reset wake source of sleep record */
-    s_sysSleepRecord.wakeSource = 0U;
+    g_syslog.sysSleepRecord.wakeSource = 0U;
 
     /* Capture power status of MIXes */
-    s_sysSleepRecord.mixPwrStat = 0U;
+    g_syslog.sysSleepRecord.mixPwrStat = 0U;
     for (uint32_t mixIdx = 0U; mixIdx < PWR_NUM_MIX_SLICE; mixIdx++)
     {
         if (SRC_MixIsPwrSwitchOn(mixIdx))
         {
-            s_sysSleepRecord.mixPwrStat |= (1UL << mixIdx);
+            g_syslog.sysSleepRecord.mixPwrStat |= (1UL << mixIdx);
         }
     }
 
     /* Capture power status of memories */
-    s_sysSleepRecord.memPwrStat = 0U;
+    g_syslog.sysSleepRecord.memPwrStat = 0U;
     for (uint32_t memIdx = 0U; memIdx < PWR_NUM_MEM_SLICE; memIdx++)
     {
         const src_mem_slice_t *srcMem = s_srcMemPtrs[memIdx];
         if ((srcMem->MEM_CTRL & SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK) != 0U)
         {
-            s_sysSleepRecord.memPwrStat |= (1UL << memIdx);
+            g_syslog.sysSleepRecord.memPwrStat |= (1UL << memIdx);
         }
     }
 
     /* Capture power status of PLLs */
-    s_sysSleepRecord.pllPwrStat = 0U;
+    g_syslog.sysSleepRecord.pllPwrStat = 0U;
     for (uint32_t pllIdx = 0U; pllIdx < CLOCK_NUM_PLL; pllIdx++)
     {
         uint32_t sourceIdx = s_pllVcoList[pllIdx];
         if (CLOCK_SourceGetEnable(sourceIdx))
         {
-            s_sysSleepRecord.pllPwrStat |= (1UL << pllIdx);
+            g_syslog.sysSleepRecord.pllPwrStat |= (1UL << pllIdx);
         }
     }
 
@@ -413,13 +412,15 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                         {
                             cpuWakeMask[cpuIdx][wakeIdx] = wakeVal;
                             sysWakeMask[wakeIdx] &= wakeVal;
-                            (void) CPU_IrqWakeSet(cpuIdx, wakeIdx, 0xFFFFFFFFU);
+                            (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                                0xFFFFFFFFU);
                         }
                     }
 
                     /* Update NOCMIX dependency */
                     uint32_t lpmSetting;
-                    if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, cpuIdx, &lpmSetting))
+                    if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_NOC, cpuIdx,
+                        &lpmSetting))
                     {
                         if (lpmSetting > lpmSettingNoc)
                         {
@@ -428,7 +429,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     }
 
                     /* Update WAKEUPMIX dependency */
-                    if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx, &lpmSetting))
+                    if (SRC_MixCpuLpmGet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx,
+                        &lpmSetting))
                     {
                         if (lpmSetting > lpmSettingWakeup)
                         {
@@ -460,7 +462,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 if (DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_OFF)
                     == SM_ERR_SUCCESS)
                 {
-                    s_sysSleepRecord.mixPwrStat &=
+                    g_syslog.sysSleepRecord.mixPwrStat &=
                         (~(1UL << PWR_MIX_SLICE_IDX_NOC));
                 }
             }
@@ -469,10 +471,10 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             if ((lpmSettingWakeup <= sleepMode) &&
                 ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0U))
             {
-                if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_OFF)
-                    == SM_ERR_SUCCESS)
+                if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
+                    DEV_SM_POWER_STATE_OFF) == SM_ERR_SUCCESS)
                 {
-                    s_sysSleepRecord.mixPwrStat &=
+                    g_syslog.sysSleepRecord.mixPwrStat &=
                         (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
                 }
             }
@@ -562,7 +564,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 (void) CLOCK_SourceSetEnable(clkSrcIdx, false);
                 clkSrcIdx--;
             }
-            s_sysSleepRecord.pllPwrStat &= (~(1UL << CLOCK_PLL_SYS1));
+            g_syslog.sysSleepRecord.pllPwrStat &= (~(1UL << CLOCK_PLL_SYS1));
 
             /* Board-level sleep entry */
             BOARD_SystemSleepEnter(sleepMode);
@@ -574,7 +576,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
 
             /* Capture sleep entry latency */
-            s_sysSleepRecord.sleepEntryUsec =
+            g_syslog.sysSleepRecord.sleepEntryUsec =
                UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
 
             /* Enter WFI to trigger sleep entry */
@@ -590,7 +592,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             FRO->CSR.SET = FRO_CSR_FROEN_MASK;
 
             /* Capture wake source */
-            s_sysSleepRecord.wakeSource =
+            g_syslog.sysSleepRecord.wakeSource =
                 (SCB->ICSR & SCB_ICSR_VECTPENDING_Msk)
                 >> SCB_ICSR_VECTPENDING_Pos;
 
@@ -640,13 +642,15 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* If WAKEUPMIX powered down during SUSPEND, force power up */
             if (lpmSettingWakeup <= sleepMode)
             {
-                (void) DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, DEV_SM_POWER_STATE_ON);
+                (void) DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
+                    DEV_SM_POWER_STATE_ON);
             }
 
             /* If NOCMIX powered down during SUSPEND, force power up */
             if (lpmSettingNoc <= sleepMode)
             {
-                (void) DEV_SM_PowerStateSet(DEV_SM_PD_NOC, DEV_SM_POWER_STATE_ON);
+                (void) DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
+                    DEV_SM_POWER_STATE_ON);
             }
 
             /* Restore SM NVIC */
@@ -664,10 +668,10 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     }
 
     /* Check if system did not sleep */
-    if (s_sysSleepRecord.wakeSource == 0U)
+    if (g_syslog.sysSleepRecord.wakeSource == 0U)
     {
         sleepExitStart = DEV_SM_Usec64Get();
-        s_sysSleepRecord.sleepEntryUsec =
+        g_syslog.sysSleepRecord.sleepEntryUsec =
            UINT64_L(sleepExitStart - sleepEntryStart);
     }
 
@@ -696,8 +700,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         }
     }
 
-    s_sysSleepRecord.sleepExitUsec =
-       UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
+    g_syslog.sysSleepRecord.sleepExitUsec =
+        UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
 
     return status;
 }
@@ -719,13 +723,7 @@ int32_t DEV_SM_SystemIdle(void)
         {
             printf("+Sleep\n");
             status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
-            printf("-Sleep (wake vector = %u)\n", s_sysSleepRecord.wakeSource);
-
-            printf("MIX power status = 0x%08X\n", s_sysSleepRecord.mixPwrStat);
-            printf("MEM power status = 0x%08X\n", s_sysSleepRecord.memPwrStat);
-            printf("PLL power status = 0x%08X\n", s_sysSleepRecord.pllPwrStat);
-            printf("Sleep latency = %u usec\n", s_sysSleepRecord.sleepEntryUsec);
-            printf("Wake latency = %u usec\n", s_sysSleepRecord.sleepExitUsec);
+            printf("-Sleep\n");
         }
         /* Otherwise stay in RUN mode and enter WFI */
         else
@@ -742,11 +740,3 @@ int32_t DEV_SM_SystemIdle(void)
     return status;
 }
 
-/*--------------------------------------------------------------------------*/
-/* Return system sleep record                                               */
-/*--------------------------------------------------------------------------*/
-void DEV_SM_SystemSleepRecGet(dev_sm_sys_sleep_rec_t *sysSleepRecord)
-{
-    /* Copy out system sleep record */
-    *sysSleepRecord = s_sysSleepRecord;
-}

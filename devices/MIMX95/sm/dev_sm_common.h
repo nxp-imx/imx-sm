@@ -74,6 +74,20 @@
 
 /* Types */
 
+/*!
+ * Syslog
+ */
+typedef struct
+{
+    /*! System sleep record */
+    dev_sm_sys_sleep_rec_t sysSleepRecord;
+} dev_sm_syslog_t;
+
+/* Global variables */
+
+/*! Structure to hold the syslog */
+extern dev_sm_syslog_t g_syslog;
+
 /* Functions */
 
 /** @} */

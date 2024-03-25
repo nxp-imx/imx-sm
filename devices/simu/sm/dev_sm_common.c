@@ -49,6 +49,8 @@
 
 /* Local variables */
 
+/* Global variables */
+
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
@@ -66,6 +68,36 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     *partNum = 0U;
     *siNameAddr = siName;
 
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the syslog                                                           */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SyslogGet(uint32_t flags, const dev_sm_syslog_t **syslog,
+    uint32_t *len)
+{
+    /* Return data */
+    *syslog = NULL;
+    *len = 0U;
+
+    /* Return result */
+    return SM_ERR_NOT_SUPPORTED;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump the syslog                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SyslogDump(uint32_t flags)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    const dev_sm_syslog_t *syslog;
+    uint32_t len;
+
+    /* Get data */
+    status = DEV_SM_SyslogGet(flags, &syslog, &len);
+
+    /* Return result */
     return status;
 }
 

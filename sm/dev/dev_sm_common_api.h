@@ -71,6 +71,38 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     uint32_t *partNum, string *siNameAddr);
 
 /*!
+ * Get the syslog.
+ *
+ * @param[in]     flags    Syslog flags
+ * @param[out]    syslog   Pointer to return syslog pointer
+ * @param[out]    len      Pointer to return the syslog size
+ *
+ * This function allows a caller to obtain a pointer to the
+ * syslog.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_SUPPORTED: if the data is not available.
+ */
+int32_t DEV_SM_SyslogGet(uint32_t flags, const dev_sm_syslog_t **syslog,
+    uint32_t *len);
+
+/*!
+ * Dump the syslog.
+ *
+ * @param[in]     flags    Syslog flags
+ *
+ * This function dumps the syslog to the debug UART.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_SUPPORTED: if the data is not available.
+ */
+int32_t DEV_SM_SyslogDump(uint32_t flags);
+
+/*!
  * Get 64-bit timestamp in microseconds.
  *
  * @return Returns the time in uS.

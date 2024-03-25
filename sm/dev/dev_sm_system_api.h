@@ -102,7 +102,6 @@ typedef struct
 
     /*! PLL power status */
     uint32_t pllPwrStat;
-
 } dev_sm_sys_sleep_rec_t;
 
 /* Functions */
@@ -257,15 +256,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
  * Return errors (see @ref STATUS "SM error codes"):
  */
 int32_t DEV_SM_SystemIdle(void);
-
-/*!
- * Query system sleep record.
- *
- * @param[out]    sysSleepRecord  Pointer to return the record
- *
- * Returns the record from the most recent system sleep occurrence.
- */
-void DEV_SM_SystemSleepRecGet(dev_sm_sys_sleep_rec_t *sysSleepRecord);
 
 #endif /* DEV_SM_SYSTEM_API_H */
 

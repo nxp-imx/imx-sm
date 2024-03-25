@@ -130,6 +130,7 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
 #endif
 static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 
 /* Local Variables */
@@ -197,6 +198,7 @@ int32_t MONITOR_Dispatch(char *line)
         "pmic.w",
         "idle",
         "assert",
+        "syslog",
         "custom"
     };
 
@@ -365,7 +367,10 @@ int32_t MONITOR_Dispatch(char *line)
             case 48:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 49:  /* custom */
+            case 49:  /* syslog */
+                status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
+                break;
+            case 50:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
             default:
@@ -2799,11 +2804,32 @@ static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[])
         /* Parse data */
         s = strtol(argv[0], NULL, 0);
 
-        printf("Asser %d\n", s);
+        printf("Assert %d\n", s);
 
         /* Do assert */
         ASSERT(false, s);
     }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Syslog command                                                           */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t flags = 0U;
+
+    if (argc > 0)
+    {
+        /* Parse data */
+        flags = strtoul(argv[0], NULL, 0);
+    }
+
+    /* Dump data */
+    status = SM_SYSLOGDUMP(flags);
 
     /* Return status */
     return status;

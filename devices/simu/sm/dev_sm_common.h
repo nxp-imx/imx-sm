@@ -78,6 +78,18 @@
 
 /* Types */
 
+/*!
+ * Syslog
+ */
+typedef struct
+{
+} dev_sm_syslog_t;
+
+/* Global variables */
+
+/*! Structure to hold the syslog */
+extern dev_sm_syslog_t g_syslog;
+
 /* Functions */
 
 /*!

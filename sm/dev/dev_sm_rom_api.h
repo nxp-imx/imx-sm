@@ -65,7 +65,7 @@ void DEV_SM_RomInit(void);
 /*!
  * Get handover data from ROM.
  *
- * @param[in]     handover Pointer to return handover pointer
+ * @param[out]    handover Pointer to return handover pointer
  *
  * This function allows a caller to obtain a pointer to the ROM
  * handover data.
@@ -80,7 +80,7 @@ int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover);
 /*!
  * Get passover data from ROM.
  *
- * @param[in]     passover Pointer to return passover pointer
+ * @param[out]    passover Pointer to return passover pointer
  *
  * This function allows a caller to obtain a pointer to the ROM
  * passover data.

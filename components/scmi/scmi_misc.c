@@ -781,6 +781,85 @@ int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get system log                                                           */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
+    uint32_t *numLogFlags, uint32_t *syslog)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t numLogFlags;
+        uint32_t syslog[SCMI_MISC_MAX_SYSLOG];
+    } msg_rmiscd13_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t flags;
+            uint32_t logIndex;
+        } msg_tmiscd13_t;
+        msg_tmiscd13_t *msgTx = (msg_tmiscd13_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->flags = flags;
+        msgTx->logIndex = logIndex;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL, SCMI_MSG_MISC_SYSLOG,
+            sizeof(msg_tmiscd13_t), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel,
+            sizeof(msg_status_t) + sizeof(uint32_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rmiscd13_t *msgRx = (const msg_rmiscd13_t*) msg;
+
+        /* Extract numLogFlags */
+        if (numLogFlags != NULL)
+        {
+            *numLogFlags = msgRx->numLogFlags;
+        }
+
+        /* Extract syslog */
+        if (syslog != NULL)
+        {
+            SCMI_MemCpy((uint8_t*) syslog, (uint8_t*) &msgRx->syslog,
+                (SCMI_MISC_NUM_SYSLOG * sizeof(uint32_t)));
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Negotiate the protocol version                                           */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_MiscNegotiateProtocolVersion(uint32_t channel,

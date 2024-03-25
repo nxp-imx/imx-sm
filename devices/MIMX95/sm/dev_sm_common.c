@@ -60,6 +60,10 @@
 
 /* Local variables */
 
+/* Global variables */
+
+dev_sm_syslog_t g_syslog;
+
 /* Local functions */
 
 static void DEV_SM_StrCpy(char *dst, const char *src, uint32_t maxLen);
@@ -110,6 +114,51 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
 
     /* Return name */
     *siNameAddr = s_siName;
+
+    /* Return result */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the syslog                                                           */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SyslogGet(uint32_t flags, const dev_sm_syslog_t **syslog,
+    uint32_t *len)
+{
+    /* Return data */
+    *syslog = &g_syslog;
+    *len = sizeof(dev_sm_syslog_t);
+
+    /* Return result */
+    return SM_ERR_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump the syslog                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SyslogDump(uint32_t flags)
+{
+    int32_t status;
+    const dev_sm_syslog_t *syslog;
+    uint32_t len;
+
+    /* Get data */
+    status = DEV_SM_SyslogGet(flags, &syslog, &len);
+
+#ifdef INC_LIBC
+    if (status == SM_ERR_SUCCESS)
+    {
+        const dev_sm_sys_sleep_rec_t *sysSleepRecord
+            = &g_syslog.sysSleepRecord;
+
+        printf("Wake vector = %u)\n", sysSleepRecord->wakeSource);
+        printf("MIX power status = 0x%08X\n", sysSleepRecord->mixPwrStat);
+        printf("MEM power status = 0x%08X\n", sysSleepRecord->memPwrStat);
+        printf("PLL power status = 0x%08X\n", sysSleepRecord->pllPwrStat);
+        printf("Sleep latency = %u usec\n", sysSleepRecord->sleepEntryUsec);
+        printf("Wake latency = %u usec\n", sysSleepRecord->sleepExitUsec);
+    }
+#endif
 
     /* Return result */
     return status;

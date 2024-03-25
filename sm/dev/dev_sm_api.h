@@ -580,6 +580,16 @@
 #define SM_SIINFOGET            DEV_SM_SiInfoGet
 #endif
 
+#ifndef SM_SYSLOGGET
+/*! Redirector (device/board) to get the syslog */
+#define SM_SYSLOGGET            DEV_SM_SyslogGet
+#endif
+
+#ifndef SM_SYSLOGDUMP
+/*! Redirector (device/board) to dump the syslog */
+#define SM_SYSLOGDUMP           DEV_SM_SyslogDump
+#endif
+
 /** @} */
 
 #endif /* DEV_SM_API */

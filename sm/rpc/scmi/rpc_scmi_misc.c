@@ -61,8 +61,9 @@
 #define COMMAND_MISC_RESET_REASON            0xAU
 #define COMMAND_MISC_SI_INFO                 0xBU
 #define COMMAND_MISC_CFG_INFO                0xCU
+#define COMMAND_MISC_SYSLOG                  0xDU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x11FFFUL
+#define COMMAND_SUPPORTED_MASK               0x13FFFUL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
@@ -76,6 +77,7 @@
 #define MISC_MAX_RTN        SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_PASSOVER   SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_EXTINFO    SCMI_ARRAY(16U, uint32_t)
+#define MISC_MAX_SYSLOG     SCMI_ARRAY(8U, uint32_t)
 
 /* SCMI Control ID Flags */
 #define MISC_CTRL_FLAG_BRD  0x8000U
@@ -106,6 +108,10 @@
 #define MISC_SHUTDOWN_FLAG_ERR_VLD(x)  (((x) & 0x1U) << 23U)
 #define MISC_SHUTDOWN_FLAG_ERR_ID(x)   (((x) & 0x7FFFU) << 8U)
 #define MISC_SHUTDOWN_FLAG_REASON(x)   (((x) & 0xFFU) << 0U)
+
+/* SCMI misc num log flags */
+#define MISC_NUM_LOG_FLAGS_REMAING_LOGS(x)  (((x) & 0xFFFU) << 20U)
+#define MISC_NUM_LOG_FLAGS_NUM_LOGS(x)      (((x) & 0xFFFU) << 0U)
 
 /* Local types */
 
@@ -331,6 +337,30 @@ typedef struct
     uint8_t cfgName[MISC_MAX_CFGNAME];
 } msg_tmisc12_t;
 
+/* Request type for MiscSyslog() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Device specific flags that might impact the data returned or clearing of the data */
+    uint32_t flags;
+    /* Index to the first log word */
+    uint32_t logIndex;
+} msg_rmisc13_t;
+
+/* Response type for MiscSyslog() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Descriptor for the log data returned by this call */
+    uint32_t numLogFlags;
+    /* Log data array */
+    uint32_t syslog[MISC_MAX_SYSLOG];
+} msg_tmisc13_t;
+
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
 {
@@ -379,6 +409,8 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc11_t *out);
 static int32_t MiscCfgInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc12_t *out);
+static int32_t MiscSyslog(const scmi_caller_t *caller,
+    const msg_rmisc13_t *in, msg_tmisc13_t *out, uint32_t *len);
 static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rmisc16_t *in, const scmi_msg_status_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
@@ -468,6 +500,11 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tmisc12_t);
             status = MiscCfgInfo(caller, (const scmi_msg_header_t*) in,
                 (msg_tmisc12_t*) out);
+            break;
+        case COMMAND_MISC_SYSLOG:
+            lenOut = sizeof(msg_tmisc13_t);
+            status = MiscSyslog(caller, (const msg_rmisc13_t*) in,
+                (msg_tmisc13_t*) out, &lenOut);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -1404,6 +1441,93 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
         // coverity[misra_c_2012_rule_7_4_violation:FALSE]
         RPC_SCMI_StrCpy(out->cfgName, (const uint8_t*) cfgName,
             MISC_MAX_CFGNAME);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get system log                                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->flags: Device specific flags that might impact the data returned   */
+/*   or clearing of the data                                                */
+/* - in->logIndex: Index to the first log word. Will be the first element   */
+/*   in the return array                                                    */
+/* - out->numLogFlags: Descriptor for the log data returned by this call.   */
+/*   Bits[31:20] Number of remaining log words.                             */
+/*   Bits[15:12] Reserved, must be zero.                                    */
+/*   Bits[11:0] Number of log words that are returned by this call          */
+/* - out->syslog: Log data array                                            */
+/* - len: Pointer to length (can modify)                                    */
+/*                                                                          */
+/* Process the MISC_SYSLOG message. Platform handler for                    */
+/* SCMI_MiscSyslog().                                                       */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - MISC_NUM_LOG_FLAGS_REMAING_LOGS() - Number of remaining log words      */
+/* - MISC_NUM_LOG_FLAGS_NUM_LOGS() - Number of log words that are returned  */
+/*   by this call                                                           */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the syslog returned sucessfully.                    */
+/* - SM_ERR_NOT_SUPPORTED: if the syslog is not available.                  */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscSyslog(const scmi_caller_t *caller,
+    const msg_rmisc13_t *in, msg_tmisc13_t *out, uint32_t *len)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t words = 0U;
+    const uint32_t *syslog;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Get data */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Call device */
+        status = SM_SYSLOGGET(in->flags, (const dev_sm_syslog_t**) &syslog,
+            &words);
+
+        /* Covert to words */
+        words /= 4U;
+    }
+
+    /* Copy out data */
+    if (status == SM_ERR_SUCCESS)
+    {
+        uint32_t index;
+
+        out->numLogFlags = 0U;
+        for (index = 0U; index < MISC_MAX_SYSLOG; index++)
+        {
+            /* Break out if done */
+            if ((index + in->logIndex) >= words)
+            {
+                break;
+            }
+
+            /* Copy out data */
+            out->syslog[index] = syslog[index + in->logIndex];
+
+            /* Increment count */
+            (out->numLogFlags)++;
+        }
+
+        /* Update length */
+        *len = (3U * sizeof(uint32_t))
+            + (out->numLogFlags * sizeof(uint32_t));
+
+        /* Append remaining logs */
+        out->numLogFlags |= MISC_NUM_LOG_FLAGS_REMAING_LOGS(
+            words - (index + in->logIndex));
     }
 
     /* Return status */
