@@ -8,7 +8,7 @@ the data could change.
 SM 2024Q2 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2024q1) and this release (imx_sm_2024q2).
+Below is a list of changes between the previous release (imx_sm_2024q1) and this release (imx_sm_2024q2_er1).
 
 New Feature {#RN_CL_NEW}
 ------------
@@ -33,7 +33,6 @@ Improvement {#RN_CL_IMP}
 | [SM-16](https://jira.sw.nxp.com/projects/SM/issues/SM-16) | Support TMPSNS powerup/down and ELE enable |   | Y | Y |
 | [SM-17](https://jira.sw.nxp.com/projects/SM/issues/SM-17) | Implement SCMI message sequence checking [[detail]](@ref RN_DETAIL_SM_17) |   | Y | Y |
 | [SM-21](https://jira.sw.nxp.com/projects/SM/issues/SM-21) | Misc. FuSa improvements |   | Y | Y |
-| [SM-24](https://jira.sw.nxp.com/projects/SM/issues/SM-24) | Align reset toggle delay with SoC specification |   | Y | Y |
 | [SM-71](https://jira.sw.nxp.com/projects/SM/issues/SM-71) | Enable/disable VDD_ARM on AP LM boot/shutdown [[detail]](@ref RN_DETAIL_SM_71) |   | Y | Y |
 | [SM-74](https://jira.sw.nxp.com/projects/SM/issues/SM-74) | Support additional configs for system testing [[detail]](@ref RN_DETAIL_SM_74) |   | Y | Y |
 | [SM-76](https://jira.sw.nxp.com/projects/SM/issues/SM-76) | Misc. updates to SM configurations |   | Y | Y |
@@ -64,6 +63,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
+| [SM-24](https://jira.sw.nxp.com/projects/SM/issues/SM-24) | Align reset toggle delay with SoC specification |   | Y | Y |
 | [SM-94](https://jira.sw.nxp.com/projects/SM/issues/SM-94) | Align to i.MX95 Rev 1 datasheet |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
@@ -71,7 +71,7 @@ Documentation {#RN_CL_DOC}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-77](https://jira.sw.nxp.com/projects/SM/issues/SM-77) | SM 2024Q2 documentation updates |   | Y | Y |
+| [SM-77](https://jira.sw.nxp.com/projects/SM/issues/SM-77) | SM 2024Q2 ER1 documentation updates |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======
@@ -88,12 +88,12 @@ Note this feature requires the agent keep and maintain the sequence number accos
 SM-71: Enable/disable VDD_ARM on AP LM boot/shutdown {#RN_DETAIL_SM_71}
 ----------
 
-Added VOLT as an LM start/stop sequence option. Updated the mx95evk cfg file to turn on/off the VDD_ARM as part of the AP LM config. After booting all LM turn off VDD_ARM if the AP55P power domain is not on.
+Added VOLT as an LM start/stop sequence option. Updated the mx95evk cfg file to turn on/off the VDD_ARM as part of the AP LM config. After booting all LM, the SM will turn off VDD_ARM if the AP55P power domain is not on.
 
 SM-74: Support additional configs for system testing {#RN_DETAIL_SM_74}
 ----------
 
-Added an "other" directory to the configs directory. This contains additional cfg files that are used for testing. These files are as is and not supported as part of the SM test and release.
+Added an "other" directory to the configs directory. This contains additional cfg files that are used for testing. These files are "as is" and not supported as part of the SM test and release.
 
 Added an other config:
  * mx95evkjailhouse.cfg - used for Jailhouse testing.
@@ -109,9 +109,9 @@ Using this cfg files is identical to supported cfg files in the top-level config
 SM-78: Provide misc. control for ADC test voltage {#RN_DETAIL_SM_78}
 ----------
 
-To enable the ADC self-test function in the ADC driver, The self-test function requires a bandgap voltage from the BBSM domain. There is a need to set the *snvs_clkrst_ctrl[7]* register of the *BLK_CTRL_BBSM* module to provide the bandgap voltage to ADC. Hence, provided a control (6) to configure the *snvs_clkrst_ctrl[7]* register of the *BLK_CTRL_BBSM* module. The value must be in the bit[7] position (e.g. 0x80). This also includes adding permissions in all cfg files so that the owner of the ADC also has access to this control.
+To enable the ADC self-test function in the ADC driver, the self-test function requires a bandgap voltage from the BBSM domain. There is a need to set the *snvs_clkrst_ctrl[7]* register of the *BLK_CTRL_BBSM* module to provide the bandgap voltage to ADC. Hence, provided a control (6) to configure the *snvs_clkrst_ctrl[7]* register of the *BLK_CTRL_BBSM* module. The value must be in the bit[7] position (e.g. 0x80). This also includes adding permissions in all cfg files so that the owner of the ADC also has access to this control.
 
-In addition, this change modifies the way board controls are indexed. Before they were added to the end of device controls. The problem is this requires their value change anytime new device controls are added. This was changed to move board controls to start at 0x8000. This remapping is handled in the SCMI code layer and does not impact the board port. It does require board controls indexes passed via SCMI from agents be changed this once but should not be something that has to occur in the future.
+In addition, this change modifies the way board controls are indexed. Before they were added to the end of device controls. The problem is this requires their value change anytime new device controls are added. This was changed to move board controls to start at 0x8000. This remapping is handled in the SCMI code layer and does not impact the board port. It does require board control indexes passed via SCMI from agents be changed this once but should not be something that has to occur in the future.
 
 Customers will need to update the indexes used in agent code. WiIl also need to regenerate their config headers from cfg files.
 
@@ -140,7 +140,7 @@ The release of CPUWAIT during MIX soft power down is only required for A55.  The
 SM-92: Add SCMI function to return config info {#RN_DETAIL_SM_92}
 ----------
 
-Add a new SCMI misc protocol function to get the SM config (cfg) file name and mSel value. Just the basename is returned, max of 16 characters. Also displayed in the debug monitor 'info command.
+Added a new SCMI misc protocol function to get the SM config (cfg) file name and mSel value. Just the basename is returned, max of 16 characters. Also displayed in the debug monitor 'info' command.
 
 SM-93: Add PERF_GPU to the GPU_PROT/NPROT resources {#RN_DETAIL_SM_93}
 ----------

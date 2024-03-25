@@ -21,20 +21,45 @@ Use the x86_64 Linux hosted AArch32 bare-metal target (arm-none-eabi) toolchain.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-- TBD
+The following changes can affect client (aka agent software):
+
+- Split misc device and board controls, **board controls start at 0x8000**
+- Added new SCMI_MSG_CPU_INFO_GET message and SCMI_CpuInfoGet() function
+- Added new SCMI_MSG_MISC_CFG_INFO message and SCMI_MiscCfgInfo() function
+- Updated FuSa protocol functions
+- Added sequence functions SCMI_SequenceConfig(), SCMI_SequenceSave(), SCMI_SequenceRestore()
+- Added a new SCMI_ERR_SEQ_ERROR error type
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
-- TBD
+The following are cfg file changes that customers will probably need to make to their cfg
+files.
+
+- Assigned CLK_ELE to the SM
+- Fixed assignment of EIM_NPU and ERM_NPU
+- Added VDD_SOC enable/disable via new VOLT start/stop options
+- Removed assignment of SM clocks to AP-NS (Linux no longer requires)
+- Update NETC, PCI, and USB SMMU parameters (KPA, SID) for Linux
+- Update SW faults to reserve FAULT_SW4 for FuSa use
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
 
-- TBD
+The following interface changes will require customers make similar change to their port.
+
+- Added BOARD_SystemSleepPrepare(), BOARD_SystemSleepEnter(), BOARD_SystemSleepExit()
+  and BOARD_SystemSleepUnprepare() to support system suspend
+- Added *perLpiId* to *board_uart_config_t*
 
 Board Implementation Changes {#RN_ADD_BOARD_IMP}
 ============================
 
-- TBD
+Customers will require the following changes to their board port.
+
+- Modify BRD_SM_Exit() to pass the PC
+- Fix issue with *errId* sign extension
+- Added low-power interface data structures and functions
+- Remove FCCU 1/2 interrupt enables
+- Move the watchdog config to be file static
 
