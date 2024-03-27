@@ -272,10 +272,10 @@ int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent);
 /*!
  * Set an LM extended clock data value.
  *
- * @param[in]     lmId      LM call is for
- * @param[in]     clockId   Identifier for the clock device
- * @param[in]     extId     Extended data identifier
- * @param[in]     value     Extended data value
+ * @param[in]     lmId               LM call is for
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[in]     extId              Extended data identifier
+ * @param[in]     extConfigValue     Extended data value
  *
  * This function allows the caller to set clock extendeed data. Nothing
  * is aggregated.
@@ -287,15 +287,15 @@ int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent);
  * - others returned by ::SM_CLOCKEXTENDEDSET
  */
 int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
-    uint32_t value);
+    uint32_t extConfigValue);
 
 /*!
  * Get an LM extended clock data value.
  *
- * @param[in]     lmId      LM call is for
- * @param[in]     clockId   Identifier for the clock device
- * @param[in]     extId     Extended data identifier
- * @param[out]    value     Pointer to return the extended data value
+ * @param[in]     lmId               LM call is for
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[in]     extId              Extended data identifier
+ * @param[out]    extConfigValue     Pointer to return the extended data value
  *
  * This function allows the caller to get clock extended data.
  *
@@ -306,7 +306,7 @@ int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
  * - others returned by ::SM_CLOCKEXTENDEDGET
  */
 int32_t LMM_ClockExtendedGet(uint32_t lmId, uint32_t clockId, uint32_t extId,
-    uint32_t *value);
+    uint32_t *extConfigValue);
 
 #endif /* LMM_CLOCK_H */
 

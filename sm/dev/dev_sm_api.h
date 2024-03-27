@@ -325,6 +325,16 @@
 #define SM_CLOCKPARENTGET       DEV_SM_ClockParentGet
 #endif
 
+#ifndef SM_CLOCKEXTENDEDSET
+/*! Redirector (device/board) to set extended clock data */
+#define SM_CLOCKEXTENDEDSET     DEV_SM_ClockExtendedSet
+#endif
+
+#ifndef SM_CLOCKEXTENDEDGET
+/*! Redirector (device/board) to get extended clock data */
+#define SM_CLOCKEXTENDEDGET     DEV_SM_ClockExtendedGet
+#endif
+
 #ifndef SM_SENSORNAMEGET
 /*! Redirector (device/board) to get a sensor name */
 #define SM_SENSORNAMEGET        DEV_SM_SensorNameGet

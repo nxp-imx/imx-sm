@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -47,6 +47,8 @@
 #define CLOCK_OSC24M_HZ                     24000000ULL
 #define CLOCK_FRO_HZ                        300000000ULL
 #define CLOCK_PLL_FREF_HZ                   CLOCK_OSC24M_HZ
+#define CLOCK_M_HZ                          1000000ULL
+#define CLOCK_K_HZ                          1000ULL
 
 #define CLOCK_PLL_CALC_ACCURACY_HZ          1000U
 #define CLOCK_PLL_MFD                       (CLOCK_PLL_FREF_HZ/CLOCK_PLL_CALC_ACCURACY_HZ)
@@ -273,6 +275,10 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx);
 bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable);
 uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx);
 bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate, uint32_t roundRule);
+bool CLOCK_SourceSetSsc(uint32_t sourceIdx, uint32_t spreadPercent,
+    uint32_t modFreq, uint32_t enable);
+bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
+    uint32_t *modFreq, uint32_t *enable);
 
 /* Externs */
 

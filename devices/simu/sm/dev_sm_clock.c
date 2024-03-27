@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -50,6 +50,7 @@
 static bool s_clockState[DEV_SM_NUM_CLOCK];
 static uint64_t s_clockFreq[DEV_SM_NUM_CLOCK];
 static uint32_t s_clockParent[DEV_SM_NUM_CLOCK];
+static uint32_t s_clockSscConfig[DEV_SM_NUM_CLOCK];
 
 /*--------------------------------------------------------------------------*/
 /* Return clock name                                                        */
@@ -276,6 +277,68 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
     else
     {
         status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set a device extended clock data value                                   */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
+    uint32_t extConfigvalue)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (extId)
+    {
+        case DEV_SM_CLOCK_EXT_SSC:
+            if (clockId < DEV_SM_NUM_CLOCK)
+            {
+                /* Latch SSC configuration */
+                s_clockSscConfig[clockId] = extConfigvalue;
+            }
+            else
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+            break;
+
+        default:
+            status = SM_ERR_NOT_FOUND;
+            break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set a device extended clock data value                                   */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
+    uint32_t *extConfigvalue)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (extId)
+    {
+        case DEV_SM_CLOCK_EXT_SSC:
+            if (clockId < DEV_SM_NUM_CLOCK)
+            {
+                /* Get latched SSC configuration */
+                *extConfigvalue = s_clockSscConfig[clockId];
+            }
+            else
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+            break;
+
+        default:
+            status = SM_ERR_NOT_FOUND;
+            break;
     }
 
     /* Return status */

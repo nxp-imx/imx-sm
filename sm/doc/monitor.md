@@ -105,9 +105,11 @@ Resource Commands
 | clock.r                     | display rate/enable for all clocks                           |
 | clock.r range               | display range for all clocks                                 |
 | clock.r parent              | display parents for all clocks                               |
+| clock.r ext *ext*           | display extended data for type *ext* for all clocks          |
 | clock.w *clock* *state*     | enable/display *clock* (on = enable, off = disable)          |
 | clock.w *clock* reparent *parent* | set parent for *clock* to *parent*                     |
 | clock.w *clock* rate *rate* | set rate for *clock* to *rate*                               |
+| clock.w *clock* ext *ext* *extConfigValue* | set extended configuration for type *ext*     |
 | clock.reset *clock*         | reset *clock* to boot state                                  |
 | sensor.r                    | display all sensor values                                    |
 | sensor.w *sensor*           | enable/display *sensor* (on = enable, off = disable)         |

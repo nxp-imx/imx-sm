@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -261,6 +261,39 @@
 #define DEV_SM_CLOCK_ROUND_UP    0x1U   /*!< Round rate up */
 #define DEV_SM_CLOCK_ROUND_AUTO  0x2U   /*!< Automatically select closest rate */
 /** @} */
+
+/*!
+ * @addtogroup DEV_SM_CLOCK_Ext_Configuration DEV_SM_CLOCK Extended Configuration
+ * @{
+ */
+
+/*!
+ * @name Device extended clock configuration type
+ */
+/** @{ */
+#define DEV_SM_CLOCK_EXT_SSC  0x80U   /*!< Spread spectrum extended clock type */
+/** @} */
+
+/*!
+ * @name Device extended clock configuration SSC (spread spectrum)
+ */
+/** @{ */
+#define DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_MASK   (0xFFU) /*!< SSC Percentage Mask */
+#define DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_SHIFT  (0U) /*!< SSC Percentage Shift */
+#define DEV_SM_CLOCK_EXT_SSC_PERCENTAGE(x)     (((uint32_t)(((uint32_t)(x)) << DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_SHIFT)) & DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_MASK) /*!< SSC Percentage */
+
+#define DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_MASK     (0xFFFF00U) /*!< SSC Modulation Frequency Mask */
+#define DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_SHIFT    (8U) /*!< SSC Modulation Frequency Shift */
+#define DEV_SM_CLOCK_EXT_SSC_MOD_FREQ(x)       (((uint32_t)(((uint32_t)(x)) << DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_SHIFT)) & DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_MASK) /*!< SSC Modulation Frequency */
+
+#define DEV_SM_CLOCK_EXT_SSC_ENABLE_MASK       (0x1000000U) /*!< SSC Enable Mask */
+#define DEV_SM_CLOCK_EXT_SSC_ENABLE_SHIFT      (24U) /*!< SSC Enable Shift */
+#define DEV_SM_CLOCK_EXT_SSC_ENABLE(x)         (((uint32_t)(((uint32_t)(x)) << DEV_SM_CLOCK_EXT_SSC_ENABLE_SHIFT)) & DEV_SM_CLOCK_EXT_SSC_ENABLE_MASK) /*!< SSC Enable */
+/** @} */
+
+/*!
+ * @}
+ */ /* end of group DEV_SM_CLOCK_Ext_Configuration */
 
 /* Types */
 

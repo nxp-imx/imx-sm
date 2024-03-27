@@ -35,16 +35,19 @@
 
 /* Local Defines */
 #define FRACPLL_CTRL_CONTEXT_MASK   PLL_CTRL_SPREADCTL_MASK
+#define FRACPLL_CTRL_SSC_MASK       (PLL_SPREAD_SPECTRUM_STEP_MASK | PLL_SPREAD_SPECTRUM_STOP_MASK)
 
 /* Local Types */
 
 /* Local Functions */
+static bool FRACTPLL_EnableSsc(uint32_t pllIdx, uint32_t mfi, uint32_t mfn);
 
 /* Local Variables */
 
 static PLL_Type *const s_pllPtrs[] = PLL_BASE_PTRS;
 static uint64_t s_vcoRates[CLOCK_NUM_PLL];
 static bool s_vcoRateIsLatched[CLOCK_NUM_PLL];
+static fracpll_ssc_t s_sscConfig[CLOCK_NUM_PLL];
 
 /*--------------------------------------------------------------------------*/
 /* Get PLL enable status                                                    */
@@ -93,6 +96,12 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
 #endif
             pll->CTRL.SET = enMask;
 
+            if (pll->SPREAD_SPECTRUM.RW != 0U)
+            {
+                /* Enable Spread Spectrum */
+                pll->SPREAD_SPECTRUM.SET = PLL_SPREAD_SPECTRUM_ENABLE_MASK;
+            }
+
             /* If powering up, wait for lock */
             if ((enMask & PLL_CTRL_POWERUP_MASK) != 0U)
             {
@@ -124,6 +133,7 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
                 pll->CTRL.SET = PLL_CTRL_CLKMUX_BYPASS_MASK;
             }
             pll->CTRL.CLR = enMask;
+            pll->SPREAD_SPECTRUM.CLR = PLL_SPREAD_SPECTRUM_ENABLE_MASK;
 
             enableUpdate = true;
         }
@@ -217,8 +227,9 @@ bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
         /* Set rdiv, mfi, and odiv */
         pll->DIV.RW = PLL_DIV_MFI(mfi) | PLL_DIV_RDIV(0U)
             | PLL_DIV_ODIV(odiv);
-        /* Disable spread spectrum modulation */
-        pll->SPREAD_SPECTRUM.CLR = PLL_SPREAD_SPECTRUM_ENABLE_MASK;
+
+        /* Disable spread spectrum */
+        pll->SPREAD_SPECTRUM.RW = 0U;
 
         /* Check if MFN/MFD calculation and configuration needed */
         if (g_pllAttrs[pllIdx].isFrac)
@@ -228,26 +239,32 @@ bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
             pll->DENOMINATOR.RW = PLL_DENOMINATOR_MFD(CLOCK_PLL_MFD);
         }
 
-        /* Wait before POWERUP */
-        SystemTimeDelay(ES_MAX_USEC_PLL_PREP);
+        /* Enable Spread Spectrum */
+        bool status = FRACTPLL_EnableSsc(pllIdx, mfi, mfn);
 
-        /* Power up for locking */
-        pll->CTRL.SET = PLL_CTRL_POWERUP_MASK;
-        uint32_t pllLockUsec = 0U;
-        while (((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U) &&
-            (pllLockUsec < ES_MAX_USEC_PLL_LOCK))
+        if (status == true)
         {
-            SystemTimeDelay(1U);
-            pllLockUsec++;
-        }
+            /* Wait before POWERUP */
+            SystemTimeDelay(ES_MAX_USEC_PLL_PREP);
 
-        if ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) != 0U)
-        {
-            /* Enable PLL and clean bypass*/
-            pll->CTRL.SET = PLL_CTRL_CLKMUX_EN_MASK;
-            pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
+            /* Power up for locking */
+            pll->CTRL.SET = PLL_CTRL_POWERUP_MASK;
+            uint32_t pllLockUsec = 0U;
+            while (((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) == 0U) &&
+                (pllLockUsec < ES_MAX_USEC_PLL_LOCK))
+            {
+                SystemTimeDelay(1U);
+                pllLockUsec++;
+            }
 
-            updateRate = true;
+            if ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) != 0U)
+            {
+                /* Enable PLL and clean bypass*/
+                pll->CTRL.SET = PLL_CTRL_CLKMUX_EN_MASK;
+                pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
+
+                updateRate = true;
+            }
         }
     }
 
@@ -567,7 +584,8 @@ bool FRACTPLL_SetContext(uint32_t pllIdx, const fracpll_context_t *pllContext)
         PLL_Type *pll = s_pllPtrs[pllIdx];
 
         pll->CTRL.RW = pllContext->CTRL & FRACPLL_CTRL_CONTEXT_MASK;
-        pll->SPREAD_SPECTRUM.RW = pllContext->SPREAD_SPECTRUM;
+        pll->SPREAD_SPECTRUM.RW = pllContext->SPREAD_SPECTRUM &
+            FRACPLL_CTRL_SSC_MASK;
         pll->DIV.RW = pllContext->DIV;
         if (g_pllAttrs[pllIdx].isFrac)
         {
@@ -593,7 +611,8 @@ bool FRACTPLL_GetContext(uint32_t pllIdx, fracpll_context_t *pllContext)
         const PLL_Type *pll = s_pllPtrs[pllIdx];
 
         pllContext->CTRL = pll->CTRL.RW & FRACPLL_CTRL_CONTEXT_MASK;
-        pllContext->SPREAD_SPECTRUM = pll->SPREAD_SPECTRUM.RW;
+        pllContext->SPREAD_SPECTRUM = pll->SPREAD_SPECTRUM.RW &
+            FRACPLL_CTRL_SSC_MASK;
         pllContext->DIV = pll->DIV.RW;
         if (g_pllAttrs[pllIdx].isFrac)
         {
@@ -606,3 +625,179 @@ bool FRACTPLL_GetContext(uint32_t pllIdx, fracpll_context_t *pllContext)
 
     return rc;
 }
+
+/*--------------------------------------------------------------------------*/
+/* Set PLL SSC config                                                       */
+/*--------------------------------------------------------------------------*/
+bool FRACTPLL_SetSscConfig(uint32_t pllIdx, uint32_t spreadPercent,
+    uint32_t modFreq, uint32_t enable)
+{
+    bool rc = false;
+
+    if (pllIdx < CLOCK_NUM_PLL)
+    {
+        /* latch SSC configuration */
+        s_sscConfig[pllIdx].spreadPercent = spreadPercent;
+        s_sscConfig[pllIdx].modFreq = modFreq;
+        s_sscConfig[pllIdx].enable = enable;
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get PLL SSC config                                                       */
+/*--------------------------------------------------------------------------*/
+bool FRACTPLL_GetSscConfig(uint32_t pllIdx, uint32_t *spreadPercent,
+    uint32_t *modFreq, uint32_t *enable)
+{
+    bool rc = false;
+
+    if (pllIdx < CLOCK_NUM_PLL)
+    {
+        /* Get latched SSC configuration */
+        *spreadPercent = s_sscConfig[pllIdx].spreadPercent;
+        *modFreq = s_sscConfig[pllIdx].modFreq;
+        *enable = s_sscConfig[pllIdx].enable;
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Configure PLL SSC config                                                 */
+/*--------------------------------------------------------------------------*/
+bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
+    uint32_t *stop, uint32_t *step)
+{
+    bool updateSsc = true;
+
+    /* Get spread frequncy at VCO */
+    uint32_t quotient = pllSsc->spreadPercent / 10U;
+    uint32_t remain = pllSsc->spreadPercent % 10U;
+
+    uint64_t spreadFreq = ((rate / 100U) * quotient) +
+        ((rate/1000U) * remain);
+
+    /* Check if spread frequency exceeds (4 * (Fref/RDIV)) */
+    if (spreadFreq > (4U * CLOCK_PLL_FREF_HZ))
+    {
+        updateSsc = false;
+    }
+
+    if (updateSsc)
+    {
+#if (CLOCK_PLL_FREF_HZ < (40U * CLOCK_M_HZ))
+        /*
+         * If (Fref/DIV[RDIV]) < 40Mhz, then modulation frequency should lie
+         * between 30Khz and 64Khz
+         */
+        if ((pllSsc->modFreq < (30U * CLOCK_K_HZ)) || (pllSsc->modFreq >
+            (64U * CLOCK_K_HZ)))
+        {
+            updateSsc = false;
+        }
+#elif (CLOCK_PLL_FREF_HZ == 40U * CLOCK_M_HZ)
+        /*
+         * If (Fref/DIV[RDIV]) = 40Mhz, then modulation frequency should lie
+         * between 30Khz and 128Khz
+         */
+        if ((pllSsc->modFreq < (30U * CLOCK_K_HZ)) || (pllSsc->modFreq >
+            (128U * CLOCK_K_HZ)))
+        {
+            updateSsc = false;
+        }
+#else
+        updateSsc = false;
+#endif
+    }
+
+    if (updateSsc)
+    {
+        /* Caculate STOP
+         *
+         * Spread = (STOP / MFD) * (Fref / RDIV)
+         * (Spread * MFD) = STOP * Fref
+         * STOP = (Spread * MFD) / Fref
+         *
+         */
+        *stop = (uint32_t)((spreadFreq * CLOCK_PLL_MFD) / CLOCK_PLL_FREF_HZ);
+
+        /*
+         * Calculate STEP
+         *
+         * Modulation = ((Fref / (RDIV * 2)) * STEP) / STOP
+         * (Modulation * STOP) = (Fref / 2) * STEP
+         * STEP = (Modulation_freq * STOP) / (Fref / 2)
+         *
+         */
+        *step = (uint32_t)(((*stop) * pllSsc->modFreq) /
+            (uint32_t)(CLOCK_PLL_FREF_HZ / 2U));
+
+        /* Check for stop overflow */
+        if ((*stop & (PLL_SPREAD_SPECTRUM_STOP_MASK >>
+            PLL_SPREAD_SPECTRUM_STOP_SHIFT)) != *stop)
+        {
+            updateSsc = false;
+        }
+
+        /* Check for step overflow */
+        if (updateSsc && ((*step & (PLL_SPREAD_SPECTRUM_STEP_MASK >>
+            PLL_SPREAD_SPECTRUM_STEP_SHIFT)) != *step))
+        {
+            updateSsc = false;
+        }
+    }
+
+    return updateSsc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enable Spread Spectrum                                                   */
+/*--------------------------------------------------------------------------*/
+static bool FRACTPLL_EnableSsc(uint32_t pllIdx, uint32_t mfi, uint32_t mfn)
+{
+    bool enableSsc = true;
+
+    /* Check for PLL SSC */
+    const fracpll_ssc_t *sscConfig = &s_sscConfig[pllIdx];
+
+    if (sscConfig->enable == 1U)
+    {
+        /* Get VCO rate (SSC is applied to VCO even if requested for
+         * the PLL_OUT)
+         */
+        uint64_t vcoRate = ((CLOCK_PLL_FREF_HZ * mfi) +
+            ((CLOCK_PLL_FREF_HZ * mfn) / CLOCK_PLL_MFD));
+
+        uint32_t stop = 0U;
+        uint32_t step = 0U;
+
+        if ((sscConfig->spreadPercent != 0U) && (vcoRate != 0U))
+        {
+
+            if (FRACTPLL_CalcSscParams(sscConfig, vcoRate, &stop, &step))
+            {
+                PLL_Type *pll = s_pllPtrs[pllIdx];
+
+                /* Update PLL & SSC parameters */
+                pll->CTRL.SET = PLL_CTRL_SPREADCTL_MASK;
+
+                /* Set stop, step and enable */
+                pll->SPREAD_SPECTRUM.RW = PLL_SPREAD_SPECTRUM_STOP(stop) |
+                    PLL_SPREAD_SPECTRUM_ENABLE_MASK |
+                    PLL_SPREAD_SPECTRUM_STEP(step);
+            }
+            else
+            {
+                /* Invalid spectrum parameters */
+                enableSsc = false;
+            }
+        }
+    }
+
+    return enableSsc;
+}
+

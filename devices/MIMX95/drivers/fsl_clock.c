@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -1463,3 +1463,124 @@ bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
 
     return updateRate;
 }
+
+/*--------------------------------------------------------------------------*/
+/* Set CCM clock source spread spectrum                                     */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_SourceSetSsc(uint32_t sourceIdx, uint32_t spreadPercent,
+    uint32_t modFreq, uint32_t enable)
+{
+    bool setSscConfig = false;
+
+    switch (sourceIdx)
+    {
+        case CLOCK_SRC_SYSPLL1_VCO:
+            /* PLL SYS */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_SYS1, spreadPercent,
+                modFreq, enable);
+            break;
+
+        case CLOCK_SRC_AUDIOPLL1_VCO:
+            /* PLL AUDIO1 */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_AUDIO1,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_AUDIOPLL2_VCO:
+            /* PLL AUDIO2 */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_AUDIO2,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_VIDEOPLL1_VCO:
+            /* PLL VIDEO1 */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_VIDEO1,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_DRAMPLL_VCO:
+            /* PLL DRAM */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_DRAM,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_HSIOPLL_VCO:
+            /* PLL HSIO */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_HSIO,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_LDBPLL_VCO:
+            /* PLL LDB */
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_LDB,
+                spreadPercent, modFreq, enable);
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    return setSscConfig;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get CCM clock source spread spectrum                                     */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
+    uint32_t *modFreq, uint32_t *enable)
+{
+    bool getSscConfig = false;
+
+    switch (sourceIdx)
+    {
+        case CLOCK_SRC_SYSPLL1_VCO:
+            /* PLL SYS */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_SYS1, spreadPercent,
+                modFreq, enable);
+            break;
+
+        case CLOCK_SRC_AUDIOPLL1_VCO:
+            /* PLL AUDIO1 */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_AUDIO1,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_AUDIOPLL2_VCO:
+            /* PLL AUDIO2 */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_AUDIO2,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_VIDEOPLL1_VCO:
+            /* PLL VIDEO */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_VIDEO1,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_DRAMPLL_VCO:
+            /* PLL DRAM */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_DRAM,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_HSIOPLL_VCO:
+            /* PLL HSIO */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_HSIO,
+                spreadPercent, modFreq, enable);
+            break;
+
+        case CLOCK_SRC_LDBPLL_VCO:
+            /* PLL LDB */
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_LDB,
+                spreadPercent, modFreq, enable);
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    return getSscConfig;
+}
+

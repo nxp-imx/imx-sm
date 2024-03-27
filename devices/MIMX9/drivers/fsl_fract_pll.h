@@ -51,6 +51,12 @@ typedef struct {
     uint32_t DIV;
 } fracpll_context_t;
 
+typedef struct {
+    uint32_t modFreq;
+    uint32_t spreadPercent;
+    uint32_t enable;
+} fracpll_ssc_t;
+
 /* Functions */
 bool FRACTPLL_GetEnable(uint32_t pllIdx, uint32_t enMask);
 bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable);
@@ -67,6 +73,12 @@ bool FRACTPLL_UpdateDfsRate(uint32_t pllIdx, uint8_t dfsIdx, uint32_t mfi,
 bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx, uint64_t rate);
 bool FRACTPLL_SetContext(uint32_t pllIdx, const fracpll_context_t *pllContext);
 bool FRACTPLL_GetContext(uint32_t pllIdx, fracpll_context_t *pllContext);
+bool FRACTPLL_SetSscConfig(uint32_t pllIdx, uint32_t spreadPercent,
+    uint32_t modFreq, uint32_t enable);
+bool FRACTPLL_GetSscConfig(uint32_t pllIdx, uint32_t *spreadPercent,
+    uint32_t *modFreq, uint32_t *enable);
+bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
+    uint32_t *stop, uint32_t *step);
 
 /* Externs */
 

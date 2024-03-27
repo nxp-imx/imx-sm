@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -223,6 +223,44 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent);
  * - ::SM_ERR_NOT_FOUND: if \a clockId is invalid.
  */
 int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent);
+
+/*!
+ * Set a device extended clock data value.
+ *
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[in]     extId              Extended data identifier
+ * @param[in]     extConfigValue     Extended configuration value
+ *
+ * This function allows the caller to set clock extendeed data.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_NOT_FOUND: if \a supported extId not found.
+ * - ::SM_ERR_INVALID_PARAMETERS: if \a clockId is invalid
+ */
+int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
+    uint32_t extConfigValue);
+
+/*!
+ * Get a device extended clock data value.
+ *
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[in]     extId              Extended data identifier
+ * @param[out]    extConfigValue     Pointer to return the extended data value
+ *
+ * This function allows the caller to get clock extended data.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_NOT_FOUND: if \a supported extId not found.
+ * - ::SM_ERR_INVALID_PARAMETERS: if \a clockId is invalid
+ */
+int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
+    uint32_t *extConfigValue);
 
 #endif /* DEV_SM_CLOCK_API_H */
 

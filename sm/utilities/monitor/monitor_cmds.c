@@ -1491,66 +1491,114 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     string const subCmds[] =
                     {
                         "range",
-                        "parent"
+                        "parent",
+                        "ext"
                     };
 
                     uint8_t subCmd = (uint8_t) MONITOR_Find(subCmds,
                         (int32_t) ARRAY_SIZE(subCmds), argv[0]);
-                    if (subCmd < ARRAY_SIZE(subCmds))
+
+                    switch (subCmd)
                     {
-                        for (uint32_t clockId = 0U; clockId < SM_NUM_CLOCK;
-                            clockId++)
-                        {
-                            string clockNameAddr;
-                            int32_t wName = 0;
-
-                            status = LMM_ClockNameGet(s_lm, clockId,
-                                &clockNameAddr, &wName);
-
-                            if (status == SM_ERR_SUCCESS)
+                        /* range/parent */
+                        case 0:
+                        case 1:
+                            for (uint32_t clockId = 0U; clockId < SM_NUM_CLOCK;
+                                clockId++)
                             {
-                                if (subCmd == 0U)
+                                string clockNameAddr;
+                                int32_t wName = 0;
+
+                                status = LMM_ClockNameGet(s_lm, clockId,
+                                    &clockNameAddr, &wName);
+
+                                if (status == SM_ERR_SUCCESS)
                                 {
-                                    dev_sm_clock_range_t range;
-                                    status = LMM_ClockDescribe(s_lm,
-                                        clockId, &range);
-                                    if (status == SM_ERR_SUCCESS)
+                                    if (subCmd == 0U)
                                     {
-                                        uint32_t maxKHz = SM_UINT64_L(
-                                            range.highestRate/1000UL);
-                                        uint32_t minKHz = SM_UINT64_L(
-                                            range.lowestRate/1000UL);
-                                        printf("%03u: %*s MAX = %7uKHz,"
-                                            " MIN = %7uKHz\n",
-                                            clockId, -wName, clockNameAddr,
-                                            maxKHz, minKHz);
-                                    }
-                                }
-                                else
-                                {
-                                    uint32_t parent;
-                                    status = LMM_ClockParentGet(s_lm,
-                                        clockId, &parent);
-                                    if (status == SM_ERR_SUCCESS)
-                                    {
-                                        string parentNameAddr;
-                                        if (LMM_ClockNameGet(s_lm, parent,
-                                            &parentNameAddr, NULL)
-                                            == SM_ERR_SUCCESS)
+                                        dev_sm_clock_range_t range;
+                                        status = LMM_ClockDescribe(s_lm,
+                                            clockId, &range);
+
+                                        if (status == SM_ERR_SUCCESS)
                                         {
-                                            printf("%03u: %*s parent "
-                                                "= %u (%s)\n",
-                                                clockId, -wName, clockNameAddr,
-                                                parent, parentNameAddr);
+                                            uint32_t maxKHz = SM_UINT64_L(
+                                                range.highestRate/1000UL);
+                                            uint32_t minKHz = SM_UINT64_L(
+                                                range.lowestRate/1000UL);
+                                            printf("%03u: %*s MAX = %7uKHz,"
+                                                " MIN = %7uKHz\n", clockId,
+                                                -wName, clockNameAddr, maxKHz,
+                                                minKHz);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        uint32_t parent;
+                                        status = LMM_ClockParentGet(s_lm,
+                                            clockId, &parent);
+
+                                        if (status == SM_ERR_SUCCESS)
+                                        {
+                                            string parentNameAddr;
+                                            if (LMM_ClockNameGet(s_lm, parent,
+                                                &parentNameAddr, NULL)
+                                                == SM_ERR_SUCCESS)
+                                            {
+                                                printf("%03u: %*s parent "
+                                                    "= %u (%s)\n",
+                                                    clockId, -wName,
+                                                    clockNameAddr, parent,
+                                                    parentNameAddr);
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                    }
-                    else
-                    {
-                        status = SM_ERR_INVALID_PARAMETERS;
+                            break;
+
+                        /* ext */
+                        case 2:
+                            {
+                                errno = 0;
+                                uint32_t ext = strtoul(argv[1], NULL, 0);
+
+                                if (errno == 0)
+                                {
+                                    for (uint32_t clockId = 0U;
+                                        clockId < SM_NUM_CLOCK; clockId++)
+                                    {
+                                        uint32_t extCfgValue = 0U;
+
+                                        status = LMM_ClockExtendedGet(s_lm,
+                                            clockId, ext, &extCfgValue);
+
+                                        if (status == SM_ERR_SUCCESS)
+                                        {
+                                            string clockNameAddr;
+                                            int32_t wName = 0;
+
+                                            status = LMM_ClockNameGet(s_lm,
+                                                clockId, &clockNameAddr,
+                                                &wName);
+
+                                            printf("%03u: %*s = 0x%08X \n",
+                                                clockId, -wName, clockNameAddr,
+                                                extCfgValue);
+                                        }
+                                    }
+                                    status = SM_ERR_SUCCESS;
+                                }
+                                else
+                                {
+                                    status = SM_ERR_INVALID_PARAMETERS;
+                                }
+                            }
+                            break;
+
+                        default:
+                            status = SM_ERR_INVALID_PARAMETERS;
+                            break;
                     }
                 }
             }
@@ -1564,7 +1612,8 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     "off",
                     "on",
                     "reparent",
-                    "rate"
+                    "rate",
+                    "ext"
                 };
 
 
@@ -1655,6 +1704,40 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                             clockId, rate, roundRule);
                                     }
                                 }
+                            }
+                            break;
+
+                        /* ext */
+                        case 4:
+                            if (argc == 4)
+                            {
+                                errno = 0;
+                                uint32_t ext = strtoul(argv[2], NULL, 0);
+
+                                if (errno == 0)
+                                {
+                                    uint32_t extConfigValue = strtoul(argv[3],
+                                        NULL, 0);
+
+                                    if (errno == 0)
+                                    {
+                                        status = LMM_ClockExtendedSet(s_lm,
+                                            clockId, ext, extConfigValue);
+                                    }
+                                    else
+                                    {
+                                        status = SM_ERR_INVALID_PARAMETERS;
+                                    }
+                                }
+                                else
+                                {
+                                    status = SM_ERR_INVALID_PARAMETERS;
+                                }
+
+                            }
+                            else
+                            {
+                                status = SM_ERR_MISSING_PARAMETERS;
                             }
                             break;
 

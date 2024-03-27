@@ -238,17 +238,47 @@ int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent)
 /* Set an LM extended clock data value                                      */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
-    uint32_t value)
+    uint32_t extConfigValue)
 {
-    return SM_ERR_INVALID_PARAMETERS;
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check parameters */
+    if (clockId >= SM_NUM_CLOCK)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Set extended clock value */
+        status = SM_CLOCKEXTENDEDSET(clockId, extId, extConfigValue);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Get an LM extended clock data value                                      */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_ClockExtendedGet(uint32_t lmId, uint32_t clockId, uint32_t extId,
-    uint32_t *value)
+    uint32_t *extConfigValue)
 {
-    return SM_ERR_INVALID_PARAMETERS;
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check parameters */
+    if (clockId >= SM_NUM_CLOCK)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Get extended clock value */
+        status = SM_CLOCKEXTENDEDGET(clockId, extId, extConfigValue);
+    }
+
+    /* Return status */
+    return status;
 }
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -1007,6 +1007,102 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
                 status = SM_ERR_NOT_FOUND;
             }
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set a device extended clock data value                                   */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
+    uint32_t extConfigValue)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (extId)
+    {
+        /* Spread spectrum */
+        case DEV_SM_CLOCK_EXT_SSC:
+            {
+                /* Parse extended configuration
+                 *
+                 * extConfigValue[7:0]   - spread percentage (%)
+                 * extConfigValue[23:8]  - Modulation Frequency (KHz)
+                 * extConfigValue[24]    - Enable/Disable
+                 * extConfigValue[31:25] - Reserved
+                 *
+                 */
+
+                /* Get spread percentage Bit[7:0] from extended config */
+                uint32_t spreadPercent =  (extConfigValue &
+                    DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_MASK) >>
+                    DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_SHIFT;
+
+                /* Get modulation freq Bit[23:8] from extended config */
+                uint32_t modFreq = (extConfigValue &
+                    DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_MASK) >>
+                    DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_SHIFT;
+
+                /* Get enable field Bit[24] from extended config */
+                uint32_t enable = (extConfigValue &
+                    DEV_SM_CLOCK_EXT_SSC_ENABLE_MASK)
+                    >> DEV_SM_CLOCK_EXT_SSC_ENABLE_SHIFT;
+
+                if (!CLOCK_SourceSetSsc(clockId, spreadPercent, modFreq,
+                    enable))
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
+                }
+            }
+            break;
+
+        default:
+            status = SM_ERR_NOT_FOUND;
+            break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set a device extended clock data value                                   */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
+    uint32_t *extConfigValue)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (extId)
+    {
+        /* Spread spectrum */
+        case DEV_SM_CLOCK_EXT_SSC:
+            {
+
+                uint32_t spreadPercent = 0U;
+                uint32_t modFreq = 0U;
+                uint32_t enable = 0U;
+
+                if (!CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
+                    &enable))
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
+                }
+                else
+                {
+                    *extConfigValue =
+                        DEV_SM_CLOCK_EXT_SSC_PERCENTAGE(spreadPercent) |
+                        DEV_SM_CLOCK_EXT_SSC_MOD_FREQ(modFreq) |
+                        DEV_SM_CLOCK_EXT_SSC_ENABLE(enable);
+                }
+            }
+            break;
+
+        default:
+            status = SM_ERR_NOT_FOUND;
+            break;
     }
 
     /* Return status */
