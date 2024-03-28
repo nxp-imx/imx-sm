@@ -151,7 +151,7 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
         const dev_sm_sys_sleep_rec_t *sysSleepRecord
             = &g_syslog.sysSleepRecord;
 
-        printf("Wake vector = %u)\n", sysSleepRecord->wakeSource);
+        printf("Wake vector = %u\n", sysSleepRecord->wakeSource);
         printf("MIX power status = 0x%08X\n", sysSleepRecord->mixPwrStat);
         printf("MEM power status = 0x%08X\n", sysSleepRecord->memPwrStat);
         printf("PLL power status = 0x%08X\n", sysSleepRecord->pllPwrStat);
