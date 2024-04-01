@@ -177,6 +177,16 @@ typedef struct
  */
 int32_t RPC_SCMI_Init(uint8_t scmiInst);
 
+/*!
+ * Initialize SCMI agent.
+ *
+ * @param[in]     agentId   SCMI agent
+ *
+ * This function initializes SCMI agent data strucures. It also calls to
+ * initialize all the associated transport channels.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
 int32_t RPC_SCMI_AgentInit(uint32_t agentId);
 
 /*!

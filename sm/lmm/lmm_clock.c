@@ -247,7 +247,7 @@ int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
 /* Get an LM extended clock data value                                      */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_ClockExtendedGet(uint32_t lmId, uint32_t clockId, uint32_t extId,
-uint32_t *value)
+    uint32_t *value)
 {
     return SM_ERR_INVALID_PARAMETERS;
 }

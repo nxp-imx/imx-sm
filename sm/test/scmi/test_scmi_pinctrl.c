@@ -226,8 +226,8 @@ void TEST_ScmiPinctrl(void)
 
     /* Config Get -- invalids */
     {
-        uint32_t attributes
-            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_TYPE);
+        uint32_t attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_TYPE;
+        uint32_t attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
@@ -236,7 +236,8 @@ void TEST_ScmiPinctrl(void)
             attributes, NULL, &numConfigs, configs), SCMI_ERR_NOT_FOUND);
 
         /* INVALID PARAMETERS */
-        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL)
+        attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_ALL;
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg)
             | SCMI_PINCTRL_GET_ATTR_SELECTOR(3UL);
 
         NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U,
@@ -244,14 +245,15 @@ void TEST_ScmiPinctrl(void)
             SCMI_ERR_INVALID_PARAMETERS);
 
         /* NOT SUPPORTED -- Group */
-        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL) |
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg) |
             SCMI_PINCTRL_GET_ATTR_SELECTOR(1UL);
 
         NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U,
             attributes, NULL, &numConfigs, configs), SCMI_ERR_NOT_SUPPORTED);
 
         /* NOT SUPPORTED -- Unsupported Custom Config */
-        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_TYPE)
+        attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_TYPE;
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg)
             | SCMI_PINCTRL_GET_ATTR_SELECTOR(0UL)
             | SCMI_PINCTRL_GET_ATTR_CONFIG_TYPE(255UL);
 
@@ -259,7 +261,8 @@ void TEST_ScmiPinctrl(void)
             attributes, NULL, &numConfigs, configs), SCMI_ERR_NOT_SUPPORTED);
 
         /* Branch -- Invalid Channel */
-        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
+        attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_ALL;
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         NECHECK(SCMI_PinctrlSettingsGet(SM_SCMI_NUM_CHN, 0U,
             attributes, NULL, NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
 
@@ -270,8 +273,9 @@ void TEST_ScmiPinctrl(void)
 
     /* Config Set -- invalids */
     {
+        uint32_t attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_ALL;
         uint32_t attributes
-            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
@@ -343,8 +347,9 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
     /* Config Get */
     {
         /* RETURN ALL CONFIGS ----------------------------------- */
+        uint32_t attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_ALL;
         uint32_t attributes
-            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
         uint32_t functionSelected = 0U;
 
@@ -380,7 +385,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
             > 0U);
 
         /* RETURN ALL CONFIGS -- skip 1 ------------------------- */
-        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL)
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg)
             | SCMI_PINCTRL_GET_ATTR_SKIP_CONFIGS(1UL);
         numConfigs = 0U;
 
@@ -416,7 +421,8 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
             > 0U);
 
         /* RETURN TYPE  ----------------------------------------- */
-        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_TYPE)
+        attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_TYPE;
+        attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg)
             | SCMI_PINCTRL_GET_ATTR_CONFIG_TYPE(SCMI_PINCTRL_TYPE_MUX);
         scmi_pin_config_t configs[1] = { 0 };
 

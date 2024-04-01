@@ -577,7 +577,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Capture sleep entry latency */
             g_syslog.sysSleepRecord.sleepEntryUsec =
-               UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+                UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
@@ -672,7 +672,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     {
         sleepExitStart = DEV_SM_Usec64Get();
         g_syslog.sysSleepRecord.sleepEntryUsec =
-           UINT64_L(sleepExitStart - sleepEntryStart);
+            UINT64_L(sleepExitStart - sleepEntryStart);
     }
 
     /* Restore GPC wake masks for sleeping CPUs */
