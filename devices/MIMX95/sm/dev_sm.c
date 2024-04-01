@@ -95,6 +95,7 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     }
 
     /* Init ROM data */
+    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     DEV_SM_RomInit();
 
     /* Initialize CPU domains */
