@@ -19,7 +19,7 @@ New Feature {#RN_CL_NEW}
 | [SM-27](https://jira.sw.nxp.com/projects/SM/issues/SM-27) | Add low-power mode entry during SM idle |   | Y | Y |
 | [SM-28](https://jira.sw.nxp.com/projects/SM/issues/SM-28) | Add support for DRAM retention |   | Y | Y |
 | [SM-29](https://jira.sw.nxp.com/projects/SM/issues/SM-29) | Add support for PLL spread spectrum mode |   | Y | Y |
-| [SM-31](https://jira.sw.nxp.com/projects/SM/issues/SM-31) | Create log for SUSPEND entry/exit |   | Y | Y |
+| [SM-31](https://jira.sw.nxp.com/projects/SM/issues/SM-31) | Create syslog to record info about suspend entry/exit [[detail]](@ref RN_DETAIL_SM_31) |   | Y | Y |
 | [SM-32](https://jira.sw.nxp.com/projects/SM/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling |   | Y | Y |
 | [SM-92](https://jira.sw.nxp.com/projects/SM/issues/SM-92) | Add SCMI function to return config info [[detail]](@ref RN_DETAIL_SM_92) |   | Y | Y |
 | [SM-97](https://jira.sw.nxp.com/projects/SM/issues/SM-97) | Add SCMI CPU protocol message to get CPU info [[detail]](@ref RN_DETAIL_SM_97) |   | Y | Y |
@@ -44,7 +44,8 @@ Improvement {#RN_CL_IMP}
 | [SM-93](https://jira.sw.nxp.com/projects/SM/issues/SM-93) | Add PERF_GPU to the GPU_PROT/NPROT resources [[detail]](@ref RN_DETAIL_SM_93) |   | Y | Y |
 | [SM-96](https://jira.sw.nxp.com/projects/SM/issues/SM-96) | Add cfg to support a NETC shared use-case [[detail]](@ref RN_DETAIL_SM_96) |   | Y | Y |
 | [SM-98](https://jira.sw.nxp.com/projects/SM/issues/SM-98) | Support SCMI agent reset when resources are shared [[detail]](@ref RN_DETAIL_SM_98) |   | Y | Y |
-| [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec |   | Y | Y |
+| [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec [[detail]](@ref RN_DETAIL_SM_100) |   | Y | Y |
+| [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55PER and A55P performance domains |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -54,7 +55,7 @@ Bug {#RN_CL_BUG}
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes |   | Y | Y |
 | [SM-83](https://jira.sw.nxp.com/projects/SM/issues/SM-83) | IOMUXC header incorrectly overwrites the JTAG TDI mux [[detail]](@ref RN_DETAIL_SM_83) |   | Y | Y |
 | [SM-85](https://jira.sw.nxp.com/projects/SM/issues/SM-85) | Release of M7 CPUWAIT during M7MIX power down may result in unterminated transactions [[detail]](@ref RN_DETAIL_SM_85) |   | Y | Y |
-| [SM-95](https://jira.sw.nxp.com/projects/SM/issues/SM-95) | SCMI performance levels should avoid duplicate frequencies |   | Y | Y |
+| [SM-95](https://jira.sw.nxp.com/projects/SM/issues/SM-95) | SCMI performance levels should avoid duplicate frequencies [[detail]](@ref RN_DETAIL_SM_95) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -63,8 +64,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-24](https://jira.sw.nxp.com/projects/SM/issues/SM-24) | Align reset toggle delay with SoC specification |   | Y | Y |
-| [SM-94](https://jira.sw.nxp.com/projects/SM/issues/SM-94) | Align to i.MX95 Rev 1 datasheet |   | Y | Y |
+| [SM-94](https://jira.sw.nxp.com/projects/SM/issues/SM-94) | Align to i.MX95 Rev 1 datasheet [[detail]](@ref RN_DETAIL_SM_94) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -84,6 +84,11 @@ SM-17: Implement SCMI message sequence checking {#RN_DETAIL_SM_17}
 Support an SCMI message sequence requirement. Enable per channel via new config and configtool options (sequence=token). This option requires the token field of the SCMI message header to increment sequentially. Failure to do so will result in a new SCMI_ERR_SEQ_ERROR error.
 
 Note this feature requires the agent keep and maintain the sequence number accoss all power state transitions other than SM-driven shutdown/reset which will reset the sequence to 0. This means suspend/resume may need to retain the sequence number using the SCMI_SequenceSave() and SCMI_SequenceRestore() functions. By default, checking of agent-side notification sequence is disabled unless enabled via SCMI_SequenceConfig().
+
+SM-31: Create syslog to record info about suspend entry/exit {#RN_DETAIL_SM_31}
+----------
+
+Created new syslog to record information about suspend entry/exit. Added new 'syslog' monitor command to display the syslog. Can be retrieved as an array of raw 32-bit words via the new SCMI_MSG_MISC_SYSLOG and SCMI_MiscSyslog() client API function.
 
 SM-71: Enable/disable VDD_ARM on AP LM boot/shutdown {#RN_DETAIL_SM_71}
 ----------
@@ -128,7 +133,7 @@ Updated the fsl_iomux.h header file from the SDK. This fixes the daisy register 
 SM-84: Remove unnecessary SM clock permissions for the AP {#RN_DETAIL_SM_84}
 ----------
 
-Removed AP access to some SM clocks. Removed SM reservation of the same clocks. This was implemented prior to SCMI 3.2 BETA3 when Linux required the rights to enable these clocks. No longer required.
+Removed AP access to some SM clocks. Removed SM reservation of the same clocks. This was implemented prior to SCMI 3.2 BETA3 when Linux required the rights to enable these clocks. No longer required. Customers should make similar changes to their cfg files.
 
 SM-85: Release of M7 CPUWAIT during M7MIX power down may result in unterminated transactions {#RN_DETAIL_SM_85}
 ----------
@@ -147,10 +152,20 @@ SM-93: Add PERF_GPU to the GPU_PROT/NPROT resources {#RN_DETAIL_SM_93}
 
 Updated the GPU_PROT and GPU_NPROT resource definitions used by the configtool to give the owners of these resources the ability to call SCMI performance protocol functions on the PERF_GPU performance domain. Customers will need to rerun the configtool on their cfg.
 
+SM-94: Align to i.MX95 Rev 1 datasheet {#RN_DETAIL_SM_94}
+----------
+
+Electrical specifications used by SM were updated based on MX95 Rev 1 datasheet.
+
+SM-95: SCMI performance levels should avoid duplicate frequencies {#RN_DETAIL_SM_95}
+----------
+
+The SCMI specification states that performance levels are neither guaranteed to be contiguous or required to be on a linear scale.  Agents may sort the performance levels returned from performance level queries and could report warnings for duplicates.  SM exposes a "parked" performance level that is guaranteed across all voltage ranges and power domain states.  In some cases, this "parked" state was a duplicate of the "low" performance level.  The "parked" level has been updated to make it unique and, therefore, avoid duplicate warnings from agents.
+
 SM-96: Add cfg to support a NETC shared use-case {#RN_DETAIL_SM_96}
 ----------
 
-A new cfg file has been created to demonstrate a shared NETC use-case. In this use-case the M7 core owns NETC ENETC2 PSI, and I2C5/I2C7 which control the PHY. The AP core uses ENETC2 VSIs.
+A new cfg file (mx95netc.cfg in configs/other) has been created to demonstrate a shared NETC use-case. In this use-case the M7 core owns NETC ENETC2 PSI, and I2C5/I2C7 which control the PHY. The AP core uses ENETC2 VSIs.
 
 Also, disabled KPA for the NETC shared use-case since SMMU won't be used for this case.
 
@@ -169,4 +184,11 @@ When the AP LM contains both the AP core and M7 core (aux core use-case), the AP
 In some cfgs, some resources might be shared in such a way that access rights cannot be used. This change modifies the agent reset function to instead track which agent last accessed a shared resource (e.g. clock rate) and use that info to reset the state.
 
  
+
+SM-100: Support final SCMI 3.2 spec {#RN_DETAIL_SM_100}
+----------
+
+Updated the client and RPC protocol to match the final SCMI 3.2 spec. The previous implementation was to the BETA3 spec. The new version changed the pin control protocol messages which breaks backwards compatibility. Customers must use the OS/SDK version tested with this version of the SM.
+
+Also added generic OEM configuration handing for clocks. This is used to support SSC.
 

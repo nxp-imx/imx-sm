@@ -23,19 +23,24 @@ SCMI API Changes {#RN_ADD_API}
 
 The following changes can affect client (aka agent software):
 
-- Split misc device and board controls, **board controls start at 0x8000**
+- Updated to the final SCMI 3.2 spec, **not backwards compatible to BETA3**
+- Split misc device and board controls, **board controls now start at 0x8000**
 - Added new SCMI_MSG_CPU_INFO_GET message and SCMI_CpuInfoGet() function
 - Added new SCMI_MSG_MISC_CFG_INFO message and SCMI_MiscCfgInfo() function
+- Added new SCMI_MSG_MISC_SI_INFO message and SCMI_MiscSyslog() function
 - Updated FuSa protocol functions
 - Added sequence functions SCMI_SequenceConfig(), SCMI_SequenceSave(), SCMI_SequenceRestore()
 - Added a new SCMI_ERR_SEQ_ERROR error type
 
+Client software **must* update to the final SCMI 3.2 protocols.
+
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
-The following are cfg file changes that customers will probably need to make to their cfg
-files.
+The following are cfg file changes that customers **must** make to their cfg files
+and rebuild their config headers.
 
+- Split DC into small functional resources
 - Assigned CLK_ELE to the SM
 - Fixed assignment of EIM_NPU and ERM_NPU
 - Added VDD_SOC enable/disable via new VOLT start/stop options
