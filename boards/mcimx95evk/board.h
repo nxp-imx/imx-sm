@@ -33,7 +33,6 @@
 #define BOARD_SWI_IRQn          Reserved110_IRQn  /*!< SWI IRQ */
 #define BOARD_HAS_WDOG                            /*!< Has a watchdog */
 #define BOARD_HAS_PMIC                            /*!< Has a PMIC */
-#define BOARD_HAS_GPIO1_0                         /*!< Uses GPIO1 0 */
 /** @} */
 
 /*!

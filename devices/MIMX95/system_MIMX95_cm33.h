@@ -50,6 +50,34 @@ extern "C" {
 #define SYSTEM_EMU_QIWC_START   0x000000C1U
 #define SYSTEM_EMU_QIWC_STOP    0x000000C2U
 
+/* IRQ Priority grouping (PRIGROUP) configured as follows:
+ *      1-bit group priority field
+ *      3-bit subgroup priority field
+ *
+ *      Note:  actual bits of priority fields are MSB of fields as defined
+ *             by __NVIC_PRIO_BITS
+ */
+#define IRQ_PRIGROUP                      6U
+
+/* IRQ handler priorities */
+#define IRQ_PRIO_PREEMPT_CRITICAL         0U    /* Critical preemptive */
+#define IRQ_PRIO_PREEMPT_VERY_HIGH        1U    /* Very high preemptive */
+#define IRQ_PRIO_PREEMPT_HIGH             2U    /* High preemptive */
+#define IRQ_PRIO_PREEMPT_ABOVE_NORMAL     3U    /* Above normal preemptive */
+#define IRQ_PRIO_PREEMPT_NORMAL           4U    /* Normal preemptive */
+#define IRQ_PRIO_PREEMPT_BELOW_NORMAL     5U    /* Below normal preemptive */
+#define IRQ_PRIO_PREEMPT_LOW              6U    /* Low preemptive */
+#define IRQ_PRIO_PREEMPT_VERY_LOW         7U    /* Very low preemptive */
+
+#define IRQ_PRIO_NOPREEMPT_CRITICAL       8U    /* Critical nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_VERY_HIGH      9U    /* Very high nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_HIGH           10U   /* High nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_ABOVE_NORMAL   11U   /* Above normal nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_NORMAL         12U   /* Normal nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_BELOW_NORMAL   13U   /* Below normal nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_LOW            14U   /* Low nonpreemptive */
+#define IRQ_PRIO_NOPREEMPT_VERY_LOW       15U   /* Very low nonpreemptive */
+
 /**
  * @brief System clock frequency (core clock)
  *

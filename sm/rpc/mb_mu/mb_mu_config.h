@@ -69,6 +69,7 @@ typedef struct
 {
     uint32_t mu;                            /*!< Index to MU SDK driver */
     uint32_t sma;                           /*!< Shared memory address */
+    uint32_t priority;                      /*!< MU IRQ priority */
     uint8_t xportType[SM_NUM_MB_MU_DB];     /*!< Linked transport types */
     uint8_t xportChannel[SM_NUM_MB_MU_DB];  /*!< Linked transport channels */
 } mb_mu_config_t;

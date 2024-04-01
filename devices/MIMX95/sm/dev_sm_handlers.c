@@ -37,9 +37,10 @@
 /*==========================================================================*/
 
 /* Includes */
+
 #include "dev_sm.h"
 #include "dev_sm_handlers.h"
-#include "board.h"
+#include "brd_sm.h"
 #include "mb_mu.h"
 #include "config_mb_mu.h"
 #include "lmm.h"
@@ -47,17 +48,209 @@
 
 /* Local defines */
 
+/* Dynamic IRQ priority definitions */
+#define DEV_SM_NUM_IRQ_PRIO_IDX                 20U
+
+#define DEV_SM_IRQ_PRIO_IDX_SYSTICK             0U
+#define DEV_SM_IRQ_PRIO_IDX_BBNSM               1U
+#define DEV_SM_IRQ_PRIO_IDX_WDOG3               2U
+#define DEV_SM_IRQ_PRIO_IDX_WDOG4               3U
+#define DEV_SM_IRQ_PRIO_IDX_WDOG5               4U
+#define DEV_SM_IRQ_PRIO_IDX_TMPSNS_ANA_1        5U
+#define DEV_SM_IRQ_PRIO_IDX_TMPSNS_ANA_2        6U
+#define DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1    7U
+#define DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2    8U
+#define DEV_SM_IRQ_PRIO_IDX_BOARD_SWI           9U
+#define DEV_SM_IRQ_PRIO_IDX_CM7_SYSRESETREQ     10U
+#define DEV_SM_IRQ_PRIO_IDX_CM7_LOCKUP          11U
+#define DEV_SM_IRQ_PRIO_IDX_FCCU0               12U
+#define DEV_SM_IRQ_PRIO_IDX_MU1_B               13U
+#define DEV_SM_IRQ_PRIO_IDX_MU2_B               14U
+#define DEV_SM_IRQ_PRIO_IDX_MU3_B               15U
+#define DEV_SM_IRQ_PRIO_IDX_MU4_B               16U
+#define DEV_SM_IRQ_PRIO_IDX_MU5_B               17U
+#define DEV_SM_IRQ_PRIO_IDX_MU6_B               18U
+#define DEV_SM_IRQ_PRIO_IDX_GPC_SM_REQ          19U
+
 /* Local types */
 
 /* Local variables */
 
 static uint64_t s_smTimeMsec = 0ULL;
 
+static irq_prio_info_t s_irqPrioInfo[DEV_SM_NUM_IRQ_PRIO_IDX] =
+{
+    [DEV_SM_IRQ_PRIO_IDX_SYSTICK] =
+    {
+        .irqId = SysTick_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_BBNSM] =
+    {
+        .irqId = BBNSM_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_WDOG3] =
+    {
+        .irqId = WDOG3_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_WDOG4] =
+    {
+        .irqId = WDOG4_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_WDOG5] =
+    {
+        .irqId = WDOG5_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_TMPSNS_ANA_1] =
+    {
+        .irqId = TMPSNS_ANA_1_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_TMPSNS_ANA_2] =
+    {
+        .irqId = TMPSNS_ANA_2_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1] =
+    {
+        .irqId = TMPSNS_CORTEXA_1_IRQ,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2] =
+    {
+        .irqId = TMPSNS_CORTEXA_2_IRQ,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_BOARD_SWI] =
+    {
+        .irqId = BOARD_SWI_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_CM7_SYSRESETREQ] =
+    {
+        .irqId = CM7_SYSRESETREQ_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_CM7_LOCKUP] =
+    {
+        .irqId = CM7_LOCKUP_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_FCCU0] =
+    {
+        .irqId = FCCU_INT0_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU1_B] =
+    {
+        .irqId = MU1_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU2_B] =
+    {
+        .irqId = MU2_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU3_B] =
+    {
+        .irqId = MU3_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU4_B] =
+    {
+        .irqId = MU4_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU5_B] =
+    {
+        .irqId = MU5_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU6_B] =
+    {
+        .irqId = MU6_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_GPC_SM_REQ] =
+    {
+        .irqId = GPC_SM_REQ_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    }
+};
+
 /* Local functions */
 
 static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     uint32_t faultStatus, uint32_t faultAddr);
 static void FaultHandler(uint32_t faultId);
+static irq_prio_info_t *IrqPrioMap(IRQn_Type irq);
+static void IrqPrioBoost(irq_prio_info_t const * pInfo,uint32_t relPrio);
+static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
+    uint32_t relPrio);
+static void IrqPrioUpdate(irq_prio_info_t *pInfo);
 
 /*--------------------------------------------------------------------------*/
 /* NMI exception handler                                                    */
@@ -149,16 +342,6 @@ void SysTick_Handler(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* GPIO 1 interrupt 0                                                       */
-/*--------------------------------------------------------------------------*/
-void GPIO1_0_IRQHandler(void)
-{
-#ifdef BOARD_HAS_GPIO1_0
-    BRD_SM_Gpio1Handler();
-#endif
-}
-
-/*--------------------------------------------------------------------------*/
 /* WDOG1 handler                                                            */
 /*--------------------------------------------------------------------------*/
 void WDOG1_IRQHandler(const uint32_t *sp)
@@ -181,6 +364,7 @@ void BBNSM_IRQHandler(void)
 {
     /* BBM handler will service BBNSM IRQs*/
     DEV_SM_BbmHandler();
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_BBNSM]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -189,6 +373,7 @@ void BBNSM_IRQHandler(void)
 void WDOG3_IRQHandler(void)
 {
     FaultHandler(DEV_SM_FAULT_WDOG3);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_WDOG3]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -197,6 +382,7 @@ void WDOG3_IRQHandler(void)
 void WDOG4_IRQHandler(void)
 {
     FaultHandler(DEV_SM_FAULT_WDOG4);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_WDOG4]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -205,6 +391,7 @@ void WDOG4_IRQHandler(void)
 void WDOG5_IRQHandler(void)
 {
     FaultHandler(DEV_SM_FAULT_WDOG5);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_WDOG5]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -213,6 +400,7 @@ void WDOG5_IRQHandler(void)
 void TMPSNS_ANA_1_IRQHandler(void)
 {
     DEV_SM_SensorHandler(0U, 1U);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_ANA_1]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -221,6 +409,7 @@ void TMPSNS_ANA_1_IRQHandler(void)
 void TMPSNS_ANA_2_IRQHandler(void)
 {
     DEV_SM_SensorHandler(0U, 2U);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_ANA_2]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -229,6 +418,7 @@ void TMPSNS_ANA_2_IRQHandler(void)
 void TMPSNS_CORTEXA_1_IRQHandler(void)
 {
     DEV_SM_SensorHandler(1U, 1U);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -237,6 +427,7 @@ void TMPSNS_CORTEXA_1_IRQHandler(void)
 void TMPSNS_CORTEXA_2_IRQHandler(void)
 {
     DEV_SM_SensorHandler(1U, 2U);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -245,6 +436,7 @@ void TMPSNS_CORTEXA_2_IRQHandler(void)
 void Reserved110_IRQHandler(void)
 {
     LMM_Handler();
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_BOARD_SWI]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -286,6 +478,7 @@ void ELE_Group3_IRQHandler(const uint32_t *sp)
 void CM7_SYSRESETREQ_IRQHandler(void)
 {
     FaultHandler(DEV_SM_FAULT_M7_RESET);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_CM7_SYSRESETREQ]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -294,6 +487,7 @@ void CM7_SYSRESETREQ_IRQHandler(void)
 void CM7_LOCKUP_IRQHandler(void)
 {
     FaultHandler(DEV_SM_FAULT_M7_LOCKUP);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_CM7_LOCKUP]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -314,6 +508,7 @@ void MU1_B_IRQHandler(void)
 #ifdef SM_MB_MU1_CONFIG
     MB_MU_Handler(1U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU1_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -334,6 +529,7 @@ void MU2_B_IRQHandler(void)
 #ifdef SM_MB_MU3_CONFIG
     MB_MU_Handler(3U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU2_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -354,6 +550,7 @@ void MU3_B_IRQHandler(void)
 #ifdef SM_MB_MU5_CONFIG
     MB_MU_Handler(5U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU3_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -374,6 +571,7 @@ void MU4_B_IRQHandler(void)
 #ifdef SM_MB_MU7_CONFIG
     MB_MU_Handler(7U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU4_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -394,6 +592,7 @@ void MU5_B_IRQHandler(void)
 #ifdef SM_MB_MU9_CONFIG
     MB_MU_Handler(9U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU5_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -414,6 +613,7 @@ void MU6_B_IRQHandler(void)
 #ifdef SM_MB_MU11_CONFIG
     MB_MU_Handler(11U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU6_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -464,7 +664,148 @@ void SWI_Trigger(void)
 /*--------------------------------------------------------------------------*/
 uint64_t DEV_SM_GetTimerMsec(void)
 {
+    /* Return milliseconds */
     return s_smTimeMsec;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update base priority for an IRQ supporting dynamic prioritization        */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_IrqPrioBaseSet(IRQn_Type irq, uint32_t basePrio)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Map IRQ to entry in dynamic priority table */
+    irq_prio_info_t *pInfo = IrqPrioMap(irq);
+
+    if (pInfo != NULL)
+    {
+        /* Range check requested base priority */
+        if (basePrio < (1U << __NVIC_PRIO_BITS))
+        {
+            /* Update current NVIC priority for this IRQ */
+            NVIC_SetPriority(irq, basePrio);
+
+            /* Update table entry for this IRQ */
+            pInfo->basePrio = basePrio;
+        }
+        else
+        {
+            status = SM_ERR_OUT_OF_RANGE;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get base priority for an IRQ supporting dynamic prioritization           */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_IrqPrioBaseGet(IRQn_Type irq, uint32_t *basePrio)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Map IRQ to entry in dynamic priority table */
+    irq_prio_info_t const *pInfo = IrqPrioMap(irq);
+
+    if (pInfo != NULL)
+    {
+        /* Get base priority from table entry */
+        *basePrio = pInfo->basePrio;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update counter for an IRQ supporting dynamic prioritization              */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_IrqPrioCntrSet(IRQn_Type irq, uint32_t irqCntr)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Map IRQ to entry in dynamic priority table */
+    irq_prio_info_t *pInfo = IrqPrioMap(irq);
+
+    if (pInfo != NULL)
+    {
+        /* Update table entry for this IRQ */
+        pInfo->irqCntr = irqCntr;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get counter for an IRQ supporting dynamic prioritization                 */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_IrqPrioCntrGet(IRQn_Type irq, uint32_t *irqCntr)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Map IRQ to entry in dynamic priority table */
+    irq_prio_info_t const *pInfo = IrqPrioMap(irq);
+
+    if (pInfo != NULL)
+    {
+        /* Get counter from table entry */
+        *irqCntr = pInfo->irqCntr;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update dynamic priority of active IRQ                                    */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_IrqPrioUpdate(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Get active IRQ from SCB */
+    uint32_t vectActive = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk)
+        >> SCB_ICSR_VECTACTIVE_Pos;
+
+    /* Convert to CMSIS IRQ value */
+    int32_t irq = (int32_t) vectActive;
+    irq -= 16;
+
+    /* Map IRQ to entry in dynamic priority table */
+    // coverity[misra_c_2012_rule_10_5_violation:FALSE]
+    irq_prio_info_t *pInfo = IrqPrioMap((IRQn_Type) irq);
+
+    if (pInfo != NULL)
+    {
+        /* Adjust dynamic IRQ priority */
+        IrqPrioUpdate(pInfo);
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*==========================================================================*/
@@ -518,6 +859,154 @@ static void FaultHandler(uint32_t faultId)
     {
         /* Finalize system reset flow */
         (void) DEV_SM_SystemRstComp(&resetRec);
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Map IRQ to dynamic priority table entry                                  */
+/*--------------------------------------------------------------------------*/
+static irq_prio_info_t *IrqPrioMap(IRQn_Type irq)
+{
+    uint32_t idx = 0U;
+    irq_prio_info_t *pInfo = NULL;
+
+#ifdef BOARD_NUM_IRQ_PRIO_IDX
+    /* Loop over board-defined IRQ table entries */
+    while ((pInfo == NULL) && (idx < BOARD_NUM_IRQ_PRIO_IDX))
+    {
+        if (s_brdIrqPrioInfo[idx].irqId == irq)
+        {
+            pInfo = &s_brdIrqPrioInfo[idx];
+        }
+
+        idx++;
+    }
+#endif
+
+    /* Loop over compulsory IRQ table entries */
+    idx = 0U;
+    while ((pInfo == NULL) && (idx < DEV_SM_NUM_IRQ_PRIO_IDX))
+    {
+        if (s_irqPrioInfo[idx].irqId == irq)
+        {
+            pInfo = &s_irqPrioInfo[idx];
+        }
+
+        idx++;
+    }
+
+    return pInfo;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Boost dynamic priority of IRQ                                            */
+/*--------------------------------------------------------------------------*/
+static void IrqPrioBoost(irq_prio_info_t const *pInfo, uint32_t relPrio)
+{
+    if (pInfo != NULL)
+    {
+        /* Check if dynamic priority is enabled for this IRQ */
+        if (pInfo->dynPrioEn)
+        {
+            /* Get current priorty */
+            IRQn_Type irqId = pInfo->irqId;
+            uint32_t irqPrio = NVIC_GetPriority(irqId);
+
+            /* Check if priority at same relative level */
+            if (irqPrio == relPrio)
+            {
+                /* raise active priority */
+                irqPrio--;
+                NVIC_SetPriority(irqId, irqPrio);
+            }
+        }
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Adjust dynamic IRQ priority by raising priority of non-active IRQs       */
+/*--------------------------------------------------------------------------*/
+static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
+    uint32_t relPrio)
+{
+    if (pInfo != NULL)
+    {
+        uint32_t idx;
+
+#ifdef BOARD_NUM_IRQ_PRIO_IDX
+        /* Loop over board-defined table entries */
+        idx = 0U;
+        while (idx < BOARD_NUM_IRQ_PRIO_IDX)
+        {
+            /* Get table entry */
+            irq_prio_info_t const *pInfoRel = &s_brdIrqPrioInfo[idx];
+
+            /* Check if table entry is active IRQ */
+            if (pInfo != pInfoRel)
+            {
+                /* Boost priority of non-active IRQ */
+                IrqPrioBoost(pInfoRel, relPrio);
+            }
+
+           idx++;
+        }
+#endif
+
+        /* Loop over compulsory table entries */
+        idx = 0U;
+        while(idx < DEV_SM_NUM_IRQ_PRIO_IDX)
+        {
+             /* Get table entry */
+             irq_prio_info_t const *pInfoRel = &s_irqPrioInfo[idx];
+
+             /* Check if table entry is active IRQ */
+             if (pInfo != pInfoRel)
+             {
+                 /* Boost priority of non-active IRQ */
+                 IrqPrioBoost(pInfoRel, relPrio);
+             }
+
+            idx++;
+        }
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update dynamic priority of IRQ using priority info table index           */
+/*--------------------------------------------------------------------------*/
+static void IrqPrioUpdate(irq_prio_info_t *pInfo)
+{
+    if (pInfo != NULL)
+    {
+        /* Update IRQ counter */
+        ++pInfo->irqCntr;
+
+        /* Get current priorty */
+        IRQn_Type irqId = pInfo->irqId;
+        uint32_t irqPrio = NVIC_GetPriority(irqId);
+
+        /* Check for first dynamic priority update for this IRQ */
+        if (!pInfo->dynPrioEn)
+        {
+            /* Indicate IRQ participating in dynamic priority */
+            pInfo->dynPrioEn = true;
+
+            /* Capture base priority */
+            pInfo->basePrio = irqPrio;
+        }
+
+        /* Check if IRQ at base priority */
+        if (irqPrio == pInfo->basePrio)
+        {
+            /* Lower active priority */
+            irqPrio++;
+            NVIC_SetPriority(irqId, irqPrio);
+        }
+        /* Else lower relative IRQ priority */
+        else
+        {
+            IrqPrioUpdateRelative(pInfo, irqPrio);
+        }
     }
 }
 

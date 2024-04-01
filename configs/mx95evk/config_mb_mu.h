@@ -65,6 +65,7 @@
 #define SM_MB_MU9_CONFIG \
     { \
         .mu = 9U, \
+        .priority = IRQ_PRIO_NOPREEMPT_HIGH, \
         .xportType[0] = SM_XPORT_SMT, \
         .xportChannel[0] = 0U, \
         .xportType[1] = SM_XPORT_SMT, \

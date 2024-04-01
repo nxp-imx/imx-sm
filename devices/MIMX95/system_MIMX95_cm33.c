@@ -54,6 +54,9 @@ void SystemInit(void)
     /* Enable unaligned access and divide by 0 faults */
     SCB->CCR |= (SCB_CCR_UNALIGN_TRP_Msk | SCB_CCR_DIV_0_TRP_Msk);
 
+    /* Configure priority grouping */
+    NVIC_SetPriorityGrouping(IRQ_PRIGROUP);
+
     /* GCC may utilize FPU registers if GP register pressure is high.  FPU must
      * be enabled before FPU instructions or FPU register usage.
      *

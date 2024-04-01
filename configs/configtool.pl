@@ -654,6 +654,11 @@ sub generate_mb
 	                {
 	                    print $out '        .sma = ' . $parm . 'U, \\' . "\n";
 	                }
+	                if ((my $parm = &param($mb, 'priority')) ne '!')
+	                {
+	                    print $out '        .priority = IRQ_PRIO_NOPREEMPT_'
+	                        . uc $parm . ', \\' . "\n";
+	                }
 	                $defLst[$i] = $mu;
 	            }
             }

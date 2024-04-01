@@ -1204,6 +1204,7 @@ static dev_sm_perf_desc_t const s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint clock root configuration for A55PER */
+// coverity[misra_c_2012_rule_8_9_violation:FALSE]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =

@@ -42,37 +42,6 @@
 #define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK
 #define BOARD_WDOG_IPG_DEBUG        BLK_CTRL_NS_AONMIX_IPG_DEBUG_CM33_WDOG2_MASK
 
-/* SM handlers configuration */
-#define BOARD_HANDLER_PRIO_PREEMPT_CRITICAL         0U    // Highest premptive
-#define BOARD_HANDLER_PRIO_PREEMPT_VERY_HIGH        1U
-#define BOARD_HANDLER_PRIO_PREEMPT_HIGH             2U
-#define BOARD_HANDLER_PRIO_PREEMPT_ABOVE_NORMAL     3U
-#define BOARD_HANDLER_PRIO_PREEMPT_NORMAL           4U
-#define BOARD_HANDLER_PRIO_PREEMPT_BELOW_NORMAL     5U
-#define BOARD_HANDLER_PRIO_PREEMPT_LOW              6U
-#define BOARD_HANDLER_PRIO_PREEMPT_VERY_LOW         7U    // Lowest premptive
-
-#define BOARD_HANDLER_PRIO_NOPREEMPT_CRITICAL       8U    // Highest non-premptive
-#define BOARD_HANDLER_PRIO_NOPREEMPT_VERY_HIGH      9U
-#define BOARD_HANDLER_PRIO_NOPREEMPT_HIGH           10U
-#define BOARD_HANDLER_PRIO_NOPREEMPT_ABOVE_NORMAL   11U
-#define BOARD_HANDLER_PRIO_NOPREEMPT_NORMAL         12U
-#define BOARD_HANDLER_PRIO_NOPREEMPT_BELOW_NORMAL   13U
-#define BOARD_HANDLER_PRIO_NOPREEMPT_LOW            14U
-#define BOARD_HANDLER_PRIO_NOPREEMPT_VERY_LOW       15U   // Lowest non-premptive
-
-/* Priority grouping (PRIGROUP) configured as follows:
- *      1-bit group priority field
- *      3-bit subgroup priority field
- *
- *      Note:  actual bits of priority fields are MSB of fields as defined
- *             by __NVIC_PRIO_BITS
- */
-#define BOARD_HANDLER_PRIGROUP                      6U
-
-/* SWI configuration */
-#define BOARD_SWI_PRIO              BOARD_HANDLER_PRIO_NOPREEMPT_NORMAL
-
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -314,26 +283,22 @@ void BOARD_InitDebugConsole(void)
 /*--------------------------------------------------------------------------*/
 void BOARD_InitHandlers(void)
 {
-    /* Configure priority grouping */
-    NVIC_SetPriorityGrouping(BOARD_HANDLER_PRIGROUP);
-
     /* Configure default priority of exceptions and IRQs */
     for (int32_t irq = ((int32_t) SVCall_IRQn); irq < ((int32_t)
         NUMBER_OF_INT_VECTORS); irq++)
     {
         // coverity[misra_c_2012_rule_10_5_violation:FALSE]
-        NVIC_SetPriority((IRQn_Type) irq,
-            BOARD_HANDLER_PRIO_NOPREEMPT_NORMAL);
+        NVIC_SetPriority((IRQn_Type) irq, IRQ_PRIO_NOPREEMPT_NORMAL);
     }
 
     /* Configure SWI handler */
-    NVIC_SetPriority(BOARD_SWI_IRQn, BOARD_SWI_PRIO);
     NVIC_EnableIRQ(BOARD_SWI_IRQn);
 
     /* Enable BBNSM handler */
     NVIC_EnableIRQ(BBNSM_IRQn);
 
     /* Enable GPC SM handler */
+    NVIC_SetPriority(GPC_SM_REQ_IRQn, IRQ_PRIO_NOPREEMPT_VERY_HIGH);
     NVIC_EnableIRQ(GPC_SM_REQ_IRQn);
 
     /* Enable ELE Group IRQ handlers */
@@ -342,6 +307,7 @@ void BOARD_InitHandlers(void)
     NVIC_EnableIRQ(ELE_Group3_IRQn);
 
     /* Enable FCCU handler */
+    NVIC_SetPriority(FCCU_INT0_IRQn, IRQ_PRIO_NOPREEMPT_CRITICAL);
     NVIC_EnableIRQ(FCCU_INT0_IRQn);
 
     /* Enable GPIO1 handler */
@@ -375,7 +341,7 @@ void BOARD_InitTimers(void)
     s_wdogConfig.timeoutValue = BOARD_WDOG_TIMEOUT;
     s_wdogConfig.enableInterrupt = true;
     WDOG32_Init(BOARD_WDOG_BASE_PTR, &s_wdogConfig);
-    NVIC_SetPriority(BOARD_WDOG_IRQn, BOARD_HANDLER_PRIO_PREEMPT_CRITICAL);
+    NVIC_SetPriority(BOARD_WDOG_IRQn, IRQ_PRIO_PREEMPT_CRITICAL);
 
     /* Configure to just non-FCCU SM watchdogs */
     BLK_CTRL_S_AONMIX->WDOG_ANY_MASK = BOARD_WDOG_ANY_INIT;

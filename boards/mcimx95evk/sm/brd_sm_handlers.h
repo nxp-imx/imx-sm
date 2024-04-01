@@ -61,6 +61,12 @@
 /*! Initial PCAL6408A interrupt mask */
 #define PCAL6408A_INITIAL_MASK  0xF7U
 
+/*! Number of board IRQs participating dynamic prioritization */
+#define BOARD_NUM_IRQ_PRIO_IDX                 1U
+
+/*! Dynamic IRQ priority table index for GPIO1 */
+#define BOARD_IRQ_PRIO_IDX_GPIO1_0             0U
+
 /* Types */
 
 /* External variables */
@@ -76,6 +82,9 @@ extern PF53_Type pf5301Dev;
 
 /*! Handle to acces PF5302 */
 extern PF53_Type pf5302Dev;
+
+/*! Array of dynamic priority info for board IRQs */
+extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
 
 /* Functions */
 

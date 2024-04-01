@@ -697,1366 +697,6 @@ SysTick_Handler:
     bx    r0
     .size SysTick_Handler, . - SysTick_Handler
 
-    .align 1
-    .thumb_func
-    .weak CAN1_IRQHandler
-    .type CAN1_IRQHandler, %function
-CAN1_IRQHandler:
-    ldr   r0,=CAN1_DriverIRQHandler
-    bx    r0
-    .size CAN1_IRQHandler, . - CAN1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN1_ERROR_IRQHandler
-    .type CAN1_ERROR_IRQHandler, %function
-CAN1_ERROR_IRQHandler:
-    ldr   r0,=CAN1_ERROR_DriverIRQHandler
-    bx    r0
-    .size CAN1_ERROR_IRQHandler, . - CAN1_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak I3C1_IRQHandler
-    .type I3C1_IRQHandler, %function
-I3C1_IRQHandler:
-    ldr   r0,=I3C1_DriverIRQHandler
-    bx    r0
-    .size I3C1_IRQHandler, . - I3C1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C1_IRQHandler
-    .type LPI2C1_IRQHandler, %function
-LPI2C1_IRQHandler:
-    ldr   r0,=LPI2C1_DriverIRQHandler
-    bx    r0
-    .size LPI2C1_IRQHandler, . - LPI2C1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C2_IRQHandler
-    .type LPI2C2_IRQHandler, %function
-LPI2C2_IRQHandler:
-    ldr   r0,=LPI2C2_DriverIRQHandler
-    bx    r0
-    .size LPI2C2_IRQHandler, . - LPI2C2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI1_IRQHandler
-    .type LPSPI1_IRQHandler, %function
-LPSPI1_IRQHandler:
-    ldr   r0,=LPSPI1_DriverIRQHandler
-    bx    r0
-    .size LPSPI1_IRQHandler, . - LPSPI1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI2_IRQHandler
-    .type LPSPI2_IRQHandler, %function
-LPSPI2_IRQHandler:
-    ldr   r0,=LPSPI2_DriverIRQHandler
-    bx    r0
-    .size LPSPI2_IRQHandler, . - LPSPI2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART1_IRQHandler
-    .type LPUART1_IRQHandler, %function
-LPUART1_IRQHandler:
-    ldr   r0,=LPUART1_DriverIRQHandler
-    bx    r0
-    .size LPUART1_IRQHandler, . - LPUART1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART2_IRQHandler
-    .type LPUART2_IRQHandler, %function
-LPUART2_IRQHandler:
-    ldr   r0,=LPUART2_DriverIRQHandler
-    bx    r0
-    .size LPUART2_IRQHandler, . - LPUART2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak SAI1_IRQHandler
-    .type SAI1_IRQHandler, %function
-SAI1_IRQHandler:
-    ldr   r0,=SAI1_DriverIRQHandler
-    bx    r0
-    .size SAI1_IRQHandler, . - SAI1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN2_IRQHandler
-    .type CAN2_IRQHandler, %function
-CAN2_IRQHandler:
-    ldr   r0,=CAN2_DriverIRQHandler
-    bx    r0
-    .size CAN2_IRQHandler, . - CAN2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN2_ERROR_IRQHandler
-    .type CAN2_ERROR_IRQHandler, %function
-CAN2_ERROR_IRQHandler:
-    ldr   r0,=CAN2_ERROR_DriverIRQHandler
-    bx    r0
-    .size CAN2_ERROR_IRQHandler, . - CAN2_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN3_IRQHandler
-    .type CAN3_IRQHandler, %function
-CAN3_IRQHandler:
-    ldr   r0,=CAN3_DriverIRQHandler
-    bx    r0
-    .size CAN3_IRQHandler, . - CAN3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN3_ERROR_IRQHandler
-    .type CAN3_ERROR_IRQHandler, %function
-CAN3_ERROR_IRQHandler:
-    ldr   r0,=CAN3_ERROR_DriverIRQHandler
-    bx    r0
-    .size CAN3_ERROR_IRQHandler, . - CAN3_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN4_IRQHandler
-    .type CAN4_IRQHandler, %function
-CAN4_IRQHandler:
-    ldr   r0,=CAN4_DriverIRQHandler
-    bx    r0
-    .size CAN4_IRQHandler, . - CAN4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN4_ERROR_IRQHandler
-    .type CAN4_ERROR_IRQHandler, %function
-CAN4_ERROR_IRQHandler:
-    ldr   r0,=CAN4_ERROR_DriverIRQHandler
-    bx    r0
-    .size CAN4_ERROR_IRQHandler, . - CAN4_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN5_IRQHandler
-    .type CAN5_IRQHandler, %function
-CAN5_IRQHandler:
-    ldr   r0,=CAN5_DriverIRQHandler
-    bx    r0
-    .size CAN5_IRQHandler, . - CAN5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak CAN5_ERROR_IRQHandler
-    .type CAN5_ERROR_IRQHandler, %function
-CAN5_ERROR_IRQHandler:
-    ldr   r0,=CAN5_ERROR_DriverIRQHandler
-    bx    r0
-    .size CAN5_ERROR_IRQHandler, . - CAN5_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak FLEXIO1_IRQHandler
-    .type FLEXIO1_IRQHandler, %function
-FLEXIO1_IRQHandler:
-    ldr   r0,=FLEXIO1_DriverIRQHandler
-    bx    r0
-    .size FLEXIO1_IRQHandler, . - FLEXIO1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak FLEXIO2_IRQHandler
-    .type FLEXIO2_IRQHandler, %function
-FLEXIO2_IRQHandler:
-    ldr   r0,=FLEXIO2_DriverIRQHandler
-    bx    r0
-    .size FLEXIO2_IRQHandler, . - FLEXIO2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak FlexSPI1_IRQHandler
-    .type FlexSPI1_IRQHandler, %function
-FlexSPI1_IRQHandler:
-    ldr   r0,=FlexSPI1_DriverIRQHandler
-    bx    r0
-    .size FlexSPI1_IRQHandler, . - FlexSPI1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak I3C2_IRQHandler
-    .type I3C2_IRQHandler, %function
-I3C2_IRQHandler:
-    ldr   r0,=I3C2_DriverIRQHandler
-    bx    r0
-    .size I3C2_IRQHandler, . - I3C2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C3_IRQHandler
-    .type LPI2C3_IRQHandler, %function
-LPI2C3_IRQHandler:
-    ldr   r0,=LPI2C3_DriverIRQHandler
-    bx    r0
-    .size LPI2C3_IRQHandler, . - LPI2C3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C4_IRQHandler
-    .type LPI2C4_IRQHandler, %function
-LPI2C4_IRQHandler:
-    ldr   r0,=LPI2C4_DriverIRQHandler
-    bx    r0
-    .size LPI2C4_IRQHandler, . - LPI2C4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI3_IRQHandler
-    .type LPSPI3_IRQHandler, %function
-LPSPI3_IRQHandler:
-    ldr   r0,=LPSPI3_DriverIRQHandler
-    bx    r0
-    .size LPSPI3_IRQHandler, . - LPSPI3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI4_IRQHandler
-    .type LPSPI4_IRQHandler, %function
-LPSPI4_IRQHandler:
-    ldr   r0,=LPSPI4_DriverIRQHandler
-    bx    r0
-    .size LPSPI4_IRQHandler, . - LPSPI4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART3_IRQHandler
-    .type LPUART3_IRQHandler, %function
-LPUART3_IRQHandler:
-    ldr   r0,=LPUART3_DriverIRQHandler
-    bx    r0
-    .size LPUART3_IRQHandler, . - LPUART3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART4_IRQHandler
-    .type LPUART4_IRQHandler, %function
-LPUART4_IRQHandler:
-    ldr   r0,=LPUART4_DriverIRQHandler
-    bx    r0
-    .size LPUART4_IRQHandler, . - LPUART4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART5_IRQHandler
-    .type LPUART5_IRQHandler, %function
-LPUART5_IRQHandler:
-    ldr   r0,=LPUART5_DriverIRQHandler
-    bx    r0
-    .size LPUART5_IRQHandler, . - LPUART5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART6_IRQHandler
-    .type LPUART6_IRQHandler, %function
-LPUART6_IRQHandler:
-    ldr   r0,=LPUART6_DriverIRQHandler
-    bx    r0
-    .size LPUART6_IRQHandler, . - LPUART6_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART7_IRQHandler
-    .type LPUART7_IRQHandler, %function
-LPUART7_IRQHandler:
-    ldr   r0,=LPUART7_DriverIRQHandler
-    bx    r0
-    .size LPUART7_IRQHandler, . - LPUART7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPUART8_IRQHandler
-    .type LPUART8_IRQHandler, %function
-LPUART8_IRQHandler:
-    ldr   r0,=LPUART8_DriverIRQHandler
-    bx    r0
-    .size LPUART8_IRQHandler, . - LPUART8_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak uSDHC1_IRQHandler
-    .type uSDHC1_IRQHandler, %function
-uSDHC1_IRQHandler:
-    ldr   r0,=uSDHC1_DriverIRQHandler
-    bx    r0
-    .size uSDHC1_IRQHandler, . - uSDHC1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak uSDHC2_IRQHandler
-    .type uSDHC2_IRQHandler, %function
-uSDHC2_IRQHandler:
-    ldr   r0,=uSDHC2_DriverIRQHandler
-    bx    r0
-    .size uSDHC2_IRQHandler, . - uSDHC2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_ERROR_IRQHandler
-    .type DMA3_ERROR_IRQHandler, %function
-DMA3_ERROR_IRQHandler:
-    ldr   r0,=DMA3_ERROR_DriverIRQHandler
-    bx    r0
-    .size DMA3_ERROR_IRQHandler, . - DMA3_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_0_IRQHandler
-    .type DMA3_0_IRQHandler, %function
-DMA3_0_IRQHandler:
-    ldr   r0,=DMA3_0_DriverIRQHandler
-    bx    r0
-    .size DMA3_0_IRQHandler, . - DMA3_0_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_1_IRQHandler
-    .type DMA3_1_IRQHandler, %function
-DMA3_1_IRQHandler:
-    ldr   r0,=DMA3_1_DriverIRQHandler
-    bx    r0
-    .size DMA3_1_IRQHandler, . - DMA3_1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_2_IRQHandler
-    .type DMA3_2_IRQHandler, %function
-DMA3_2_IRQHandler:
-    ldr   r0,=DMA3_2_DriverIRQHandler
-    bx    r0
-    .size DMA3_2_IRQHandler, . - DMA3_2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_3_IRQHandler
-    .type DMA3_3_IRQHandler, %function
-DMA3_3_IRQHandler:
-    ldr   r0,=DMA3_3_DriverIRQHandler
-    bx    r0
-    .size DMA3_3_IRQHandler, . - DMA3_3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_4_IRQHandler
-    .type DMA3_4_IRQHandler, %function
-DMA3_4_IRQHandler:
-    ldr   r0,=DMA3_4_DriverIRQHandler
-    bx    r0
-    .size DMA3_4_IRQHandler, . - DMA3_4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_5_IRQHandler
-    .type DMA3_5_IRQHandler, %function
-DMA3_5_IRQHandler:
-    ldr   r0,=DMA3_5_DriverIRQHandler
-    bx    r0
-    .size DMA3_5_IRQHandler, . - DMA3_5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_6_IRQHandler
-    .type DMA3_6_IRQHandler, %function
-DMA3_6_IRQHandler:
-    ldr   r0,=DMA3_6_DriverIRQHandler
-    bx    r0
-    .size DMA3_6_IRQHandler, . - DMA3_6_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_7_IRQHandler
-    .type DMA3_7_IRQHandler, %function
-DMA3_7_IRQHandler:
-    ldr   r0,=DMA3_7_DriverIRQHandler
-    bx    r0
-    .size DMA3_7_IRQHandler, . - DMA3_7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_8_IRQHandler
-    .type DMA3_8_IRQHandler, %function
-DMA3_8_IRQHandler:
-    ldr   r0,=DMA3_8_DriverIRQHandler
-    bx    r0
-    .size DMA3_8_IRQHandler, . - DMA3_8_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_9_IRQHandler
-    .type DMA3_9_IRQHandler, %function
-DMA3_9_IRQHandler:
-    ldr   r0,=DMA3_9_DriverIRQHandler
-    bx    r0
-    .size DMA3_9_IRQHandler, . - DMA3_9_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_10_IRQHandler
-    .type DMA3_10_IRQHandler, %function
-DMA3_10_IRQHandler:
-    ldr   r0,=DMA3_10_DriverIRQHandler
-    bx    r0
-    .size DMA3_10_IRQHandler, . - DMA3_10_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_11_IRQHandler
-    .type DMA3_11_IRQHandler, %function
-DMA3_11_IRQHandler:
-    ldr   r0,=DMA3_11_DriverIRQHandler
-    bx    r0
-    .size DMA3_11_IRQHandler, . - DMA3_11_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_12_IRQHandler
-    .type DMA3_12_IRQHandler, %function
-DMA3_12_IRQHandler:
-    ldr   r0,=DMA3_12_DriverIRQHandler
-    bx    r0
-    .size DMA3_12_IRQHandler, . - DMA3_12_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_13_IRQHandler
-    .type DMA3_13_IRQHandler, %function
-DMA3_13_IRQHandler:
-    ldr   r0,=DMA3_13_DriverIRQHandler
-    bx    r0
-    .size DMA3_13_IRQHandler, . - DMA3_13_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_14_IRQHandler
-    .type DMA3_14_IRQHandler, %function
-DMA3_14_IRQHandler:
-    ldr   r0,=DMA3_14_DriverIRQHandler
-    bx    r0
-    .size DMA3_14_IRQHandler, . - DMA3_14_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_15_IRQHandler
-    .type DMA3_15_IRQHandler, %function
-DMA3_15_IRQHandler:
-    ldr   r0,=DMA3_15_DriverIRQHandler
-    bx    r0
-    .size DMA3_15_IRQHandler, . - DMA3_15_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_16_IRQHandler
-    .type DMA3_16_IRQHandler, %function
-DMA3_16_IRQHandler:
-    ldr   r0,=DMA3_16_DriverIRQHandler
-    bx    r0
-    .size DMA3_16_IRQHandler, . - DMA3_16_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_17_IRQHandler
-    .type DMA3_17_IRQHandler, %function
-DMA3_17_IRQHandler:
-    ldr   r0,=DMA3_17_DriverIRQHandler
-    bx    r0
-    .size DMA3_17_IRQHandler, . - DMA3_17_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_18_IRQHandler
-    .type DMA3_18_IRQHandler, %function
-DMA3_18_IRQHandler:
-    ldr   r0,=DMA3_18_DriverIRQHandler
-    bx    r0
-    .size DMA3_18_IRQHandler, . - DMA3_18_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_19_IRQHandler
-    .type DMA3_19_IRQHandler, %function
-DMA3_19_IRQHandler:
-    ldr   r0,=DMA3_19_DriverIRQHandler
-    bx    r0
-    .size DMA3_19_IRQHandler, . - DMA3_19_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_20_IRQHandler
-    .type DMA3_20_IRQHandler, %function
-DMA3_20_IRQHandler:
-    ldr   r0,=DMA3_20_DriverIRQHandler
-    bx    r0
-    .size DMA3_20_IRQHandler, . - DMA3_20_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_21_IRQHandler
-    .type DMA3_21_IRQHandler, %function
-DMA3_21_IRQHandler:
-    ldr   r0,=DMA3_21_DriverIRQHandler
-    bx    r0
-    .size DMA3_21_IRQHandler, . - DMA3_21_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_22_IRQHandler
-    .type DMA3_22_IRQHandler, %function
-DMA3_22_IRQHandler:
-    ldr   r0,=DMA3_22_DriverIRQHandler
-    bx    r0
-    .size DMA3_22_IRQHandler, . - DMA3_22_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_23_IRQHandler
-    .type DMA3_23_IRQHandler, %function
-DMA3_23_IRQHandler:
-    ldr   r0,=DMA3_23_DriverIRQHandler
-    bx    r0
-    .size DMA3_23_IRQHandler, . - DMA3_23_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_24_IRQHandler
-    .type DMA3_24_IRQHandler, %function
-DMA3_24_IRQHandler:
-    ldr   r0,=DMA3_24_DriverIRQHandler
-    bx    r0
-    .size DMA3_24_IRQHandler, . - DMA3_24_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_25_IRQHandler
-    .type DMA3_25_IRQHandler, %function
-DMA3_25_IRQHandler:
-    ldr   r0,=DMA3_25_DriverIRQHandler
-    bx    r0
-    .size DMA3_25_IRQHandler, . - DMA3_25_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_26_IRQHandler
-    .type DMA3_26_IRQHandler, %function
-DMA3_26_IRQHandler:
-    ldr   r0,=DMA3_26_DriverIRQHandler
-    bx    r0
-    .size DMA3_26_IRQHandler, . - DMA3_26_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_27_IRQHandler
-    .type DMA3_27_IRQHandler, %function
-DMA3_27_IRQHandler:
-    ldr   r0,=DMA3_27_DriverIRQHandler
-    bx    r0
-    .size DMA3_27_IRQHandler, . - DMA3_27_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_28_IRQHandler
-    .type DMA3_28_IRQHandler, %function
-DMA3_28_IRQHandler:
-    ldr   r0,=DMA3_28_DriverIRQHandler
-    bx    r0
-    .size DMA3_28_IRQHandler, . - DMA3_28_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_29_IRQHandler
-    .type DMA3_29_IRQHandler, %function
-DMA3_29_IRQHandler:
-    ldr   r0,=DMA3_29_DriverIRQHandler
-    bx    r0
-    .size DMA3_29_IRQHandler, . - DMA3_29_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA3_30_IRQHandler
-    .type DMA3_30_IRQHandler, %function
-DMA3_30_IRQHandler:
-    ldr   r0,=DMA3_30_DriverIRQHandler
-    bx    r0
-    .size DMA3_30_IRQHandler, . - DMA3_30_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_ERROR_IRQHandler
-    .type DMA4_ERROR_IRQHandler, %function
-DMA4_ERROR_IRQHandler:
-    ldr   r0,=DMA4_ERROR_DriverIRQHandler
-    bx    r0
-    .size DMA4_ERROR_IRQHandler, . - DMA4_ERROR_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_0_1_IRQHandler
-    .type DMA4_0_1_IRQHandler, %function
-DMA4_0_1_IRQHandler:
-    ldr   r0,=DMA4_0_1_DriverIRQHandler
-    bx    r0
-    .size DMA4_0_1_IRQHandler, . - DMA4_0_1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_2_3_IRQHandler
-    .type DMA4_2_3_IRQHandler, %function
-DMA4_2_3_IRQHandler:
-    ldr   r0,=DMA4_2_3_DriverIRQHandler
-    bx    r0
-    .size DMA4_2_3_IRQHandler, . - DMA4_2_3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_4_5_IRQHandler
-    .type DMA4_4_5_IRQHandler, %function
-DMA4_4_5_IRQHandler:
-    ldr   r0,=DMA4_4_5_DriverIRQHandler
-    bx    r0
-    .size DMA4_4_5_IRQHandler, . - DMA4_4_5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_6_7_IRQHandler
-    .type DMA4_6_7_IRQHandler, %function
-DMA4_6_7_IRQHandler:
-    ldr   r0,=DMA4_6_7_DriverIRQHandler
-    bx    r0
-    .size DMA4_6_7_IRQHandler, . - DMA4_6_7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_8_9_IRQHandler
-    .type DMA4_8_9_IRQHandler, %function
-DMA4_8_9_IRQHandler:
-    ldr   r0,=DMA4_8_9_DriverIRQHandler
-    bx    r0
-    .size DMA4_8_9_IRQHandler, . - DMA4_8_9_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_10_11_IRQHandler
-    .type DMA4_10_11_IRQHandler, %function
-DMA4_10_11_IRQHandler:
-    ldr   r0,=DMA4_10_11_DriverIRQHandler
-    bx    r0
-    .size DMA4_10_11_IRQHandler, . - DMA4_10_11_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_12_13_IRQHandler
-    .type DMA4_12_13_IRQHandler, %function
-DMA4_12_13_IRQHandler:
-    ldr   r0,=DMA4_12_13_DriverIRQHandler
-    bx    r0
-    .size DMA4_12_13_IRQHandler, . - DMA4_12_13_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_14_15_IRQHandler
-    .type DMA4_14_15_IRQHandler, %function
-DMA4_14_15_IRQHandler:
-    ldr   r0,=DMA4_14_15_DriverIRQHandler
-    bx    r0
-    .size DMA4_14_15_IRQHandler, . - DMA4_14_15_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_16_17_IRQHandler
-    .type DMA4_16_17_IRQHandler, %function
-DMA4_16_17_IRQHandler:
-    ldr   r0,=DMA4_16_17_DriverIRQHandler
-    bx    r0
-    .size DMA4_16_17_IRQHandler, . - DMA4_16_17_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_18_19_IRQHandler
-    .type DMA4_18_19_IRQHandler, %function
-DMA4_18_19_IRQHandler:
-    ldr   r0,=DMA4_18_19_DriverIRQHandler
-    bx    r0
-    .size DMA4_18_19_IRQHandler, . - DMA4_18_19_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_20_21_IRQHandler
-    .type DMA4_20_21_IRQHandler, %function
-DMA4_20_21_IRQHandler:
-    ldr   r0,=DMA4_20_21_DriverIRQHandler
-    bx    r0
-    .size DMA4_20_21_IRQHandler, . - DMA4_20_21_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_22_23_IRQHandler
-    .type DMA4_22_23_IRQHandler, %function
-DMA4_22_23_IRQHandler:
-    ldr   r0,=DMA4_22_23_DriverIRQHandler
-    bx    r0
-    .size DMA4_22_23_IRQHandler, . - DMA4_22_23_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_24_25_IRQHandler
-    .type DMA4_24_25_IRQHandler, %function
-DMA4_24_25_IRQHandler:
-    ldr   r0,=DMA4_24_25_DriverIRQHandler
-    bx    r0
-    .size DMA4_24_25_IRQHandler, . - DMA4_24_25_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_26_27_IRQHandler
-    .type DMA4_26_27_IRQHandler, %function
-DMA4_26_27_IRQHandler:
-    ldr   r0,=DMA4_26_27_DriverIRQHandler
-    bx    r0
-    .size DMA4_26_27_IRQHandler, . - DMA4_26_27_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_28_29_IRQHandler
-    .type DMA4_28_29_IRQHandler, %function
-DMA4_28_29_IRQHandler:
-    ldr   r0,=DMA4_28_29_DriverIRQHandler
-    bx    r0
-    .size DMA4_28_29_IRQHandler, . - DMA4_28_29_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_30_31_IRQHandler
-    .type DMA4_30_31_IRQHandler, %function
-DMA4_30_31_IRQHandler:
-    ldr   r0,=DMA4_30_31_DriverIRQHandler
-    bx    r0
-    .size DMA4_30_31_IRQHandler, . - DMA4_30_31_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_32_33_IRQHandler
-    .type DMA4_32_33_IRQHandler, %function
-DMA4_32_33_IRQHandler:
-    ldr   r0,=DMA4_32_33_DriverIRQHandler
-    bx    r0
-    .size DMA4_32_33_IRQHandler, . - DMA4_32_33_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_34_35_IRQHandler
-    .type DMA4_34_35_IRQHandler, %function
-DMA4_34_35_IRQHandler:
-    ldr   r0,=DMA4_34_35_DriverIRQHandler
-    bx    r0
-    .size DMA4_34_35_IRQHandler, . - DMA4_34_35_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_36_37_IRQHandler
-    .type DMA4_36_37_IRQHandler, %function
-DMA4_36_37_IRQHandler:
-    ldr   r0,=DMA4_36_37_DriverIRQHandler
-    bx    r0
-    .size DMA4_36_37_IRQHandler, . - DMA4_36_37_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_38_39_IRQHandler
-    .type DMA4_38_39_IRQHandler, %function
-DMA4_38_39_IRQHandler:
-    ldr   r0,=DMA4_38_39_DriverIRQHandler
-    bx    r0
-    .size DMA4_38_39_IRQHandler, . - DMA4_38_39_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_40_41_IRQHandler
-    .type DMA4_40_41_IRQHandler, %function
-DMA4_40_41_IRQHandler:
-    ldr   r0,=DMA4_40_41_DriverIRQHandler
-    bx    r0
-    .size DMA4_40_41_IRQHandler, . - DMA4_40_41_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_42_43_IRQHandler
-    .type DMA4_42_43_IRQHandler, %function
-DMA4_42_43_IRQHandler:
-    ldr   r0,=DMA4_42_43_DriverIRQHandler
-    bx    r0
-    .size DMA4_42_43_IRQHandler, . - DMA4_42_43_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_44_45_IRQHandler
-    .type DMA4_44_45_IRQHandler, %function
-DMA4_44_45_IRQHandler:
-    ldr   r0,=DMA4_44_45_DriverIRQHandler
-    bx    r0
-    .size DMA4_44_45_IRQHandler, . - DMA4_44_45_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_46_47_IRQHandler
-    .type DMA4_46_47_IRQHandler, %function
-DMA4_46_47_IRQHandler:
-    ldr   r0,=DMA4_46_47_DriverIRQHandler
-    bx    r0
-    .size DMA4_46_47_IRQHandler, . - DMA4_46_47_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_48_49_IRQHandler
-    .type DMA4_48_49_IRQHandler, %function
-DMA4_48_49_IRQHandler:
-    ldr   r0,=DMA4_48_49_DriverIRQHandler
-    bx    r0
-    .size DMA4_48_49_IRQHandler, . - DMA4_48_49_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_50_51_IRQHandler
-    .type DMA4_50_51_IRQHandler, %function
-DMA4_50_51_IRQHandler:
-    ldr   r0,=DMA4_50_51_DriverIRQHandler
-    bx    r0
-    .size DMA4_50_51_IRQHandler, . - DMA4_50_51_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_52_53_IRQHandler
-    .type DMA4_52_53_IRQHandler, %function
-DMA4_52_53_IRQHandler:
-    ldr   r0,=DMA4_52_53_DriverIRQHandler
-    bx    r0
-    .size DMA4_52_53_IRQHandler, . - DMA4_52_53_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_54_55_IRQHandler
-    .type DMA4_54_55_IRQHandler, %function
-DMA4_54_55_IRQHandler:
-    ldr   r0,=DMA4_54_55_DriverIRQHandler
-    bx    r0
-    .size DMA4_54_55_IRQHandler, . - DMA4_54_55_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_56_57_IRQHandler
-    .type DMA4_56_57_IRQHandler, %function
-DMA4_56_57_IRQHandler:
-    ldr   r0,=DMA4_56_57_DriverIRQHandler
-    bx    r0
-    .size DMA4_56_57_IRQHandler, . - DMA4_56_57_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_58_59_IRQHandler
-    .type DMA4_58_59_IRQHandler, %function
-DMA4_58_59_IRQHandler:
-    ldr   r0,=DMA4_58_59_DriverIRQHandler
-    bx    r0
-    .size DMA4_58_59_IRQHandler, . - DMA4_58_59_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_60_61_IRQHandler
-    .type DMA4_60_61_IRQHandler, %function
-DMA4_60_61_IRQHandler:
-    ldr   r0,=DMA4_60_61_DriverIRQHandler
-    bx    r0
-    .size DMA4_60_61_IRQHandler, . - DMA4_60_61_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA4_62_63_IRQHandler
-    .type DMA4_62_63_IRQHandler, %function
-DMA4_62_63_IRQHandler:
-    ldr   r0,=DMA4_62_63_DriverIRQHandler
-    bx    r0
-    .size DMA4_62_63_IRQHandler, . - DMA4_62_63_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak SAI2_IRQHandler
-    .type SAI2_IRQHandler, %function
-SAI2_IRQHandler:
-    ldr   r0,=SAI2_DriverIRQHandler
-    bx    r0
-    .size SAI2_IRQHandler, . - SAI2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak SAI3_IRQHandler
-    .type SAI3_IRQHandler, %function
-SAI3_IRQHandler:
-    ldr   r0,=SAI3_DriverIRQHandler
-    bx    r0
-    .size SAI3_IRQHandler, . - SAI3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak SAI4_IRQHandler
-    .type SAI4_IRQHandler, %function
-SAI4_IRQHandler:
-    ldr   r0,=SAI4_DriverIRQHandler
-    bx    r0
-    .size SAI4_IRQHandler, . - SAI4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak SAI5_IRQHandler
-    .type SAI5_IRQHandler, %function
-SAI5_IRQHandler:
-    ldr   r0,=SAI5_DriverIRQHandler
-    bx    r0
-    .size SAI5_IRQHandler, . - SAI5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI5_IRQHandler
-    .type LPSPI5_IRQHandler, %function
-LPSPI5_IRQHandler:
-    ldr   r0,=LPSPI5_DriverIRQHandler
-    bx    r0
-    .size LPSPI5_IRQHandler, . - LPSPI5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI6_IRQHandler
-    .type LPSPI6_IRQHandler, %function
-LPSPI6_IRQHandler:
-    ldr   r0,=LPSPI6_DriverIRQHandler
-    bx    r0
-    .size LPSPI6_IRQHandler, . - LPSPI6_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI7_IRQHandler
-    .type LPSPI7_IRQHandler, %function
-LPSPI7_IRQHandler:
-    ldr   r0,=LPSPI7_DriverIRQHandler
-    bx    r0
-    .size LPSPI7_IRQHandler, . - LPSPI7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPSPI8_IRQHandler
-    .type LPSPI8_IRQHandler, %function
-LPSPI8_IRQHandler:
-    ldr   r0,=LPSPI8_DriverIRQHandler
-    bx    r0
-    .size LPSPI8_IRQHandler, . - LPSPI8_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C5_IRQHandler
-    .type LPI2C5_IRQHandler, %function
-LPI2C5_IRQHandler:
-    ldr   r0,=LPI2C5_DriverIRQHandler
-    bx    r0
-    .size LPI2C5_IRQHandler, . - LPI2C5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C6_IRQHandler
-    .type LPI2C6_IRQHandler, %function
-LPI2C6_IRQHandler:
-    ldr   r0,=LPI2C6_DriverIRQHandler
-    bx    r0
-    .size LPI2C6_IRQHandler, . - LPI2C6_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C7_IRQHandler
-    .type LPI2C7_IRQHandler, %function
-LPI2C7_IRQHandler:
-    ldr   r0,=LPI2C7_DriverIRQHandler
-    bx    r0
-    .size LPI2C7_IRQHandler, . - LPI2C7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak LPI2C8_IRQHandler
-    .type LPI2C8_IRQHandler, %function
-LPI2C8_IRQHandler:
-    ldr   r0,=LPI2C8_DriverIRQHandler
-    bx    r0
-    .size LPI2C8_IRQHandler, . - LPI2C8_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak PDM_EVENT_IRQHandler
-    .type PDM_EVENT_IRQHandler, %function
-PDM_EVENT_IRQHandler:
-    ldr   r0,=PDM_EVENT_DriverIRQHandler
-    bx    r0
-    .size PDM_EVENT_IRQHandler, . - PDM_EVENT_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak uSDHC3_IRQHandler
-    .type uSDHC3_IRQHandler, %function
-uSDHC3_IRQHandler:
-    ldr   r0,=uSDHC3_DriverIRQHandler
-    bx    r0
-    .size uSDHC3_IRQHandler, . - uSDHC3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DISP_IRQSTEER0_IRQHandler
-    .type DISP_IRQSTEER0_IRQHandler, %function
-DISP_IRQSTEER0_IRQHandler:
-    ldr   r0,=DISP_IRQSTEER0_DriverIRQHandler
-    bx    r0
-    .size DISP_IRQSTEER0_IRQHandler, . - DISP_IRQSTEER0_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DISP_IRQSTEER1_IRQHandler
-    .type DISP_IRQSTEER1_IRQHandler, %function
-DISP_IRQSTEER1_IRQHandler:
-    ldr   r0,=DISP_IRQSTEER1_DriverIRQHandler
-    bx    r0
-    .size DISP_IRQSTEER1_IRQHandler, . - DISP_IRQSTEER1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DISP_IRQSTEER2_IRQHandler
-    .type DISP_IRQSTEER2_IRQHandler, %function
-DISP_IRQSTEER2_IRQHandler:
-    ldr   r0,=DISP_IRQSTEER2_DriverIRQHandler
-    bx    r0
-    .size DISP_IRQSTEER2_IRQHandler, . - DISP_IRQSTEER2_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DISP_IRQSTEER3_IRQHandler
-    .type DISP_IRQSTEER3_IRQHandler, %function
-DISP_IRQSTEER3_IRQHandler:
-    ldr   r0,=DISP_IRQSTEER3_DriverIRQHandler
-    bx    r0
-    .size DISP_IRQSTEER3_IRQHandler, . - DISP_IRQSTEER3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DISP_IRQSTEER4_IRQHandler
-    .type DISP_IRQSTEER4_IRQHandler, %function
-DISP_IRQSTEER4_IRQHandler:
-    ldr   r0,=DISP_IRQSTEER4_DriverIRQHandler
-    bx    r0
-    .size DISP_IRQSTEER4_IRQHandler, . - DISP_IRQSTEER4_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DISP_IRQSTEER7_IRQHandler
-    .type DISP_IRQSTEER7_IRQHandler, %function
-DISP_IRQSTEER7_IRQHandler:
-    ldr   r0,=DISP_IRQSTEER7_DriverIRQHandler
-    bx    r0
-    .size DISP_IRQSTEER7_IRQHandler, . - DISP_IRQSTEER7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_0_1_IRQHandler
-    .type DMA5_0_1_IRQHandler, %function
-DMA5_0_1_IRQHandler:
-    ldr   r0,=DMA5_0_1_DriverIRQHandler
-    bx    r0
-    .size DMA5_0_1_IRQHandler, . - DMA5_0_1_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_2_3_IRQHandler
-    .type DMA5_2_3_IRQHandler, %function
-DMA5_2_3_IRQHandler:
-    ldr   r0,=DMA5_2_3_DriverIRQHandler
-    bx    r0
-    .size DMA5_2_3_IRQHandler, . - DMA5_2_3_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_4_5_IRQHandler
-    .type DMA5_4_5_IRQHandler, %function
-DMA5_4_5_IRQHandler:
-    ldr   r0,=DMA5_4_5_DriverIRQHandler
-    bx    r0
-    .size DMA5_4_5_IRQHandler, . - DMA5_4_5_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_6_7_IRQHandler
-    .type DMA5_6_7_IRQHandler, %function
-DMA5_6_7_IRQHandler:
-    ldr   r0,=DMA5_6_7_DriverIRQHandler
-    bx    r0
-    .size DMA5_6_7_IRQHandler, . - DMA5_6_7_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_8_9_IRQHandler
-    .type DMA5_8_9_IRQHandler, %function
-DMA5_8_9_IRQHandler:
-    ldr   r0,=DMA5_8_9_DriverIRQHandler
-    bx    r0
-    .size DMA5_8_9_IRQHandler, . - DMA5_8_9_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_10_11_IRQHandler
-    .type DMA5_10_11_IRQHandler, %function
-DMA5_10_11_IRQHandler:
-    ldr   r0,=DMA5_10_11_DriverIRQHandler
-    bx    r0
-    .size DMA5_10_11_IRQHandler, . - DMA5_10_11_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_12_13_IRQHandler
-    .type DMA5_12_13_IRQHandler, %function
-DMA5_12_13_IRQHandler:
-    ldr   r0,=DMA5_12_13_DriverIRQHandler
-    bx    r0
-    .size DMA5_12_13_IRQHandler, . - DMA5_12_13_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_14_15_IRQHandler
-    .type DMA5_14_15_IRQHandler, %function
-DMA5_14_15_IRQHandler:
-    ldr   r0,=DMA5_14_15_DriverIRQHandler
-    bx    r0
-    .size DMA5_14_15_IRQHandler, . - DMA5_14_15_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_16_17_IRQHandler
-    .type DMA5_16_17_IRQHandler, %function
-DMA5_16_17_IRQHandler:
-    ldr   r0,=DMA5_16_17_DriverIRQHandler
-    bx    r0
-    .size DMA5_16_17_IRQHandler, . - DMA5_16_17_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_18_19_IRQHandler
-    .type DMA5_18_19_IRQHandler, %function
-DMA5_18_19_IRQHandler:
-    ldr   r0,=DMA5_18_19_DriverIRQHandler
-    bx    r0
-    .size DMA5_18_19_IRQHandler, . - DMA5_18_19_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_20_21_IRQHandler
-    .type DMA5_20_21_IRQHandler, %function
-DMA5_20_21_IRQHandler:
-    ldr   r0,=DMA5_20_21_DriverIRQHandler
-    bx    r0
-    .size DMA5_20_21_IRQHandler, . - DMA5_20_21_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_22_23_IRQHandler
-    .type DMA5_22_23_IRQHandler, %function
-DMA5_22_23_IRQHandler:
-    ldr   r0,=DMA5_22_23_DriverIRQHandler
-    bx    r0
-    .size DMA5_22_23_IRQHandler, . - DMA5_22_23_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_24_25_IRQHandler
-    .type DMA5_24_25_IRQHandler, %function
-DMA5_24_25_IRQHandler:
-    ldr   r0,=DMA5_24_25_DriverIRQHandler
-    bx    r0
-    .size DMA5_24_25_IRQHandler, . - DMA5_24_25_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_26_27_IRQHandler
-    .type DMA5_26_27_IRQHandler, %function
-DMA5_26_27_IRQHandler:
-    ldr   r0,=DMA5_26_27_DriverIRQHandler
-    bx    r0
-    .size DMA5_26_27_IRQHandler, . - DMA5_26_27_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_28_29_IRQHandler
-    .type DMA5_28_29_IRQHandler, %function
-DMA5_28_29_IRQHandler:
-    ldr   r0,=DMA5_28_29_DriverIRQHandler
-    bx    r0
-    .size DMA5_28_29_IRQHandler, . - DMA5_28_29_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_30_31_IRQHandler
-    .type DMA5_30_31_IRQHandler, %function
-DMA5_30_31_IRQHandler:
-    ldr   r0,=DMA5_30_31_DriverIRQHandler
-    bx    r0
-    .size DMA5_30_31_IRQHandler, . - DMA5_30_31_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_32_33_IRQHandler
-    .type DMA5_32_33_IRQHandler, %function
-DMA5_32_33_IRQHandler:
-    ldr   r0,=DMA5_32_33_DriverIRQHandler
-    bx    r0
-    .size DMA5_32_33_IRQHandler, . - DMA5_32_33_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_34_35_IRQHandler
-    .type DMA5_34_35_IRQHandler, %function
-DMA5_34_35_IRQHandler:
-    ldr   r0,=DMA5_34_35_DriverIRQHandler
-    bx    r0
-    .size DMA5_34_35_IRQHandler, . - DMA5_34_35_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_36_37_IRQHandler
-    .type DMA5_36_37_IRQHandler, %function
-DMA5_36_37_IRQHandler:
-    ldr   r0,=DMA5_36_37_DriverIRQHandler
-    bx    r0
-    .size DMA5_36_37_IRQHandler, . - DMA5_36_37_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_38_39_IRQHandler
-    .type DMA5_38_39_IRQHandler, %function
-DMA5_38_39_IRQHandler:
-    ldr   r0,=DMA5_38_39_DriverIRQHandler
-    bx    r0
-    .size DMA5_38_39_IRQHandler, . - DMA5_38_39_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_40_41_IRQHandler
-    .type DMA5_40_41_IRQHandler, %function
-DMA5_40_41_IRQHandler:
-    ldr   r0,=DMA5_40_41_DriverIRQHandler
-    bx    r0
-    .size DMA5_40_41_IRQHandler, . - DMA5_40_41_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_42_43_IRQHandler
-    .type DMA5_42_43_IRQHandler, %function
-DMA5_42_43_IRQHandler:
-    ldr   r0,=DMA5_42_43_DriverIRQHandler
-    bx    r0
-    .size DMA5_42_43_IRQHandler, . - DMA5_42_43_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_44_45_IRQHandler
-    .type DMA5_44_45_IRQHandler, %function
-DMA5_44_45_IRQHandler:
-    ldr   r0,=DMA5_44_45_DriverIRQHandler
-    bx    r0
-    .size DMA5_44_45_IRQHandler, . - DMA5_44_45_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_46_47_IRQHandler
-    .type DMA5_46_47_IRQHandler, %function
-DMA5_46_47_IRQHandler:
-    ldr   r0,=DMA5_46_47_DriverIRQHandler
-    bx    r0
-    .size DMA5_46_47_IRQHandler, . - DMA5_46_47_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_48_49_IRQHandler
-    .type DMA5_48_49_IRQHandler, %function
-DMA5_48_49_IRQHandler:
-    ldr   r0,=DMA5_48_49_DriverIRQHandler
-    bx    r0
-    .size DMA5_48_49_IRQHandler, . - DMA5_48_49_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_50_51_IRQHandler
-    .type DMA5_50_51_IRQHandler, %function
-DMA5_50_51_IRQHandler:
-    ldr   r0,=DMA5_50_51_DriverIRQHandler
-    bx    r0
-    .size DMA5_50_51_IRQHandler, . - DMA5_50_51_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_52_53_IRQHandler
-    .type DMA5_52_53_IRQHandler, %function
-DMA5_52_53_IRQHandler:
-    ldr   r0,=DMA5_52_53_DriverIRQHandler
-    bx    r0
-    .size DMA5_52_53_IRQHandler, . - DMA5_52_53_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_54_55_IRQHandler
-    .type DMA5_54_55_IRQHandler, %function
-DMA5_54_55_IRQHandler:
-    ldr   r0,=DMA5_54_55_DriverIRQHandler
-    bx    r0
-    .size DMA5_54_55_IRQHandler, . - DMA5_54_55_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_56_57_IRQHandler
-    .type DMA5_56_57_IRQHandler, %function
-DMA5_56_57_IRQHandler:
-    ldr   r0,=DMA5_56_57_DriverIRQHandler
-    bx    r0
-    .size DMA5_56_57_IRQHandler, . - DMA5_56_57_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_58_59_IRQHandler
-    .type DMA5_58_59_IRQHandler, %function
-DMA5_58_59_IRQHandler:
-    ldr   r0,=DMA5_58_59_DriverIRQHandler
-    bx    r0
-    .size DMA5_58_59_IRQHandler, . - DMA5_58_59_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_60_61_IRQHandler
-    .type DMA5_60_61_IRQHandler, %function
-DMA5_60_61_IRQHandler:
-    ldr   r0,=DMA5_60_61_DriverIRQHandler
-    bx    r0
-    .size DMA5_60_61_IRQHandler, . - DMA5_60_61_IRQHandler
-
-    .align 1
-    .thumb_func
-    .weak DMA5_62_63_IRQHandler
-    .type DMA5_62_63_IRQHandler, %function
-DMA5_62_63_IRQHandler:
-    ldr   r0,=DMA5_62_63_DriverIRQHandler
-    bx    r0
-    .size DMA5_62_63_IRQHandler, . - DMA5_62_63_IRQHandler
-
-
 /*    Macro to define default handlers. Default handler
  *    will be weak symbol and just dead loops. They can be
  *    overwritten by other handlers */
@@ -2080,19 +720,19 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    Reserved21_IRQHandler
     def_irq_handler    Reserved22_IRQHandler
     def_irq_handler    Reserved23_IRQHandler
-    def_irq_handler    CAN1_DriverIRQHandler
-    def_irq_handler    CAN1_ERROR_DriverIRQHandler
-    def_irq_handler    Reserved26_IRQHandler
+    def_irq_handler    CAN1_IRQHandler
+    def_irq_handler    CAN1_ERROR_IRQHandler
+    def_irq_handler    GPIO1_0_IRQHandler
     def_irq_handler    Reserved27_IRQHandler
-    def_irq_handler    I3C1_DriverIRQHandler
-    def_irq_handler    LPI2C1_DriverIRQHandler
-    def_irq_handler    LPI2C2_DriverIRQHandler
+    def_irq_handler    I3C1_IRQHandler
+    def_irq_handler    LPI2C1_IRQHandler
+    def_irq_handler    LPI2C2_IRQHandler
     def_irq_handler    LPIT1_IRQHandler
-    def_irq_handler    LPSPI1_DriverIRQHandler
-    def_irq_handler    LPSPI2_DriverIRQHandler
+    def_irq_handler    LPSPI1_IRQHandler
+    def_irq_handler    LPSPI2_IRQHandler
     def_irq_handler    LPTMR1_IRQHandler
-    def_irq_handler    LPUART1_DriverIRQHandler
-    def_irq_handler    LPUART2_DriverIRQHandler
+    def_irq_handler    LPUART1_IRQHandler
+    def_irq_handler    LPUART2_IRQHandler
     def_irq_handler    Reserved37_IRQHandler
     def_irq_handler    Reserved38_IRQHandler
     def_irq_handler    Reserved39_IRQHandler
@@ -2106,21 +746,21 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    WDOG1_IRQHandler
     def_irq_handler    WDOG2_IRQHandler
     def_irq_handler    TRDC_MGR_A_IRQHandler
-    def_irq_handler    SAI1_DriverIRQHandler
+    def_irq_handler    SAI1_IRQHandler
     def_irq_handler    Reserved51_IRQHandler
     def_irq_handler    Reserved52_IRQHandler
     def_irq_handler    Reserved53_IRQHandler
-    def_irq_handler    CAN2_DriverIRQHandler
-    def_irq_handler    CAN2_ERROR_DriverIRQHandler
-    def_irq_handler    CAN3_DriverIRQHandler
-    def_irq_handler    CAN3_ERROR_DriverIRQHandler
-    def_irq_handler    CAN4_DriverIRQHandler
-    def_irq_handler    CAN4_ERROR_DriverIRQHandler
-    def_irq_handler    CAN5_DriverIRQHandler
-    def_irq_handler    CAN5_ERROR_DriverIRQHandler
-    def_irq_handler    FLEXIO1_DriverIRQHandler
-    def_irq_handler    FLEXIO2_DriverIRQHandler
-    def_irq_handler    FlexSPI1_DriverIRQHandler
+    def_irq_handler    CAN2_IRQHandler
+    def_irq_handler    CAN2_ERROR_IRQHandler
+    def_irq_handler    CAN3_IRQHandler
+    def_irq_handler    CAN3_ERROR_IRQHandler
+    def_irq_handler    CAN4_IRQHandler
+    def_irq_handler    CAN4_ERROR_IRQHandler
+    def_irq_handler    CAN5_IRQHandler
+    def_irq_handler    CAN5_ERROR_IRQHandler
+    def_irq_handler    FLEXIO1_IRQHandler
+    def_irq_handler    FLEXIO2_IRQHandler
+    def_irq_handler    FlexSPI1_IRQHandler
     def_irq_handler    Reserved65_IRQHandler
     def_irq_handler    Reserved66_IRQHandler
     def_irq_handler    Reserved67_IRQHandler
@@ -2129,21 +769,21 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    Reserved70_IRQHandler
     def_irq_handler    Reserved71_IRQHandler
     def_irq_handler    Reserved72_IRQHandler
-    def_irq_handler    I3C2_DriverIRQHandler
-    def_irq_handler    LPI2C3_DriverIRQHandler
-    def_irq_handler    LPI2C4_DriverIRQHandler
+    def_irq_handler    I3C2_IRQHandler
+    def_irq_handler    LPI2C3_IRQHandler
+    def_irq_handler    LPI2C4_IRQHandler
     def_irq_handler    LPIT2_IRQHandler
-    def_irq_handler    LPSPI3_DriverIRQHandler
-    def_irq_handler    LPSPI4_DriverIRQHandler
+    def_irq_handler    LPSPI3_IRQHandler
+    def_irq_handler    LPSPI4_IRQHandler
     def_irq_handler    LPTMR2_IRQHandler
-    def_irq_handler    LPUART3_DriverIRQHandler
-    def_irq_handler    LPUART4_DriverIRQHandler
-    def_irq_handler    LPUART5_DriverIRQHandler
-    def_irq_handler    LPUART6_DriverIRQHandler
-    def_irq_handler    LPUART7_DriverIRQHandler
-    def_irq_handler    LPUART8_DriverIRQHandler
+    def_irq_handler    LPUART3_IRQHandler
+    def_irq_handler    LPUART4_IRQHandler
+    def_irq_handler    LPUART5_IRQHandler
+    def_irq_handler    LPUART6_IRQHandler
+    def_irq_handler    LPUART7_IRQHandler
+    def_irq_handler    LPUART8_IRQHandler
     def_irq_handler    Reserved86_IRQHandler
-    def_irq_handler    Reserved87_IRQHandler
+    def_irq_handler    BBNSM_IRQHandler
     def_irq_handler    Reserved88_IRQHandler
     def_irq_handler    TPM3_IRQHandler
     def_irq_handler    TPM4_IRQHandler
@@ -2152,14 +792,14 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    WDOG3_IRQHandler
     def_irq_handler    WDOG4_IRQHandler
     def_irq_handler    WDOG5_IRQHandler
-    def_irq_handler    Reserved96_IRQHandler
-    def_irq_handler    Reserved97_IRQHandler
+    def_irq_handler    TMPSNS_ANA_1_IRQHandler
+    def_irq_handler    TMPSNS_ANA_2_IRQHandler
     def_irq_handler    Reserved98_IRQHandler
-    def_irq_handler    Reserved99_IRQHandler
-    def_irq_handler    Reserved100_IRQHandler
+    def_irq_handler    TMPSNS_CORTEXA_1_IRQHandler
+    def_irq_handler    TMPSNS_CORTEXA_2_IRQHandler
     def_irq_handler    Reserved101_IRQHandler
-    def_irq_handler    uSDHC1_DriverIRQHandler
-    def_irq_handler    uSDHC2_DriverIRQHandler
+    def_irq_handler    uSDHC1_IRQHandler
+    def_irq_handler    uSDHC2_IRQHandler
     def_irq_handler    Reserved104_IRQHandler
     def_irq_handler    Reserved105_IRQHandler
     def_irq_handler    Reserved106_IRQHandler
@@ -2167,71 +807,71 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    Reserved108_IRQHandler
     def_irq_handler    Reserved109_IRQHandler
     def_irq_handler    Reserved110_IRQHandler
-    def_irq_handler    DMA3_ERROR_DriverIRQHandler
-    def_irq_handler    DMA3_0_DriverIRQHandler
-    def_irq_handler    DMA3_1_DriverIRQHandler
-    def_irq_handler    DMA3_2_DriverIRQHandler
-    def_irq_handler    DMA3_3_DriverIRQHandler
-    def_irq_handler    DMA3_4_DriverIRQHandler
-    def_irq_handler    DMA3_5_DriverIRQHandler
-    def_irq_handler    DMA3_6_DriverIRQHandler
-    def_irq_handler    DMA3_7_DriverIRQHandler
-    def_irq_handler    DMA3_8_DriverIRQHandler
-    def_irq_handler    DMA3_9_DriverIRQHandler
-    def_irq_handler    DMA3_10_DriverIRQHandler
-    def_irq_handler    DMA3_11_DriverIRQHandler
-    def_irq_handler    DMA3_12_DriverIRQHandler
-    def_irq_handler    DMA3_13_DriverIRQHandler
-    def_irq_handler    DMA3_14_DriverIRQHandler
-    def_irq_handler    DMA3_15_DriverIRQHandler
-    def_irq_handler    DMA3_16_DriverIRQHandler
-    def_irq_handler    DMA3_17_DriverIRQHandler
-    def_irq_handler    DMA3_18_DriverIRQHandler
-    def_irq_handler    DMA3_19_DriverIRQHandler
-    def_irq_handler    DMA3_20_DriverIRQHandler
-    def_irq_handler    DMA3_21_DriverIRQHandler
-    def_irq_handler    DMA3_22_DriverIRQHandler
-    def_irq_handler    DMA3_23_DriverIRQHandler
-    def_irq_handler    DMA3_24_DriverIRQHandler
-    def_irq_handler    DMA3_25_DriverIRQHandler
-    def_irq_handler    DMA3_26_DriverIRQHandler
-    def_irq_handler    DMA3_27_DriverIRQHandler
-    def_irq_handler    DMA3_28_DriverIRQHandler
-    def_irq_handler    DMA3_29_DriverIRQHandler
-    def_irq_handler    DMA3_30_DriverIRQHandler
-    def_irq_handler    DMA4_ERROR_DriverIRQHandler
-    def_irq_handler    DMA4_0_1_DriverIRQHandler
-    def_irq_handler    DMA4_2_3_DriverIRQHandler
-    def_irq_handler    DMA4_4_5_DriverIRQHandler
-    def_irq_handler    DMA4_6_7_DriverIRQHandler
-    def_irq_handler    DMA4_8_9_DriverIRQHandler
-    def_irq_handler    DMA4_10_11_DriverIRQHandler
-    def_irq_handler    DMA4_12_13_DriverIRQHandler
-    def_irq_handler    DMA4_14_15_DriverIRQHandler
-    def_irq_handler    DMA4_16_17_DriverIRQHandler
-    def_irq_handler    DMA4_18_19_DriverIRQHandler
-    def_irq_handler    DMA4_20_21_DriverIRQHandler
-    def_irq_handler    DMA4_22_23_DriverIRQHandler
-    def_irq_handler    DMA4_24_25_DriverIRQHandler
-    def_irq_handler    DMA4_26_27_DriverIRQHandler
-    def_irq_handler    DMA4_28_29_DriverIRQHandler
-    def_irq_handler    DMA4_30_31_DriverIRQHandler
-    def_irq_handler    DMA4_32_33_DriverIRQHandler
-    def_irq_handler    DMA4_34_35_DriverIRQHandler
-    def_irq_handler    DMA4_36_37_DriverIRQHandler
-    def_irq_handler    DMA4_38_39_DriverIRQHandler
-    def_irq_handler    DMA4_40_41_DriverIRQHandler
-    def_irq_handler    DMA4_42_43_DriverIRQHandler
-    def_irq_handler    DMA4_44_45_DriverIRQHandler
-    def_irq_handler    DMA4_46_47_DriverIRQHandler
-    def_irq_handler    DMA4_48_49_DriverIRQHandler
-    def_irq_handler    DMA4_50_51_DriverIRQHandler
-    def_irq_handler    DMA4_52_53_DriverIRQHandler
-    def_irq_handler    DMA4_54_55_DriverIRQHandler
-    def_irq_handler    DMA4_56_57_DriverIRQHandler
-    def_irq_handler    DMA4_58_59_DriverIRQHandler
-    def_irq_handler    DMA4_60_61_DriverIRQHandler
-    def_irq_handler    DMA4_62_63_DriverIRQHandler
+    def_irq_handler    DMA3_ERROR_IRQHandler
+    def_irq_handler    DMA3_0_IRQHandler
+    def_irq_handler    DMA3_1_IRQHandler
+    def_irq_handler    DMA3_2_IRQHandler
+    def_irq_handler    DMA3_3_IRQHandler
+    def_irq_handler    DMA3_4_IRQHandler
+    def_irq_handler    DMA3_5_IRQHandler
+    def_irq_handler    DMA3_6_IRQHandler
+    def_irq_handler    DMA3_7_IRQHandler
+    def_irq_handler    DMA3_8_IRQHandler
+    def_irq_handler    DMA3_9_IRQHandler
+    def_irq_handler    DMA3_10_IRQHandler
+    def_irq_handler    DMA3_11_IRQHandler
+    def_irq_handler    DMA3_12_IRQHandler
+    def_irq_handler    DMA3_13_IRQHandler
+    def_irq_handler    DMA3_14_IRQHandler
+    def_irq_handler    DMA3_15_IRQHandler
+    def_irq_handler    DMA3_16_IRQHandler
+    def_irq_handler    DMA3_17_IRQHandler
+    def_irq_handler    DMA3_18_IRQHandler
+    def_irq_handler    DMA3_19_IRQHandler
+    def_irq_handler    DMA3_20_IRQHandler
+    def_irq_handler    DMA3_21_IRQHandler
+    def_irq_handler    DMA3_22_IRQHandler
+    def_irq_handler    DMA3_23_IRQHandler
+    def_irq_handler    DMA3_24_IRQHandler
+    def_irq_handler    DMA3_25_IRQHandler
+    def_irq_handler    DMA3_26_IRQHandler
+    def_irq_handler    DMA3_27_IRQHandler
+    def_irq_handler    DMA3_28_IRQHandler
+    def_irq_handler    DMA3_29_IRQHandler
+    def_irq_handler    DMA3_30_IRQHandler
+    def_irq_handler    DMA4_ERROR_IRQHandler
+    def_irq_handler    DMA4_0_1_IRQHandler
+    def_irq_handler    DMA4_2_3_IRQHandler
+    def_irq_handler    DMA4_4_5_IRQHandler
+    def_irq_handler    DMA4_6_7_IRQHandler
+    def_irq_handler    DMA4_8_9_IRQHandler
+    def_irq_handler    DMA4_10_11_IRQHandler
+    def_irq_handler    DMA4_12_13_IRQHandler
+    def_irq_handler    DMA4_14_15_IRQHandler
+    def_irq_handler    DMA4_16_17_IRQHandler
+    def_irq_handler    DMA4_18_19_IRQHandler
+    def_irq_handler    DMA4_20_21_IRQHandler
+    def_irq_handler    DMA4_22_23_IRQHandler
+    def_irq_handler    DMA4_24_25_IRQHandler
+    def_irq_handler    DMA4_26_27_IRQHandler
+    def_irq_handler    DMA4_28_29_IRQHandler
+    def_irq_handler    DMA4_30_31_IRQHandler
+    def_irq_handler    DMA4_32_33_IRQHandler
+    def_irq_handler    DMA4_34_35_IRQHandler
+    def_irq_handler    DMA4_36_37_IRQHandler
+    def_irq_handler    DMA4_38_39_IRQHandler
+    def_irq_handler    DMA4_40_41_IRQHandler
+    def_irq_handler    DMA4_42_43_IRQHandler
+    def_irq_handler    DMA4_44_45_IRQHandler
+    def_irq_handler    DMA4_46_47_IRQHandler
+    def_irq_handler    DMA4_48_49_IRQHandler
+    def_irq_handler    DMA4_50_51_IRQHandler
+    def_irq_handler    DMA4_52_53_IRQHandler
+    def_irq_handler    DMA4_54_55_IRQHandler
+    def_irq_handler    DMA4_56_57_IRQHandler
+    def_irq_handler    DMA4_58_59_IRQHandler
+    def_irq_handler    DMA4_60_61_IRQHandler
+    def_irq_handler    DMA4_62_63_IRQHandler
     def_irq_handler    ELE_Group1_IRQHandler
     def_irq_handler    ELE_Group2_IRQHandler
     def_irq_handler    ELE_Group3_IRQHandler
@@ -2241,29 +881,29 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    Reserved182_IRQHandler
     def_irq_handler    CM7_SYSRESETREQ_IRQHandler
     def_irq_handler    CM7_LOCKUP_IRQHandler
-    def_irq_handler    SAI2_DriverIRQHandler
-    def_irq_handler    SAI3_DriverIRQHandler
-    def_irq_handler    SAI4_DriverIRQHandler
-    def_irq_handler    SAI5_DriverIRQHandler
+    def_irq_handler    SAI2_IRQHandler
+    def_irq_handler    SAI3_IRQHandler
+    def_irq_handler    SAI4_IRQHandler
+    def_irq_handler    SAI5_IRQHandler
     def_irq_handler    Reserved189_IRQHandler
     def_irq_handler    Reserved190_IRQHandler
     def_irq_handler    USB1_IRQHandler
     def_irq_handler    USB2_IRQHandler
-    def_irq_handler    LPSPI5_DriverIRQHandler
-    def_irq_handler    LPSPI6_DriverIRQHandler
-    def_irq_handler    LPSPI7_DriverIRQHandler
-    def_irq_handler    LPSPI8_DriverIRQHandler
-    def_irq_handler    LPI2C5_DriverIRQHandler
-    def_irq_handler    LPI2C6_DriverIRQHandler
-    def_irq_handler    LPI2C7_DriverIRQHandler
-    def_irq_handler    LPI2C8_DriverIRQHandler
+    def_irq_handler    LPSPI5_IRQHandler
+    def_irq_handler    LPSPI6_IRQHandler
+    def_irq_handler    LPSPI7_IRQHandler
+    def_irq_handler    LPSPI8_IRQHandler
+    def_irq_handler    LPI2C5_IRQHandler
+    def_irq_handler    LPI2C6_IRQHandler
+    def_irq_handler    LPI2C7_IRQHandler
+    def_irq_handler    LPI2C8_IRQHandler
     def_irq_handler    PDM_HWVAD_ERROR_IRQHandler
     def_irq_handler    PDM_HWVAD_EVENT_IRQHandler
     def_irq_handler    PDM_ERROR_IRQHandler
-    def_irq_handler    PDM_EVENT_DriverIRQHandler
+    def_irq_handler    PDM_EVENT_IRQHandler
     def_irq_handler    Reserved205_IRQHandler
     def_irq_handler    Reserved206_IRQHandler
-    def_irq_handler    uSDHC3_DriverIRQHandler
+    def_irq_handler    uSDHC3_IRQHandler
     def_irq_handler    Reserved208_IRQHandler
     def_irq_handler    Reserved209_IRQHandler
     def_irq_handler    Reserved210_IRQHandler
@@ -2286,12 +926,12 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    FCCU_INT1_IRQHandler
     def_irq_handler    FCCU_INT2_IRQHandler
     def_irq_handler    Reserved229_IRQHandler
-    def_irq_handler    DISP_IRQSTEER0_DriverIRQHandler
-    def_irq_handler    DISP_IRQSTEER1_DriverIRQHandler
-    def_irq_handler    DISP_IRQSTEER2_DriverIRQHandler
-    def_irq_handler    DISP_IRQSTEER3_DriverIRQHandler
-    def_irq_handler    DISP_IRQSTEER4_DriverIRQHandler
-    def_irq_handler    DISP_IRQSTEER7_DriverIRQHandler
+    def_irq_handler    DISP_IRQSTEER0_IRQHandler
+    def_irq_handler    DISP_IRQSTEER1_IRQHandler
+    def_irq_handler    DISP_IRQSTEER2_IRQHandler
+    def_irq_handler    DISP_IRQSTEER3_IRQHandler
+    def_irq_handler    DISP_IRQSTEER4_IRQHandler
+    def_irq_handler    DISP_IRQSTEER7_IRQHandler
     def_irq_handler    Reserved236_IRQHandler
     def_irq_handler    Reserved237_IRQHandler
     def_irq_handler    Reserved238_IRQHandler
@@ -2328,38 +968,38 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    Reserved269_IRQHandler
     def_irq_handler    Reserved270_IRQHandler
     def_irq_handler    Reserved271_IRQHandler
-    def_irq_handler    DMA5_0_1_DriverIRQHandler
-    def_irq_handler    DMA5_2_3_DriverIRQHandler
-    def_irq_handler    DMA5_4_5_DriverIRQHandler
-    def_irq_handler    DMA5_6_7_DriverIRQHandler
-    def_irq_handler    DMA5_8_9_DriverIRQHandler
-    def_irq_handler    DMA5_10_11_DriverIRQHandler
-    def_irq_handler    DMA5_12_13_DriverIRQHandler
-    def_irq_handler    DMA5_14_15_DriverIRQHandler
-    def_irq_handler    DMA5_16_17_DriverIRQHandler
-    def_irq_handler    DMA5_18_19_DriverIRQHandler
-    def_irq_handler    DMA5_20_21_DriverIRQHandler
-    def_irq_handler    DMA5_22_23_DriverIRQHandler
-    def_irq_handler    DMA5_24_25_DriverIRQHandler
-    def_irq_handler    DMA5_26_27_DriverIRQHandler
-    def_irq_handler    DMA5_28_29_DriverIRQHandler
-    def_irq_handler    DMA5_30_31_DriverIRQHandler
-    def_irq_handler    DMA5_32_33_DriverIRQHandler
-    def_irq_handler    DMA5_34_35_DriverIRQHandler
-    def_irq_handler    DMA5_36_37_DriverIRQHandler
-    def_irq_handler    DMA5_38_39_DriverIRQHandler
-    def_irq_handler    DMA5_40_41_DriverIRQHandler
-    def_irq_handler    DMA5_42_43_DriverIRQHandler
-    def_irq_handler    DMA5_44_45_DriverIRQHandler
-    def_irq_handler    DMA5_46_47_DriverIRQHandler
-    def_irq_handler    DMA5_48_49_DriverIRQHandler
-    def_irq_handler    DMA5_50_51_DriverIRQHandler
-    def_irq_handler    DMA5_52_53_DriverIRQHandler
-    def_irq_handler    DMA5_54_55_DriverIRQHandler
-    def_irq_handler    DMA5_56_57_DriverIRQHandler
-    def_irq_handler    DMA5_58_59_DriverIRQHandler
-    def_irq_handler    DMA5_60_61_DriverIRQHandler
-    def_irq_handler    DMA5_62_63_DriverIRQHandler
+    def_irq_handler    DMA5_0_1_IRQHandler
+    def_irq_handler    DMA5_2_3_IRQHandler
+    def_irq_handler    DMA5_4_5_IRQHandler
+    def_irq_handler    DMA5_6_7_IRQHandler
+    def_irq_handler    DMA5_8_9_IRQHandler
+    def_irq_handler    DMA5_10_11_IRQHandler
+    def_irq_handler    DMA5_12_13_IRQHandler
+    def_irq_handler    DMA5_14_15_IRQHandler
+    def_irq_handler    DMA5_16_17_IRQHandler
+    def_irq_handler    DMA5_18_19_IRQHandler
+    def_irq_handler    DMA5_20_21_IRQHandler
+    def_irq_handler    DMA5_22_23_IRQHandler
+    def_irq_handler    DMA5_24_25_IRQHandler
+    def_irq_handler    DMA5_26_27_IRQHandler
+    def_irq_handler    DMA5_28_29_IRQHandler
+    def_irq_handler    DMA5_30_31_IRQHandler
+    def_irq_handler    DMA5_32_33_IRQHandler
+    def_irq_handler    DMA5_34_35_IRQHandler
+    def_irq_handler    DMA5_36_37_IRQHandler
+    def_irq_handler    DMA5_38_39_IRQHandler
+    def_irq_handler    DMA5_40_41_IRQHandler
+    def_irq_handler    DMA5_42_43_IRQHandler
+    def_irq_handler    DMA5_44_45_IRQHandler
+    def_irq_handler    DMA5_46_47_IRQHandler
+    def_irq_handler    DMA5_48_49_IRQHandler
+    def_irq_handler    DMA5_50_51_IRQHandler
+    def_irq_handler    DMA5_52_53_IRQHandler
+    def_irq_handler    DMA5_54_55_IRQHandler
+    def_irq_handler    DMA5_56_57_IRQHandler
+    def_irq_handler    DMA5_58_59_IRQHandler
+    def_irq_handler    DMA5_60_61_IRQHandler
+    def_irq_handler    DMA5_62_63_IRQHandler
     def_irq_handler    Reserved304_IRQHandler
     def_irq_handler    Reserved305_IRQHandler
     def_irq_handler    Reserved306_IRQHandler
