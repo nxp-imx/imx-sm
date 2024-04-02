@@ -88,9 +88,8 @@ typedef struct {
   __IO uint32_t RCR;                               /**< Receive Control Register, offset: 0x128 */
   __I  uint32_t RSR;                               /**< Receive Status Register, offset: 0x12C */
        uint8_t RESERVED_3[208];
-  __O  uint32_t TR[4];                             /**< Transmit Register, array offset: 0x200, array step: 0x4 */
-       uint8_t RESERVED_4[112];
-  __I  uint32_t RR[4];                             /**< Receive Register, array offset: 0x280, array step: 0x4 */
+  __O  uint32_t TR[32];                             /**< Transmit Register, array offset: 0x200, array step: 0x4 */
+  __I  uint32_t RR[32];                             /**< Receive Register, array offset: 0x280, array step: 0x4 */
 } MU_Type;
 
 /* ----------------------------------------------------------------------------
@@ -785,7 +784,7 @@ typedef struct {
 /*! @} */
 
 /* The count of MU_TR */
-#define MU_TR_COUNT                              (4U)
+#define MU_TR_COUNT                              (8U)
 
 /*! @name RR - Receive Register */
 /*! @{ */
@@ -797,7 +796,7 @@ typedef struct {
 /*! @} */
 
 /* The count of MU_RR */
-#define MU_RR_COUNT                              (4U)
+#define MU_RR_COUNT                              (8U)
 
 
 /*!

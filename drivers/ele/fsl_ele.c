@@ -749,7 +749,7 @@ static void ELE_MuTx(ele_mu_msg_t *msg)
     size = ((uint32_t) msg->hdr.size) - 1UL;
     while (size > 0U)
     {
-        MU_SendMsg(s_eleMuBase, pos % 4UL, buf[pos]);
+        MU_SendMsg(s_eleMuBase, pos % 8UL, buf[pos]);
 
         pos++;
         size--;
@@ -786,7 +786,7 @@ static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
             while (size > 0U)
             {
                 buf[pos] = MU_ReceiveMsg(s_eleMuBase, ((uint32_t) pos)
-                    % 4UL);
+                    % 8UL);
 
                 pos++;
                 size--;
