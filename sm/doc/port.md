@@ -256,7 +256,7 @@ Reset Record Output  {#PORT_NXP_PRINT}
 
 Output of reset information is board port specific. For debug reasons, reset/shutdown event information can
 be useful to output to the SM debug UART. This is done for two cases, when the event occurs and when recorded
-events are displayed via the @ref MONITOR.
+events are displayed via the @ref MONITOR. This info can also be read via the SCMI_MiscResetReason() function.
 
 When the event occurs, a call is made to the board BRD_SM_FaultReactionGet() function to allow the reaction
 to be overloaded. This also allows for outputting a message about the event. For NXP ports, this displays
@@ -280,32 +280,35 @@ Exception numbers are basically the CM33 exception/interrupt index. Negative for
 fault indicating interrupts. For exceptions, the extended info array, *extInfo[]*, contains the stack pointer,
 fault status, and faulting address.
 
-Common reset reasons:
+Common reset reasons (for example ::DEV_SM_REASON_CM33_LOCKUP)
 
-| Reason       | errId  | Description                      |
-|--------------|--------|----------------------------------|
-| cm33_lockup  |        | CM33 lockup                      |
-| cm33_swreq   |        | CM33 SW request                  |
-| cm7_lockup   |        | CM7 lockup                       |
-| cm7_swreq    |        | CM7 SW request                   |
-| fccu         | fault  | FCCU                             |
-| jtag_sw      |        | JTAG SW                          |
-| ele          |        | ELE                              |
-| tempsense    |        | ANA sensor panic                 |
-| wdog1        |        | WDOG 1                           |
-| wdog2        |        | WDOG 2                           |
-| wdog3        |        | WDOG 3                           |
-| wdog4        |        | WDOG 4                           |
-| wdog5        |        | WDOG 5                           |
-| jtag         |        | JTAG                             |
-| cm33_exc     | ex/IRQ | CM33 exception                   |
-| bbm          |        | BBM boot/shutdown                |
-| sw           | agent  | SW requested                     |
-| sm_err       | status | SM error/exit                    |
-| por          |        | Power on reset                   |
+| Reason       | errId      | Description                      |
+|--------------|------------|----------------------------------|
+| cm33_lockup  |            | CM33 lockup                      |
+| cm33_swreq   |            | CM33 SW request                  |
+| cm7_lockup   |            | CM7 lockup                       |
+| cm7_swreq    |            | CM7 SW request                   |
+| fccu         | faultId    | FCCU                             |
+| jtag_sw      |            | JTAG SW                          |
+| ele          |            | ELE                              |
+| tempsense    |            | ANA sensor panic                 |
+| wdog1        |            | WDOG 1                           |
+| wdog2        |            | WDOG 2                           |
+| wdog3        |            | WDOG 3                           |
+| wdog4        |            | WDOG 4                           |
+| wdog5        |            | WDOG 5                           |
+| jtag         |            | JTAG                             |
+| cm33_exc     | ex/IRQ     | CM33 exception                   |
+| bbm          | BBM flags  | BBM boot/shutdown (button, RTC)  |
+| sw           | agent      | SW requested                     |
+| sm_err       | status     | SM error/exit                    |
+| fusa_sreco   | status     | FuSa error/exit                  |
+| por          |            | Power on reset                   |
 
 Note that once the FCCU is configured some of the above become FCCU
-faults (e.g. WDOG2).
+faults (e.g. WDOG2). BBM flags is a bit mask. An example flag is
+::DEV_SM_BBM_BOOT_OFF. Most other status is SM error codes such as
+::SM_ERR_NOT_SUPPORTED.
 
 Typical CM33 exceptions/interrupts (::DEV_SM_REASON_CM33_EXC):
 
@@ -330,7 +333,8 @@ For the ELE group exceptions:
       0x00200020 <- ELE_RST_REQ_STAT
       0x00000020 <- ELE_IRQ_REQ_STAT
 
-For the ::DEV_SM_REASON_FCCU reason, *errId* contains the FCCU faultId.
+For the ::DEV_SM_REASON_FCCU reason, *errId* contains an FCCU faultId
+such as ::DEV_SM_FAULT_TMP_ANA. Below is a list of some faults:
 
 | Fault         | errId | Description                                |
 |---------------|-------|--------------------------------------------|
