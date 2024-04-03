@@ -101,6 +101,15 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel);
 void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList);
 
 /*!
+ * Configure power domain hardware after power up ACK sent to GPC/SRC.
+ *
+ * @param[in]  domainId    power domain powered up
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId);
+
+/*!
  * Configure power domain hardware after power up.
  *
  * @param[in]  domainId    power domain powered up

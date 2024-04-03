@@ -438,6 +438,7 @@ void BOARD_WdogModeSet(uint32_t mode)
             IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__WDOG_ANY, 0U);
             break;
         case BOARD_WDOG_MODE_OFF:  /* off */
+            s_wdogConfig.enableWdog32 = false;
             WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
             break;
         case BOARD_WDOG_MODE_TRIGGER: /* trigger */
@@ -530,8 +531,17 @@ void BOARD_SystemSleepEnter(uint32_t sleepMode)
     /* Clear pending SysTick exception */
     SCB->ICSR = SCB_ICSR_PENDSTCLR_Msk;
 
-    /* Disable WDOG */
-    WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
+    if (s_wdogConfig.enableWdog32)
+    {
+        /* Disable WDOG */
+        WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
+
+        /* Waits until for new configuration to take effect. */
+        while (0U == ((BOARD_WDOG_BASE_PTR->CS) & WDOG_CS_RCS_MASK))
+        {
+            ;
+        }
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -539,8 +549,11 @@ void BOARD_SystemSleepEnter(uint32_t sleepMode)
 /*--------------------------------------------------------------------------*/
 void BOARD_SystemSleepExit(uint32_t sleepMode)
 {
-    /* Enable WDOG */
-    WDOG32_Init(BOARD_WDOG_BASE_PTR, &s_wdogConfig);
+    if (s_wdogConfig.enableWdog32)
+    {
+        /* Enable WDOG */
+        WDOG32_Init(BOARD_WDOG_BASE_PTR, &s_wdogConfig);
+    }
 
     /* Enable SysTick */
     uint32_t sysTickMask = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;

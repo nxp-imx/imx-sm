@@ -54,8 +54,10 @@
 static bool s_tempSensorA55Enabled = false;
 static fracpll_context_t s_pllContextHsio;
 static fracpll_context_t s_pllContextLdb;
+static fracpll_context_t s_pllContextDdr;
 static bool s_pllContextValidHsio = false;
 static bool s_pllContextValidLdb = false;
+static bool s_pllContextValidDdr = false;
 
 /* Local functions */
 
@@ -118,27 +120,6 @@ int32_t DEV_SM_A55pConfigLoad(void)
             s_tempSensorA55Enabled = true;
         }
     }
-
-    /* Query A55 CPU wake list */
-    uint32_t cpuWakeListA55;
-    if (DEV_SM_CpuWakeListGet(DEV_SM_CPU_A55P, &cpuWakeListA55)
-        == SM_ERR_SUCCESS)
-    {
-        /* Wake A55 CPUs recorded during sleep mode entry */
-        while (cpuWakeListA55 != 0U)
-        {
-            /* Convert mask into index */
-            uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
-
-            (void) CPU_SwWakeup(cpuIdx);
-
-            /* Clear wake list mask to mark done */
-            cpuWakeListA55 &= (~(1UL << (cpuIdx)));
-        }
-    }
-
-    /* Clear A55 wake list */
-    (void) DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, 0U);
 
     /* Process perpheral low-power interfaces */
     (void) CPU_PerLpiProcess(DEV_SM_CPU_A55P, CPU_SLEEP_MODE_RUN);
@@ -303,6 +284,18 @@ int32_t DEV_SM_DdrConfigLoad(void)
         status = SM_DDR_CONFIG_FUNC();
     }
 #endif
+
+    /* Restore PLL context */
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (s_pllContextValidDdr)
+        {
+            if (!FRACTPLL_SetContext(CLOCK_PLL_DRAM, &s_pllContextDdr))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+    }
 
     /* Return status */
     return status;
@@ -773,6 +766,27 @@ int32_t DEV_SM_A55pPowerDownPre(void)
 
     /* Move A55 perf level to a setpoint that does not require ARM_PLL */
     return DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR power domain power down configuration                                */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_DdrPowerDownPre(void)
+{
+    int32_t status;
+
+    if (FRACTPLL_GetContext(CLOCK_PLL_DRAM, &s_pllContextDdr))
+    {
+        s_pllContextValidDdr = true;
+        status = SM_ERR_SUCCESS;
+    }
+    else
+    {
+        s_pllContextValidDdr = false;
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

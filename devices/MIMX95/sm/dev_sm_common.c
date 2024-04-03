@@ -157,6 +157,7 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
         printf("PLL power status = 0x%08X\n", sysSleepRecord->pllPwrStat);
         printf("Sleep latency = %u usec\n", sysSleepRecord->sleepEntryUsec);
         printf("Wake latency = %u usec\n", sysSleepRecord->sleepExitUsec);
+        printf("Sleep count = %u\n", sysSleepRecord->sleepCnt);
     }
 #endif
 

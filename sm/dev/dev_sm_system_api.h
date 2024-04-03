@@ -91,6 +91,9 @@ typedef struct
     /*! System sleep exit latency */
     uint32_t sleepExitUsec;
 
+    /*! System sleep counter */
+    uint32_t sleepCnt;
+
     /*! IRQ/exception causing system wake */
     uint32_t wakeSource;
 
@@ -256,6 +259,24 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
  * Return errors (see @ref STATUS "SM error codes"):
  */
 int32_t DEV_SM_SystemIdle(void);
+
+/*!
+ * Place the system DRAM into retention.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_SystemDramRetentionEnter(void);
+
+/*!
+ * Exit the system DRAM from retention.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_SystemDramRetentionExit(void);
 
 #endif /* DEV_SM_SYSTEM_API_H */
 

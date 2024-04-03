@@ -41,6 +41,7 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
+#include "fsl_ddr.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 
@@ -457,6 +458,20 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Board-level sleep prepare */
             BOARD_SystemSleepPrepare(sleepMode);
 
+            /*! Increment system sleep counter */
+             g_syslog.sysSleepRecord.sleepCnt++;
+
+            /* Place DRAM into retention */
+            if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
+            {
+                if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
+                    == SM_ERR_SUCCESS)
+                {
+                    g_syslog.sysSleepRecord.mixPwrStat &=
+                        (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                }
+            }
+
             /* If NOCMIX powered down during SUSPEND, force power down */
             if (lpmSettingNoc <= sleepMode)
             {
@@ -643,15 +658,26 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* If WAKEUPMIX powered down during SUSPEND, force power up */
             if (lpmSettingWakeup <= sleepMode)
             {
-                (void) DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
+                status = DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
                     DEV_SM_POWER_STATE_ON);
             }
 
             /* If NOCMIX powered down during SUSPEND, force power up */
-            if (lpmSettingNoc <= sleepMode)
+            if ((status == SM_ERR_SUCCESS) && (lpmSettingNoc <= sleepMode))
             {
-                (void) DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
+                status = DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
                     DEV_SM_POWER_STATE_ON);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Power up DDRMIX */
+                status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_ON);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                status = DEV_SM_SystemDramRetentionExit();
             }
 
             /* Restore SM NVIC */
@@ -722,9 +748,7 @@ int32_t DEV_SM_SystemIdle(void)
     {
         if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
         {
-            printf("+Sleep\n");
             status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
-            printf("-Sleep\n");
         }
         /* Otherwise stay in RUN mode and enter WFI */
         else
@@ -737,6 +761,130 @@ int32_t DEV_SM_SystemIdle(void)
         }
     }
     __enable_irq();
+
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Place the system DRAM into retention                                     */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SystemDramRetentionEnter(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
+
+    /* Enter retention */
+    if (!DDR_EnterRetention(ddr))
+    {
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Assert DDRPHY Reset */
+        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_RESETN,
+            RST_LINE_CTRL_ASSERT))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Deassert BP_PWROK */
+        if (!SRC_MixSetResetLine(RST_LINE_DDRMIX_PHY,
+            RST_LINE_CTRL_DEASSERT))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Exit the system DRAM from retention                                      */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SystemDramRetentionExit(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
+
+    /**
+     * BIT(8) => src_ipc_ddrphy_presetn, PRESETN
+     * BIT(9) => src_ipc_ddrphy_reset_n, RESET_N
+     * for some reason BIT(8)=1 at this point, so PRESETN go LOW after power-up
+     * Ensure PRESETN go HIGH after power-up
+     * Ensure RESET_N go LOW  after power-up
+     */
+    if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN, RST_LINE_CTRL_DEASSERT))
+    {
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* sleep for a while, just random */
+        SystemTimeDelay(15U);
+
+        /* set PRESETN LOW after power-up */
+        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN,
+            RST_LINE_CTRL_ASSERT))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* The delay below must be at least 16 APBCLK
+         * APBCLK is @200MHz in waveform. Timer clock is @24MHz =>
+         * => (16 * 24.000.000 / 200.000.000) = 1.92us minimum
+         * => set x4 = 8us */
+        SystemTimeDelay(15U);
+
+        /* set PRESETN HIGH */
+        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN,
+            RST_LINE_CTRL_DEASSERT))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* The delay below shall be 0 according to PHY PUB, set 8 just in case */
+        SystemTimeDelay(15U);
+
+        /* set RESET_N HIGH */
+        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_RESETN,
+            RST_LINE_CTRL_DEASSERT))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* The duration for the delay below is not mentioned in PHY PUB, set 8 just in case */
+        SystemTimeDelay(15U);
+
+        status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL_VCO, true);
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL, true);
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Exit retention */
+        if (!DDR_ExitRetention(ddr))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
 
     return status;
 }

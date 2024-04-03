@@ -2793,7 +2793,47 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
 /*--------------------------------------------------------------------------*/
 static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[])
 {
-    return DEV_SM_SystemIdle();
+#ifndef SIMU
+    int32_t status;
+    bool consoleResume = false;
+    const board_uart_config_t *uartConfig = BOARD_GetDebugUart();
+
+    /* Block waiting on console to resume */
+    do
+    {
+        /* Grab sleep count to detect idle/sleep */
+        uint32_t prevSleepCnt = g_syslog.sysSleepRecord.sleepCnt;
+
+        /* Enter system idle */
+        status = DEV_SM_SystemIdle();
+
+        /* Check if system idle succeeded */
+        if ((status == SM_ERR_SUCCESS) && (uartConfig != NULL))
+        {
+            /* Check if if system entered sleep */
+            if (prevSleepCnt != g_syslog.sysSleepRecord.sleepCnt)
+            {
+                /* Check if system sleep wake source was consule UART */
+                if (g_syslog.sysSleepRecord.wakeSource ==
+                    (uartConfig->irq + 16U))
+                {
+                    consoleResume = true;
+                }
+            }
+            else
+            {
+                /* Check for console character */
+                consoleResume = MONITOR_CharPending();
+            }
+        }
+    } while ((status == SM_ERR_SUCCESS) && !consoleResume);
+
+    /* Return status */
+    return status;
+#else
+    /* Return status */
+    return SM_ERR_NOT_SUPPORTED;
+#endif
 }
 
 /*--------------------------------------------------------------------------*/

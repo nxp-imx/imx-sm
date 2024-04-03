@@ -273,6 +273,60 @@ int32_t DEV_SM_PowerUpPost(uint32_t domainId)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Power domain postamble for power-up ACK sent to GPC/SRC                  */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (domainId)
+    {
+        case DEV_SM_PD_A55P:
+            {
+                /* Wait for A55P to fully wake */
+                bool rc;
+                uint32_t fsmState;
+                do
+                {
+                    rc = CPU_FsmStateGet(CPU_IDX_A55P, &fsmState);
+                } while (rc && (fsmState >= CPU_FSM_STATE_IDLE_SLEEP));
+
+                /* Query A55 CPU wake list */
+                uint32_t cpuWakeListA55;
+                if (DEV_SM_CpuWakeListGet(DEV_SM_CPU_A55P, &cpuWakeListA55)
+                    == SM_ERR_SUCCESS)
+                {
+                    /* Wake A55 CPUs recorded during sleep mode entry */
+                    while (cpuWakeListA55 != 0U)
+                    {
+                        /* Convert mask into index */
+                        uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
+
+                        (void) CPU_SwWakeup(cpuIdx);
+
+                        /* Clear wake list mask to mark done */
+                        cpuWakeListA55 &= (~(1UL << (cpuIdx)));
+                    }
+                }
+
+                /* Clear A55 wake list */
+                (void) DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, 0U);
+            }
+            break;
+        default:
+            /* Only return error if domain out of range */
+            if (domainId >= DEV_SM_NUM_POWER)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+            break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Power domain preamble for power-down                                     */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_PowerDownPre(uint32_t domainId)
@@ -286,6 +340,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
         {
             case DEV_SM_PD_A55P:
                 status = DEV_SM_A55pPowerDownPre();
+                break;
+            case DEV_SM_PD_DDR:
+                status = DEV_SM_DdrPowerDownPre();
                 break;
             case DEV_SM_PD_DISPLAY:
                 status = DEV_SM_DisplayPowerDownPre();

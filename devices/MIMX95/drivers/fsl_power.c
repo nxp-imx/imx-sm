@@ -224,7 +224,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_DDR),
-        .retainMask = 0U,
+        .retainMask = (1U << PWR_MEM_SLICE_IDX_DDR),
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* DDR complex */
                      SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* DDR complex */

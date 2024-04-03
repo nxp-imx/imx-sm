@@ -438,15 +438,16 @@ void GPC_SM_REQ_IRQHandler(void)
     {
         (void) DEV_SM_PowerUpPost(lpHsMode.srcMixIdx);
         CPU_MixPowerUpNotify(lpHsMode.srcMixIdx);
+        PWR_LpHandshakeAck();
+        (void) DEV_SM_PowerUpAckComplete(lpHsMode.srcMixIdx);
     }
     /* Else powering down or asserting reset */
     else
     {
         (void) DEV_SM_PowerDownPre(lpHsMode.srcMixIdx);
         CPU_MixPowerDownNotify(lpHsMode.srcMixIdx);
+        PWR_LpHandshakeAck();
     }
-
-    PWR_LpHandshakeAck();
 }
 
 /*--------------------------------------------------------------------------*/
