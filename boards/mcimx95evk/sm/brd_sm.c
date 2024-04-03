@@ -114,6 +114,8 @@
 
 /* Local functions */
 
+static int32_t BRD_SM_InitComplete(uint32_t mSel);
+
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
 /*--------------------------------------------------------------------------*/
@@ -146,6 +148,12 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 
     if (status == SM_ERR_SUCCESS)
     {
+        /* Complete board init after device init */
+        status = BRD_SM_InitComplete(*mSel);
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
         /* Disallow ANA TMPSNS to generate internal warm reset */
         SRC_GEN->SRMASK |= BIT32(RST_REASON_TEMPSENSE);
 
@@ -153,6 +161,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
         BOARD_WdogModeSet(BOARD_WDOG_MODE_FCCU);
     }
 
+    /* TODO: Remove when A0 support dropped */
     /* Configure ISO controls based on feature fuses */
     uint32_t ipIsoMask = 0U;
 
@@ -171,6 +180,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
         ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK;
     }
 
+    /* Apply ISO mask */
     if (ipIsoMask != 0U)
     {
         SRC_XSPR_HSIOMIX_TOP->SLICE_SW_CTRL &= (~ipIsoMask);
@@ -604,5 +614,19 @@ int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt)
 {
     /* Get voltage level */
     return BRD_SM_VoltageLevelGet(domain, (int32_t*) microVolt);
+}
+
+/*==========================================================================*/
+
+/*--------------------------------------------------------------------------*/
+/* Complete init after DEV_SM init                                          */
+/*--------------------------------------------------------------------------*/
+static int32_t BRD_SM_InitComplete(uint32_t mSel)
+{
+    /* Safe to call DEV_SM functions to init hardware. For example, to
+       enabled a power domain, configure a clock SSC, clock rate, or pin.
+       Not safe to call LMM functions! */
+
+    return SM_ERR_SUCCESS;
 }
 

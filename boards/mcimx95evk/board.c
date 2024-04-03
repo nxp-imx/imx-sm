@@ -557,3 +557,4 @@ void BOARD_SystemSleepUnprepare(uint32_t sleepMode)
         NVIC_ClearPendingIRQ(s_uartConfig.irq);
     }
 }
+

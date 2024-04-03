@@ -118,6 +118,8 @@ static uint8_t s_voltMode[DEV_SM_NUM_VOLT] =
 
 /* Local functions */
 
+static int32_t BRD_SM_InitComplete(uint32_t mSel);
+
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
 /*--------------------------------------------------------------------------*/
@@ -150,6 +152,12 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 
     /* Init the device */
     status = DEV_SM_Init(BOARD_BOOT_LEVEL, BOARD_PERF_LEVEL);
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Complete board init after device init */
+        status = BRD_SM_InitComplete(*mSel);
+    }
 
     if (status == SM_ERR_SUCCESS)
     {
@@ -563,5 +571,19 @@ int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt)
 
     /* Return status */
     return status;
+}
+
+/*==========================================================================*/
+
+/*--------------------------------------------------------------------------*/
+/* Complete init after DEV_SM init                                          */
+/*--------------------------------------------------------------------------*/
+static int32_t BRD_SM_InitComplete(uint32_t mSel)
+{
+    /* Safe to call DEV_SM functions to init hardware. For example, to
+       enabled a power domain, configure a clock SSC, clock rate, or pin.
+       Not safe to call LMM functions! */
+
+    return SM_ERR_SUCCESS;
 }
 
