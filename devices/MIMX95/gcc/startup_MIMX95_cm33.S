@@ -250,9 +250,9 @@ __isr_vector:
     .long   MU7_B_IRQHandler                                /* WAKEUPMIX MU Ored of all (tx,rx,gp,core,murip) interrupt to MUB*/
     .long   MU8_B_IRQHandler                                /* WAKEUPMIX MU Ored of all (tx,rx,gp,core,murip) interrupt to MUB*/
     .long   Reserved225_IRQHandler                          /* WAKEUPMIX XSPI Responder*/
-    .long   FCCU0_IRQHandler                                /* AONMIX FCCU Interrupt Reaction 0*/
-    .long   FCCU1_IRQHandler                                /* AONMIX FCCU Interrupt Reaction 1*/
-    .long   FCCU2_IRQHandler                                /* AONMIX FCCU Interrupt Reaction 2*/
+    .long   FCCU_INT0_IRQHandler                            /* AONMIX FCCU Interrupt Reaction 0*/
+    .long   FCCU_INT1_IRQHandler                                /* AONMIX FCCU Interrupt Reaction 1*/
+    .long   FCCU_INT2_IRQHandler                                /* AONMIX FCCU Interrupt Reaction 2*/
     .long   Reserved229_IRQHandler                          /* AONMIX STCU Selftest end Interrupt*/
     .long   DISP_IRQSTEER0_IRQHandler                       /* DISPLAYMIX IRQSTEER 0*/
     .long   DISP_IRQSTEER1_IRQHandler                       /* DISPLAYMIX IRQSTEER 1*/
@@ -2282,9 +2282,9 @@ DMA5_62_63_IRQHandler:
     def_irq_handler    MU7_B_IRQHandler
     def_irq_handler    MU8_B_IRQHandler
     def_irq_handler    Reserved225_IRQHandler
-    def_irq_handler    FCCU0_IRQHandler
-    def_irq_handler    FCCU1_IRQHandler
-    def_irq_handler    FCCU2_IRQHandler
+    def_irq_handler    FCCU_INT0_IRQHandler
+    def_irq_handler    FCCU_INT1_IRQHandler
+    def_irq_handler    FCCU_INT2_IRQHandler
     def_irq_handler    Reserved229_IRQHandler
     def_irq_handler    DISP_IRQSTEER0_DriverIRQHandler
     def_irq_handler    DISP_IRQSTEER1_DriverIRQHandler

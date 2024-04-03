@@ -85,7 +85,7 @@ int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
     {
         /* Disable FCCU interrupts if not recovered - allows
            delayed recovery via clear with DEV_SM_FaultSet() */
-        NVIC_DisableIRQ(FCCU0_IRQn);
+        NVIC_DisableIRQ(FCCU_INT0_IRQn);
     }
 
     /* Return status */
@@ -185,7 +185,7 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
                 else
                 {
                     /* Re-enable FCCU interrupts */
-                    NVIC_EnableIRQ(FCCU0_IRQn);
+                    NVIC_EnableIRQ(FCCU_INT0_IRQn);
                 }
             }
         }

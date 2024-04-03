@@ -53,7 +53,7 @@ typedef struct
     string name;
     uint32_t rdcBase;
     char rdcLabel;
-    uint8_t rdcId;
+    uint8_t apiId;
     const uint32_t *config;
     uint32_t pd;
 } dev_sm_trdc_info_t;
@@ -95,8 +95,10 @@ int32_t DEV_SM_RdcInit(void)
     /* RDC Init */
     for (uint32_t rdcId = 0U; rdcId < DEV_SM_NUM_RDC; rdcId++)
     {
-        ELE_RdcRelease(s_trdcInfo[rdcId].rdcId);
+        /* Request RDC from ELE */
+        ELE_RdcRelease(s_trdcInfo[rdcId].apiId);
 
+        /* Check ELE error */
         if (g_eleStatus != SM_ERR_SUCCESS)
         {
             status = g_eleStatus;

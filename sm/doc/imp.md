@@ -340,7 +340,7 @@ purpose is generate reactions to the fault and inform the FCCU the fault has bee
 recovered). If the SM does not report the fault is resolved with the configured timeout, the
 FCCU is configured to reset the system.
 
-- **FCCU0_IRQHandler()** - shim from the vector table to the associated device handler
+- **FCCU_INT0_IRQHandler()** - shim from the vector table to the associated device handler
   - Just calls VFCCU_ALARM_ISR()
 - **VFCCU_ALARM_ISR()** - process the fault
   - calls the handler as defined in the eMcem_CVfccuInstanceCfgType struct passed to

@@ -419,7 +419,7 @@ void MU6_B_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 /* FCCU Interrupt Reaction 0 IRQ handler                                    */
 /*--------------------------------------------------------------------------*/
-void FCCU0_IRQHandler(void)
+void FCCU_INT0_IRQHandler(void)
 {
     VFCCU_ALARM_ISR();
 }

@@ -334,7 +334,7 @@ void BOARD_InitHandlers(void)
     NVIC_EnableIRQ(ELE_Group3_IRQn);
 
     /* Enable FCCU handler */
-    NVIC_EnableIRQ(FCCU0_IRQn);
+    NVIC_EnableIRQ(FCCU_INT0_IRQn);
 
     /* Enable GPIO1 handler */
     NVIC_EnableIRQ(GPIO1_0_IRQn);

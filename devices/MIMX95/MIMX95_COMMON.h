@@ -280,9 +280,9 @@ typedef enum IRQn
     MU7_B_IRQn           = 207, /**< WAKEUPMIX MU Ored of all (tx,rx,gp,core,murip) interrupt to MUB */
     MU8_B_IRQn           = 208, /**< WAKEUPMIX MU Ored of all (tx,rx,gp,core,murip) interrupt to MUB */
     Reserved225_IRQn     = 209, /**< WAKEUPMIX XSPI Responder */
-    FCCU0_IRQn           = 210, /**< AONMIX FCCU Interrupt Reaction 0 */
-    FCCU1_IRQn           = 211, /**< AONMIX FCCU Interrupt Reaction 1 */
-    FCCU2_IRQn           = 212, /**< AONMIX FCCU Interrupt Reaction 2 */
+    FCCU_INT0_IRQn       = 210, /**< AONMIX FCCU Interrupt Reaction 0 */
+    FCCU_INT1_IRQn       = 211, /**< AONMIX FCCU Interrupt Reaction 1 */
+    FCCU_INT2_IRQn       = 212, /**< AONMIX FCCU Interrupt Reaction 2 */
     Reserved229_IRQn     = 213, /**< AONMIX STCU Selftest end Interrupt */
     DISP_IRQSTEER0_IRQn  = 214, /**< DISPLAYMIX IRQSTEER 0 */
     DISP_IRQSTEER1_IRQn  = 215, /**< DISPLAYMIX IRQSTEER 1 */

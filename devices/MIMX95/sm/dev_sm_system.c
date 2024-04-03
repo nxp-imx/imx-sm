@@ -45,6 +45,7 @@
 #include "fsl_reset.h"
 
 /* Local defines */
+
 #define DEV_SM_NUM_SLEEP_ROOTS  3U
 
 /* Local types */
