@@ -3087,8 +3087,15 @@ sub get_trdc
     				error_line('too many regions ' . $elm, '');
     			}
 
-    			$m = sprintf("%s%02d %d, %d = %d", $elm, $rgd, $w0, $w1, $perm);
-    			$rgd++;
+				if ($perm != 0)
+				{
+    				$m = sprintf("%s%02d %d, %d = %d", $elm, $rgd, $w0, $w1, $perm);
+    				$rgd++;
+    			}
+    			else
+    			{
+    				$m = '';
+    			}
 
                 $old_elm = $elm;
                 $old_rgn = $rgn;
@@ -3124,7 +3131,7 @@ sub get_trdc
 				$curr_mrc = $mrc;
 			}
 
-            if ($w1 != 0)
+            if (($w1 != 0) && ($perm != 0))
             {
     			# Find match
     			my $match = -1;
@@ -3310,8 +3317,14 @@ sub convert_trdc
 			my $addr = 0x10040 + (0x2000 * $nmbc) + (0x1000 * $mrc)
 				+ (0x8 * $rgd) + (0x100 * $dom);
 
-			push @avp, sprintf("%s: 0x%08x = %s", uc $idx, $addr, $val1);
+			if ($val2 ne '0x00000000')
+			{
+				push @avp, sprintf("%s: 0x%08x = %s", uc $idx, $addr, $val1);
+			}
 			push @avp, sprintf("%s: 0x%08x = %s", uc $idx, $addr + 4, $val2);
+		}
+		elsif ($t eq '')
+		{
 		}
 		else
 		{
