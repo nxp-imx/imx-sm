@@ -115,6 +115,7 @@ and some of the optional messages are supported.
 | Lmm | 0x80 | [LMM_SUSPEND](@ref SCMI_PROTO_LMM_LMM_SUSPEND) | 0x8 | PRIV |
 | Lmm | 0x80 | [LMM_NOTIFY](@ref SCMI_PROTO_LMM_LMM_NOTIFY) | 0x9 | NOTIFY |
 | Lmm | 0x80 | [LMM_RESET_REASON](@ref SCMI_PROTO_LMM_LMM_RESET_REASON) | 0xA | GET |
+| Lmm | 0x80 | [LMM_POWER_ON](@ref SCMI_PROTO_LMM_LMM_POWER_ON) | 0xB | PRIV |
 | Lmm | 0x80 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_LMM_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Lmm\n(notification) | 0x80 | [LMM_EVENT](@ref SCMI_PROTO_LMM_LMM_EVENT) | 0x0 |  |
 | Bbm | 0x81 | [PROTOCOL_VERSION](@ref SCMI_PROTO_BBM_PROTOCOL_VERSION) | 0x0 |  |
@@ -175,6 +176,7 @@ and some of the optional messages are supported.
 | Misc | 0x84 | [MISC_RESET_REASON](@ref SCMI_PROTO_MISC_MISC_RESET_REASON) | 0xA |  |
 | Misc | 0x84 | [MISC_SI_INFO](@ref SCMI_PROTO_MISC_MISC_SI_INFO) | 0xB |  |
 | Misc | 0x84 | [MISC_CFG_INFO](@ref SCMI_PROTO_MISC_MISC_CFG_INFO) | 0xC |  |
+| Misc | 0x84 | [MISC_SYSLOG](@ref SCMI_PROTO_MISC_MISC_SYSLOG) | 0xD |  |
 | Misc | 0x84 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Misc\n(notification) | 0x84 | [MISC_CONTROL_EVENT](@ref SCMI_PROTO_MISC_MISC_CONTROL_EVENT) | 0x0 |  |
 
@@ -2145,6 +2147,24 @@ See SCMI_LmmResetReason() for details.
     | uint32         | ext_info[N]                                                  |
     ---------------------------------------------------------------------------------
 
+## Lmm: LMM_POWER_ON ## {#SCMI_PROTO_LMM_LMM_POWER_ON}
+
+See SCMI_LmmPowerOn() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x80, msg=0xB                          |
+    ---------------------------------------------------------------------------------
+    | uint32         | lm_id                                                        |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x80, msg=0xB                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
 ## Lmm: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_LMM_NEGOTIATE_PROTOCOL_VERSION}
 
 See SCMI_LmmNegotiateProtocolVersion() for details.
@@ -3359,6 +3379,30 @@ See SCMI_MiscCfgInfo() for details.
     | uint32         | mSel                                                         |
     ---------------------------------------------------------------------------------
     | uint8          | cfg_name[16]                                                 |
+    ---------------------------------------------------------------------------------
+
+## Misc: MISC_SYSLOG ## {#SCMI_PROTO_MISC_MISC_SYSLOG}
+
+See SCMI_MiscSyslog() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0xD                          |
+    ---------------------------------------------------------------------------------
+    | uint32         | flags                                                        |
+    ---------------------------------------------------------------------------------
+    | uint32         | log_index                                                    |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0xD                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | num_log_flags                                                |
+    ---------------------------------------------------------------------------------
+    | uint32         | syslog[N]                                                    |
     ---------------------------------------------------------------------------------
 
 ## Misc: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION}

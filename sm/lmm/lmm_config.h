@@ -94,6 +94,7 @@ typedef struct
     uint8_t rpcType;                   /*!< RPC type */
     uint8_t rpcInst;                   /*!< RPC instance */
     uint8_t safeType;                  /*!< Safety classification */
+    uint8_t group;                     /*!< LMM group */
     uint8_t boot[SM_LM_NUM_MSEL];      /*!< Boot order of LM */
     uint8_t bootSkip[SM_LM_NUM_MSEL];  /*!< Skip boot in no image */
 } lmm_config_t;

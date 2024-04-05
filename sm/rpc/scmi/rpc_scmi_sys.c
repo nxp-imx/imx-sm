@@ -67,6 +67,8 @@
 #define SYS_STATE_FULL_RESET     0x80000002U
 #define SYS_STATE_FULL_SUSPEND   0x80000003U
 #define SYS_STATE_FULL_WAKE      0x80000004U
+#define SYS_STATE_GRP_SHUTDOWN   0x80000005U
+#define SYS_STATE_GRP_RESET      0x80000006U
 #define SYS_STATE_MODE           0xC0000000U
 
 /* Local macros */
@@ -817,6 +819,16 @@ static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
             /* System wake*/
             status = LMM_SystemWake(caller->lmId,
                 caller->instAgentId);
+            break;
+        case SYS_STATE_GRP_SHUTDOWN:
+            /* System shutdown */
+            status = LMM_SystemGrpShutdown(caller->lmId,
+                caller->instAgentId, graceful, &g_swReason, 0U);
+            break;
+        case SYS_STATE_GRP_RESET:
+            /* System reset*/
+            status = LMM_SystemGrpReset(caller->lmId,
+                caller->instAgentId, graceful, &g_swReason, 0U);
             break;
         default:
             status = SM_ERR_INVALID_PARAMETERS;

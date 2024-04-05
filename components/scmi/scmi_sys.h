@@ -84,6 +84,10 @@
 #define SCMI_SYS_STATE_FULL_SUSPEND   0x80000003U
 /*! Wake (resume) full SoC */
 #define SCMI_SYS_STATE_FULL_WAKE      0x80000004U
+/*! Shutdown (off) LM group 0 */
+#define SCMI_SYS_STATE_GRP_SHUTDOWN   0x80000005U
+/*! Reset LM group 0 */
+#define SCMI_SYS_STATE_GRP_RESET      0x80000006U
 /*! Set suspend/shutdown mode */
 #define SCMI_SYS_STATE_MODE           0xC0000000U
 /** @} */

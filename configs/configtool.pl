@@ -1421,6 +1421,12 @@ sub generate_lmm
 	                . ', \\' . "\n";
 	        }
 
+            # Output group
+   	        if ((my $parm = &param($lm, 'group')) ne '!')
+	        {
+	            print $out '        .group = ' . $parm . 'U, \\' . "\n";
+	        }
+
 			# Output start/stop
 			my $sidx = first { $start[$_] =~ /lm=$lm_val/ } 0..$#start;
 			if (defined $sidx)

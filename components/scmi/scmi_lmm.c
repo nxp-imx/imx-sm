@@ -172,7 +172,7 @@ int32_t SCMI_LmmAttributes(uint32_t channel, uint32_t *lmId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Boot (power on) an LM                                                    */
+/* Boot (power on and start) an LM                                          */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_LmmBoot(uint32_t channel, uint32_t lmId)
 {
@@ -534,6 +534,53 @@ int32_t SCMI_LmmResetReason(uint32_t channel, uint32_t lmId,
             SCMI_MemCpy((uint8_t*) extInfo, (uint8_t*) &msgRx->extInfo,
                 (SCMI_LMM_NUM_EXTINFO * sizeof(uint32_t)));
         }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Power up an LM                                                           */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_LmmPowerOn(uint32_t channel, uint32_t lmId)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t lmId;
+        } msg_tlmmd11_t;
+        msg_tlmmd11_t *msgTx = (msg_tlmmd11_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->lmId = lmId;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_LMM_POWER_ON, sizeof(msg_tlmmd11_t), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_status_t), header);
     }
 
     /* Release lock */

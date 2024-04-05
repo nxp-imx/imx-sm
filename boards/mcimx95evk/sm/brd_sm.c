@@ -246,6 +246,14 @@ int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
         case LMM_REACT_SYS_SHUTDOWN:
             ; /* Intentional empty as will print elsewhere */
             break;
+        case LMM_REACT_GRP_RESET:
+            printf("\nReset group %u", *lm);
+            BRD_SM_ResetRecordPrint(",", resetRec);
+            break;
+        case LMM_REACT_GRP_SHUTDOWN:
+            printf("\nShutdown group %u", *lm);
+            BRD_SM_ResetRecordPrint(",", resetRec);
+            break;
         case LMM_REACT_LM_RESET:
             printf("\nReset LM %u", *lm);
             BRD_SM_ResetRecordPrint(",", resetRec);

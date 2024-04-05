@@ -131,6 +131,7 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
 static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 
 /* Local Variables */
@@ -199,6 +200,7 @@ int32_t MONITOR_Dispatch(char *line)
         "idle",
         "assert",
         "syslog",
+        "grp",
         "custom"
     };
 
@@ -370,7 +372,10 @@ int32_t MONITOR_Dispatch(char *line)
             case 49:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 50:  /* custom */
+            case 50:  /* group */
+                status = MONITOR_CmdGroup(argc - 1, &argv[1]);
+                break;
+            case 51:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
             default:
@@ -1042,7 +1047,8 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
         "reset",
         "wake",
         "suspend",
-        "reason"
+        "reason",
+        "power"
     };
 
     /* Check argument */
@@ -1111,6 +1117,9 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
                     status = MONITOR_CmdLmReason(argc - arg, &argv[arg],
                         lm);
                     break;
+                case 8:  /* power */
+                    status = LMM_SystemLmPowerOn(0U, 0U, lm);
+                    break;
                 default:
                     status = SM_ERR_INVALID_PARAMETERS;
                     break;
@@ -1153,6 +1162,7 @@ static int32_t MONITOR_CmdLmInfo(int32_t argc, const char * const argv[])
                 "off",
                 "on",
                 "suspend",
+                "powered"
             };
 
             printf("%03u: %*s = %s", lm, -wName, name, stateText[state]);
@@ -2830,6 +2840,87 @@ static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[])
 
     /* Dump data */
     status = SM_SYSLOGDUMP(flags);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Group command                                                            */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    static string cmds[] =
+    {
+        "boot",
+        "shutdown",
+        "reset"
+    };
+
+    /* Check argument */
+    if (argc != 0)
+    {
+        int32_t arg = 0;
+        uint32_t grp = 0U;
+
+        if (argc > 1)
+        {
+            int32_t temp_status = MONITOR_FindN(cmds,
+                (int32_t) ARRAY_SIZE(cmds), argv[0]);
+            if (temp_status == ARRAY_SIZE(cmds))
+            {
+                grp = strtoul(argv[0], NULL, 0);
+                arg++;
+            }
+            else
+            {
+                grp = 0U;
+            }
+        }
+
+        if (arg >= argc)
+        {
+            status = SM_ERR_MISSING_PARAMETERS;
+        }
+        else
+        {
+            bool graceful = false;
+
+            int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
+                argv[arg]);
+            arg++;
+
+            /* Graceful? */
+            if (arg < argc)
+            {
+                graceful = true;
+            }
+
+            switch (sub)
+            {
+                case 0:  /* boot */
+                    status = LMM_SystemGrpBoot(0U, 0U, &g_swReason, grp);
+                    break;
+                case 1:  /* shutdown */
+                    status = LMM_SystemGrpShutdown(0U, 0U, graceful,
+                        &g_swReason, grp);
+                    break;
+                case 2:  /* reset */
+                    status = LMM_SystemGrpReset(0U, 0U, graceful,
+                        &g_swReason, grp);
+                    break;
+                default:
+                    status = SM_ERR_INVALID_PARAMETERS;
+                    break;
+            }
+        }
+    }
+    else
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
 
     /* Return status */
     return status;

@@ -345,6 +345,8 @@ Fault reactions supported are:
 |----------------------------|----------------------------------|
 | ::LMM_REACT_SYS_RESET      | Reset the system                 |
 | ::LMM_REACT_SYS_SHUTDOWN   | Shutdown (power off) the system  |
+| ::LMM_REACT_GRP_RESET      | Reset an LM group                |
+| ::LMM_REACT_GRP_SHUTDOWN   | Shutdown (power off) an LM group |
 | ::LMM_REACT_LM_RESET       | Reset an LM                      |
 | ::LMM_REACT_LM_SHUTDOWN    | Shutdown (power off) an LM       |
 | ::LMM_REACT_BOARD          | Custom board handling            |
@@ -689,6 +691,7 @@ The configtool supports the following commands and key=value pairs in the input 
 |             | rtime    | Optional, boot time of LM in uS, relative to start of LM boot loop, max 178 seconds |
 |             | did      | RDC DID for this LM |
 |             | safe     | Safety type is LMM_SAFE_TYPE_\<VAL\>, e.g. ::LMM_SAFE_TYPE_SEENV, deault is NSEENV |
+|             | group    | LM group, deault is 0 |
 |             | default  | The deault LM for the debug monitor |
 | MODE        | msel     | Alternate boot config index |
 |             | boot     | Optional, boot order starting with 1, undefined/0 = do not boot |

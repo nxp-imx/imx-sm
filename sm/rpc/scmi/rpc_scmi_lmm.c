@@ -59,8 +59,9 @@
 #define COMMAND_LMM_SUSPEND                  0x8U
 #define COMMAND_LMM_NOTIFY                   0x9U
 #define COMMAND_LMM_RESET_REASON             0xAU
+#define COMMAND_LMM_POWER_ON                 0xBU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x107FFUL
+#define COMMAND_SUPPORTED_MASK               0x10FFFUL
 
 /* SCMI LMM max argument lengths */
 #define LMM_MAX_NAME     16U
@@ -267,6 +268,15 @@ typedef struct
     uint32_t extInfo[LMM_MAX_EXTINFO];
 } msg_tlmm10_t;
 
+/* Request type for LmmPowerOn() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the logical machine */
+    uint32_t lmId;
+} msg_rlmm11_t;
+
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
 {
@@ -313,6 +323,8 @@ static int32_t LmmNotify(const scmi_caller_t *caller, const msg_rlmm9_t *in,
     const scmi_msg_status_t *out);
 static int32_t LmmResetReason(const scmi_caller_t *caller,
     const msg_rlmm10_t *in, msg_tlmm10_t *out, uint32_t *len);
+static int32_t LmmPowerOn(const scmi_caller_t *caller, const msg_rlmm11_t *in,
+    const scmi_msg_status_t *out);
 static int32_t LmmNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rlmm16_t *in, const scmi_msg_status_t *out);
 static int32_t LmmEvent(scmi_msg_id_t msgId,
@@ -392,6 +404,11 @@ int32_t RPC_SCMI_LmmDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tlmm10_t);
             status = LmmResetReason(caller, (const msg_rlmm10_t*) in,
                 (msg_tlmm10_t*) out, &lenOut);
+            break;
+        case COMMAND_LMM_POWER_ON:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = LmmPowerOn(caller, (const msg_rlmm11_t*) in,
+                (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -684,7 +701,7 @@ static int32_t LmmAttributes(const scmi_caller_t *caller,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Boot (power on) an LM                                                    */
+/* Boot (power on and start) an LM                                          */
 /*                                                                          */
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
@@ -1209,6 +1226,66 @@ static int32_t LmmResetReason(const scmi_caller_t *caller,
 
         /* Update length */
         *len = (4U + extLen) * sizeof(uint32_t);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Power up an LM                                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->lmId: Identifier for the logical machine                           */
+/*                                                                          */
+/* Process the LMM_POWER_ON message. Platform handler for                   */
+/* SCMI_LmmPowerOn(). Requires access greater than or equal to PRIV.        */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the LM successfully powered on.                     */
+/* - SM_ERR_NOT_FOUND: if the LM identified by lmId does not exist.         */
+/* - SM_ERR_INVALID_PARAMETERS, if lmId is the same as the caller.          */
+/* - SM_ERR_DENIED: if the calling agent is not allowed to manage the LM    */
+/*   specified by lmId.                                                     */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t LmmPowerOn(const scmi_caller_t *caller, const msg_rlmm11_t *in,
+    const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check LM */
+    if ((status == SM_ERR_SUCCESS) && (in->lmId >= SM_NUM_LM))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Check permissions */
+    if ((status == SM_ERR_SUCCESS)
+        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
+        < SM_SCMI_PERM_PRIV))
+    {
+        status = SM_ERR_DENIED;
+    }
+
+    /* Check not self */
+    if ((status == SM_ERR_SUCCESS) && (in->lmId ==  caller->lmId))
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Boot LM */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_SystemLmPowerOn(caller->lmId, caller->instAgentId,
+            in->lmId);
     }
 
     /* Return status */

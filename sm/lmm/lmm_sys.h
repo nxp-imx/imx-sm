@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -82,7 +82,8 @@
 /** @{ */
 #define LMM_STATE_LM_OFF      0x0U  /*!< LM off (shutdown) */
 #define LMM_STATE_LM_ON       0x1U  /*!< LM on (booted/running) */
-#define LMM_STATE_LM_SUSPEND  0x2U  /*!< LM suspend (asleep) */
+#define LMM_STATE_LM_SUSPEND  0x2U  /*!< LM suspended (asleep) */
+#define LMM_STATE_LM_POWERED  0x3U  /*!< LM powered (not running) */
 /** @} */
 
 /*!
@@ -91,11 +92,13 @@
 /** @{ */
 #define LMM_REACT_SYS_RESET     0U  /*!< System reset */
 #define LMM_REACT_SYS_SHUTDOWN  1U  /*!< System shutdown */
-#define LMM_REACT_LM_RESET      2U  /*!< LM reset */
-#define LMM_REACT_LM_SHUTDOWN   3U  /*!< LM shutdown */
-#define LMM_REACT_BOARD         4U  /*!< Custom board handling */
-#define LMM_REACT_FUSA          5U  /*!< FuSa notifications only */
-#define LMM_REACT_NONE          6U  /*!< No reaction */
+#define LMM_REACT_GRP_RESET     2U  /*!< Group reset */
+#define LMM_REACT_GRP_SHUTDOWN  3U  /*!< Group shutdown */
+#define LMM_REACT_LM_RESET      4U  /*!< LM reset */
+#define LMM_REACT_LM_SHUTDOWN   5U  /*!< LM shutdown */
+#define LMM_REACT_BOARD         6U  /*!< Custom board handling */
+#define LMM_REACT_FUSA          7U  /*!< FuSa notifications only */
+#define LMM_REACT_NONE          8U  /*!< No reaction */
 /** @} */
 
 /* Types */
@@ -276,6 +279,22 @@ int32_t LMM_SystemPowerModeSet(uint32_t lmId, uint32_t powerMode);
 /** @} */
 
 /*!
+ * @name Group system functions
+ * @{
+ */
+
+int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
+    const lmm_rst_rec_t *bootRec, uint8_t group);
+
+int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
+    bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group);
+
+int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
+    const lmm_rst_rec_t *resetRec, uint8_t group);
+
+/** @} */
+
+/*!
  * @name LMM logical machine functions
  * @{
  */
@@ -307,6 +326,24 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t LMM_SystemLmCheck(uint32_t bootLm);
+
+/*!
+ * Power up an LM.
+ *
+ * @param[in]     lmId         Requesting LM
+ * @param[in]     agentId      Requesting agent (LM view)
+ * @param[in]     pwrLm        LM to power on
+ *
+ * Function to power up an LM. Executes the configured start sequence
+ * skipping CPU starts. Useful to power on an LM to then load its code.
+ * CPU start addresses still need to be set via LMM_CpuResetVectorSet().
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_SUPPORTED: if bad start sequence
+ */
+int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm);
 
 /*!
  * Boot (turn on) an LM.

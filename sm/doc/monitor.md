@@ -75,9 +75,21 @@ Logical Machine Commands
 | lm [*lm*] suspend           | suspend LM (default unless *lm* specified)                   |
 | lm [*lm*] wake              | wake LM (default unless *lm* specified)                      |
 | lm [*lm*] reason            | display reset reason for LM (default unless *lm* specified)  |
+| lm [*lm*] power             | power up an LM (default unless *lm* specified)               |
 
 The output of reason commands on NXP board ports is described in the @ref PORT_NXP_PRINT
 section.
+
+Group Commands
+--------------
+
+These operate on groups of LM as defined by the SM config.
+
+| Command                     | Description                                                  |
+|-----------------------------|--------------------------------------------------------------|
+| grp [*grp*] boot            | boot LM group (0 unless *grp* specified)                     |
+| grp [*grp*] shutdown [gful] | power off LM group (optional grp=0 and graceful flag)        |
+| grp [*grp*] reset [gful]    | reset/reboot LM group (optional grp=0 and graceful flag)     |
 
 Resource Commands
 -----------------

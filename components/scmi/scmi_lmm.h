@@ -54,7 +54,7 @@
 /** @{ */
 /*! Get logical machine attributes */
 #define SCMI_MSG_LMM_ATTRIBUTES    0x3U
-/*! Boot (power on) an LM */
+/*! Boot (power on and start) an LM */
 #define SCMI_MSG_LMM_BOOT          0x4U
 /*! Reset an LM */
 #define SCMI_MSG_LMM_RESET         0x5U
@@ -68,6 +68,8 @@
 #define SCMI_MSG_LMM_NOTIFY        0x9U
 /*! Read the reason the LM last booted/shutdown/reset */
 #define SCMI_MSG_LMM_RESET_REASON  0xAU
+/*! Power up an LM */
+#define SCMI_MSG_LMM_POWER_ON      0xBU
 /*! Read LM notification event */
 #define SCMI_MSG_LMM_EVENT         0x0U
 /** @} */
@@ -293,13 +295,14 @@ int32_t SCMI_LmmAttributes(uint32_t channel, uint32_t *lmId,
     uint8_t *name);
 
 /*!
- * Boot (power on) an LM.
+ * Boot (power on and start) an LM.
  *
  * @param[in]     channel  A2P channel for comms
  * @param[in]     lmId     Identifier for the logical machine
  *
- * This function will boot (power on) an LM. An LMM_EVENT notification will be
- * sent to subscribing agents. It cannot be called on itself.
+ * This function will boot (power on and start) an LM. An LMM_EVENT
+ * notification will be sent to subscribing agents. It cannot be called on
+ * itself.
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -538,6 +541,27 @@ int32_t SCMI_LmmNotify(uint32_t channel, uint32_t lmId, uint32_t flags);
  */
 int32_t SCMI_LmmResetReason(uint32_t channel, uint32_t lmId,
     uint32_t *bootFlags, uint32_t *shutdownFlags, uint32_t *extInfo);
+
+/*!
+ * Power up an LM.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     lmId     Identifier for the logical machine
+ *
+ * This function will power on an LM. This allows code to be loaded into LM
+ * memory, boot addresses set with SCMI_CpuResetVectorSet(), and then booted
+ * via SCMI_LmmBoot(). It cannot be called on itself.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the LM successfully powered on.
+ * - ::SCMI_ERR_NOT_FOUND: if the LM identified by \a lmId does not exist.
+ * - ::SCMI_ERR_INVALID_PARAMETERS, if \a lmId is the same as the caller.
+ * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to manage the LM
+ *   specified by \a lmId.
+ */
+int32_t SCMI_LmmPowerOn(uint32_t channel, uint32_t lmId);
 
 /*!
  * Negotiate the protocol version.

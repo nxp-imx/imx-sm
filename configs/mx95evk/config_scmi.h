@@ -78,7 +78,6 @@
         .faultPerms[DEV_SM_FAULT_M7_RESET] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_SW0] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_SW1] = SM_SCMI_PERM_ALL, \
-        .faultPerms[DEV_SM_FAULT_SW2] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG5] = SM_SCMI_PERM_ALL, \
         .fusaPerms = SM_SCMI_PERM_EXCLUSIVE, \
         .lmmPerms[2] = SM_SCMI_PERM_ALL, \
@@ -172,7 +171,7 @@
         .cpuPerms[DEV_SM_CPU_A55C4] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_A55C5] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_A55P] = SM_SCMI_PERM_ALL, \
-        .faultPerms[DEV_SM_FAULT_SW3] = SM_SCMI_PERM_ALL, \
+        .faultPerms[DEV_SM_FAULT_SW2] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG3] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG4] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
