@@ -450,8 +450,9 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         uint32_t functionSelected = 0U;
 
         /* Get the current Config */
+        uint32_t attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_ALL;
         uint32_t attributes
-            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
@@ -497,8 +498,9 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
     {
         uint32_t functionSelected = 0U;
 
+        uint32_t attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_ALL;
         uint32_t attributes
-            = SCMI_PINCTRL_GET_ATTR_CONFIG(SCMI_PINCTRL_CONFIG_FLAG_ALL);
+            = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
         scmi_pin_config_t configs[10] = { 0 };
 
