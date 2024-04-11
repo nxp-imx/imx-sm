@@ -127,6 +127,17 @@ void TMPSNS_GetDefaultConfig(tmpsns_config_t *config);
 /** @} */
 
 /*!
+ * @brief Gets the TMPSNS enabled state.
+ *
+ * This function returns the enable state of the TMPSNS.
+ *
+ * @param base    TMPSNS peripheral base address.
+ *
+ * @return Bool indicating the enable state.
+ */
+bool TMPSNS_Enabled(const TMPSNS_Type *base);
+
+/*!
  * @brief Gets the TMPSNS status flags.
  *
  * This function returns a bit mask of the TMPSNS status flags.

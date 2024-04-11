@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -84,7 +84,7 @@ int32_t DEV_SM_SensorInit(void);
 /*!
  * Power up a sensor.
  *
- * @param[in]     sensorId        Sensor name to get
+ * @param[in]     sensorId        Sensor to power on
  *
  * This function initializes the sensor. It is used after the power
  * domain containing the sensor is turned on.
@@ -92,6 +92,17 @@ int32_t DEV_SM_SensorInit(void);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_SensorPowerUp(uint32_t sensorId);
+
+/*!
+ * Power down a sensor.
+ *
+ * @param[in]     sensorId        Sensor to power off
+ *
+ * This function powers down the sensor.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_SensorPowerDown(uint32_t sensorId);
 
 /*!
  * Get a sensor name.

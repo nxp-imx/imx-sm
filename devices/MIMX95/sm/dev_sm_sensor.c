@@ -87,16 +87,8 @@ static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
     }
 };
 
-/* Panic temps */
-static const int64_t s_panicTemp[4] =
-{
-    9700,   /* 00 - Consumer 0C to 95C */
-    10700,  /* 01 - Ext. Consumer -20C to 105C */
-    10700,  /* 10 - Industrial -40C to 105C */
-    12700   /* 11 - Automotive -40C to 125C */
-};
-
 static TMPSNS_Type *const s_tmpsnsBases[] = TMPSNS_BASE_PTRS;
+static bool s_tmpsnsOwn[DEV_SM_NUM_SENSOR];
 static bool s_tmpsnsEnb[DEV_SM_NUM_SENSOR];
 static uint8_t s_tmpsnsDir[DEV_SM_NUM_SENSOR];
 
@@ -111,32 +103,9 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 int32_t DEV_SM_SensorInit(void)
 {
     int32_t status;
-    uint32_t sensorId = DEV_SM_SENSOR_TEMP_ANA;
-    TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
-    tmpsns_config_t config;
-    uint32_t hwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
-    uint32_t mktSeg;
 
-    /* Get default confg */
-    TMPSNS_GetDefaultConfig(&config);
-    config.measMode = 1U;
-
-    /* Apply trim */
-    if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
-    {
-        config.trim1 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim1];
-        config.trim2 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim2];
-    }
-
-    /* Init sensor */
-    TMPSNS_Init(base, &config);
-
-    /* Configure ANA panic */
-    mktSeg = (hwCfg0 & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
-        >> FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT;
-    status = TMPSNS_ThresholdSet(sensorId,
-        s_tmpsns[sensorId].panicThreshold, s_panicTemp[mktSeg],
-        DEV_SM_SENSOR_TP_HIGH);
+    /* Power on ANA sensor */
+    status = DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_ANA);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -155,7 +124,7 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
+    /* Check sensor */
     if (sensorId >= DEV_SM_NUM_SENSOR)
     {
         status = SM_ERR_NOT_FOUND;
@@ -167,28 +136,74 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
         uint32_t hwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
         uint32_t mktSeg;
 
+        /* Panic temps */
+        const int64_t panicTemp[4] =
+        {
+            9700,   /* 00 - Consumer 0C to 95C */
+            10700,  /* 01 - Ext. Consumer -20C to 105C */
+            10700,  /* 10 - Industrial -40C to 105C */
+            12700   /* 11 - Automotive -40C to 125C */
+        };
+               
         /* Get default confg */
         TMPSNS_GetDefaultConfig(&config);
-
+        
         /* Config for periodic one-shot */
         config.measMode = 1U;
-
+        
         /* Apply trim */
         if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
         {
             config.trim1 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim1];
             config.trim2 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim2];
         }
+        /* Check if ELE enabled */
+        if (!TMPSNS_Enabled(base))
+        {           
+            /* Note we enabled */
+            s_tmpsnsOwn[sensorId] = true;
 
-        /* Init sensor */
-        TMPSNS_Init(base, &config);
+            /* Init secure section of sensor */
+            TMPSNS_Init(base, &config);
+        }
+            
+        /* Init NS section of sensor */
+        TMPSNS_InitNs(base, &config);
 
         /* Configure panic */
         mktSeg = (hwCfg0 & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
             >> FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT;
         status = TMPSNS_ThresholdSet(sensorId,
-            s_tmpsns[sensorId].panicThreshold, s_panicTemp[mktSeg],
+            s_tmpsns[sensorId].panicThreshold, panicTemp[mktSeg],
             DEV_SM_SENSOR_TP_HIGH);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Power down sensor                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SensorPowerDown(uint32_t sensorId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check sensor */
+    if (sensorId >= DEV_SM_NUM_SENSOR)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Did we enable? */
+        if (s_tmpsnsOwn[sensorId])
+        {
+            TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
+
+            /* Deinit secure section of sensor */
+            TMPSNS_Deinit(base);           
+        }
     }
 
     /* Return status */
@@ -236,7 +251,7 @@ int32_t DEV_SM_SensorDescribe(uint32_t sensorId,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
+    /* Check sensor */
     if (sensorId >= DEV_SM_NUM_SENSOR)
     {
         status = SM_ERR_NOT_FOUND;
@@ -262,7 +277,7 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
+    /* Check sensor */
     if (sensorId >= DEV_SM_NUM_SENSOR)
     {
         status = SM_ERR_NOT_FOUND;
@@ -331,7 +346,7 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
+    /* Check sensor */
     if (sensorId >= DEV_SM_NUM_SENSOR)
     {
         status = SM_ERR_NOT_FOUND;
@@ -380,7 +395,7 @@ int32_t DEV_SM_SensorEnable(uint32_t sensorId, bool enable,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
+    /* Check sensor */
     if (sensorId >= DEV_SM_NUM_SENSOR)
     {
         status = SM_ERR_NOT_FOUND;
@@ -419,7 +434,7 @@ int32_t DEV_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
+    /* Check sensor */
     if (sensorId >= DEV_SM_NUM_SENSOR)
     {
         status = SM_ERR_NOT_FOUND;

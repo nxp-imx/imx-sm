@@ -20,7 +20,7 @@
  *****************************************************************************/
 
 /*!
- * Initializes the secure section a TMPSNS module.
+ * Initializes the secure section of a TMPSNS module.
  */
 void TMPSNS_Init(TMPSNS_Type *base, const tmpsns_config_t *config)
 {
@@ -60,7 +60,7 @@ void TMPSNS_Init(TMPSNS_Type *base, const tmpsns_config_t *config)
 }
 
 /*!
- * Initializes the nonsecure section a TMPSNS module.
+ * Initializes the nonsecure section of a TMPSNS module.
  */
 void TMPSNS_InitNs(TMPSNS_Type *base, const tmpsns_config_t *config)
 {
@@ -70,7 +70,7 @@ void TMPSNS_InitNs(TMPSNS_Type *base, const tmpsns_config_t *config)
 }
 
 /*!
- * De-initializes a TMPSNS module.
+ * De-initializes the secure section of a TMPSNS module.
  */
 void TMPSNS_Deinit(TMPSNS_Type *base)
 {
@@ -94,6 +94,14 @@ void TMPSNS_GetDefaultConfig(tmpsns_config_t *config)
     config->measFreq = 40000U; /* 4MHz */
     config->trim1 = 0xB561BC2DU;
     config->trim2 = 0x65D4U;
+}
+
+/*!
+ * Check if enabled.
+ */
+bool TMPSNS_Enabled(const TMPSNS_Type *base)
+{
+    return (base->CTRL1 & TMPSNS_CTRL1_ENABLE_MASK) != 0U;
 }
 
 /*
