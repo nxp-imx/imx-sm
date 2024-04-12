@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -73,13 +73,13 @@
 #define DEV_SM_PD_BBSM       PWR_MIX_SLICE_IDX_BBSM       /*!< 2: BB domain */
 #define DEV_SM_PD_CAMERA     PWR_MIX_SLICE_IDX_CAMERA     /*!< 3: Camera domain */
 #define DEV_SM_PD_CCMSRCGPC  PWR_MIX_SLICE_IDX_CCMSRCGPC  /*!< 4: System domain */
-#define DEV_SM_PD_A55C0      PWR_MIX_SLICE_IDX_A55C0      /*!< 5: CA55 platform domain */
-#define DEV_SM_PD_A55C1      PWR_MIX_SLICE_IDX_A55C1      /*!< 6: CA55 core 0 domain */
-#define DEV_SM_PD_A55C2      PWR_MIX_SLICE_IDX_A55C2      /*!< 7: CA55 core 1 domain */
-#define DEV_SM_PD_A55C3      PWR_MIX_SLICE_IDX_A55C3      /*!< 8: CA55 core 2 domain */
-#define DEV_SM_PD_A55C4      PWR_MIX_SLICE_IDX_A55C4      /*!< 9: CA55 core 3 domain */
-#define DEV_SM_PD_A55C5      PWR_MIX_SLICE_IDX_A55C5      /*!< 10: CA55 core 4 domain */
-#define DEV_SM_PD_A55P       PWR_MIX_SLICE_IDX_A55P       /*!< 11: CA55 core 5 domain */
+#define DEV_SM_PD_A55C0      PWR_MIX_SLICE_IDX_A55C0      /*!< 5: CA55 core 0 domain */
+#define DEV_SM_PD_A55C1      PWR_MIX_SLICE_IDX_A55C1      /*!< 6: CA55 core 1 domain */
+#define DEV_SM_PD_A55C2      PWR_MIX_SLICE_IDX_A55C2      /*!< 7: CA55 core 2 domain */
+#define DEV_SM_PD_A55C3      PWR_MIX_SLICE_IDX_A55C3      /*!< 8: CA55 core 3 domain */
+#define DEV_SM_PD_A55C4      PWR_MIX_SLICE_IDX_A55C4      /*!< 9: CA55 core 4 domain */
+#define DEV_SM_PD_A55C5      PWR_MIX_SLICE_IDX_A55C5      /*!< 10: CA55 core 5 domain */
+#define DEV_SM_PD_A55P       PWR_MIX_SLICE_IDX_A55P       /*!< 11: CA55 platform domain */
 #define DEV_SM_PD_DDR        PWR_MIX_SLICE_IDX_DDR        /*!< 12: DRAM domain */
 #define DEV_SM_PD_DISPLAY    PWR_MIX_SLICE_IDX_DISPLAY    /*!< 13: Display domain */
 #define DEV_SM_PD_GPU        PWR_MIX_SLICE_IDX_GPU        /*!< 14: GPU domain */
