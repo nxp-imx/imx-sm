@@ -283,12 +283,53 @@ int32_t LMM_SystemPowerModeSet(uint32_t lmId, uint32_t powerMode);
  * @{
  */
 
+/*!
+ * Boot an LM group.
+ *
+ * @param[in]     lmId      Requesting LM
+ * @param[in]     agentId   Requesting agent (LM view)
+ * @param[in]     bootRec   Boot record to store
+ * @param[in]     group     Group to boot
+ *
+ * Function to boot an LM group. Will boot those LM configured to
+ * boot at system boot.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
 int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
     const lmm_rst_rec_t *bootRec, uint8_t group);
 
+/*!
+ * Shutdown (power off) an LM group.
+ *
+ * @param[in]     lmId         Requesting LM
+ * @param[in]     agentId      Requesting agent (LM view)
+ * @param[in]     graceful     Graceful request if true
+ * @param[in]     shutdownRec  Shutdown record to store
+ * @param[in]     group        Group to shutdown
+ *
+ * Function to shutdown an LM group. Will shutdown all LM belonging to
+ * the group.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
 int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
     bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group);
 
+/*!
+ * Reset an LM group.
+ *
+ * @param[in]     lmId      Requesting LM
+ * @param[in]     agentId   Requesting agent (LM view)
+ * @param[in]     graceful  Graceful request if true
+ * @param[in]     resetRec  Reset record to store
+ * @param[in]     group     Group to reset
+ *
+ * Function to reset an LM group. Will shutdown all LM belonging to
+ * the group and then boot those configured to boot at system boot.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
 int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
     const lmm_rst_rec_t *resetRec, uint8_t group);
 
