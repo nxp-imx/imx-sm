@@ -144,13 +144,13 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
             10700,  /* 10 - Industrial -40C to 105C */
             12700   /* 11 - Automotive -40C to 125C */
         };
-               
+
         /* Get default confg */
         TMPSNS_GetDefaultConfig(&config);
-        
+
         /* Config for periodic one-shot */
         config.measMode = 1U;
-        
+
         /* Apply trim */
         if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
         {
@@ -159,14 +159,14 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
         }
         /* Check if ELE enabled */
         if (!TMPSNS_Enabled(base))
-        {           
+        {
             /* Note we enabled */
             s_tmpsnsOwn[sensorId] = true;
 
             /* Init secure section of sensor */
             TMPSNS_Init(base, &config);
         }
-            
+
         /* Init NS section of sensor */
         TMPSNS_InitNs(base, &config);
 
@@ -202,7 +202,7 @@ int32_t DEV_SM_SensorPowerDown(uint32_t sensorId)
             TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
 
             /* Deinit secure section of sensor */
-            TMPSNS_Deinit(base);           
+            TMPSNS_Deinit(base);
         }
     }
 
