@@ -619,9 +619,9 @@ static int32_t MiscProtocolVersion(const scmi_caller_t *caller,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->attributes: Protocol attributes:                                  */
-/*   Bits[31:24] Reserved, must be zero.                                    */
+/*   Bits[31:24] Number of board controls.                                  */
 /*   Bits[23:16] Number of reasons.                                         */
-/*   Bits[15:0] Number of controls                                          */
+/*   Bits[15:0] Number of device controls                                   */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
 /* SCMI_MiscProtocolAttributes().                                           */

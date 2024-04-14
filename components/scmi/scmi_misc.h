@@ -228,9 +228,9 @@ int32_t SCMI_MiscProtocolVersion(uint32_t channel, uint32_t *version);
  *
  * @param[in]     channel     A2P channel for comms
  * @param[out]    attributes  Protocol attributes:<BR>
- *                            Bits[31:24] Reserved, must be zero.<BR>
+ *                            Bits[31:24] Number of board controls.<BR>
  *                            Bits[23:16] Number of reasons.<BR>
- *                            Bits[15:0] Number of controls
+ *                            Bits[15:0] Number of device controls
  *
  * This function returns the implementation details associated with this
  * protocol.
