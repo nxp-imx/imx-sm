@@ -50,6 +50,7 @@
 /* Local types */
 
 /* Local variables */
+
 static bool s_tempSensorA55Enabled = false;
 static fracpll_context_t s_pllContextHsio;
 static fracpll_context_t s_pllContextLdb;

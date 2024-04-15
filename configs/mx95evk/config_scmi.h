@@ -240,7 +240,6 @@
         .domId = 3U, \
         .secure = 0U, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_ADC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_AUDIOPLL1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_AUDIOPLL1_VCO] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_AUDIOPLL2] = SM_SCMI_PERM_ALL, \

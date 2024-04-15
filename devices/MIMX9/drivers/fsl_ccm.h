@@ -38,6 +38,7 @@
 /*! @file */
 
 /* Includes */
+
 #include "fsl_common.h"
 
 /* Defines */
@@ -45,6 +46,7 @@
 /* Types */
 
 /* Functions */
+
 bool CCM_RootGetEnable(uint32_t rootIdx);
 bool CCM_RootSetEnable(uint32_t rootIdx, bool enable);
 uint64_t CCM_RootGetRate(uint32_t rootIdx);
@@ -73,3 +75,4 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting);
 #endif /* FSL_CCM_H */
 
 /** @} */
+

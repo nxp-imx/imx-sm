@@ -73,7 +73,6 @@
         .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_ADC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -573,7 +572,6 @@
         .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_ADC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -1064,7 +1062,6 @@
         .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_ADC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \

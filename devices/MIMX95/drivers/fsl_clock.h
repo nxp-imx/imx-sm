@@ -38,9 +38,11 @@
 /*! @file */
 
 /* Includes */
+
 #include "fsl_common.h"
 
 /* Defines */
+
 #define CLOCK_OSC32K_HZ                     32768ULL
 #define CLOCK_OSC24M_HZ                     24000000ULL
 #define CLOCK_FRO_HZ                        300000000ULL
@@ -266,12 +268,14 @@ typedef struct
 } ccm_gpr_sel_attr_t;
 
 /* Functions */
+
 bool CLOCK_SourceGetEnable(uint32_t sourceIdx);
 bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable);
 uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx);
 bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate, uint32_t roundRule);
 
 /* Externs */
+
 extern uint64_t g_clockExt1Rate;
 extern const pll_attr_t g_pllAttrs[];
 extern const uint8_t g_clockRootMux[][CLOCK_NUM_ROOT_MUX_SEL];

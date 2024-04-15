@@ -38,9 +38,11 @@
 /*! @file */
 
 /* Includes */
+
 #include "fsl_common.h"
 
 /* Defines */
+
 #define CPU_NUM_IDX         9U
 
 #define CPU_IDX_M33P        0U
@@ -121,6 +123,7 @@
 #define CPU_PER_LPI_ON_ALWAYS           4U
 
 /* Types */
+
 typedef struct
 {
     IRQn_Type secIrq;
@@ -152,6 +155,7 @@ typedef struct
 } cpu_per_lpi_info_t;
 
 /* Functions */
+
 bool CPU_Init(uint32_t cpuIdx);
 bool CPU_WaitSet(uint32_t cpuIdx, bool enableCpuWait);
 bool CPU_WaitGet(uint32_t cpuIdx, bool *cpuWait);
