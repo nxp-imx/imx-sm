@@ -458,8 +458,11 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Board-level sleep prepare */
             BOARD_SystemSleepPrepare(sleepMode);
 
+            /* Disable sensor */
+            (void) DEV_SM_SensorPowerDown(DEV_SM_SENSOR_TEMP_ANA);
+
             /*! Increment system sleep counter */
-             g_syslog.sysSleepRecord.sleepCnt++;
+            g_syslog.sysSleepRecord.sleepCnt++;
 
             /* Place DRAM into retention */
             if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
@@ -672,7 +675,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             if (status == SM_ERR_SUCCESS)
             {
                 /* Power up DDRMIX */
-                status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_ON);
+                status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR,
+                    DEV_SM_POWER_STATE_ON);
             }
 
             if (status == SM_ERR_SUCCESS)
@@ -688,6 +692,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 NVIC->ICER[wakeIdx] = 0xFFFFFFFFU;
                 NVIC->ISER[wakeIdx] = nvicISER[wakeIdx];
             }
+
+            /* Enable sensor */
+            (void) DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_ANA);
 
             /* Board-level sleep unprepare */
             BOARD_SystemSleepUnprepare(sleepMode);
@@ -866,7 +873,8 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
 
     if (status == SM_ERR_SUCCESS)
     {
-        /* The duration for the delay below is not mentioned in PHY PUB, set 8 just in case */
+        /* The duration for the delay below is not mentioned in PHY PUB,
+           set 8 just in case */
         SystemTimeDelay(15U);
 
         status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL_VCO, true);

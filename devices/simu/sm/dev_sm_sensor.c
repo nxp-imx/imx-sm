@@ -68,7 +68,7 @@ int32_t DEV_SM_SensorInit(void)
 /*--------------------------------------------------------------------------*/
 /* Power up sensor                                                          */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
 {
     int32_t status = SM_ERR_SUCCESS;
 

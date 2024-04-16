@@ -52,11 +52,8 @@ void TMPSNS_Init(TMPSNS_Type *base, const tmpsns_config_t *config)
     base->TRIM1 = config->trim1;
     base->TRIM2 = config->trim2;
 
-    /* Set CTRL1[ENABLE] */
-    base->CTRL1_SET = TMPSNS_CTRL1_ENABLE(1U);
-
-    /* Set CTRL1[START]. */
-    base->CTRL1_SET = TMPSNS_CTRL1_START(1U);
+    /* Enable and Start */
+    TMPSNS_Enable(base);
 }
 
 /*!
@@ -79,6 +76,18 @@ void TMPSNS_Deinit(TMPSNS_Type *base)
 
     /* Clear CTRL1[ENABLE] */
     base->CTRL1_CLR= TMPSNS_CTRL1_ENABLE(1U);
+}
+
+/*!
+ * Enable and start an already configured TMPSNS module.
+ */
+void TMPSNS_Enable(TMPSNS_Type *base)
+{
+    /* Set CTRL1[ENABLE] */
+    base->CTRL1_SET = TMPSNS_CTRL1_ENABLE(1U);
+
+    /* Set CTRL1[START]. */
+    base->CTRL1_SET = TMPSNS_CTRL1_START(1U);
 }
 
 /*!

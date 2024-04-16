@@ -105,7 +105,7 @@ int32_t DEV_SM_SensorInit(void)
     int32_t status;
 
     /* Power on ANA sensor */
-    status = DEV_SM_SensorPowerUp(DEV_SM_SENSOR_TEMP_ANA);
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -118,9 +118,9 @@ int32_t DEV_SM_SensorInit(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Power up sensor                                                          */
+/* Configure and start a sensor                                             */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -183,6 +183,34 @@ int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Power up a sensor                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check sensor */
+    if (sensorId >= DEV_SM_NUM_SENSOR)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Do we own the secure section? */
+        if (s_tmpsnsOwn[sensorId])
+        {
+            TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
+
+            /* Enable and start */
+            TMPSNS_Enable(base);
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Power down sensor                                                        */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SensorPowerDown(uint32_t sensorId)
@@ -196,12 +224,12 @@ int32_t DEV_SM_SensorPowerDown(uint32_t sensorId)
     }
     else
     {
-        /* Did we enable? */
+        /* Do we own the secure section? */
         if (s_tmpsnsOwn[sensorId])
         {
             TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
 
-            /* Deinit secure section of sensor */
+            /* Stop and disable */
             TMPSNS_Deinit(base);
         }
     }

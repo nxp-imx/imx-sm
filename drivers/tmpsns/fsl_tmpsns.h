@@ -118,6 +118,13 @@ void TMPSNS_InitNs(TMPSNS_Type *base, const tmpsns_config_t *config);
 void TMPSNS_Deinit(TMPSNS_Type *base);
 
 /*!
+ * @brief Enable/start a TMPSNS module.
+ *
+ * @param base TMPSNS peripheral base address.
+ */
+void TMPSNS_Enable(TMPSNS_Type *base);
+
+/*!
  * @brief Gets the default configuration structure.
  *
  * @param config Pointer to a configuration structure.

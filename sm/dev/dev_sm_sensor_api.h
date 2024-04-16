@@ -82,7 +82,7 @@ typedef struct
 int32_t DEV_SM_SensorInit(void);
 
 /*!
- * Power up a sensor.
+ * Configure and start a sensor.
  *
  * @param[in]     sensorId        Sensor to power on
  *
@@ -91,14 +91,26 @@ int32_t DEV_SM_SensorInit(void);
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t DEV_SM_SensorPowerUp(uint32_t sensorId);
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId);
 
 /*!
- * Power down a sensor.
+ * Enable and start a sensor.
  *
  * @param[in]     sensorId        Sensor to power off
  *
- * This function powers down the sensor.
+ * This function enables and starts a sensor a sensor. The sensor
+ * must already be configured using DEV_SM_SensorConfigStart().
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_SensorPowerUp(uint32_t sensorId);
+
+/*!
+ * Stop and disable a sensor.
+ *
+ * @param[in]     sensorId        Sensor to power off
+ *
+ * This function stops and disables a sensor to save power.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
