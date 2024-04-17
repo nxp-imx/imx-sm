@@ -34,6 +34,10 @@
 #include "fsl_power.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
+#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
+#include "fsl_ccm.h"
+#include "fsl_clock.h"
+#endif
 
 /* Local Defines */
 #define WHITELIST_VAL(cpuId)    (WHITELIST_MASK(CPU_IDX_M33P) | WHITELIST_MASK(cpuId))
@@ -603,6 +607,18 @@ void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode)
 /*--------------------------------------------------------------------------*/
 void PWR_LpHandshakeAck(void)
 {
+#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
+    /* Query clock root divider for LP_HANDSHAKE module */
+    uint32_t oldDiv;
+    bool rc = CCM_RootGetDiv(CLOCK_ROOT_M33, &oldDiv);
+
+    /* Increase clock root divider for LP_HANDSHAKE module during ACK */
+    if (rc)
+    {
+        rc = CCM_RootSetDiv(CLOCK_ROOT_M33, oldDiv << 2U);
+    }
+#endif
+
     BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS = 
                 BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
                 BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(1U);
@@ -613,4 +629,12 @@ void PWR_LpHandshakeAck(void)
     BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS = 
                  BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
                  BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(0U);
+
+#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
+    /* Restore clock root divider for LP_HANDSHAKE module */
+    if (rc)
+    {
+        rc = CCM_RootSetDiv(CLOCK_ROOT_M33, oldDiv);
+    }
+#endif
 }

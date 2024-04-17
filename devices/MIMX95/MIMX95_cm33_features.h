@@ -609,4 +609,8 @@
 /* @brief Is affected by errata with ID 52127 (BLK_CTRL_NOC: default value requires access to sync) */
 #define FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127 (1)
 
+/* LP_HANDSHAKE_SM module features */
+/* @brief Is affected by errata with ID 52232 (LP_HANDSHAKE_SM: handshake clock sync) */
+#define FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232 (1)
+
 #endif /* _MIMX95_cm33_FEATURES_H_ */
