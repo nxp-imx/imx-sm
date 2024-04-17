@@ -15,6 +15,12 @@ Improvement {#RN_KN_IMP}
 
 | Key     | Summary                        | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|---|---|
-| [SM-15](https://jira.sw.nxp.com/projects/SM/issues/SM-15) | Support reporting SCMI notification queue overflow as a fault | Y | Y |
 | [SM-19](https://jira.sw.nxp.com/projects/SM/issues/SM-19) | Optimize boot time | Y | Y |
+
+Bug {#RN_KN_BUG}
+============
+
+| Key     | Summary                        | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|---|---|
+| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes | Y | Y |
 

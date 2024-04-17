@@ -23,16 +23,17 @@ New Feature {#RN_CL_NEW}
 | [SM-32](https://jira.sw.nxp.com/projects/SM/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling |   | Y | Y |
 | [SM-92](https://jira.sw.nxp.com/projects/SM/issues/SM-92) | Add SCMI function to return config info [[detail]](@ref RN_DETAIL_SM_92) |   | Y | Y |
 | [SM-97](https://jira.sw.nxp.com/projects/SM/issues/SM-97) | Add SCMI CPU protocol message to get CPU info [[detail]](@ref RN_DETAIL_SM_97) |   | Y | Y |
+| [SM-101](https://jira.sw.nxp.com/projects/SM/issues/SM-101) | Support LM group shutdown/reset [[detail]](@ref RN_DETAIL_SM_101) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-13](https://jira.sw.nxp.com/projects/SM/issues/SM-13) | Load FRO trim from fuses and run closed-loop |   | Y | Y |
+| [SM-13](https://jira.sw.nxp.com/projects/SM/issues/SM-13) | Remove the FRO trim hardcoding, instead load the value from fuses. |   | Y | Y |
 | [SM-16](https://jira.sw.nxp.com/projects/SM/issues/SM-16) | Support TMPSNS powerup/down and ELE enable |   | Y | Y |
 | [SM-17](https://jira.sw.nxp.com/projects/SM/issues/SM-17) | Implement SCMI message sequence checking [[detail]](@ref RN_DETAIL_SM_17) |   | Y | Y |
-| [SM-21](https://jira.sw.nxp.com/projects/SM/issues/SM-21) | Misc. FuSa improvements |   | Y | Y |
+| [SM-21](https://jira.sw.nxp.com/projects/SM/issues/SM-21) | Misc. FuSa improvements [[detail]](@ref RN_DETAIL_SM_21) |   | Y | Y |
 | [SM-71](https://jira.sw.nxp.com/projects/SM/issues/SM-71) | Enable/disable VDD_ARM on AP LM boot/shutdown [[detail]](@ref RN_DETAIL_SM_71) |   | Y | Y |
 | [SM-74](https://jira.sw.nxp.com/projects/SM/issues/SM-74) | Support additional configs for system testing [[detail]](@ref RN_DETAIL_SM_74) |   | Y | Y |
 | [SM-76](https://jira.sw.nxp.com/projects/SM/issues/SM-76) | Misc. updates to SM configurations |   | Y | Y |
@@ -52,10 +53,12 @@ Bug {#RN_CL_BUG}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes |   | Y | Y |
 | [SM-83](https://jira.sw.nxp.com/projects/SM/issues/SM-83) | IOMUXC header incorrectly overwrites the JTAG TDI mux [[detail]](@ref RN_DETAIL_SM_83) |   | Y | Y |
 | [SM-85](https://jira.sw.nxp.com/projects/SM/issues/SM-85) | Release of M7 CPUWAIT during M7MIX power down may result in unterminated transactions [[detail]](@ref RN_DETAIL_SM_85) |   | Y | Y |
 | [SM-95](https://jira.sw.nxp.com/projects/SM/issues/SM-95) | SCMI performance levels should avoid duplicate frequencies [[detail]](@ref RN_DETAIL_SM_95) |   | Y | Y |
+| [SM-99](https://jira.sw.nxp.com/projects/SM/issues/SM-99) | Remove ADC clock access as disable can hang the SM [[detail]](@ref RN_DETAIL_SM_99) |   | Y | Y |
+| [SM-103](https://jira.sw.nxp.com/projects/SM/issues/SM-103) | Monitor ELE dump and events commands do not work [[detail]](@ref RN_DETAIL_SM_103) |   | Y | Y |
+| [SM-104](https://jira.sw.nxp.com/projects/SM/issues/SM-104) | Fix issue with MRCs with ELE regions not being cleared [[detail]](@ref RN_DETAIL_SM_104) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -65,6 +68,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-94](https://jira.sw.nxp.com/projects/SM/issues/SM-94) | Align to i.MX95 Rev 1 datasheet [[detail]](@ref RN_DETAIL_SM_94) |   | Y | Y |
+| [SM-105](https://jira.sw.nxp.com/projects/SM/issues/SM-105) | Add software workaround for ERR052232 (SM handshake clock sync) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -84,6 +88,11 @@ SM-17: Implement SCMI message sequence checking {#RN_DETAIL_SM_17}
 Support an SCMI message sequence requirement. Enable per channel via new config and configtool options (sequence=token). This option requires the token field of the SCMI message header to increment sequentially. Failure to do so will result in a new SCMI_ERR_SEQ_ERROR error.
 
 Note this feature requires the agent keep and maintain the sequence number accoss all power state transitions other than SM-driven shutdown/reset which will reset the sequence to 0. This means suspend/resume may need to retain the sequence number using the SCMI_SequenceSave() and SCMI_SequenceRestore() functions. By default, checking of agent-side notification sequence is disabled unless enabled via SCMI_SequenceConfig().
+
+SM-21: Misc. FuSa improvements {#RN_DETAIL_SM_21}
+----------
+
+Updated the SCMI FuSa protocol. Implemented support functions for exit, exception, and fault recovery. Added support for ASSERT/ENSURE. Added a board callout to allow FuSa tools to configure clocks. Cleaned-up FCCU IRQ names and removed handling of other FCCU interrupts. Fixed issues with looping, error on buffer size, FREE bit status.
 
 SM-31: Create syslog to record info about suspend entry/exit {#RN_DETAIL_SM_31}
 ----------
@@ -185,10 +194,38 @@ In some cfgs, some resources might be shared in such a way that access rights ca
 
  
 
+SM-99: Remove ADC clock access as disable can hang the SM {#RN_DETAIL_SM_99}
+----------
+
+Giving an agent access to the ADC clock can allow the agent to disable the clock. An agent access then to the ADC will hang the bus, then hang the SM, and result in a watchdog reset of the system.
+
+This change removes implicit agent access to the ADC clock if own access to the ADC. In NXP reference board ports, the ADC clock is now initialized to 80MHz.
+
+Explicit access can be granted to the CLK_ADC resource in the cfg file but it also opens a path for the agent with access to cause an SM watchdog and reset.
+
 SM-100: Support final SCMI 3.2 spec {#RN_DETAIL_SM_100}
 ----------
 
 Updated the client and RPC protocol to match the final SCMI 3.2 spec. The previous implementation was to the BETA3 spec. The new version changed the pin control protocol messages which breaks backwards compatibility. Customers must use the OS/SDK version tested with this version of the SM.
 
 Also added generic OEM configuration handing for clocks. This is used to support SSC.
+
+SM-101: Support LM group shutdown/reset {#RN_DETAIL_SM_101}
+----------
+
+Introduced the concept of LM groups. Can be specified in the cfg file using the _group_ argument on the LM command. Default is to place all in group 0.
+
+Reset/shutdown of an LM group are now options for fault reactions. Added new reset/shutdown power modes that will operate only on LM in group 0.
+
+All this is to support leaving some LM up when resetting all the other LM to provide for a "partial" reset of the device.
+
+SM-103: Monitor ELE dump and events commands do not work {#RN_DETAIL_SM_103}
+----------
+
+The ELE MU are different and have eight RR/TR registers instead of four. Modified the SDK MU driver to support the difference. This resolved the hang with long ELE messages.
+
+SM-104: Fix issue with MRCs with ELE regions not being cleared {#RN_DETAIL_SM_104}
+----------
+
+Modified configtool to generate register writes to clear regions passed from ELE. Requires customers regenerate config header files.
 
