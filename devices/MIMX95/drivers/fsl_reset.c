@@ -40,6 +40,7 @@
 /* Local Variables */
 
 /* Global Variables */
+
 rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
 {
     [RST_LINE_A55C0_NCPUPORESET].lineMask =

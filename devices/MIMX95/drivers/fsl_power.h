@@ -38,9 +38,11 @@
 /*! @file */
 
 /* Includes */
+
 #include "fsl_common.h"
 
 /* Defines */
+
 #define PWR_NUM_MIX_SLICE               23UL
 
 #define PWR_MIX_SLICE_IDX_ANA           0U
@@ -214,6 +216,7 @@
 
 
 /* Types */
+
 typedef struct
 {
     uint32_t flags;
@@ -235,6 +238,7 @@ typedef struct
 } pwr_lp_hs_mode;
 
 /* Functions */
+
 bool PWR_Init(uint32_t srcMixIdx);
 bool PWR_IsParentPowered(uint32_t srcMixIdx);
 bool PWR_AnyChildPowered(uint32_t srcMixIdx);

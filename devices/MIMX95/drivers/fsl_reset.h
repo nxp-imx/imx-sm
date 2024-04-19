@@ -38,9 +38,11 @@
 /*! @file */
 
 /* Includes */
+
 #include "fsl_common.h"
 
 /* Defines */
+
 #define RST_NUM_REASONS                 32UL
 
 #define RST_REASON_CM33_LOCKUP          0U
@@ -157,6 +159,7 @@
 
 
 /* Types */
+
 typedef SRC_XSPR_Type src_mix_slice_t;
 typedef SRC_MEM_Type src_mem_slice_t;
 typedef SRC_GEN_Type src_generic_t;
@@ -172,11 +175,13 @@ typedef struct
 } rst_line_info_t;
 
 /* Functions */
+
 uint32_t RST_SystemGetResetReason(void);
 void RST_SystemClearResetReason(uint32_t resetReason);
 void RST_SystemRequestReset(void);
 
 /* Externs */
+
 extern rst_line_info_t const g_rstLineInfo[];
 
 #endif /* DRV_RST_H */

@@ -46,6 +46,7 @@
 /* Local types */
 
 /* Local variables */
+
 static uint32_t s_cpuWakeListA55 = 0U;
 
 /*--------------------------------------------------------------------------*/

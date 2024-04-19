@@ -40,12 +40,14 @@
 /* Local Defines */
 
 /* Local Types */
+
 typedef struct {
   uint32_t LPM0;
   uint32_t LPM1;
 } cpu_per_lpi_lpgc_t;
 
 /* Local Functions */
+
 static bool CPU_SwMultiWakeup(uint32_t cpuIdx);
 static bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode);
 static bool CPU_WdogReset(uint32_t cpuIdx);
@@ -59,6 +61,7 @@ static bool CPU_VirtLpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx,
     uint32_t *lpmSetting);
 
 /* Local Variables */
+
 static GPC_CPU_CTRL_Type *const s_gpcCpuCtrlPtrs[] = GPC_CPU_CTRL_BASE_PTRS;
 // coverity[misra_c_2012_rule_8_9_violation:FALSE]
 static GICR_Type *const s_gicrPtrs[] = GICR_BASE_PTRS;
