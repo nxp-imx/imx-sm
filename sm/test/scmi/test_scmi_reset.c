@@ -198,7 +198,7 @@ static void TEST_ScmiResetExclusive(bool pass, uint32_t channel,
     XECHECK(pass, SCMI_Reset(channel, domainId,
         flags, SCMI_RESET_ARCH_COLD), SCMI_ERR_DENIED);
 
-    if(pass)
+    if (pass)
     {
         /* Asynchronous Call -- Should Fail */
         flags = SCMI_RESET_FLAGS_ASYNC(1U)| SCMI_RESET_FLAGS_SIGNAL(0U)

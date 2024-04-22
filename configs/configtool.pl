@@ -3565,7 +3565,7 @@ sub startstop
 				if (@words > 0)
 				{
 					$rtn .= ', '  . '\\' . "\n";
-					$rtn .= '    .numArg = ' . @words . ',';
+					$rtn .= '     .numArg = ' . @words . ',';
 				}
 
 				for my $i (0 .. $#words)

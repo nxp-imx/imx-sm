@@ -1583,7 +1583,7 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     uint8_t clockMode = (uint8_t) MONITOR_Find(clockModes,
                         (int32_t) ARRAY_SIZE(clockModes), argv[1]);
 
-                    switch(clockMode)
+                    switch (clockMode)
                     {
                         /* on/off */
                         case 0:
@@ -2241,7 +2241,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                     uint8_t subCmd = (uint8_t) MONITOR_Find(subCmds,
                         (int32_t) ARRAY_SIZE(subCmds), argv[1]);
 
-                    switch(subCmd)
+                    switch (subCmd)
                     {
                         /* start */
                         case 0U:

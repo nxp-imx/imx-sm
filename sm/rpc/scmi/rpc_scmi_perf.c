@@ -330,7 +330,7 @@ int32_t RPC_SCMI_PerfDispatchCommand(scmi_caller_t *caller,
     uint32_t lenOut = sizeof(scmi_msg_status_t);
 
     /* Handle standard messages */
-    switch(messageId)
+    switch (messageId)
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tperf0_t);

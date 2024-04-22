@@ -242,7 +242,7 @@ int32_t RPC_SCMI_AgentInit(uint32_t agentId)
 void RPC_SCMI_Dispatch(uint32_t scmiChannel)
 {
     /* Check channel type */
-    switch(g_scmiChannelConfig[scmiChannel].type)
+    switch (g_scmiChannelConfig[scmiChannel].type)
     {
         case SM_SCMI_CHN_A2P:
             RPC_SCMI_A2pDispatch(scmiChannel);
@@ -762,7 +762,7 @@ static int32_t RPC_SCMI_A2pSubDispatch(scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    switch(protocolId)
+    switch (protocolId)
     {
         case SCMI_PROTOCOL_BASE:
             status = RPC_SCMI_BaseDispatchCommand(caller, messageId);

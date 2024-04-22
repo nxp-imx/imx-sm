@@ -242,7 +242,7 @@ bool PCA9451_BuckDvsVoltage2CodeConvert(uint32_t buckIdx, uint32_t microVolt,
     {
         case 1U:
         case 3U:
-            switch(microVolt)
+            switch (microVolt)
             {
                 case 750000U:
                     *voltCode = 0U;
@@ -262,7 +262,7 @@ bool PCA9451_BuckDvsVoltage2CodeConvert(uint32_t buckIdx, uint32_t microVolt,
             }
             break;
         case 2U:
-            switch(microVolt)
+            switch (microVolt)
             {
                 case 600000U:
                     *voltCode = 0U;
@@ -320,7 +320,7 @@ bool PCA9451_BuckDvsCode2VoltageConvert(uint32_t buckIdx, uint32_t voltCode,
         case 1U:
         case 3U:
 
-            switch(voltCode)
+            switch (voltCode)
             {
                 case 0U:
                     *microVolt = 750000U;
@@ -340,7 +340,7 @@ bool PCA9451_BuckDvsCode2VoltageConvert(uint32_t buckIdx, uint32_t voltCode,
             }
             break;
         case 2U:
-            switch(voltCode)
+            switch (voltCode)
             {
                 case 0U:
                     *microVolt = 600000U;
@@ -409,7 +409,7 @@ bool PCA9451_BuckRunVoltageSet(const PCA9451_Type *dev, uint8_t buckId,
 
     uint8_t regAddr = 0U;
 
-    switch(buckId)
+    switch (buckId)
     {
         case 1U:
             regAddr = PCA9451_REG_BUCK1OUT_DVS0;
@@ -459,7 +459,7 @@ bool PCA9451_BuckStbyVoltageSet(const PCA9451_Type *dev, uint8_t buckId,
 
     uint8_t regAddr = 0U;
 
-    switch(buckId)
+    switch (buckId)
     {
         case 1U:
             regAddr = PCA9451_REG_BUCK1OUT_DVS1;

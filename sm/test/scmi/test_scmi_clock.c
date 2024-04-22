@@ -317,7 +317,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         CHECK(SCMI_ClockAttributes(channel, clockId, &attributesParent,
             name));
 
-        if(SCMI_CLOCK_ATTR_PARENT(attributesParent) == 1U)
+        if (SCMI_CLOCK_ATTR_PARENT(attributesParent) == 1U)
         {
             printf("SCMI_ClockPossibleParentsGet(%u, %u)\n",
                 channel, clockId);
@@ -334,7 +334,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
                 SCMI_CLOCK_NUM_PARENT_FLAGS_NUM_PARENTS(numParentsFlags);
             printf("  parent clock identifiers= %u\n", numParents);
 
-            for(uint32_t i = 0U; i < numParents; i++)
+            for (uint32_t i = 0U; i < numParents; i++)
             {
                 printf("  possible parent clock = %u\n", parents[i]);
             }
@@ -451,7 +451,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 #endif
 
     /* Test for parentget and parentset*/
-    if(pass)
+    if (pass)
     {
         uint32_t parentId = 0U;
         uint32_t attributes = 0U;
@@ -465,7 +465,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 
         CHECK(SCMI_ClockParentGet(channel, clockId, NULL));
 
-        if(SCMI_CLOCK_ATTR_PARENT(attributes) == 1U)
+        if (SCMI_CLOCK_ATTR_PARENT(attributes) == 1U)
         {
             printf("SCMI_ClockParentSet(%u, %u)\n", channel, clockId);
             XCHECK(pass, SCMI_ClockParentSet(channel, clockId, parentId));

@@ -72,7 +72,7 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
     /* Do reaction */
     if (status == SM_ERR_SUCCESS)
     {
-        switch(reaction)
+        switch (reaction)
         {
             case LMM_REACT_SYS_RESET:
                 status = LMM_SystemReset(0U, 0U, false, &resetRec);

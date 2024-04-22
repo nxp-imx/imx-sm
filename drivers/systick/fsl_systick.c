@@ -125,7 +125,7 @@ void SYSTICK_TimeDelay(uint32_t usec)
     uint64_t ticks = SYSTICK_UsecToTicks(usec);
     
     /* Loop to break delay into smaller chunks */
-    while(ticks >  s_sysTickMax)
+    while (ticks >  s_sysTickMax)
     {
         SYSTICK_CycleDelay(s_sysTickMax);
         ticks -= s_sysTickMax;

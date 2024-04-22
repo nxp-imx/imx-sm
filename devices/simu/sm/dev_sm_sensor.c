@@ -131,7 +131,7 @@ int32_t DEV_SM_SensorDescribe(uint32_t sensorId,
         desc->timestampSupport = false;
         desc->timestampExponent = 0;
 
-        if(sensorId == DEV_SM_SENSOR_1)
+        if (sensorId == DEV_SM_SENSOR_1)
         {
             desc->timestampSupport = true;
             desc->timestampExponent = -3;
@@ -237,7 +237,7 @@ int32_t DEV_SM_SensorEnable(uint32_t sensorId, bool enable,
         /* Timestamp not supported */
         if (timestampReporting)
         {
-            if(sensorId != DEV_SM_SENSOR_1)
+            if (sensorId != DEV_SM_SENSOR_1)
             {
                 status = SM_ERR_NOT_SUPPORTED;
             }
@@ -247,7 +247,7 @@ int32_t DEV_SM_SensorEnable(uint32_t sensorId, bool enable,
             }
         }
 
-        if(status == SM_ERR_SUCCESS)
+        if (status == SM_ERR_SUCCESS)
         {
             /* Record sensor enable */
             sensorEnb[sensorId] = enable;
@@ -291,9 +291,9 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
     static bool s_sensor = false;
 
     s_sensor = !s_sensor;
-    if(s_sensor)
+    if (s_sensor)
     {
-        if((s_eventControl == DEV_SM_SENSOR_TP_BOTH)
+        if ((s_eventControl == DEV_SM_SENSOR_TP_BOTH)
             || (s_eventControl == DEV_SM_SENSOR_TP_RISING))
         {
             LMM_SensorEvent(s_sensorId, 0U, 1U);
@@ -301,7 +301,7 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
     }
     else
     {
-        if((s_eventControl == DEV_SM_SENSOR_TP_BOTH)
+        if ((s_eventControl == DEV_SM_SENSOR_TP_BOTH)
             || (s_eventControl == DEV_SM_SENSOR_TP_FALLING))
         {
             LMM_SensorEvent(s_sensorId, 0U, 0U);

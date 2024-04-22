@@ -306,7 +306,7 @@ int32_t RPC_SCMI_PinctrlDispatchCommand(scmi_caller_t *caller,
     uint32_t lenOut = sizeof(scmi_msg_status_t);
 
     /* Handle standard messages */
-    switch(messageId)
+    switch (messageId)
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tpinctrl0_t);

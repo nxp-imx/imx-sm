@@ -363,7 +363,7 @@ int32_t RPC_SCMI_BbmDispatchCommand(scmi_caller_t *caller,
     uint32_t lenOut = sizeof(scmi_msg_status_t);
 
     /* Handle standard messages */
-    switch(messageId)
+    switch (messageId)
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tbbm0_t);
@@ -455,7 +455,7 @@ int32_t RPC_SCMI_BbmDispatchNotification(scmi_msg_id_t msgId,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Handle notifications */
-    switch(msgId.messageId)
+    switch (msgId.messageId)
     {
         case RPC_SCMI_NOTIFY_BBM_RTC_EVENT:
             status = BbmRtcEvent(msgId, trigger);

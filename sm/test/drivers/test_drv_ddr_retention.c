@@ -102,7 +102,7 @@ void TEST_DrvDdrRetention(void)
     printf("Memory end = 0x%x\n", memEnd);
 
     success_count = 0U;
-    while(loop_counter > 0U)
+    while (loop_counter > 0U)
     {
         int32_t status;
 
@@ -153,7 +153,7 @@ void TEST_DrvDdrRetention(void)
                 memSrc = memSrc + MEM_STEP;
 
                 /* Check for need to wrap source address */
-                if((memSrc >= memEnd) || (memSrc < MEM_SRC))
+                if ((memSrc >= memEnd) || (memSrc < MEM_SRC))
                 {
                     memSrc = MEM_SRC;
                 }

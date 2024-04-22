@@ -205,7 +205,7 @@ uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
     if ((pAddr >= 0x80000000UL) && (pAddr < 0x80010000UL))
     {
         // Perform the probe
-        switch(width)
+        switch (width)
         {
             default:
                 *((uint8_t *) val) = *((const uint8_t *) addr);

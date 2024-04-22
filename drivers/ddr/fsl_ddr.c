@@ -117,7 +117,7 @@ static bool Mr_Write(uint32_t mr_Rank, uint32_t mr_Addr, uint32_t mr_Data)
     uint32_t chip_Select;
     bool rc = true;
 
-    if(mr_Rank == 1U)
+    if (mr_Rank == 1U)
     {
         chip_Select = 0U; /* CS0 */
     }
@@ -218,7 +218,8 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 {
                     DDRC_CTRL->DDRDSR_2 |=
                         (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT);
-                } while((DDRC_CTRL->DDRDSR_2 &
+                }
+                while ((DDRC_CTRL->DDRDSR_2 &
                 (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT)) != 0U);
 
                 /* Clear DDR_INTERVAL(this disables refreshes */
@@ -238,8 +239,9 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                     ~(1UL << DDRC_DDR_SDRAM_CFG_2_FRC_SR_SHIFT);
 
                 /* Wait PHY INIT complete */
-                while((DDRC_CTRL->DDRDSR_2 &
-                    (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT)) == 0U) {};
+                while ((DDRC_CTRL->DDRDSR_2 &
+                    (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT)) == 0U)
+                    {};
             }
         }
     }

@@ -245,7 +245,7 @@ int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Print reaction */
-    switch(*reaction)
+    switch (*reaction)
     {
         case LMM_REACT_SYS_RESET:
         case LMM_REACT_SYS_SHUTDOWN:

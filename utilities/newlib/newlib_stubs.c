@@ -77,7 +77,7 @@ int _write(int file, char *buf, int len)
 
     if ((uartConfig->base != NULL) && (file == STDOUT_FILENO || file == STDERR_FILENO))
     {
-        while((len--) != 0)
+        while ((len--) != 0)
         {
             if (*buf == '\n')
             {
@@ -129,14 +129,14 @@ caddr_t _sbrk(int incr)
     heapbase = (uint8_t *)__HeapBase;
 
     /* initialize */
-    if(heap_end == NULL)
+    if (heap_end == NULL)
     {
         heap_end = heapbase;
     }
 
     prev_heap_end = heap_end;
 
-    if(((heap_end + incr) - heapbase) > (int)size)
+    if (((heap_end + incr) - heapbase) > (int)size)
     {
         /* heap overflow */
         (void) _write(STDERR_FILENO, "Heap overflow!\n", 15);

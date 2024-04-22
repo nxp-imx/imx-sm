@@ -400,7 +400,7 @@ static void TEST_ScmiVoltageExclusive(bool pass, uint32_t channel,
     int32_t voltage[SCMI_VOLTAGE_MAX_VOLTAGE] = { 0 };
 
     /* Adequate Set Permissions */
-    if(pass)
+    if (pass)
     {
         /* Level Set */
         int32_t voltageLevel = 0;

@@ -259,7 +259,7 @@ void TEST_ScmiSensor(void)
                 SCMI_SENSOR_NUM_SENSOR_FLAGS_NUM_DESCS(numSensorFlags);
             printf(" numData=%u\n", numData);
 
-            for(uint16_t loopIndex = 0U; loopIndex<numData; loopIndex++)
+            for (uint16_t loopIndex = 0U; loopIndex<numData; loopIndex++)
             {
                 printf(" upper 32 data[%u]= %u\n lower 32 data[%u]= %u\n",
                     loopIndex + descIndex,
@@ -269,7 +269,7 @@ void TEST_ScmiSensor(void)
             }
             descIndex += numData;
         }
-        while(SCMI_SENSOR_NUM_SENSOR_FLAGS_REMAINING_DESCS(numSensorFlags)
+        while (SCMI_SENSOR_NUM_SENSOR_FLAGS_REMAINING_DESCS(numSensorFlags)
             > 0U);
     }
 
@@ -382,7 +382,7 @@ static void TEST_ScmiSensorSet(bool pass, uint32_t channel,
     uint32_t descIndex = 0U;
 
     /* Find sensor descriptor */
-    while(sensorId != s_desc[descIndex].sensorId)
+    while (sensorId != s_desc[descIndex].sensorId)
     {
         descIndex++;
     }

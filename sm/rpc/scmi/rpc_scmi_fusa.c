@@ -360,7 +360,7 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
     uint32_t lenOut = sizeof(scmi_msg_status_t);
 
     /* Handle standard messages */
-    switch(messageId)
+    switch (messageId)
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tfusa0_t);
@@ -452,7 +452,7 @@ int32_t RPC_SCMI_FusaDispatchNotification(scmi_msg_id_t msgId,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Handle notifications */
-    switch(msgId.messageId)
+    switch (msgId.messageId)
     {
         case RPC_SCMI_NOTIFY_FUSA_FEENV_STATE_EVENT:
             status = FusaFeenvStateEvent(msgId, trigger);

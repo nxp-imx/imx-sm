@@ -126,7 +126,7 @@ void TEST_ScmiPinctrl(void)
         uint8_t name[SCMI_PINCTRL_MAX_NAME];
         uint32_t flags = 0U;
 
-        for(uint8_t i = 0U; i < SCMI_PINCTRL_MAX_NAME; i++)
+        for (uint8_t i = 0U; i < SCMI_PINCTRL_MAX_NAME; i++)
         {
             name[i] = 0U;
         }
@@ -155,7 +155,7 @@ void TEST_ScmiPinctrl(void)
         NECHECK(SCMI_PinctrlAttributes(SM_TEST_DEFAULT_CHN,
             functions, flags, &attributes, name), SCMI_ERR_NOT_FOUND);
 
-        if(pins > 0U)
+        if (pins > 0U)
         {
             flags = SCMI_PINCTRL_FLAGS_SELECTOR(0U);
 
@@ -177,7 +177,7 @@ void TEST_ScmiPinctrl(void)
                 0U, flags, NULL, NULL));
         }
 
-        if(groups > 0U)
+        if (groups > 0U)
         {
             flags = SCMI_PINCTRL_FLAGS_SELECTOR(1U);
 
@@ -200,7 +200,7 @@ void TEST_ScmiPinctrl(void)
                 0U, flags, NULL, NULL));
         }
 
-        if(functions > 0U)
+        if (functions > 0U)
         {
             flags = SCMI_PINCTRL_FLAGS_SELECTOR(2U);
 
