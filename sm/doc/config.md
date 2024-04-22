@@ -868,7 +868,7 @@ Below is an explanation of each line:
 - **Lines 21-23** - Defines, OWNER and EXEC used below, DFMT0 used in include files for CPU masters
 - **Line 27** - Give LM0 the M33 core. M33P and OWNER are defines and expand to:
 @code
-    DEV_SM_PD_M33P DEV_SM_CLK_M33 DEV_SM_CLK_M33SYSTICK DEV_SM_CPU_M33P sa=secure MDAC_A16C=0-2 pd=all clk=all cpu=all 
+    DEV_SM_CLK_M33 DEV_SM_CLK_M33SYSTICK DEV_SM_CPU_M33P sa=secure MDAC_A16C=0-2 pd=all clk=all cpu=all 
 @endcode
   This configures the MDACs for secure (DID=2 from LM), ALL perms for the M33 related power
   domain, clocks, and CPU protocols.
