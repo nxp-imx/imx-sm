@@ -331,7 +331,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     static src_mem_slice_t *const s_srcMemPtrs[] = SRC_MEM_BASE_PTRS;
 
     int32_t status = SM_ERR_SUCCESS;
-    bool dramInRetention = false;
     uint32_t s_clkRootCtrl[DEV_SM_NUM_SLEEP_ROOTS];
     uint32_t cpuWakeMask[CPU_NUM_IDX][GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t sysWakeMask[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
@@ -466,6 +465,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             g_syslog.sysSleepRecord.sleepCnt++;
 
             /* Attempt to place DRAM into retention */
+            bool dramInRetention = false;
             if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
             {
                 /* Set flag to indicate DRAM retention is active */
