@@ -331,6 +331,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     static src_mem_slice_t *const s_srcMemPtrs[] = SRC_MEM_BASE_PTRS;
 
     int32_t status = SM_ERR_SUCCESS;
+    bool dramInRetention = false;
     uint32_t s_clkRootCtrl[DEV_SM_NUM_SLEEP_ROOTS];
     uint32_t cpuWakeMask[CPU_NUM_IDX][GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
     uint32_t sysWakeMask[GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT];
@@ -464,9 +465,13 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /*! Increment system sleep counter */
             g_syslog.sysSleepRecord.sleepCnt++;
 
-            /* Place DRAM into retention */
+            /* Attempt to place DRAM into retention */
             if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
             {
+                /* Set flag to indicate DRAM retention is active */
+                dramInRetention = true;
+
+                /* Power down DDRMIX */
                 if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
                     == SM_ERR_SUCCESS)
                 {
@@ -672,16 +677,21 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     DEV_SM_POWER_STATE_ON);
             }
 
-            if (status == SM_ERR_SUCCESS)
+            /* Check if DRAM retention active */
+            if (dramInRetention)
             {
-                /* Power up DDRMIX */
-                status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR,
-                    DEV_SM_POWER_STATE_ON);
-            }
+                if (status == SM_ERR_SUCCESS)
+                {
+                    /* Power up DDRMIX */
+                    status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR,
+                        DEV_SM_POWER_STATE_ON);
+                }
 
-            if (status == SM_ERR_SUCCESS)
-            {
-                status = DEV_SM_SystemDramRetentionExit();
+                if (status == SM_ERR_SUCCESS)
+                {
+                    /* Take DRAM out of retention */
+                    status = DEV_SM_SystemDramRetentionExit();
+                }
             }
 
             /* Restore SM NVIC */
@@ -779,11 +789,26 @@ int32_t DEV_SM_SystemDramRetentionEnter(void)
 {
     int32_t status = SM_ERR_SUCCESS;
     const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
+    uint8_t powerState = DEV_SM_POWER_STATE_OFF;
 
-    /* Enter retention */
-    if (!DDR_EnterRetention(ddr))
+    /* Get power state of DDRMIX */
+    status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_HARDWARE_ERROR;
+        /* DDRMIX must be ON to apply retention */
+        if (powerState != DEV_SM_POWER_STATE_ON)
+        {
+            status = SM_ERR_POWER;
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Enter retention */
+        if (!DDR_EnterRetention(ddr))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
     }
 
     if (status == SM_ERR_SUCCESS)
@@ -816,6 +841,18 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
     const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
+    uint8_t powerState = DEV_SM_POWER_STATE_OFF;
+
+    /* Get power state of DDRMIX */
+    status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* DDRMIX must be ON to remove retention */
+        if (powerState != DEV_SM_POWER_STATE_ON)
+        {
+            status = SM_ERR_POWER;
+        }
+    }
 
     /**
      * BIT(8) => src_ipc_ddrphy_presetn, PRESETN
@@ -824,9 +861,12 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
      * Ensure PRESETN go HIGH after power-up
      * Ensure RESET_N go LOW  after power-up
      */
-    if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN, RST_LINE_CTRL_DEASSERT))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_HARDWARE_ERROR;
+        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN, RST_LINE_CTRL_DEASSERT))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
     }
 
     if (status == SM_ERR_SUCCESS)
