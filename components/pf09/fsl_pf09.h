@@ -333,11 +333,21 @@ bool PF09_MonitorSet(const PF09_Type *dev, uint8_t monitor, uint8_t state,
  *
  * @param[in]     dev        Device info.
  * @param[in]     monitor    Monitor name.
- * @param[in]     monEn      Enable or Disable voltage monitoring.
+ * @param[in]     monEn      Enable or disable voltage monitoring.
  *
  * @return True if successful.
  */
 bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn);
+
+/*!
+ * Enable/disable XRESET monitoring in STANDBY
+ *
+ * @param[in]     dev        Device info.
+ * @param[in]     xrstEn     Enable or disable XRESET monitoring.
+ *
+ * @return True if successful.
+ */
+bool PF09_XrstStbyEnable(const PF09_Type *dev, bool xrstEn);
 
 #if defined(__cplusplus)
 }

@@ -86,6 +86,7 @@
 
 #define PF09_REG_SECURE_WR1     0x35U
 #define PF09_REG_SECURE_WR2     0x36U
+#define PF09_REG_SYS_CFG1       0x38U
 
 #define PF09_REG_WD_CTRL1       0x4EU
 #define PF09_REG_WD_CTRL2       0x4FU
@@ -590,7 +591,7 @@ bool PF09_LdoEnable(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     {
         uint8_t enable;
 
-        if (ldoEn == true)
+        if (ldoEn)
         {
             /* Set LDO_EN bit */
             enable = 0x20U;
@@ -682,7 +683,7 @@ bool PF09_VoltageSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
         }
     }
 
-    if (rc == true)
+    if (rc)
     {
         switch (regulator)
         {
@@ -740,7 +741,7 @@ bool PF09_VoltageGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
         ; /* Intentional empty else */
     }
 
-    if (rc == true)
+    if (rc)
     {
         switch (regulator)
         {
@@ -872,7 +873,7 @@ bool PF09_WdogEnable(const PF09_Type *dev, bool wdogEn)
     uint8_t wdEn;
     bool rc = true;
 
-    if (wdogEn == true)
+    if (wdogEn)
     {
         /* Set WD_EN bit */
         wdEn = 0x80U;
@@ -938,7 +939,7 @@ bool PF09_MonitorSet(const PF09_Type *dev, uint8_t monitor, uint8_t state,
         }
     }
 
-    if (rc == true)
+    if (rc)
     {
         switch (monitor)
         {
@@ -975,7 +976,7 @@ bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn)
     uint8_t code = 0U;
 
     /* Set Enable bit */
-    if (monEn == true)
+    if (monEn)
     {
         code = 0x80U;
     }
@@ -992,7 +993,27 @@ bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn)
 
     /* Return status */
     return rc;
+}
 
+/*--------------------------------------------------------------------------*/
+/* Enable/disable XRESET monitoring in STANDBY                              */
+/*--------------------------------------------------------------------------*/
+bool PF09_XrstStbyEnable(const PF09_Type *dev, bool xrstEn)
+{
+    bool rc;
+    uint8_t code = 0U;
+
+    /* Set Enable bit */
+    if (xrstEn)
+    {
+        code = 0x4U;
+    }
+
+    /* Write 8-bits */
+    rc = PF09_PmicWrite(dev, PF09_REG_SYS_CFG1, code, 0x4U);
+
+    /* Return status */
+    return rc;
 }
 
 /*==========================================================================*/
