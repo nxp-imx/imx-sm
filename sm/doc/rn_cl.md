@@ -17,13 +17,14 @@ New Feature {#RN_CL_NEW}
 |------------|-------------------------------|-------|---|---|
 | [SM-26](https://jira.sw.nxp.com/projects/SM/issues/SM-26) | Add support for vendor-defined SCMI system power states |   | Y | Y |
 | [SM-27](https://jira.sw.nxp.com/projects/SM/issues/SM-27) | Add low-power mode entry during SM idle |   | Y | Y |
-| [SM-28](https://jira.sw.nxp.com/projects/SM/issues/SM-28) | Add support for DRAM retention |   | Y | Y |
+| [SM-28](https://jira.sw.nxp.com/projects/SM/issues/SM-28) | Add support for DRAM retention [[detail]](@ref RN_DETAIL_SM_28) |   | Y | Y |
 | [SM-29](https://jira.sw.nxp.com/projects/SM/issues/SM-29) | Add support for PLL spread spectrum mode |   | Y | Y |
 | [SM-31](https://jira.sw.nxp.com/projects/SM/issues/SM-31) | Create syslog to record info about suspend entry/exit [[detail]](@ref RN_DETAIL_SM_31) |   | Y | Y |
 | [SM-32](https://jira.sw.nxp.com/projects/SM/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling |   | Y | Y |
 | [SM-92](https://jira.sw.nxp.com/projects/SM/issues/SM-92) | Add SCMI function to return config info [[detail]](@ref RN_DETAIL_SM_92) |   | Y | Y |
 | [SM-97](https://jira.sw.nxp.com/projects/SM/issues/SM-97) | Add SCMI CPU protocol message to get CPU info [[detail]](@ref RN_DETAIL_SM_97) |   | Y | Y |
 | [SM-101](https://jira.sw.nxp.com/projects/SM/issues/SM-101) | Support LM group shutdown/reset [[detail]](@ref RN_DETAIL_SM_101) |   | Y | Y |
+| [SM-108](https://jira.sw.nxp.com/projects/SM/issues/SM-108) | Support the i.MX95 15x15 EVK [[detail]](@ref RN_DETAIL_SM_108) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -31,7 +32,7 @@ Improvement {#RN_CL_IMP}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-13](https://jira.sw.nxp.com/projects/SM/issues/SM-13) | Remove the FRO trim hardcoding, instead load the value from fuses. |   | Y | Y |
-| [SM-16](https://jira.sw.nxp.com/projects/SM/issues/SM-16) | Support TMPSNS powerup/down and ELE enable |   | Y | Y |
+| [SM-16](https://jira.sw.nxp.com/projects/SM/issues/SM-16) | Support TMPSNS powerup/down and ELE enable [[detail]](@ref RN_DETAIL_SM_16) |   | Y | Y |
 | [SM-17](https://jira.sw.nxp.com/projects/SM/issues/SM-17) | Implement SCMI message sequence checking [[detail]](@ref RN_DETAIL_SM_17) |   | Y | Y |
 | [SM-21](https://jira.sw.nxp.com/projects/SM/issues/SM-21) | Misc. FuSa improvements [[detail]](@ref RN_DETAIL_SM_21) |   | Y | Y |
 | [SM-71](https://jira.sw.nxp.com/projects/SM/issues/SM-71) | Enable/disable VDD_ARM on AP LM boot/shutdown [[detail]](@ref RN_DETAIL_SM_71) |   | Y | Y |
@@ -41,7 +42,6 @@ Improvement {#RN_CL_IMP}
 | [SM-82](https://jira.sw.nxp.com/projects/SM/issues/SM-82) | Create reset reason for SM error/exit [[detail]](@ref RN_DETAIL_SM_82) |   | Y | Y |
 | [SM-84](https://jira.sw.nxp.com/projects/SM/issues/SM-84) | Remove unnecessary SM clock permissions for the AP [[detail]](@ref RN_DETAIL_SM_84) |   | Y | Y |
 | [SM-86](https://jira.sw.nxp.com/projects/SM/issues/SM-86) | Fix MISRA violations that resulted from new scan rules |   | Y | Y |
-| [SM-87](https://jira.sw.nxp.com/projects/SM/issues/SM-87) | Improve unit test coverage |   | Y | Y |
 | [SM-93](https://jira.sw.nxp.com/projects/SM/issues/SM-93) | Add PERF_GPU to the GPU_PROT/NPROT resources [[detail]](@ref RN_DETAIL_SM_93) |   | Y | Y |
 | [SM-96](https://jira.sw.nxp.com/projects/SM/issues/SM-96) | Add cfg to support a NETC shared use-case [[detail]](@ref RN_DETAIL_SM_96) |   | Y | Y |
 | [SM-98](https://jira.sw.nxp.com/projects/SM/issues/SM-98) | Support SCMI agent reset when resources are shared [[detail]](@ref RN_DETAIL_SM_98) |   | Y | Y |
@@ -82,6 +82,11 @@ Details {#CL_DETAIL}
 
 This section provides details for select changes.
 
+SM-16: Support TMPSNS powerup/down and ELE enable {#RN_DETAIL_SM_16}
+----------
+
+Added new DEV_SM functions for sensor power up and down. Powered down the A55 sensor when the MIX goes off. Powered up/down the ANA sensor as part of system suspend.
+
 SM-17: Implement SCMI message sequence checking {#RN_DETAIL_SM_17}
 ----------
 
@@ -93,6 +98,11 @@ SM-21: Misc. FuSa improvements {#RN_DETAIL_SM_21}
 ----------
 
 Updated the SCMI FuSa protocol. Implemented support functions for exit, exception, and fault recovery. Added support for ASSERT/ENSURE. Added a board callout to allow FuSa tools to configure clocks. Cleaned-up FCCU IRQ names and removed handling of other FCCU interrupts. Fixed issues with looping, error on buffer size, FREE bit status.
+
+SM-28: Add support for DRAM retention {#RN_DETAIL_SM_28}
+----------
+
+Added DRC driver to perform DRAM retention when entering system suspend. Relies on OEI DDR plug-in changes to handover the config so users must utilize the plug-in associated with the release.
 
 SM-31: Create syslog to record info about suspend entry/exit {#RN_DETAIL_SM_31}
 ----------
@@ -228,4 +238,9 @@ SM-104: Fix issue with MRCs with ELE regions not being cleared {#RN_DETAIL_SM_10
 ----------
 
 Modified configtool to generate register writes to clear regions passed from ELE. Requires customers regenerate config header files.
+
+SM-108: Support the i.MX95 15x15 EVK {#RN_DETAIL_SM_108}
+----------
+
+The i.MX95 15x15 EVK has the PF09 in ASILB mode by default. This change writes to the PMIC to change the XRESET handling.
 

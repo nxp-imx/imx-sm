@@ -38,6 +38,7 @@ Highlights {#RN_HIGH}
 ==========
 
 - Added system suspend/resume support
+- Added support for the i.MX95 15x15 EVK
 - Misc. improvements and bug fixes
 
 Note these are highlights of the original release. These do not cover changes
