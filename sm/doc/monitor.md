@@ -55,12 +55,14 @@ System Commands
 | stage serial[container]     | set boot stage to serial  and reset                          |
 | suspend                     | request all LM suspend (sleep)                               |
 | wake                        | request all LM wake (resume)                                 |
+| idle                        | enter SM idle (system suspend if all LM in suspend)          |
 | wdog warm                   | configure wdog to generate warm reset                        |
 | wdog cold                   | configure wdog to generate warm reset and drive WDOG_ANY     |
 | wdog irq                    | configure wdog to drive WDOG_ANY                             |
 | wdog off                    | turn off the watchdog                                        |
 | wdog trigger                | trigger the watchdog                                         |
 | fault *id*                  | trigger the *id* fault                                       |
+| assert *status*             | assert with status *status*                                  |
 
 Logical Machine Commands
 ------------------------
