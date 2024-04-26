@@ -80,33 +80,6 @@ typedef struct
     uint32_t extInfo[DEV_SM_NUM_EXT_INFO];
 } dev_sm_rst_rec_t;
 
-/*!
- * System sleep record
- */
-typedef struct
-{
-    /*! System sleep entry latency */
-    uint32_t sleepEntryUsec;
-
-    /*! System sleep exit latency */
-    uint32_t sleepExitUsec;
-
-    /*! System sleep counter */
-    uint32_t sleepCnt;
-
-    /*! IRQ/exception causing system wake */
-    uint32_t wakeSource;
-
-    /*! MIX power status */
-    uint32_t mixPwrStat;
-
-    /*! MEM power status */
-    uint32_t memPwrStat;
-
-    /*! PLL power status */
-    uint32_t pllPwrStat;
-} dev_sm_sys_sleep_rec_t;
-
 /* Functions */
 
 /*!
@@ -128,13 +101,6 @@ int32_t DEV_SM_SystemInit(void);
  * @param[in]     powerMode  Mode to store
  */
 void DEV_SM_SystemPowerModeSet(uint32_t powerMode);
-
-/*!
- * Get the power mode.
- *
- * @param[out]    powerMode  Pointer to return the power mode
- */
-void DEV_SM_SystemPowerModeGet(uint32_t *powerMode);
 
 /*!
  * Reset the system.

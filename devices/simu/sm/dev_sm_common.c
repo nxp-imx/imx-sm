@@ -51,6 +51,8 @@
 
 /* Global variables */
 
+dev_sm_syslog_t g_syslog;
+
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
@@ -78,11 +80,11 @@ int32_t DEV_SM_SyslogGet(uint32_t flags, const dev_sm_syslog_t **syslog,
     uint32_t *len)
 {
     /* Return data */
-    *syslog = NULL;
-    *len = 0U;
+    *syslog = &g_syslog;
+    *len = sizeof(dev_sm_syslog_t);
 
     /* Return result */
-    return SM_ERR_NOT_SUPPORTED;
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -96,6 +98,11 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
 
     /* Get data */
     status = DEV_SM_SyslogGet(flags, &syslog, &len);
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        printf("Sys power mode = 0x%08X\n", syslog->sysPwrMode);
+    }
 
     /* Return result */
     return status;

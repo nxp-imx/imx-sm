@@ -55,6 +55,7 @@ System Commands
 | stage serial[container]     | set boot stage to serial  and reset                          |
 | suspend                     | request all LM suspend (sleep)                               |
 | wake                        | request all LM wake (resume)                                 |
+| spm *mode*                  | set SM system power mode (used for system suspend)           |
 | idle                        | enter SM idle (system suspend if all LM in suspend)          |
 | wdog warm                   | configure wdog to generate warm reset                        |
 | wdog cold                   | configure wdog to generate warm reset and drive WDOG_ANY     |

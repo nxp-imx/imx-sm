@@ -110,3 +110,46 @@ void SYSCTR_TimeDelay(uint32_t usec)
     {
     }
 }
+
+/*--------------------------------------------------------------------------*/
+/* Configure SYSCTR frequency mode                                          */
+/*--------------------------------------------------------------------------*/
+void SYSCTR_FreqMode(bool bLowFreq, bool bWaitAck)
+{
+    uint32_t cntcr;
+
+    if (bLowFreq)
+    {
+        // Low-frequency mode request
+        cntcr = SYS_CTR_CONTROL->CNTCR;
+        cntcr |= SYS_CTR_CONTROL_CNTCR_FCR1_MASK;
+        cntcr &= ~SYS_CTR_CONTROL_CNTCR_FCR0_MASK;
+        SYS_CTR_CONTROL->CNTCR = cntcr;
+
+        if (bWaitAck)
+        {
+            /* Wait for low-frequency mode ack */
+            while ((SYS_CTR_CONTROL->CNTSR &
+                SYS_CTR_CONTROL_CNTSR_FCA1_MASK) == 0U)
+            {
+            }
+        }
+    }
+    else
+    {
+        /* High-frequency mode request */
+        cntcr = SYS_CTR_CONTROL->CNTCR;
+        cntcr &= ~SYS_CTR_CONTROL_CNTCR_FCR1_MASK;
+        cntcr |= SYS_CTR_CONTROL_CNTCR_FCR0_MASK;
+        SYS_CTR_CONTROL->CNTCR = cntcr;
+
+        if (bWaitAck)
+        {
+            // Wait for high-frequency mode ack
+            while ((SYS_CTR_CONTROL->CNTSR &
+                SYS_CTR_CONTROL_CNTSR_FCA0_MASK) == 0U)
+            {
+            }
+        }
+    }
+}

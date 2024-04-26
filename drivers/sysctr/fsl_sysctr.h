@@ -114,6 +114,14 @@ uint32_t SYSCTR_GetUsec32(void);
  */
 void SYSCTR_TimeDelay(uint32_t usec);
 
+/*!
+ * This function sets the frequency mode of the system counter.
+ *
+ * @param[in]     bLowFreq    True selects slow clock frequency mode
+ * @param[in]     bWaitAck    True waits for frequency mode transition
+ */
+void SYSCTR_FreqMode(bool bLowFreq, bool bWaitAck);
+
 /** @} */
 
 #endif /* DRV_SYSCTR_H */

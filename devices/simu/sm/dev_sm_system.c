@@ -48,7 +48,6 @@
 
 /* Local variables */
 
-static uint32_t s_powerMode = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
 
 /*--------------------------------------------------------------------------*/
@@ -67,15 +66,7 @@ int32_t DEV_SM_SystemInit(void)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_SystemPowerModeSet(uint32_t powerMode)
 {
-    s_powerMode = powerMode;
-}
-
-/*--------------------------------------------------------------------------*/
-/* get power mode                                                           */
-/*--------------------------------------------------------------------------*/
-void DEV_SM_SystemPowerModeGet(uint32_t *powerMode)
-{
-    *powerMode = s_powerMode;
+    g_syslog.sysPwrMode = powerMode;
 }
 
 /*--------------------------------------------------------------------------*/

@@ -123,7 +123,49 @@
         .valid = true \
     }
 
+/*!
+ * @name System power mode flags
+ */
+/** @{ */
+#define DEV_SM_SPM_SM_ACTIVE_MASK           (1U << 0U)  /*!< Keep SM active */
+#define DEV_SM_SPM_FRO_ACTIVE_MASK          (1U << 1U)  /*!< Keep FRO active */
+#define DEV_SM_SPM_SYSCTR_ACTIVE_MASK       (1U << 2U)  /*!< Keep SYSCTR active */
+#define DEV_SM_SPM_PMIC_STBY_INACTIVE_MASK  (1U << 3U)  /*!< No PMIC_STBY assertion */
+#define DEV_SM_SPM_OSC24M_ACTIVE_MASK       (1U << 4U)  /*!< Keep OSC24M active */
+#define DEV_SM_SPM_DRAM_ACTIVE_MASK         (1U << 5U)  /*!< Keep DRAM active */
+/** @} */
+
 /* Types */
+
+/*!
+ * System sleep record
+ */
+typedef struct
+{
+    /*! System sleep entry latency */
+    uint32_t sleepEntryUsec;
+
+    /*! System sleep exit latency */
+    uint32_t sleepExitUsec;
+
+    /*! System sleep counter */
+    uint32_t sleepCnt;
+
+    /*! IRQ/exception causing system wake */
+    uint32_t wakeSource;
+
+    /*! MIX power status */
+    uint32_t mixPwrStat;
+
+    /*! MEM power status */
+    uint32_t memPwrStat;
+
+    /*! PLL power status */
+    uint32_t pllPwrStat;
+
+    /*! System power mode */
+    uint32_t sysPwrMode;
+} dev_sm_sys_sleep_rec_t;
 
 /* Functions */
 

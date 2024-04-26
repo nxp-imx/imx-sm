@@ -44,6 +44,7 @@
 #include "fsl_ddr.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
+#include "fsl_sysctr.h"
 
 /* Local defines */
 
@@ -102,14 +103,6 @@ int32_t DEV_SM_SystemInit(void)
 void DEV_SM_SystemPowerModeSet(uint32_t powerMode)
 {
     s_powerMode = powerMode;
-}
-
-/*--------------------------------------------------------------------------*/
-/* get power mode                                                           */
-/*--------------------------------------------------------------------------*/
-void DEV_SM_SystemPowerModeGet(uint32_t *powerMode)
-{
-    *powerMode = s_powerMode;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -343,6 +336,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     /* Reset wake source of sleep record */
     g_syslog.sysSleepRecord.wakeSource = 0U;
 
+    /* Capture system power mode */
+    g_syslog.sysSleepRecord.sysPwrMode = s_powerMode;
+
     /* Capture power status of MIXes */
     g_syslog.sysSleepRecord.mixPwrStat = 0U;
     for (uint32_t mixIdx = 0U; mixIdx < PWR_NUM_MIX_SLICE; mixIdx++)
@@ -464,19 +460,23 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /*! Increment system sleep counter */
             g_syslog.sysSleepRecord.sleepCnt++;
 
-            /* Attempt to place DRAM into retention */
             bool dramInRetention = false;
-            if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
+            /* Check DRAM system power mode flag */
+            if ((s_powerMode & DEV_SM_SPM_DRAM_ACTIVE_MASK) == 0U)
             {
-                /* Set flag to indicate DRAM retention is active */
-                dramInRetention = true;
-
-                /* Power down DDRMIX */
-                if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
-                    == SM_ERR_SUCCESS)
+                /* Attempt to place DRAM into retention */
+                if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
                 {
-                    g_syslog.sysSleepRecord.mixPwrStat &=
-                        (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                    /* Set flag to indicate DRAM retention is active */
+                    dramInRetention = true;
+
+                    /* Power down DDRMIX */
+                    if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
+                        == SM_ERR_SUCCESS)
+                    {
+                        g_syslog.sysSleepRecord.mixPwrStat &=
+                            (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                    }
                 }
             }
 
@@ -542,17 +542,32 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Set target M33P sleep mode */
             (void) CPU_SleepModeSet(CPU_IDX_M33P, sleepMode);
 
-            /* TODO:  Apply configuration based on
-             *      SCMI system power mode flags
-             */
+            /* Check OSC_24M and DRAM system power mode flags */
+            if (((s_powerMode & DEV_SM_SPM_OSC24M_ACTIVE_MASK) == 0U) &&
+                ((s_powerMode & DEV_SM_SPM_DRAM_ACTIVE_MASK) == 0U))
+            {
+                /* Shut off OSC_24M during system sleep */
+                GPC_GLOBAL->GPC_ROSC_CTRL =
+                    GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK;
+            }
+            else
+            {
+                /* Keep OSC_24M active during system sleep */
+                GPC_GLOBAL->GPC_ROSC_CTRL = 0U;
+            }
 
-            /* Shut off OSC_24M during system sleep */
-            GPC_GLOBAL->GPC_ROSC_CTRL =
-                GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK;
-
-            /* Enable GPC PMIC standby control */
-            GPC_GLOBAL->GPC_PMIC_CTRL =
-                GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK;
+            /* Check PMIC_STBY system power mode flag */
+            if ((s_powerMode & DEV_SM_SPM_PMIC_STBY_INACTIVE_MASK) == 0U)
+            {
+                /* Enable GPC PMIC standby control */
+                GPC_GLOBAL->GPC_PMIC_CTRL =
+                    GPC_GLOBAL_GPC_PMIC_CTRL_PMIC_STBY_EN_MASK;
+            }
+            else
+            {
+                /* Disable GPC PMIC standby control */
+                GPC_GLOBAL->GPC_PMIC_CTRL = 0U;
+            }
 
             /* Power down eFUSE */
             GPC_GLOBAL->GPC_EFUSE_CTRL =
@@ -596,12 +611,23 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Process SM LPIs for sleep entry */
             (void) CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
 
-            /* Power down FRO */
-            FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
+            /* Check FRO system power mode flag */
+            if ((s_powerMode & DEV_SM_SPM_FRO_ACTIVE_MASK) == 0U)
+            {
+                /* Power down FRO */
+                FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
+            }
 
             /* Capture sleep entry latency */
             g_syslog.sysSleepRecord.sleepEntryUsec =
                 UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+
+            /* Check SYSCTR system power mode flag */
+            if ((s_powerMode & DEV_SM_SPM_SYSCTR_ACTIVE_MASK) != 0U)
+            {
+                /* Switch SYSCTR to low-freq mode (blocking) */
+                SYSCTR_FreqMode(true, true);
+            }
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
@@ -609,11 +635,25 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             __WFI();
             __ISB();
 
+            /* Check SYSCTR system power mode flag
+             *
+             * NOTE: switch completion required before read of exit timestamp
+             */
+            if ((s_powerMode & DEV_SM_SPM_SYSCTR_ACTIVE_MASK) != 0U)
+            {
+                /* Switch SYSCTR to high-freq mode (blocking) */
+                SYSCTR_FreqMode(false, true);
+            }
+
             /* Capture start of sleep exit */
             sleepExitStart = DEV_SM_Usec64Get();
 
-            /* Power up FRO */
-            FRO->CSR.SET = FRO_CSR_FROEN_MASK;
+            /* Check FRO system power mode flag */
+            if ((s_powerMode & DEV_SM_SPM_FRO_ACTIVE_MASK) != 0U)
+            {
+                /* Power up FRO */
+                FRO->CSR.SET = FRO_CSR_FROEN_MASK;
+            }
 
             /* Capture wake source */
             g_syslog.sysSleepRecord.wakeSource =
@@ -649,10 +689,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
                     s_clkRootCtrl[sleepRootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
             }
-
-            /* TODO:  Apply configuration based on
-             *      SCMI system power mode flags
-             */
 
             /* Power up eFUSE */
             GPC_GLOBAL->GPC_EFUSE_CTRL = 0U;
@@ -759,24 +795,38 @@ int32_t DEV_SM_SystemIdle(void)
 
     __disable_irq();
 
-    /* Check if conditions allow system sleep */
-    uint32_t sysSleepStat;
-    if (CPU_SystemSleepStatusGet(&sysSleepStat))
+    /* Check if system power mode flag allows system sleep */
+    if ((s_powerMode & DEV_SM_SPM_SM_ACTIVE_MASK) == 0U)
     {
-        if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
+        /* Check if conditions allow system sleep */
+        uint32_t sysSleepStat;
+        if (CPU_SystemSleepStatusGet(&sysSleepStat))
         {
-            status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
-        }
-        /* Otherwise stay in RUN mode and enter WFI */
-        else
-        {
-            (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
-            __DSB();
-            // coverity[misra_c_2012_rule_1_2_violation:FALSE]
-            __WFI();
-            __ISB();
+            if (sysSleepStat == CPU_SLEEP_MODE_SUSPEND)
+            {
+                status = DEV_SM_SystemSleep(CPU_SLEEP_MODE_SUSPEND);
+            }
+            /* Otherwise stay in RUN mode and enter WFI */
+            else
+            {
+                (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+                __DSB();
+                // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+                __WFI();
+                __ISB();
+            }
         }
     }
+    /* SM remains active, no system sleep */
+    else
+    {
+        (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+        __DSB();
+        // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+        __WFI();
+        __ISB();
+    }
+
     __enable_irq();
 
     return status;

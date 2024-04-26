@@ -132,6 +132,7 @@ static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdSpm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 
 /* Local Variables */
@@ -201,6 +202,7 @@ int32_t MONITOR_Dispatch(char *line)
         "assert",
         "syslog",
         "grp",
+        "spm",
         "custom"
     };
 
@@ -375,7 +377,10 @@ int32_t MONITOR_Dispatch(char *line)
             case 50:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 51:  /* custom */
+            case 51:  /* spm */
+                status = MONITOR_CmdSpm(argc - 1, &argv[1]);
+                break;
+            case 52:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
             default:
@@ -3043,6 +3048,32 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
     else
     {
         status = SM_ERR_MISSING_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* System power mode                                                        */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdSpm(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (argc < 1)
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
+    else
+    {
+        int32_t spm;
+
+        /* Parse data */
+        spm = strtol(argv[0], NULL, 0);
+
+        /* Set system power mode for the SM */
+        status = LMM_SystemPowerModeSet(0U, spm);
     }
 
     /* Return status */
