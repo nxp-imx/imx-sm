@@ -186,14 +186,6 @@
         .pdPerms[DEV_SM_PD_A55C4] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55C5] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55C0] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55C1] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55C2] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55C3] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55C4] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55C5] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55PER] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_A55P] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_A55] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \

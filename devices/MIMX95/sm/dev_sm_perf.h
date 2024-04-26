@@ -55,7 +55,7 @@
 /* Defines */
 
 /*! Number of device performance domains */
-#define DEV_SM_NUM_PERF     21U
+#define DEV_SM_NUM_PERF     13U
 
 /*!
  * @name Device performance domain indexes
@@ -74,14 +74,6 @@
 #define DEV_SM_PERF_VPU     10U  /*!< VPU domain */
 #define DEV_SM_PERF_CAM     11U  /*!< CAM domain */
 #define DEV_SM_PERF_DISP    12U  /*!< DISP domain */
-#define DEV_SM_PERF_A55PER  13U  /*!< A55PER domain */
-#define DEV_SM_PERF_A55P    14U  /*!< A55P domain */
-#define DEV_SM_PERF_A55C0   15U  /*!< A55C0 domain */
-#define DEV_SM_PERF_A55C1   16U  /*!< A55C1 domain */
-#define DEV_SM_PERF_A55C2   17U  /*!< A55C2 domain */
-#define DEV_SM_PERF_A55C3   18U  /*!< A55C3 domain */
-#define DEV_SM_PERF_A55C4   19U  /*!< A55C4 domain */
-#define DEV_SM_PERF_A55C5   20U  /*!< A55C5 domain */
 /** @} */
 
 /*!
