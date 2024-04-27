@@ -100,6 +100,7 @@ SDK_OBJS = \
 	$(OUT)/fsl_bbnsm.o  \
 	$(OUT)/fsl_ele.o  \
 	$(OUT)/fsl_fract_pll.o  \
+	$(OUT)/fsl_fro.o  \
 	$(OUT)/fsl_lpi2c.o  \
 	$(OUT)/fsl_lpuart.o  \
 	$(OUT)/fsl_mu.o  \

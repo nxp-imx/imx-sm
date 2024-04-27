@@ -86,16 +86,6 @@ void SystemInit(void)
                       (1UL << RST_REASON_WDOG4) |
                       (1UL << RST_REASON_WDOG5);
 
-    /* Configure FRO for open-loop */
-    FRO->CSR.CLR = FRO_CSR_TREN_MASK;
-    FRO->CSR.CLR = FRO_CSR_TRUPEN_MASK;
-
-    /* Configure FRO trim */
-    FRO->FROTRIM.RW = FRO_FROTRIM_TRIMTEMP(31U) | 2035U;
-
-    /* Enable FRO */
-    FRO->CSR.SET = FRO_CSR_FROEN_MASK;
-
     // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     SystemInitHook();
 }

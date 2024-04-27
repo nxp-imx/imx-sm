@@ -16,6 +16,7 @@
 #include "fsl_wdog32.h"
 #include "fsl_cache.h"
 #include "fsl_iomuxc.h"
+#include "fsl_fro.h"
 
 /*******************************************************************************
  * Definitions
@@ -236,6 +237,27 @@ void BOARD_ConfigMPU(void)
 /*--------------------------------------------------------------------------*/
 void BOARD_InitClocks(void)
 {
+    uint32_t fuseTrim = (uint32_t)((FSB->FUSE[FSB_FUSE_ANA_CFG4] &
+        FSB_FUSE_ANA_CFG4_FRO_TRIM_MASK) >>
+        FSB_FUSE_ANA_CFG4_FRO_TRIM_SHIFT);
+
+    if (fuseTrim == 0U)
+    {
+        /* Enable the FRO clock with default value */
+        (void)FRO_SetEnable(true);
+    }
+    else
+    {
+        /* Set the Trim value read from the fuses */
+        bool status = FRO_SetTrim(fuseTrim);
+
+        if (status)
+        {
+            /* Enable the FRO clock with default value */
+            (void) FRO_SetEnable(true);
+        }
+    }
+
     /* Configure default EXT_CLK1 rate tied to XTAL_OUT/EXT_CLK pin */
     (void) CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
 
