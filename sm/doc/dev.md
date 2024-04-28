@@ -49,7 +49,7 @@ the [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-
 website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare-metal target
 (arm-none-eabi) section, download the *.xv file to a directory for the tool chain (e.g. tools) and then:
 
-    tar xvf *.mv
+    tar xvf *.xv
 
 The latest toolchain should work but it is highly recommended to use the specific version listed in the
 release notes as this version was used for testing. Note the Linux-based ARM cross-compile toolchain

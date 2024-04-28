@@ -13,7 +13,7 @@ the [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-
 website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare-metal target
 (arm-none-eabi) section, download the *.xv file to a directory for the tool chain (e.g. tools) and then:
 
-    tar xvf *.mv
+    tar xvf *.xv
 
 Set the TOOLS shell variable to the directory the toolchain is installed in. For example:
 
