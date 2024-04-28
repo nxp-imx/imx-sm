@@ -77,7 +77,7 @@ int32_t MB_LOOPBACK_Init(uint8_t inst, uint8_t db, bool noIrq,
 uint32_t *MB_LOOPBACK_SmaGet(uint8_t inst, uint8_t db)
 {
     static uint32_t s_smtBuffer[SM_NUM_MB_LOOPBACK][SM_NUM_MB_LB_DB]
-    [SM_MB_LB_BUF_SIZE/4];
+    [SM_MB_LB_BUF_SIZE/4] = { 0 };
 
     return s_smtBuffer[inst][db];
 }

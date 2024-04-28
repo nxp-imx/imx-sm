@@ -375,7 +375,7 @@ bool PF53_VoltageSet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
         rc = PF53_ConvertVolts2Code(regulator, microVolt, &voltCode);
     }
 
-    if ((state <= PF53_STATE_VSTBY) && (rc == true))
+    if ((state <= PF53_STATE_VSTBY) && rc)
     {
         /* Check regulator index */
         if (regulator == PF53_REG_SW1)
@@ -416,7 +416,7 @@ bool PF53_VoltageGet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
         ; /* Intentional empty else */
     }
 
-    if (rc == true)
+    if (rc)
     {
         /* Check regulator index */
         if (regulator == PF53_REG_SW1)
@@ -491,7 +491,7 @@ bool PF53_WdogEnable(const PF53_Type *dev, bool wdogEn)
     uint8_t wdEn;
     bool rc = true;
 
-    if (wdogEn == true)
+    if (wdogEn)
     {
         /* Set WD_EN bit */
         wdEn = 0x01U;
@@ -544,7 +544,7 @@ static bool PF53_ConvertVolts2Code(uint8_t regulator, uint32_t microVolt,
     uint8_t *voltCode)
 {
     bool rc = true;
-    uint32_t code;
+    uint32_t code = 0U;
 
     /* Check regulator index */
     if (regulator == PF53_REG_SW1)
@@ -565,7 +565,7 @@ static bool PF53_ConvertVolts2Code(uint8_t regulator, uint32_t microVolt,
     }
 
     /* Return result, check voltCode */
-    if ((rc) && (voltCode != NULL))
+    if (rc && (voltCode != NULL))
     {
         *voltCode = (uint8_t) code;
     }
@@ -602,7 +602,7 @@ static bool PF53_ConvertCode2Volts(uint8_t regulator, uint8_t voltCode,
     }
 
     /* Return result, check microVolt */
-    if ((rc) && (microVolt != NULL))
+    if (rc && (microVolt != NULL))
     {
         *microVolt = microV;
     }

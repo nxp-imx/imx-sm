@@ -294,7 +294,7 @@ int32_t LMM_CpuPdLpmConfigSet(uint32_t lmId, uint32_t cpuId,
     uint32_t domainId, uint32_t lpmSetting, uint32_t retMask)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t pdMask;
+    uint32_t pdMask = 0U;
 
     /* Check parameters */
     if ((cpuId >= SM_NUM_CPU) || (domainId >= SM_NUM_POWER))
