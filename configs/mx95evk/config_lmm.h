@@ -155,7 +155,7 @@
     {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0},
 
 /*! Config for number of stop */
-#define SM_LM_NUM_STOP  30U
+#define SM_LM_NUM_STOP  33U
 
 /*! LM stop list */
 #define SM_LM_STOP_DATA \
@@ -188,7 +188,10 @@
     {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C0}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
-    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P},
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM}, \
+    {.lmId = 2U, .mSel = 1U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM}, \
+    {.lmId = 2U, .mSel = 2U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_ARM},
 
 /*--------------------------------------------------------------------------*/
 /* LM Fault Lists                                                           */
