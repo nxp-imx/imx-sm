@@ -95,11 +95,6 @@ extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
  */
 int32_t BRD_SM_SerialDevicesInit(void);
 
-/*!
- * GPIO1 interrupt handler.
- */
-void BRD_SM_Gpio1Handler(void);
-
 /** @} */
 
 #endif /* BRD_SM_HANDLERS_H */
