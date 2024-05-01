@@ -98,7 +98,7 @@ Configures the MU mailbox module. The defines in this file are as follows:
 - **SM_MB_MUn_CONFIG** - fills a single mb_mu_config_t structure for an MU mailbox
   - *mu* - Index to MU SDK driver, see MU_BASE_PTRS
   - *sma* - Shared memory address, undefined (0) indicates the MU SRAM
-  - *priority* - Priority of the MU interrupt, for example ::IRQ_PRIO_NOPREEMPT_CRITICAL
+  - *priority* - Priority of the MU interrupt, for example IRQ_PRIO_NOPREEMPT_CRITICAL
   - *xportType[]* - array of transport types, one per doorbell of the MB
   - *xportChannel[]* - array of transport channels, one per doorbell of the MB
 - **SM_NUM_MB_MU** - number of MU mailboxes
@@ -704,7 +704,7 @@ The configtool supports the following commands and key=value pairs in the input 
 |             | mu       | Index into SDK MU base pointer array, platform side |
 |             | test     | Index into SDK MU base pointer array, client side for testing |
 |             | sma      | Shared memory area address, undefined/0 = MU SRAM |
-|             | priority | MU interrupt prority is IRQ_PRIO_NOPREEMPT_\<VAL\>, e.g. ::IRQ_PRIO_NOPREEMPT_CRITICAL, deault is NORMAL |
+|             | priority | MU interrupt prority is IRQ_PRIO_NOPREEMPT_\<VAL\>, e.g. IRQ_PRIO_NOPREEMPT_CRITICAL, deault is NORMAL |
 | CHANNEL     | xport    | Define a channel of type SM_XPORT_<VAL\>, e.g. ::SM_XPORT_SMT, up to four per mailbox |
 |             | db       | Mailbox doorbell, 0-3 |
 |             | rpc      | RPC type of SM_RPC_<VAL\>, e.g. ::SM_RPC_SCMI |
