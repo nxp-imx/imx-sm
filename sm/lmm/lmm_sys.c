@@ -640,19 +640,16 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm)
 
     if (status == SM_ERR_SUCCESS)
     {
-        /* Send notifications */
-        for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
+        lmm_rpc_trigger_t trigger =
         {
-            lmm_rpc_trigger_t trigger =
-            {
-                .event = LMM_TRIGGER_SYSTEM,
-                .parm[0] = LMM_TRIGGER_PARM_LM_WAKE,
-                .parm[1] = lmId,
-                .parm[2] = wakeLm
-            };
+            .event = LMM_TRIGGER_SYSTEM,
+            .parm[0] = LMM_TRIGGER_PARM_LM_WAKE,
+            .parm[1] = lmId,
+            .parm[2] = wakeLm
+        };
 
-            (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
-        }
+        /* Notify LM via system */
+        (void) LMM_RpcNotificationTrigger(wakeLm, &trigger);
     }
 
     /* Return status */
