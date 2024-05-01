@@ -26,3 +26,10 @@ Bug {#RN_KN_BUG}
 |------------|-------------------------------|---|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes | Y | Y |
 
+Documentation {#RN_KN_DOC}
+============
+
+| Key     | Summary                        | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|---|---|
+| [SM-106](https://jira.sw.nxp.com/projects/SM/issues/SM-106) | Add dox to MX9 and MX95 device driver headers | Y | Y |
+

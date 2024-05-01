@@ -16,11 +16,11 @@ New Feature {#RN_CL_NEW}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-26](https://jira.sw.nxp.com/projects/SM/issues/SM-26) | Add support for vendor-defined SCMI system power states |   | Y | Y |
-| [SM-27](https://jira.sw.nxp.com/projects/SM/issues/SM-27) | Add low-power mode entry during SM idle |   | Y | Y |
+| [SM-27](https://jira.sw.nxp.com/projects/SM/issues/SM-27) | Add low-power mode entry during SM idle [[detail]](@ref RN_DETAIL_SM_27) |   | Y | Y |
 | [SM-28](https://jira.sw.nxp.com/projects/SM/issues/SM-28) | Add support for DRAM retention [[detail]](@ref RN_DETAIL_SM_28) |   | Y | Y |
-| [SM-29](https://jira.sw.nxp.com/projects/SM/issues/SM-29) | Add support for PLL spread spectrum mode |   | Y | Y |
+| [SM-29](https://jira.sw.nxp.com/projects/SM/issues/SM-29) | Add support for PLL spread spectrum mode [[detail]](@ref RN_DETAIL_SM_29) |   | Y | Y |
 | [SM-31](https://jira.sw.nxp.com/projects/SM/issues/SM-31) | Create syslog to record info about suspend entry/exit [[detail]](@ref RN_DETAIL_SM_31) |   | Y | Y |
-| [SM-32](https://jira.sw.nxp.com/projects/SM/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling |   | Y | Y |
+| [SM-32](https://jira.sw.nxp.com/projects/SM/issues/SM-32) | Add fairness/prioritization to SM IRQ/event handling [[detail]](@ref RN_DETAIL_SM_32) |   | Y | Y |
 | [SM-92](https://jira.sw.nxp.com/projects/SM/issues/SM-92) | Add SCMI function to return config info [[detail]](@ref RN_DETAIL_SM_92) |   | Y | Y |
 | [SM-97](https://jira.sw.nxp.com/projects/SM/issues/SM-97) | Add SCMI CPU protocol message to get CPU info [[detail]](@ref RN_DETAIL_SM_97) |   | Y | Y |
 | [SM-101](https://jira.sw.nxp.com/projects/SM/issues/SM-101) | Support LM group shutdown/reset [[detail]](@ref RN_DETAIL_SM_101) |   | Y | Y |
@@ -46,7 +46,7 @@ Improvement {#RN_CL_IMP}
 | [SM-96](https://jira.sw.nxp.com/projects/SM/issues/SM-96) | Add cfg to support a NETC shared use-case [[detail]](@ref RN_DETAIL_SM_96) |   | Y | Y |
 | [SM-98](https://jira.sw.nxp.com/projects/SM/issues/SM-98) | Support SCMI agent reset when resources are shared [[detail]](@ref RN_DETAIL_SM_98) |   | Y | Y |
 | [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec [[detail]](@ref RN_DETAIL_SM_100) |   | Y | Y |
-| [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55PER and A55P performance domains |   | Y | Y |
+| [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55 performance subdomains [[detail]](@ref RN_DETAIL_SM_102) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -68,7 +68,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-94](https://jira.sw.nxp.com/projects/SM/issues/SM-94) | Align to i.MX95 Rev 1 datasheet [[detail]](@ref RN_DETAIL_SM_94) |   | Y | Y |
-| [SM-105](https://jira.sw.nxp.com/projects/SM/issues/SM-105) | Add software workaround for ERR052232 (SM handshake clock sync) |   | Y | Y |
+| [SM-105](https://jira.sw.nxp.com/projects/SM/issues/SM-105) | Add software workaround for ERR052232 (SM handshake clock sync) [[detail]](@ref RN_DETAIL_SM_105) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -99,15 +99,61 @@ SM-21: Misc. FuSa improvements {#RN_DETAIL_SM_21}
 
 Updated the SCMI FuSa protocol. Implemented support functions for exit, exception, and fault recovery. Added support for ASSERT/ENSURE. Added a board callout to allow FuSa tools to configure clocks. Cleaned-up FCCU IRQ names and removed handling of other FCCU interrupts. Fixed issues with looping, error on buffer size, FREE bit status.
 
+SM-27: Add low-power mode entry during SM idle {#RN_DETAIL_SM_27}
+----------
+
+SM main processing loop has been updated to enter low-power mode during idle periods.  This low-power mode can range from a basic CM33 WFI to full system suspend depending on agent status and the aggregated system power mode.
+
+Note that when running SM with the monitor, use the 'idle' command to request SM to enter low-power idle.  This command will block on low-power entry until a subsequent character is sent to the SM monitor.
+
 SM-28: Add support for DRAM retention {#RN_DETAIL_SM_28}
 ----------
 
 Added DRC driver to perform DRAM retention when entering system suspend. Relies on OEI DDR plug-in changes to handover the config so users must utilize the plug-in associated with the release.
 
+SM-29: Add support for PLL spread spectrum mode {#RN_DETAIL_SM_29}
+----------
+
+In PLL spread spectrum mode, the output clock frequency is modulated (required for some applications) and the difference between high and low peak frequency is called the spread frequency. In down spread mode, the high peak is the base frequency itself and the low peak is at (base frequency - spread frequency).
+
+Support for PLL down spectrum is added which can now be controlled through the SCMI 3.2 extended clock configuration for type 0x80 (OEM defined type for spread spectrum). It can also be configured via LMM_ClockExtendedSet() or DEV_SM_ClockExtendedSet() calls from board port code.
+
+Below is the OEM defined format for extendedConfigVal for extended clock configuration type 0x80 (spread spectrum):
+ - Bits[7:0]: Spread Percentage (%) (for 2% spread, it should be 20 (0x14))
+
+ - Bits[23:8]: Modulation Frequency (KHz)
+
+ - Bits[24]: Enable/Disable
+
+ - Bits[31:25]: Reserved
+
+Notes:
+ - Spread is applied at the VCO frequency and gets applied to all its derivative clocks.
+
+ - Spread spectrum on PLL is applied on next CLOCK_RATE_SET command.
+
+SM monitor commands to get/set extended clock configuration:
+
+    $ clock.w ldbpll_vco ext 0x80 0x1753014
+    $ clock.r ext 0x80
+
+Example : To set 2% spread on ldbpll_vco with a 30KHz modulation frequency then extendedConfigVal for extended clock configuration type 0x80 (spread spectrum) would be set to 0x1753014 (bit[7:0] to 0x14 (20) for 2.0%, bit[23:8] to 0x7530 (30K) for 30KHz, and bit[24]=1 to enable spread spectrum).
+
+    >$ clock.w ldbpll_vco rate 2600000000
+    >$ clock.w ldbpll_vco ext 0x80 0x1753014
+    >$ clock.w ldbpll rate 1300000000
+
+Spread spectrum will be affective after running the CLOCK_RATE_SET command (clock.w ldbpll rate 1300000000) above.
+
 SM-31: Create syslog to record info about suspend entry/exit {#RN_DETAIL_SM_31}
 ----------
 
 Created new syslog to record information about suspend entry/exit. Added new 'syslog' monitor command to display the syslog. Can be retrieved as an array of raw 32-bit words via the new SCMI_MSG_MISC_SYSLOG and SCMI_MiscSyslog() client API function.
+
+SM-32: Add fairness/prioritization to SM IRQ/event handling {#RN_DETAIL_SM_32}
+----------
+
+Added support for dynamic adjustments of NVIC IRQ priorities to allow fairness/prioritization among SM event processing.
 
 SM-71: Enable/disable VDD_ARM on AP LM boot/shutdown {#RN_DETAIL_SM_71}
 ----------
@@ -229,6 +275,11 @@ Reset/shutdown of an LM group are now options for fault reactions. Added new res
 
 All this is to support leaving some LM up when resetting all the other LM to provide for a "partial" reset of the device.
 
+SM-102: Remove A55 performance subdomains {#RN_DETAIL_SM_102}
+----------
+
+The A55 performance subdomains (A55PER, A55P, and A55Cx) have been removed due to lack of independent clock sources for the supported performance levels.  The A55 performance domain should be used to collectively manage the performance setpoint of the Cortex-A55 cluster, cores, and peripheral interface. 
+
 SM-103: Monitor ELE dump and events commands do not work {#RN_DETAIL_SM_103}
 ----------
 
@@ -238,6 +289,11 @@ SM-104: Fix issue with MRCs with ELE regions not being cleared {#RN_DETAIL_SM_10
 ----------
 
 Modified configtool to generate register writes to clear regions passed from ELE. Requires customers regenerate config header files.
+
+SM-105: Add software workaround for ERR052232 (SM handshake clock sync) {#RN_DETAIL_SM_105}
+----------
+
+SM was updated with the recommended software workaround for ERR052232.  This workaround slows down the clock source connected to low-power handshake logic to avoid clock synchronization issues.
 
 SM-108: Support the i.MX95 15x15 EVK {#RN_DETAIL_SM_108}
 ----------
