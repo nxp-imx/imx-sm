@@ -1737,7 +1737,7 @@ static int32_t DEV_SM_PerfPowerCheck(uint32_t perfLevel, uint32_t srcMixIdx)
     /* Check if perfLevel needs local PLL */
     if (perfLevel > DEV_SM_PERF_LVL_PRK)
     {
-        switch(srcMixIdx)
+        switch (srcMixIdx)
         {
             /* DDR PLL is local to DDRMIX */
             case PWR_MIX_SLICE_IDX_DDR:
@@ -1881,7 +1881,7 @@ static int32_t DEV_SM_PerfPllFreqUpdate(uint32_t pllIdx,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if(!FRACTPLL_UpdateRate(pllIdx,
+    if (!FRACTPLL_UpdateRate(pllIdx,
         pllCfg->mfi,
         pllCfg->mfn,
         pllCfg->odiv))
@@ -1901,7 +1901,7 @@ static int32_t DEV_SM_PerfPfdFreqUpdate(uint32_t pllIdx, uint8_t pfdIdx,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if(!FRACTPLL_UpdateDfsRate(pllIdx,
+    if (!FRACTPLL_UpdateDfsRate(pllIdx,
         pfdIdx,
         pfdUpdate->mfi,
         pfdUpdate->mfn))
@@ -2205,7 +2205,7 @@ static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel)
     }
     else
     {
-        switch(domainId)
+        switch (domainId)
         {
             case DEV_SM_PERF_WAKEUP:
                 status = DEV_SM_PerfWakeupFreqUpdate(perfLevel);
@@ -2258,7 +2258,7 @@ static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    switch(domainId)
+    switch (domainId)
     {
         case DEV_SM_PERF_A55:
             {
@@ -2299,7 +2299,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
     uint32_t clockId;
     dev_sm_perf_desc_t const *perfDesc;
 
-    switch(domainId)
+    switch (domainId)
     {
         case DEV_SM_PERF_DRAM:
             clockId = DEV_SM_CLK_DRAM_GPR_SEL;

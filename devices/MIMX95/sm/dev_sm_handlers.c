@@ -948,23 +948,23 @@ static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
                 IrqPrioBoost(pInfoRel, relPrio);
             }
 
-           idx++;
+            idx++;
         }
 #endif
 
         /* Loop over compulsory table entries */
         idx = 0U;
-        while(idx < DEV_SM_NUM_IRQ_PRIO_IDX)
+        while (idx < DEV_SM_NUM_IRQ_PRIO_IDX)
         {
-             /* Get table entry */
-             irq_prio_info_t const *pInfoRel = &s_irqPrioInfo[idx];
+            /* Get table entry */
+            irq_prio_info_t const *pInfoRel = &s_irqPrioInfo[idx];
 
-             /* Check if table entry is active IRQ */
-             if (pInfo != pInfoRel)
-             {
-                 /* Boost priority of non-active IRQ */
-                 IrqPrioBoost(pInfoRel, relPrio);
-             }
+            /* Check if table entry is active IRQ */
+            if (pInfo != pInfoRel)
+            {
+                /* Boost priority of non-active IRQ */
+                IrqPrioBoost(pInfoRel, relPrio);
+            }
 
             idx++;
         }

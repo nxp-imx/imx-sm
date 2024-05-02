@@ -157,7 +157,7 @@ bool CCM_RootSetRate(uint32_t rootIdx, uint64_t rate, uint32_t roundRule)
         uint64_t quotient = srcRate / newRate;
 
         /* Apply rounding rule */
-        switch(roundRule)
+        switch (roundRule)
         {
             case CLOCK_ROUND_RULE_CEILING:
                 /* Ensure max root divider is not exceeded */

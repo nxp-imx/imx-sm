@@ -173,7 +173,7 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
     }
     else
     {
-        switch(powerState)
+        switch (powerState)
         {
             case DEV_SM_POWER_STATE_ON:
                 if (PWR_IsParentPowered(domainId))

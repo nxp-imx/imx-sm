@@ -158,7 +158,7 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if(clockId < DEV_SM_NUM_CLOCK)
+    if (clockId < DEV_SM_NUM_CLOCK)
     {
         if (roundSel <= 2U)
         {
@@ -186,7 +186,7 @@ int32_t DEV_SM_ClockRateGet(uint32_t clockId, uint64_t *rate)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if(clockId < DEV_SM_NUM_CLOCK)
+    if (clockId < DEV_SM_NUM_CLOCK)
     {
         *rate = s_clockFreq[clockId];
     }
@@ -207,7 +207,7 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if(clockId < DEV_SM_NUM_CLOCK)
+    if (clockId < DEV_SM_NUM_CLOCK)
     {
         s_clockState[clockId] = enable;
     }
@@ -228,7 +228,7 @@ int32_t DEV_SM_ClockIsEnabled(uint32_t clockId, bool *enabled)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if(clockId < DEV_SM_NUM_CLOCK)
+    if (clockId < DEV_SM_NUM_CLOCK)
     {
         *enabled = s_clockState[clockId];
     }
@@ -249,7 +249,7 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if(clockId < DEV_SM_NUM_CLOCK)
+    if (clockId < DEV_SM_NUM_CLOCK)
     {
         s_clockParent[clockId] = parent;
     }
@@ -270,7 +270,7 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if(clockId < DEV_SM_NUM_CLOCK)
+    if (clockId < DEV_SM_NUM_CLOCK)
     {
         *parent = s_clockParent[clockId];
     }

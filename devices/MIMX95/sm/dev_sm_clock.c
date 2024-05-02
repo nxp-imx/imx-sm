@@ -718,7 +718,7 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
 
     if (clockId < CLOCK_NUM_SRC)
     {
-        switch(roundSel)
+        switch (roundSel)
         {
             case DEV_SM_CLOCK_ROUND_DOWN:
                 if (!CLOCK_SourceSetRate(clockId, rate,
@@ -755,7 +755,7 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
 
         if (clockIndex < CLOCK_NUM_ROOT)
         {
-            switch(roundSel)
+            switch (roundSel)
             {
                 case DEV_SM_CLOCK_ROUND_DOWN:
                     if (!CCM_RootSetRate(clockIndex, rate,

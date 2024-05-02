@@ -598,7 +598,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Power down SYSPLL clock nodes */
             uint32_t clkSrcIdx = CLOCK_SRC_SYSPLL1_PFD2_DIV2;
-            while(clkSrcIdx >= CLOCK_SRC_SYSPLL1_VCO)
+            while (clkSrcIdx >= CLOCK_SRC_SYSPLL1_VCO)
             {
                 (void) CLOCK_SourceSetEnable(clkSrcIdx, false);
                 clkSrcIdx--;
@@ -668,7 +668,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Power up SYSPLL clock nodes */
             clkSrcIdx = CLOCK_SRC_SYSPLL1_VCO;
-            while(clkSrcIdx <= CLOCK_SRC_SYSPLL1_PFD2_DIV2)
+            while (clkSrcIdx <= CLOCK_SRC_SYSPLL1_PFD2_DIV2)
             {
                 (void) CLOCK_SourceSetEnable(clkSrcIdx, true);
                 clkSrcIdx++;
