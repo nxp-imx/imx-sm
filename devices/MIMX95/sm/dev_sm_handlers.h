@@ -114,11 +114,6 @@ void UsageFault_Handler(const uint32_t *sp);
 void SysTick_Handler(void);
 
 /*!
- * GPIO 1 interrupt 0 handler.
- */
-void GPIO1_0_IRQHandler(void);
-
-/*!
  * SM watchdog interrupt handler.
  *
  * @param[in]  sp  Stack pointer

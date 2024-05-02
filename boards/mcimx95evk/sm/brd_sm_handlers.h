@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -94,6 +94,11 @@ extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t BRD_SM_SerialDevicesInit(void);
+
+/*!
+ * GPIO 1 interrupt 0 handler.
+ */
+void GPIO1_0_IRQHandler(void);
 
 /** @} */
 
