@@ -15,7 +15,8 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-26](https://jira.sw.nxp.com/projects/SM/issues/SM-26) | Add support for vendor-defined SCMI system power states |   | Y | Y |
+| [SM-13](https://jira.sw.nxp.com/projects/SM/issues/SM-13) | Add FRO driver, support trim from fuses [[detail]](@ref RN_DETAIL_SM_13) |   | Y | Y |
+| [SM-26](https://jira.sw.nxp.com/projects/SM/issues/SM-26) | Add support for vendor-defined parameters passed to SYSTEM_POWER_STATE_SET [[detail]](@ref RN_DETAIL_SM_26) |   | Y | Y |
 | [SM-27](https://jira.sw.nxp.com/projects/SM/issues/SM-27) | Add low-power mode entry during SM idle [[detail]](@ref RN_DETAIL_SM_27) |   | Y | Y |
 | [SM-28](https://jira.sw.nxp.com/projects/SM/issues/SM-28) | Add support for DRAM retention [[detail]](@ref RN_DETAIL_SM_28) |   | Y | Y |
 | [SM-29](https://jira.sw.nxp.com/projects/SM/issues/SM-29) | Add support for PLL spread spectrum mode [[detail]](@ref RN_DETAIL_SM_29) |   | Y | Y |
@@ -31,13 +32,12 @@ Improvement {#RN_CL_IMP}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-13](https://jira.sw.nxp.com/projects/SM/issues/SM-13) | Remove the FRO trim hardcoding, instead load the value from fuses. |   | Y | Y |
 | [SM-16](https://jira.sw.nxp.com/projects/SM/issues/SM-16) | Support TMPSNS powerup/down and ELE enable [[detail]](@ref RN_DETAIL_SM_16) |   | Y | Y |
 | [SM-17](https://jira.sw.nxp.com/projects/SM/issues/SM-17) | Implement SCMI message sequence checking [[detail]](@ref RN_DETAIL_SM_17) |   | Y | Y |
 | [SM-21](https://jira.sw.nxp.com/projects/SM/issues/SM-21) | Misc. FuSa improvements [[detail]](@ref RN_DETAIL_SM_21) |   | Y | Y |
 | [SM-71](https://jira.sw.nxp.com/projects/SM/issues/SM-71) | Enable/disable VDD_ARM on AP LM boot/shutdown [[detail]](@ref RN_DETAIL_SM_71) |   | Y | Y |
 | [SM-74](https://jira.sw.nxp.com/projects/SM/issues/SM-74) | Support additional configs for system testing [[detail]](@ref RN_DETAIL_SM_74) |   | Y | Y |
-| [SM-76](https://jira.sw.nxp.com/projects/SM/issues/SM-76) | Misc. updates to SM configurations |   | Y | Y |
+| [SM-76](https://jira.sw.nxp.com/projects/SM/issues/SM-76) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_76) |   | Y | Y |
 | [SM-78](https://jira.sw.nxp.com/projects/SM/issues/SM-78) | Provide misc. control for ADC test voltage [[detail]](@ref RN_DETAIL_SM_78) |   | Y | Y |
 | [SM-82](https://jira.sw.nxp.com/projects/SM/issues/SM-82) | Create reset reason for SM error/exit [[detail]](@ref RN_DETAIL_SM_82) |   | Y | Y |
 | [SM-84](https://jira.sw.nxp.com/projects/SM/issues/SM-84) | Remove unnecessary SM clock permissions for the AP [[detail]](@ref RN_DETAIL_SM_84) |   | Y | Y |
@@ -59,6 +59,7 @@ Bug {#RN_CL_BUG}
 | [SM-99](https://jira.sw.nxp.com/projects/SM/issues/SM-99) | Remove ADC clock access as disable can hang the SM [[detail]](@ref RN_DETAIL_SM_99) |   | Y | Y |
 | [SM-103](https://jira.sw.nxp.com/projects/SM/issues/SM-103) | Monitor ELE dump and events commands do not work [[detail]](@ref RN_DETAIL_SM_103) |   | Y | Y |
 | [SM-104](https://jira.sw.nxp.com/projects/SM/issues/SM-104) | Fix issue with MRCs with ELE regions not being cleared [[detail]](@ref RN_DETAIL_SM_104) |   | Y | Y |
+| [SM-109](https://jira.sw.nxp.com/projects/SM/issues/SM-109) | LM wake sends message to all LM [[detail]](@ref RN_DETAIL_SM_109) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -82,6 +83,17 @@ Details {#CL_DETAIL}
 
 This section provides details for select changes.
 
+SM-13: Add FRO driver, support trim from fuses {#RN_DETAIL_SM_13}
+----------
+
+In case of open-loop configuration of the FRO, the TRIM value for the desired frequency setting needs to be configured into the TRIM register. Earlier, a hard corded value was configured into the TRIM register.
+
+This change adds an FRO driver and modifies the board port to read the trim value from the fuses (ANA_CFG4) and if valid configures the same into the TRIM using FRO_SetTrim(). Otherwise, it uses the default TRIM. This required removal of FRO initialization from the startup code. The board code must enable the FRO using FRO_SetEnable().
+
+Additionally, it also supports closed-loop configuration. In NXP board ports, the FRO is configured into the open-loop mode using the TRIM from the fuses. Open-loop is required for FuSa applications and to meet boot time requirements.
+
+Note customers must add FRO init code to their board port.
+
 SM-16: Support TMPSNS powerup/down and ELE enable {#RN_DETAIL_SM_16}
 ----------
 
@@ -92,17 +104,40 @@ SM-17: Implement SCMI message sequence checking {#RN_DETAIL_SM_17}
 
 Support an SCMI message sequence requirement. Enable per channel via new config and configtool options (sequence=token). This option requires the token field of the SCMI message header to increment sequentially. Failure to do so will result in a new SCMI_ERR_SEQ_ERROR error.
 
-Note this feature requires the agent keep and maintain the sequence number accoss all power state transitions other than SM-driven shutdown/reset which will reset the sequence to 0. This means suspend/resume may need to retain the sequence number using the SCMI_SequenceSave() and SCMI_SequenceRestore() functions. By default, checking of agent-side notification sequence is disabled unless enabled via SCMI_SequenceConfig().
+Note this feature requires the agent keep and maintain the sequence number across all power state transitions other than SM-driven shutdown/reset which will reset the sequence to 0. This means suspend/resume may need to retain the sequence number using the SCMI_SequenceSave() and SCMI_SequenceRestore() functions. By default, checking of agent-side notification sequence is disabled unless enabled via SCMI_SequenceConfig().
 
 SM-21: Misc. FuSa improvements {#RN_DETAIL_SM_21}
 ----------
 
 Updated the SCMI FuSa protocol. Implemented support functions for exit, exception, and fault recovery. Added support for ASSERT/ENSURE. Added a board callout to allow FuSa tools to configure clocks. Cleaned-up FCCU IRQ names and removed handling of other FCCU interrupts. Fixed issues with looping, error on buffer size, FREE bit status.
 
+This included renaming FCCU0_IRQn to FCCU_INT0_IRQn and removing FCCU 1/2 interrupt enables in the board code. Customers should make the same changes.
+
+
+SM-26: Add support for vendor-defined parameters passed to SYSTEM_POWER_STATE_SET {#RN_DETAIL_SM_26}
+----------
+
+The SCMI *SYSTEM_POWER_STATE_SET* command supports vendor-defined parameters passed via the *system_state* parameter.   The following bit assignments of the *system_state* parameter can be used to control behaviors during SM idle periods:
+
+- *BIT0:  SM_ACTIVE* - Setting this bit prevents SM from scanning the suspend status of agents and inhibits the system from entering system suspend.
+
+- *BIT1:  FRO_ACTIVE* - Setting this bit prevents SM from powering down FRO during suspend.  FRO may need to remain powered if a wake source requires it.
+
+- *BIT2:  SYSCTR_ACTIVE* - Setting this bit requests SM to keep SYSCTR active during system suspend by switching this counter to operate from the 32K slow clock input.
+
+- *BIT3:  PMIC_STBY_INACTIVE* - Setting this bit prevents SM from configuring the GPC to assert PMIC_STBY during system suspend.
+
+- *BIT4:  OSC24M_ACTIVE* - Setting this bit prevents SM from configuring the GPC to power down the OSC24M during system suspend.  Note this implies PMIC_STBY will not be asserted during system suspend.
+
+- *BIT5:  DRAM_ACTIVE_MASK* - Setting this bit prevents SM from transitioning the DRAM into retention during system suspend.  Note this implies OSC24M will remain active and PMIC_STBY will not be asserted during system suspend.
+ 
+
 SM-27: Add low-power mode entry during SM idle {#RN_DETAIL_SM_27}
 ----------
 
 SM main processing loop has been updated to enter low-power mode during idle periods.  This low-power mode can range from a basic CM33 WFI to full system suspend depending on agent status and the aggregated system power mode.
+
+This required adding BOARD_SystemSleepPrepare(), BOARD_SystemSleepEnter(), BOARD_SystemSleepExit(), and BOARD_SystemSleepUnprepare() to the board port code. Customers will have to add these functions to their board port.
 
 Note that when running SM with the monitor, use the 'idle' command to request SM to enter low-power idle.  This command will block on low-power entry until a subsequent character is sent to the SM monitor.
 
@@ -137,7 +172,7 @@ SM monitor commands to get/set extended clock configuration:
     $ clock.w ldbpll_vco ext 0x80 0x1753014
     $ clock.r ext 0x80
 
-Example : To set 2% spread on ldbpll_vco with a 30KHz modulation frequency then extendedConfigVal for extended clock configuration type 0x80 (spread spectrum) would be set to 0x1753014 (bit[7:0] to 0x14 (20) for 2.0%, bit[23:8] to 0x7530 (30K) for 30KHz, and bit[24]=1 to enable spread spectrum).
+Example : To set a 2% spread on the ldbpll_vco with a 30KHz modulation frequency the extendedConfigVal for the extended clock configuration type 0x80 (spread spectrum) would be set to 0x1753014 (bit[7:0] to 0x14 (20) for 2.0%, bit[23:8] to 0x7530 (30K) for 30KHz, and bit[24]=1 to enable spread spectrum).
 
     >$ clock.w ldbpll_vco rate 2600000000
     >$ clock.w ldbpll_vco ext 0x80 0x1753014
@@ -154,6 +189,8 @@ SM-32: Add fairness/prioritization to SM IRQ/event handling {#RN_DETAIL_SM_32}
 ----------
 
 Added support for dynamic adjustments of NVIC IRQ priorities to allow fairness/prioritization among SM event processing.
+
+As part of this change, the base GPIO1 interrupt handler was moved to board code (requires the board GPIO1 handler be renamed). Board code was also added to prioritize the GPIO1 interrupt. Customers using the GPIO1 interrupt will require similar changes. **Without the name change the GPIO1 interrupt handler will not run even though the code will compile.**
 
 SM-71: Enable/disable VDD_ARM on AP LM boot/shutdown {#RN_DETAIL_SM_71}
 ----------
@@ -176,6 +213,23 @@ Using this cfg files is identical to supported cfg files in the top-level config
 
  
 
+SM-76: Misc. updates to SM configurations {#RN_DETAIL_SM_76}
+----------
+
+Changes to the NXP EVK configs:
+
+- Assigned CLK_ELE to the SM (bug fix)
+- Fixed assignment of EIM_NPU and ERM_NPU (bug fix)
+- Added M7 power off on M7 LM shutdown as M7 TCM now retained
+- Assigned LPTMR1/2 to the M7 LM for SDK testing
+- Gave ATF all access to SYS
+- Removed assignment of SM clocks to AP-NS (Linux no longer requires)
+- Split DC into small functional resources to allow display sharing
+- Update NETC, PCI, and USB SMMU parameters (KPA, SID) for Linux
+
+Customers may need some of these changes to be compatible with the OS/SDKs associated with this release. Note also there were other changes as part of other CRs. In addition, some new config files create in the other directory (non official) for various test-cases.
+
+
 SM-78: Provide misc. control for ADC test voltage {#RN_DETAIL_SM_78}
 ----------
 
@@ -183,12 +237,14 @@ To enable the ADC self-test function in the ADC driver, the self-test function r
 
 In addition, this change modifies the way board controls are indexed. Before they were added to the end of device controls. The problem is this requires their value change anytime new device controls are added. This was changed to move board controls to start at 0x8000. This remapping is handled in the SCMI code layer and does not impact the board port. It does require board control indexes passed via SCMI from agents be changed this once but should not be something that has to occur in the future.
 
-Customers will need to update the indexes used in agent code. WiIl also need to regenerate their config headers from cfg files.
+Customers will need to update the indexes used in agent code. Also need to regenerate config headers from cfg files.
 
 SM-82: Create reset reason for SM error/exit {#RN_DETAIL_SM_82}
 ----------
 
 Created a new reset reason (DEV_SM_REASON_SM_ERR) to indicate the SM has errored. This will record the reset reason and reset the system. Called within the SM via SM_Error(). Also called if main() exits. The status code is stored in errId. If possible, the first extension word will contain the PC of the function that called SM_Error() or exit().
+
+Note this required changing BRD_SM_Exit() to pass a PC. Customers will have to make the same change to their board port code.
 
 SM-83: IOMUXC header incorrectly overwrites the JTAG TDI mux {#RN_DETAIL_SM_83}
 ----------
@@ -210,7 +266,7 @@ The release of CPUWAIT during MIX soft power down is only required for A55.  The
 SM-92: Add SCMI function to return config info {#RN_DETAIL_SM_92}
 ----------
 
-Added a new SCMI misc protocol function to get the SM config (cfg) file name and mSel value. Just the basename is returned, max of 16 characters. Also displayed in the debug monitor 'info' command.
+Added a new SCMI misc protocol message (SCMI_MSG_MISC_CFG_INFO) to get the SM config (cfg) file name and mSel value. The client API is SCMI_MiscCfgInfo(), Just the basename is returned, max of 16 characters. Also displayed in the debug monitor 'info' command.
 
 SM-93: Add PERF_GPU to the GPU_PROT/NPROT resources {#RN_DETAIL_SM_93}
 ----------
@@ -275,6 +331,8 @@ Reset/shutdown of an LM group are now options for fault reactions. Added new res
 
 All this is to support leaving some LM up when resetting all the other LM to provide for a "partial" reset of the device.
 
+Note this requires adding LM group reactions to BRD_SM_FaultReactionGet() in the board port. Customers will need to do the same.
+
 SM-102: Remove A55 performance subdomains {#RN_DETAIL_SM_102}
 ----------
 
@@ -299,4 +357,9 @@ SM-108: Support the i.MX95 15x15 EVK {#RN_DETAIL_SM_108}
 ----------
 
 The i.MX95 15x15 EVK has the PF09 in ASILB mode by default. This change writes to the PMIC to change the XRESET handling.
+
+SM-109: LM wake sends message to all LM {#RN_DETAIL_SM_109}
+----------
+
+Fixed issue where a request to wake an LM would send a message to all LM.
 
