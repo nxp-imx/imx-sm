@@ -138,14 +138,14 @@ bool FRO_GetMode(FRO_mode *mode)
 /*--------------------------------------------------------------------------*/
 /* Set the FRO Trim value                                                   */
 /*--------------------------------------------------------------------------*/
-bool FRO_SetTrim(uint32_t trimVal)
+bool FRO_SetTrim(uint32_t trim)
 {
     bool rc = true;
 
     /* Check the FRO running status */
     if (!s_froEnabled)
     {
-        s_configInfo.trimVal = trimVal;
+        s_configInfo.trimVal = trim;
     }
     else
     {
