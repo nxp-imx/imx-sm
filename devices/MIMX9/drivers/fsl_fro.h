@@ -33,7 +33,6 @@
 /* Includes */
 
 #include "fsl_common.h"
-#include "MIMX95_FRO.h"
 
 /* Defines */
 
