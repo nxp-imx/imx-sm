@@ -34,6 +34,8 @@ This is an engineering release! It is "as is" and not production quality.
 \htmlonly
 </font>\endhtmlonly
 
+<br>
+
 Highlights {#RN_HIGH}
 ==========
 

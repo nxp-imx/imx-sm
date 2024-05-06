@@ -223,7 +223,6 @@ Changes to the NXP EVK configs:
 - Added M7 power off on M7 LM shutdown as M7 TCM now retained
 - Assigned LPTMR1/2 to the M7 LM for SDK testing
 - Gave ATF all access to SYS
-- Removed assignment of SM clocks to AP-NS (Linux no longer requires)
 - Split DC into small functional resources to allow display sharing
 - Update NETC, PCI, and USB SMMU parameters (KPA, SID) for Linux
 
