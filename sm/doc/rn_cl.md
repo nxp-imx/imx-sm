@@ -47,6 +47,7 @@ Improvement {#RN_CL_IMP}
 | [SM-98](https://jira.sw.nxp.com/projects/SM/issues/SM-98) | Support SCMI agent reset when resources are shared [[detail]](@ref RN_DETAIL_SM_98) |   | Y | Y |
 | [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec [[detail]](@ref RN_DETAIL_SM_100) |   | Y | Y |
 | [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55 performance subdomains [[detail]](@ref RN_DETAIL_SM_102) |   | Y | Y |
+| [SM-111](https://jira.sw.nxp.com/projects/SM/issues/SM-111) | Enable QoS to be driven from CAMERAMIX block control [[detail]](@ref RN_DETAIL_SM_111) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -361,4 +362,9 @@ SM-109: LM wake sends message to all LM {#RN_DETAIL_SM_109}
 ----------
 
 Fixed issue where a request to wake an LM would send a message to all LM.
+
+SM-111: Enable QoS to be driven from CAMERAMIX block control {#RN_DETAIL_SM_111}
+----------
+
+Added QoS enable so that each regulator passes the value upstream.
 
