@@ -72,9 +72,16 @@ int32_t DEV_SM_CameraConfigLoad(void)
     /* Load TRDC C config */
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_C);
 
-    /* Load device config */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Enable ISI and ISP BLK_CTRL */
+        *((volatile uint32_t*) 0x4AFF0C98UL ) |= 1UL;
+        *((volatile uint32_t*) 0x4AFF0D18UL ) |= 1UL;
+        *((volatile uint32_t*) 0x4AFF0D98UL ) |= 1UL;
+        *((volatile uint32_t*) 0x4AFF0F18UL ) |= 1UL;
+        *((volatile uint32_t*) 0x4AFF0F98UL ) |= 1UL;
+
+        /* Load device config */
         status = CONFIG_Load(NULL, s_configData);
     }
 
@@ -502,16 +509,19 @@ int32_t DEV_SM_NocConfigLoad(void)
     /* Load TRDC N config */
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_N);
 
-    /* Load device config */
     if (status == SM_ERR_SUCCESS)
     {
+#if (defined(FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127) && FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127)
+        /* Issue read access to force sync of default values */
+        BLK_CTRL_NOCMIX->TIE_VALUE;
+#endif
+
+        /* Enable CameraMix BLK_CTRL */
+        *((volatile uint32_t*) 0x49062a98UL ) |= 1UL;
+
+        /* Load device config */
         status = CONFIG_Load(NULL, s_configData);
     }
-
-#if (defined(FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127) && FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127)
-    /* Issue read access to force sync of default values */
-    BLK_CTRL_NOCMIX->TIE_VALUE;
-#endif
 
 #ifdef SM_NOC_CONFIG_FUNC
     /* Run device config function */
