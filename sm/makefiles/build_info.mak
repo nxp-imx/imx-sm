@@ -38,7 +38,7 @@ SM_DEVICES = i.MX95 (A0), i.MX95 (A1)
 SM_ELE_VER = 0.0.3
 
 MKIMAGE_BRANCH = lf-6.6.23_2.0.0
-MKIMAGE_BUILD = Linux_IMX_Core
+MKIMAGE_BUILD = Linux_IMX_6.6.23_2.0.0
 MKIMAGE_N = latest
 
 $(OUT)/build_info.h :
