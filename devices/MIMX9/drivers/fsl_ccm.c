@@ -64,7 +64,7 @@ bool CCM_RootGetEnable(uint32_t rootIdx)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get CCM clock root enable status                                          */
+/* Set CCM clock root enable status                                          */
 /*--------------------------------------------------------------------------*/
 bool CCM_RootSetEnable(uint32_t rootIdx, bool enable)
 {

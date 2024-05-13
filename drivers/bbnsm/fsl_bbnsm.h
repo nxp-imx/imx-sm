@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 NXP
+ * Copyright 2021, 2024 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -379,5 +379,7 @@ void BBNSM_ButtonSetConfig(BBNSM_Type *base, bbnsm_button_config_t *btnConfig);
 #if defined(__cplusplus)
 }
 #endif
+
+/*! @}*/
 
 #endif /* _FSL_BBNSM_H_ */

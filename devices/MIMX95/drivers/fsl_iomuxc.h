@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -10,11 +10,16 @@
 #include "fsl_common.h"
 
 /*!
- * @addtogroup iomuxc_driver
+ * @addtogroup mx95_iomuxc_driver
  * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header file containing the API for the MX95 IOMUXC driver.
  */
 
-/*! @file */
+#ifndef DOXYGEN
 
 /*******************************************************************************
  * Definitions
@@ -919,6 +924,8 @@
 #define IOMUXC_PAD_APC_SHIFT   (24U)
 #define IOMUXC_PAD_APC(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_PAD_APC_SHIFT)) & IOMUXC_PAD_APC_MASK)
 
+#endif
+
 /*******************************************************************************
  * APIs
  ******************************************************************************/
@@ -927,18 +934,19 @@ extern "C" {
 #endif /*__cplusplus */
 
 /*! @name Configuration */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Sets the IOMUXC pin mux mode.
- * @note The first five parameters can be filled with the pin function ID macros.
+ * @note The first five parameters can be filled with the pin function ID
+ * macros.
  *
  * @param muxRegister    The pin mux register
  * @param muxMode        The pin mux mode
  * @param inputRegister  The select input register
  * @param inputDaisy     The input daisy
  * @param configRegister The config register
- * @param inputOn        The software input on
+ * @param inputOnfield   The software input on
  */
 static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
                                     uint32_t muxMode,
@@ -959,7 +967,8 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
 }
 /*!
  * @brief Sets the IOMUXC pin configuration.
- * @note The previous five parameters can be filled with the pin function ID macros.
+ * @note The previous five parameters can be filled with the pin function ID
+ * macros.
  *
  * @param muxRegister    The pin mux register
  * @param muxMode        The pin mux mode
@@ -980,7 +989,7 @@ static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
         *((volatile uint32_t *)configRegister) = configValue;
     }
 }
-/*@}*/
+/*! @} */
 
 #if defined(__cplusplus)
 }

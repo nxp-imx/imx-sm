@@ -27,21 +27,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*==========================================================================*/
+/*!
+ * @addtogroup MX95_PWR_driver
+ * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header for MX95 Power Driver.
+ */
+/*==========================================================================*/
+
 #ifndef DRV_PWR_H
 #define DRV_PWR_H
-
-/*!
- * @addtogroup PWR_driver
- * @{
- */
-
-/*! @file */
 
 /* Includes */
 
 #include "fsl_common.h"
 
 /* Defines */
+
+#ifndef DOXYGEN
 
 #define PWR_NUM_MIX_SLICE               23UL
 
@@ -214,42 +221,130 @@
 #define PWR_GPC_HS_PWR_VPU              18U
 #define PWR_GPC_HS_PWR_WAKEUP           19U
 
+#endif
 
 /* Types */
 
+/*!
+ * Power MIX management structure
+ */
 typedef struct
 {
-    uint32_t flags;
-    uint32_t memMask;
-    uint32_t retainMask;
-    uint32_t cpuMask;
-    uint32_t ipIsoMask;
-    uint32_t gpcReqMaskRst;
-    uint32_t gpcReqMaskPwr;
-    uint32_t authenCtrl;
-    uint64_t lpmSetting;
+    uint32_t flags;             /*!< MIX capabilities */
+    uint32_t memMask;           /*!< Bitmask of MEM slice instances */
+    uint32_t retainMask;        /*!< Bitmask of MEM slices always retained */
+    uint32_t cpuMask;           /*!< CPU mask */
+    uint32_t ipIsoMask;         /*!< ISO mask */
+    uint32_t gpcReqMaskRst;     /*!< GPC reset request mask */
+    uint32_t gpcReqMaskPwr;     /*!< GPC power request mask */
+    uint32_t authenCtrl;        /*!< MIX authentication control */
+    uint64_t lpmSetting;        /*!< MIX LPM setting */
 } pwrmix_mgmt_info_t;
 
+/*!
+ * Structure containing SM LP handshake details
+ */
 typedef struct 
 {
-    uint32_t srcMixIdx;
-    uint32_t req;
-    uint32_t stat;
+    uint32_t srcMixIdx;     /*!< SRX MIX identifier for the active LP request */
+    uint32_t req;           /*!< Active LP request */
+    uint32_t stat;          /*!< Active LP request status */
 } pwr_lp_hs_mode;
 
 /* Functions */
 
+/*!
+ * @name MX95 Power driver functions
+ * @{
+ */
+
+/*!
+ * Initialize MIX slice power configuration
+ *
+ * @param[in]   srcMixIdx       SRC MIX identifier
+ *
+ * This function initializes given MIX slice's power configuration.
+ *
+ * @return Returns true if MIX slice's power initialization is successful,
+ *         otherwise false.
+ */
 bool PWR_Init(uint32_t srcMixIdx);
+
+/*!
+ * Check if parent of MIX slice is powered
+ *
+ * @param[in]   srcMixIdx       SRC MIX identifier
+ *
+ * @return Returns true if parent of MIX slice is powered-on, otherwise false.
+ */
 bool PWR_IsParentPowered(uint32_t srcMixIdx);
+
+/*!
+ * Check if any child of MIX slice is powered
+ *
+ * @param[in]   srcMixIdx       SRC MIX identifier
+ *
+ * @return Returns true if any child of the given MIX slice is powered-on,
+ *         otherwise false.
+ */
 bool PWR_AnyChildPowered(uint32_t srcMixIdx);
+
+/*!
+ * Find number of children domains powered
+ *
+ * @param[in]   srcMixIdx       SRC MIX identifier
+ *
+ * @return Returns number of powered-on child domains for the given MIX slice.
+ */
 uint32_t PWR_NumChildPowered(uint32_t srcMixIdx);
+
+/*!
+ * Request system power down
+ *
+ * This function allows caller to request system power down.
+ */
 void PWR_SystemPowerDown(void);
+
+/*!
+ * Configure SM LP handshake mask
+ *
+ * @param[in]   srcMixIdx           SRC MIX identifier
+ * @param[in]   enableHandshake     Handshake enable flag (1=enable, 0=disable)
+ *
+ * This function enable/disable SM LP handshake.
+ */
 void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake);
+
+/*!
+ * Configure ELE LP handshake mask
+ *
+ * @param[in]   srcMixIdx           SRC MIX identifier
+ * @param[in]   enableHandshake     Handshake enable flag (1=enable, 0=disable)
+ *
+ * This function enable/disable ELE LP handshake.
+ */
 void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake);
+
+/*!
+ * Get SM LP handshake mode details
+ *
+ * @param[out]   lpHsMode    Structure containing SM LP handshake details
+ *
+ * This function gets SM LP handshake mode details like SRC MIX for active lp
+ * request, LP request and status.
+ */
 void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode);
+
+/*!
+ * Acknowledge LP handshake
+ */
 void PWR_LpHandshakeAck(void);
 
+/** @} */
+
 /* Externs */
+
+/*! Power MIX management info */
 extern pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[];
 
 #endif /* DRV_PWR_H */

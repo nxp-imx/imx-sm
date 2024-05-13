@@ -667,14 +667,14 @@ bool FRACTPLL_GetSscConfig(uint32_t pllIdx, uint32_t *spreadPercent,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Configure PLL SSC config                                                 */
+/* Calculate PLL SSC parameters                                             */
 /*--------------------------------------------------------------------------*/
 bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
     uint32_t *stop, uint32_t *step)
 {
     bool updateSsc = true;
 
-    /* Get spread frequncy at VCO */
+    /* Get spread frequency at VCO */
     uint32_t quotient = pllSsc->spreadPercent / 10U;
     uint32_t remain = pllSsc->spreadPercent % 10U;
 
@@ -716,7 +716,7 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
 
     if (updateSsc)
     {
-        /* Caculate STOP
+        /* Calculate STOP
          *
          * Spread = (STOP / MFD) * (Fref / RDIV)
          * (Spread * MFD) = STOP * Fref

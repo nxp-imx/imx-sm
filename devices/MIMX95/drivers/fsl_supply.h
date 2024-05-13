@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 NXP
+ * Copyright 2022, 2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,24 +27,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*==========================================================================*/
+/*!
+ * @addtogroup MX95_SUPPLY_driver
+ * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header for MX95 power supply driver.
+ */
+/*==========================================================================*/
+
 #ifndef DRV_PS_H
 #define DRV_PS_H
-
-/*!
- * @addtogroup SUPPLY_driver
- * @{
- */
-
-/*! @file */
 
 /* Includes */
 #include "fsl_common.h"
 
 /* Defines */
 
+/*! Number of power supply */
 #define PS_NUM_SUPPLY                   2UL
 
+/*! Power supply VDD_SOC */
 #define PS_VDD_SOC                      0U
+
+/*! Power supply VDD_ARM */
 #define PS_VDD_ARM                      1U
 
 /* Types */

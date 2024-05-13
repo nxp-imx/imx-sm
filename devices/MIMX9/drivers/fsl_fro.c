@@ -50,7 +50,7 @@ static FRO_config_info_t s_configInfo =
 };
 
 /*--------------------------------------------------------------------------*/
-/* Set the default FRO configuration                                        */
+/* Set FRO default configuration                                            */
 /*--------------------------------------------------------------------------*/
 bool FRO_SetDefaultConfig(const FRO_config_info_t defConfig)
 {
@@ -71,7 +71,7 @@ bool FRO_SetDefaultConfig(const FRO_config_info_t defConfig)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get the default FRO configuration                                        */
+/* Get FRO default configuration                                            */
 /*--------------------------------------------------------------------------*/
 bool FRO_GetDefaultConfig(FRO_config_info_t *config)
 {
@@ -94,7 +94,7 @@ bool FRO_GetDefaultConfig(FRO_config_info_t *config)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set the FRO Mode                                                         */
+/* Set FRO operation mode                                                   */
 /*--------------------------------------------------------------------------*/
 bool FRO_SetMode(FRO_mode mode)
 {
@@ -115,7 +115,7 @@ bool FRO_SetMode(FRO_mode mode)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get the FRO Mode                                                         */
+/* Get FRO mode                                                             */
 /*--------------------------------------------------------------------------*/
 bool FRO_GetMode(FRO_mode *mode)
 {
@@ -136,7 +136,7 @@ bool FRO_GetMode(FRO_mode *mode)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set the FRO Trim value                                                   */
+/* Set FRO trim value                                                       */
 /*--------------------------------------------------------------------------*/
 bool FRO_SetTrim(uint32_t trim)
 {
@@ -157,7 +157,7 @@ bool FRO_SetTrim(uint32_t trim)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get the FRO trim value                                                   */
+/* Get FRO trim value                                                       */
 /*--------------------------------------------------------------------------*/
 bool FRO_GetTrim(uint32_t *trim)
 {
@@ -209,7 +209,7 @@ bool FRO_GetTrim(uint32_t *trim)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set the FRO output Frequency                                             */
+/* Set FRO output frequency rate                                            */
 /*--------------------------------------------------------------------------*/
 bool FRO_SetRate(uint32_t rate)
 {
@@ -230,7 +230,7 @@ bool FRO_SetRate(uint32_t rate)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get the FRO output Frequency                                             */
+/* Get FRO output frequency rate                                            */
 /*--------------------------------------------------------------------------*/
 bool FRO_GetRate(uint32_t *rate)
 {
@@ -251,7 +251,7 @@ bool FRO_GetRate(uint32_t *rate)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Enable/disable the FRO                                                   */
+/* Set (enable/disable) FRO                                                 */
 /*--------------------------------------------------------------------------*/
 bool FRO_SetEnable(bool enable)
 {

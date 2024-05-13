@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,21 +27,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*==========================================================================*/
+/*!
+ * @addtogroup MX95_RST_driver
+ * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header file containing the API for the MX95 Reset Driver.
+ */
+/*==========================================================================*/
+
 #ifndef DRV_RST_H
 #define DRV_RST_H
-
-/*!
- * @addtogroup RST_driver
- * @{
- */
-
-/*! @file */
 
 /* Includes */
 
 #include "fsl_common.h"
 
 /* Defines */
+
+#ifndef DOXYGEN
 
 #define RST_NUM_REASONS                 32UL
 
@@ -157,31 +164,64 @@
 #define AUTHEN_CTRL_WHITELIST_SHIFT     SRC_XSPR_AUTHEN_CTRL_WHITE_LIST_SHIFT
 #define SLICE_SW_CTRL_PDN_SOFT_MASK     SRC_XSPR_SLICE_SW_CTRL_PDN_SOFT_MASK
 
+#endif
 
 /* Types */
 
+/*! SRC power region mix slice register structure */
 typedef SRC_XSPR_Type src_mix_slice_t;
+
+/*! SRC power region memory slice register structure */
 typedef SRC_MEM_Type src_mem_slice_t;
+
+/*! SRC general register structure */
 typedef SRC_GEN_Type src_generic_t;
 
+/*! Structure for reset line details */
 typedef struct
 {
-    uint32_t lineMask;
-    __IO uint32_t *lineReg;
-    uint32_t statMask;
-    __I uint32_t *statReg;
-    bool assertLow;
-    uint32_t toggleUsec;
+    uint32_t lineMask;      /*!< Reset line control mask register */
+    __IO uint32_t *lineReg; /*!< Reset line control register */
+    uint32_t statMask;      /*!< Reset line status mask */
+    __I uint32_t *statReg;  /*!< Reset line status register */
+    bool assertLow;         /*!< Assert signal (low/high) */
+    uint32_t toggleUsec;    /*!< Delay during reset toggle */
 } rst_line_info_t;
 
 /* Functions */
 
+/*!
+ * Get system reset reason
+ *
+ * This function allows caller to get reset reason from SRESR (SRC recent event
+ * status register).
+ *
+ * @return Returns system reset reason captured by SRES (SRC Reset Events
+ *         Status) register. Defaults to reset reason as POR if SRES bits are
+ *         cleared.
+ */
 uint32_t RST_SystemGetResetReason(void);
+
+/*!
+ * Clear system reset reason
+ *
+ * @param[in]       resetReason       Reset reason identifier
+ *
+ * This function allows caller to clear given \a resetReason in SRESR (SRC
+ * recent event status register).
+ */
 void RST_SystemClearResetReason(uint32_t resetReason);
+
+/*!
+ * Request system reset
+ *
+ * This function allows caller to request system reset.
+ */
 void RST_SystemRequestReset(void);
 
 /* Externs */
 
+/*! Reset line information */
 extern rst_line_info_t const g_rstLineInfo[];
 
 #endif /* DRV_RST_H */

@@ -1453,7 +1453,7 @@ bool CPU_WakeMuxSet(uint32_t cpuIdx, bool gicWake)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set wake mux (GPC/GIC)                                                   */
+/* Get wake mux (GPC/GIC)                                                   */
 /*--------------------------------------------------------------------------*/
 bool CPU_WakeMuxGet(uint32_t cpuIdx, bool *gicWake)
 {
@@ -1784,7 +1784,7 @@ bool CPU_PerLpiConfigGet(uint32_t cpuIdx, uint32_t perLpiIdx,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Initalize CPU peripheral low-power interface config                      */
+/* Initialize CPU peripheral low-power interface config                      */
 /*--------------------------------------------------------------------------*/
 bool CPU_PerLpiConfigInit(uint32_t cpuIdx)
 {
@@ -1944,7 +1944,7 @@ void CPU_MixPowerDownNotify(uint32_t srcMixIdx)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set reset vector                                                         */
+/* Set CPU reset vector                                                     */
 /*--------------------------------------------------------------------------*/
 bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
 {
@@ -1978,7 +1978,7 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get reset vector                                                         */
+/* Get CPU reset vector                                                     */
 /*--------------------------------------------------------------------------*/
 bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector)
 {

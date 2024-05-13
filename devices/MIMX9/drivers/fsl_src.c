@@ -379,7 +379,7 @@ static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx, uint32_t sleepMode)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Check if MIX power up sequence is complete.                              */
+/* Check if MIX power down sequence is complete.                              */
 /*--------------------------------------------------------------------------*/
 static bool SRC_MixPowerDownCompleted(uint32_t srcMixIdx)
 {
@@ -412,7 +412,7 @@ static bool SRC_MixPowerDownCompleted(uint32_t srcMixIdx)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Check if MIX power down sequence is complete.                            */
+/* Check if MIX power up sequence is complete.                            */
 /*--------------------------------------------------------------------------*/
 static bool SRC_MixPowerUpCompleted(uint32_t srcMixIdx)
 {
@@ -714,7 +714,7 @@ bool SRC_MixGetResetLine(uint32_t lineIdx, uint32_t *resetType)
 
 #ifdef SRC_GEN_SP_ISO_CTRL_COUNT
 /*--------------------------------------------------------------------------*/
-/* Disable isolation for certain PHYs in MIXes                              */
+/* Update isolation for certain PHYs in MIXes                               */
 /*--------------------------------------------------------------------------*/
 void SRC_MixIsolationSetup(uint32_t isoMask, bool enable)
 {
