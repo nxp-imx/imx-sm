@@ -243,7 +243,6 @@
         .clkPerms[DEV_SM_CLK_AUDIOPLL2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_AUDIOPLL2_VCO] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_AUDIOXCVR] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_CAMISI] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_CAN2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_CAN3] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_CAN4] = SM_SCMI_PERM_ALL, \
