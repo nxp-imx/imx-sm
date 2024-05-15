@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -135,10 +135,25 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState);
 int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState);
 
 /*!
+ * Set device power retention mode.
+ *
+ * @param[in]     domainId    Power domain to set
+ * @param[in]     memRetMask  Retention mode
+ *
+ * This function sets the retention mode for a power domain.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND if \a domainId is out of range
+ */
+int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask);
+
+/*!
  * Get device power retention mask.
  *
  * @param[in]     domainId  Power domain to get
- * @param[out]    retMask   Pointer to return the power state
+ * @param[out]    retMask   Pointer to return the retention mask
  *
  * This function returns the retention mask for a power domain.
  * The mask contains 1s for the memories associated with the

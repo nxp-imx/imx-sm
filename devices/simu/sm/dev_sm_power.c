@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -177,6 +177,15 @@ int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set power domain retention mode                                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
+{
+    /* Return status */
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/

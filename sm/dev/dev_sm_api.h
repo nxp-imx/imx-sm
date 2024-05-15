@@ -195,6 +195,11 @@
 #define SM_POWERSTATEGET        DEV_SM_PowerStateGet
 #endif
 
+#ifndef SM_POWERRETMODESET
+/*! Redirector (device/board) to set a power domain's retention mode */
+#define SM_POWERRETMODESET      DEV_SM_PowerRetModeSet
+#endif
+
 #ifndef SM_POWERRETMASKGET
 /*! Redirector (device/board) to get a power domain's retention mask */
 #define SM_POWERRETMASKGET      DEV_SM_PowerRetMaskGet
