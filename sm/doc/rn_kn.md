@@ -1,7 +1,7 @@
 Known Issues {#RN_KN}
 ============
 
-Below is a list of known outstanding issues in this release (imx_sm_2024q2_er1).
+Below is a list of known outstanding issues in this release (imx_sm_2024q2).
 
 New Feature {#RN_KN_NEW}
 ============

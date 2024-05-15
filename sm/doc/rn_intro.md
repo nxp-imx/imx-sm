@@ -26,14 +26,7 @@ The table below lists the release information:
 | Tested mkimage    | #MKIMAGE_BRANCH             |
 | Tested Linux      | #MKIMAGE_BUILD              |
 
-\htmlonly
-<font color="red">\endhtmlonly
-
-This is an engineering release! It is "as is" and not production quality.
-
-\htmlonly
-</font>\endhtmlonly
-
+<br>
 <br>
 
 Highlights {#RN_HIGH}

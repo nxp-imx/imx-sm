@@ -8,7 +8,7 @@ the data could change.
 SM 2024Q2 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2024q1) and this release (imx_sm_2024q2_er1).
+Below is a list of changes between the previous release (imx_sm_2024q1) and this release (imx_sm_2024q2).
 
 New Feature {#RN_CL_NEW}
 ------------
@@ -47,6 +47,7 @@ Improvement {#RN_CL_IMP}
 | [SM-98](https://jira.sw.nxp.com/projects/SM/issues/SM-98) | Support SCMI agent reset when resources are shared [[detail]](@ref RN_DETAIL_SM_98) |   | Y | Y |
 | [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec [[detail]](@ref RN_DETAIL_SM_100) |   | Y | Y |
 | [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55 performance subdomains [[detail]](@ref RN_DETAIL_SM_102) |   | Y | Y |
+| [SM-114](https://jira.sw.nxp.com/projects/SM/issues/SM-114) | Clear retention mode on CPU stop [[detail]](@ref RN_DETAIL_SM_114) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -60,6 +61,7 @@ Bug {#RN_CL_BUG}
 | [SM-103](https://jira.sw.nxp.com/projects/SM/issues/SM-103) | Monitor ELE dump and events commands do not work [[detail]](@ref RN_DETAIL_SM_103) |   | Y | Y |
 | [SM-104](https://jira.sw.nxp.com/projects/SM/issues/SM-104) | Fix issue with MRCs with ELE regions not being cleared [[detail]](@ref RN_DETAIL_SM_104) |   | Y | Y |
 | [SM-109](https://jira.sw.nxp.com/projects/SM/issues/SM-109) | LM wake sends message to all LM [[detail]](@ref RN_DETAIL_SM_109) |   | Y | Y |
+| [SM-113](https://jira.sw.nxp.com/projects/SM/issues/SM-113) | Change configs to remove Linux access to CLK_CAMCM0 [[detail]](@ref RN_DETAIL_SM_113) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -77,6 +79,7 @@ Documentation {#RN_CL_DOC}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-77](https://jira.sw.nxp.com/projects/SM/issues/SM-77) | SM 2024Q2 ER1 documentation updates |   | Y | Y |
+| [SM-112](https://jira.sw.nxp.com/projects/SM/issues/SM-112) | SM 2024Q2 documentation updates |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======
@@ -361,4 +364,14 @@ SM-109: LM wake sends message to all LM {#RN_DETAIL_SM_109}
 ----------
 
 Fixed issue where a request to wake an LM would send a message to all LM.
+
+SM-113: Change configs to remove Linux access to CLK_CAMCM0 {#RN_DETAIL_SM_113}
+----------
+
+If CLK_CAMCM0 is disabled, then the SM will wdog when trying to load the TRDC on CAMERAMIX power on. This change removes CLK_CAMCM0 from the clocks associated with the ISP. Rebuilt the SM config headers so that access is then removed from agents. This prevents agents from disabling the clock. Customers will also have to rebuild their config headers.
+
+SM-114: Clear retention mode on CPU stop {#RN_DETAIL_SM_114}
+----------
+
+Whan a CPU is stopped (inc. when an LM is reset) then clear the retention modes set for that CPU. This is required to ensure retention is not set on a power domain for which the external supply may be turned off (e.g. A55P).
 
