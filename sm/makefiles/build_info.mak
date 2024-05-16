@@ -99,5 +99,6 @@ rn_info.sed :
 	$(AT)/bin/echo "/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#MKIMAGE_BRANCH/$(MKIMAGE_BRANCH)/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#MKIMAGE_BUILD/$(MKIMAGE_BUILD)/g' rn.md" >> $@
+	$(AT)/bin/echo "sed -i 's/_RC[0-9]//g' rn.md" >> $@
 	$(AT)/bin/echo '' >> $@
 
