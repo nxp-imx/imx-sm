@@ -9,7 +9,3 @@ NXP, the NXP logo, NXP SECURE CONNECTIONS FOR A SMARTER WORLD, COOLFLUX, EMBRACE
 
 (c) 2024 NXP B.V.
 
-@image html NXP_logo.png
-@image rtf NXP_logo.png
-@image latex NXP_logo.png height=1in
-
