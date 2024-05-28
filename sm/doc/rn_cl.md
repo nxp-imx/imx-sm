@@ -48,6 +48,7 @@ Improvement {#RN_CL_IMP}
 | [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec [[detail]](@ref RN_DETAIL_SM_100) |   | Y | Y |
 | [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55 performance subdomains [[detail]](@ref RN_DETAIL_SM_102) |   | Y | Y |
 | [SM-114](https://jira.sw.nxp.com/projects/SM/issues/SM-114) | Clear retention mode on CPU stop [[detail]](@ref RN_DETAIL_SM_114) |   | Y | Y |
+| [SM-116](https://jira.sw.nxp.com/projects/SM/issues/SM-116) | Update Android configuration |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
