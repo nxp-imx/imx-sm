@@ -222,7 +222,7 @@ status_t MU_TriggerInterrupts(MU_Type *base, uint32_t interrupts)
     }
     else
     {
-        base->GCR = (gcr | interrupts);
+        base->GCR = interrupts;
         status    = kStatus_Success;
     }
 
