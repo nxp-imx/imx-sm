@@ -70,10 +70,12 @@
 #define SCMI_MSG_MISC_RESET_REASON         0xAU
 /*! Get silicon info */
 #define SCMI_MSG_MISC_SI_INFO              0xBU
-/*! Get build config name */
+/*! Get build config info */
 #define SCMI_MSG_MISC_CFG_INFO             0xCU
 /*! Get system log */
 #define SCMI_MSG_MISC_SYSLOG               0xDU
+/*! Get board info */
+#define SCMI_MSG_MISC_BOARD_INFO           0xEU
 /*! Read control notification event */
 #define SCMI_MSG_MISC_CONTROL_EVENT        0x0U
 /** @} */
@@ -92,6 +94,8 @@
 #define SCMI_MISC_MAX_SINAME     16U
 /*! Max length of the returned cfg name */
 #define SCMI_MISC_MAX_CFGNAME    16U
+/*! Max length of the returned board name */
+#define SCMI_MISC_MAX_BRDNAME    16U
 /*! Max number value words */
 #define SCMI_MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
 /*! Max number return words */
@@ -536,11 +540,12 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
     uint32_t *siRev, uint32_t *partNum, uint8_t *siName);
 
 /*!
- * Get build config name.
+ * Get build config info.
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    mSel     Mode selector value
- * @param[out]    cfgName  Config (cfg) file basename
+ * @param[out]    cfgName  Config (cfg) file basename. Null terminated ASCII
+ *                         string of up to 16 bytes in length
  *
  * This function returns the basename of the SM configuration (cfg) file and
  * the mSel value.
@@ -548,8 +553,8 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
- * - ::SCMI_ERR_SUCCESS: in case the cfg name is returned.
- * - ::SCMI_ERR_NOT_SUPPORTED: if the name is not available.
+ * - ::SCMI_ERR_SUCCESS: in case the cfg info is returned.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the info is not available.
  */
 int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
     uint8_t *cfgName);
@@ -586,6 +591,25 @@ int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
  */
 int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
     uint32_t *numLogFlags, uint32_t *syslog);
+
+/*!
+ * Get board info.
+ *
+ * @param[in]     channel     A2P channel for comms
+ * @param[out]    attributes  Board specific attributes
+ * @param[out]    brdName     Board name. Null terminated ASCII string of up to
+ *                            16 bytes in length
+ *
+ * This function returns the board name and attributes.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: in case the board info is returned.
+ * - ::SCMI_ERR_NOT_SUPPORTED: if the info is not available.
+ */
+int32_t SCMI_MiscBoardInfo(uint32_t channel, uint32_t *attributes,
+    uint8_t *brdName);
 
 /*!
  * Negotiate the protocol version.

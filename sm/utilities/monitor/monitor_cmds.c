@@ -417,7 +417,8 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     cfgName = LMM_CfgInfoGet(&mSel);
     printf("SM Config     = %s, mSel=%u\n", cfgName, mSel);
 
-    printf("Platform      = %s\n", SCMI_SUB_VENDOR);
+    /* Get the board info */
+    printf("Board         = %s, attr=0x%08X\n", BRD_SM_NAME, BRD_SM_ATTR);
 
     /* Get the silicon info */
     if (SM_SIINFOGET(&deviceId, &siRev, &partNum, (string*) &siName)

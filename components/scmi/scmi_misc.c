@@ -718,7 +718,7 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get build config name                                                    */
+/* Get build config info                                                    */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
     uint8_t *cfgName)
@@ -849,6 +849,69 @@ int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
         {
             SCMI_MemCpy((uint8_t*) syslog, (uint8_t*) &msgRx->syslog,
                 (SCMI_MISC_NUM_SYSLOG * sizeof(uint32_t)));
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get board info                                                           */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_MiscBoardInfo(uint32_t channel, uint32_t *attributes,
+    uint8_t *brdName)
+{
+    int32_t status;
+    uint32_t header;
+    const void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t attributes;
+        uint8_t brdName[SCMI_MISC_MAX_BRDNAME];
+    } msg_rmiscd14_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInitC(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_MISC_BOARD_INFO, sizeof(header), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rmiscd14_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rmiscd14_t *msgRx = (const msg_rmiscd14_t*) msg;
+
+        /* Extract attributes */
+        if (attributes != NULL)
+        {
+            *attributes = msgRx->attributes;
+        }
+
+        /* Extract brdName */
+        if (brdName != NULL)
+        {
+            SCMI_StrCpy(brdName, msgRx->brdName, SCMI_MISC_MAX_BRDNAME);
         }
     }
 

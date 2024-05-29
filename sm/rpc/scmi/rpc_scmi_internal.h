@@ -76,6 +76,9 @@
 /*! Vendor string returned by BASE_DISCOVER_VENDOR */
 #define SCMI_VENDOR         "NXP"
 
+/*! Subvendor string returned by BASE_DISCOVER_SUB_VENDOR */
+#define SCMI_SUB_VENDOR     "IMX"
+
 /*! Payload buffer size */
 #define SCMI_PAYLOAD_LEN    100U
 

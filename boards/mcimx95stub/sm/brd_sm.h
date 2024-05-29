@@ -55,8 +55,11 @@
 
 /* Defines */
 
-/*! Vendor string */
-#define SCMI_SUB_VENDOR  "i.MX95 Stub"
+/*! Board name string */
+#define BRD_SM_NAME  "i.MX95 Stub"
+
+/*! Board attributes */
+#define BRD_SM_ATTR  0x0
 
 /*!
  * @name Board redirection defines

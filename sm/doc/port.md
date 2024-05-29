@@ -396,7 +396,11 @@ complex board ports.
 
 -#  Add the new board directory in the INPUT section of the *sm/doc/common.cfg* file.
 
--#  [optional] Update the SCMI_SUB_VENDOR string in the new board *sm/brd_sm.h* file.
+-#  [optional] Update the BRD_SM_NAME string in the new board *sm/brd_sm.h* file. This value is
+    returned via SCMI_MiscBoardInfo().
+
+-#  [optional] Update the BRD_SM_ATTR value in the new board *sm/brd_sm.h* file. This value is
+    board specific and port defined. It is returned via SCMI_MiscBoardInfo(). 
 
 -#  [Compile the documentation](@ref GUIDE_DOC) and ensure the new board port looks correct in the board
     modules section:

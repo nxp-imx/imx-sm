@@ -59,8 +59,11 @@
 
 /* Defines */
 
-/*! Vendor string */
-#define SCMI_SUB_VENDOR  "i.MX95 EVK"
+/*! Board name string */
+#define BRD_SM_NAME  "i.MX95 EVK"
+
+/*! Board attributes */
+#define BRD_SM_ATTR  0x0
 
 /*!
  * @name Board redirection defines

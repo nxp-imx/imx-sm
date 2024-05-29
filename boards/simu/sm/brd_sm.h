@@ -56,8 +56,11 @@
 
 /* Defines */
 
-/*! Vendor string */
-#define SCMI_SUB_VENDOR  "Simulation"
+/*! Board nanme string */
+#define BRD_SM_NAME  "Simulation"
+
+/*! Board attributes */
+#define BRD_SM_ATTR  0x0
 
 /* Types */
 

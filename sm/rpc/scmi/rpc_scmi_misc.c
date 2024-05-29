@@ -62,8 +62,9 @@
 #define COMMAND_MISC_SI_INFO                 0xBU
 #define COMMAND_MISC_CFG_INFO                0xCU
 #define COMMAND_MISC_SYSLOG                  0xDU
+#define COMMAND_MISC_BOARD_INFO              0xEU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x13FFFUL
+#define COMMAND_SUPPORTED_MASK               0x17FFFUL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
@@ -71,6 +72,7 @@
 #define MISC_MAX_NAME       16U
 #define MISC_MAX_SINAME     16U
 #define MISC_MAX_CFGNAME    16U
+#define MISC_MAX_BRDNAME    16U
 #define MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_VAL        SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_ARG_T      SCMI_ARRAY(12U, uint32_t)
@@ -361,6 +363,19 @@ typedef struct
     uint32_t syslog[MISC_MAX_SYSLOG];
 } msg_tmisc13_t;
 
+/* Response type for MiscBoardInfo() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Board specific attributes */
+    uint32_t attributes;
+    /* Board name */
+    uint8_t brdName[MISC_MAX_BRDNAME];
+} msg_tmisc14_t;
+
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
 {
@@ -411,6 +426,8 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc12_t *out);
 static int32_t MiscSyslog(const scmi_caller_t *caller,
     const msg_rmisc13_t *in, msg_tmisc13_t *out, uint32_t *len);
+static int32_t MiscBoardInfo(const scmi_caller_t *caller,
+    const scmi_msg_header_t *in, msg_tmisc14_t *out);
 static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rmisc16_t *in, const scmi_msg_status_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
@@ -505,6 +522,11 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tmisc13_t);
             status = MiscSyslog(caller, (const msg_rmisc13_t*) in,
                 (msg_tmisc13_t*) out, &lenOut);
+            break;
+        case COMMAND_MISC_BOARD_INFO:
+            lenOut = sizeof(msg_tmisc14_t);
+            status = MiscBoardInfo(caller, (const scmi_msg_header_t*) in,
+                (msg_tmisc14_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -1403,19 +1425,20 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get build config name                                                    */
+/* Get build config info                                                    */
 /*                                                                          */
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->mSel: Mode selector value                                         */
-/* - out->cfgName: Config (cfg) file basename                               */
+/* - out->cfgName: Config (cfg) file basename. Null terminated ASCII        */
+/*   string of up to 16 bytes in length                                     */
 /*                                                                          */
 /* Process the MISC_CFG_INFO message. Platform handler for                  */
 /* SCMI_MiscCfgInfo().                                                      */
 /*                                                                          */
 /* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: in case the cfg name is returned.                      */
-/* - SM_ERR_NOT_SUPPORTED: if the name is not available.                    */
+/* - SM_ERR_SUCCESS: in case the cfg info is returned.                      */
+/* - SM_ERR_NOT_SUPPORTED: if the info is not available.                    */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
 static int32_t MiscCfgInfo(const scmi_caller_t *caller,
@@ -1528,6 +1551,49 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
         /* Append remaining logs */
         out->numLogFlags |= MISC_NUM_LOG_FLAGS_REMAING_LOGS(
             words - (index + in->logIndex));
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get board info                                                           */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - out->attributes: Board specific attributes                             */
+/* - out->brdName: Board name. Null terminated ASCII string of up to 16     */
+/*   bytes in length                                                        */
+/*                                                                          */
+/* Process the MISC_BOARD_INFO message. Platform handler for                */
+/* SCMI_MiscBoardInfo().                                                    */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: in case the board info is returned.                    */
+/* - SM_ERR_NOT_SUPPORTED: if the info is not available.                    */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscBoardInfo(const scmi_caller_t *caller,
+    const scmi_msg_header_t *in, msg_tmisc14_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Return data */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Set attributes */
+        out->attributes = BRD_SM_ATTR;
+
+        /* Copy out board name */
+        RPC_SCMI_StrCpy(out->brdName,
+            (const uint8_t *) BRD_SM_NAME, MISC_MAX_BRDNAME);
     }
 
     /* Return status */

@@ -177,6 +177,7 @@ and some of the optional messages are supported.
 | Misc | 0x84 | [MISC_SI_INFO](@ref SCMI_PROTO_MISC_MISC_SI_INFO) | 0xB |  |
 | Misc | 0x84 | [MISC_CFG_INFO](@ref SCMI_PROTO_MISC_MISC_CFG_INFO) | 0xC |  |
 | Misc | 0x84 | [MISC_SYSLOG](@ref SCMI_PROTO_MISC_MISC_SYSLOG) | 0xD |  |
+| Misc | 0x84 | [MISC_BOARD_INFO](@ref SCMI_PROTO_MISC_MISC_BOARD_INFO) | 0xE |  |
 | Misc | 0x84 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Misc\n(notification) | 0x84 | [MISC_CONTROL_EVENT](@ref SCMI_PROTO_MISC_MISC_CONTROL_EVENT) | 0x0 |  |
 
@@ -3403,6 +3404,26 @@ See SCMI_MiscSyslog() for details.
     | uint32         | num_log_flags                                                |
     ---------------------------------------------------------------------------------
     | uint32         | syslog[N]                                                    |
+    ---------------------------------------------------------------------------------
+
+## Misc: MISC_BOARD_INFO ## {#SCMI_PROTO_MISC_MISC_BOARD_INFO}
+
+See SCMI_MiscBoardInfo() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0xE                          |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0xE                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | attributes                                                   |
+    ---------------------------------------------------------------------------------
+    | uint8          | brd_name[16]                                                 |
     ---------------------------------------------------------------------------------
 
 ## Misc: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_MISC_NEGOTIATE_PROTOCOL_VERSION}
