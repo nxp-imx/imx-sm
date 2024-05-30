@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -76,6 +76,8 @@
 #define LMM_SS_CLK   2U  /*!< Clock command */
 #define LMM_SS_CPU   3U  /*!< CPU command */
 #define LMM_SS_VOLT  4U  /*!< Voltage command */
+#define LMM_SS_RST   5U  /*!< Reset command */
+#define LMM_SS_CTRL  6U  /*!< Control command */
 /** @} */
 
 /* Types */
@@ -100,7 +102,7 @@ typedef struct
 } lmm_config_t;
 
 /*!
- * LMM start structure
+ * LMM start/stop structure
  *
  * See @ref CONFIG_STRUCT for more info.
  */
@@ -112,20 +114,7 @@ typedef struct
     uint8_t mSel;               /*!< Associated mode select */
     uint8_t ss;                 /*!< Start command */
     uint8_t numArg;             /*!< Argument count */
-} lmm_start_t;
-
-/*!
- * LMM stop structure
- *
- * See @ref CONFIG_STRUCT for more info.
- */
-typedef struct
-{
-    uint32_t rsrc;  /*!< Resource */
-    uint8_t lmId;   /*!< LM ID */
-    uint8_t mSel;   /*!< Associated mode select */
-    uint8_t ss;     /*!< Stop command */
-} lmm_stop_t;
+} lmm_startstop_t;
 
 /*!
  * LMM fault structure

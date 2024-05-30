@@ -292,7 +292,7 @@ as follows:
 - **SM_LM_CFG_NAME** - Basename of the cfg file
 - **SM_LM_DEFAULT** - default LM used by the debug monitor
 - **SM_LM_NUM_START** - total number of start array entries
-- **SM_LM_START_DATA** - fills in the s_lmmStart array of lmm_start_t
+- **SM_LM_START_DATA** - fills in the s_lmmStart array of lmm_startstop_t
   structures, one per start item
   - *lmId* - associated logical machine (LM)
   - *mSel* - mode select tor start command
@@ -301,12 +301,14 @@ as follows:
   - *numArg* - number of arguments
   - *arg* - array of 64-bit arguments
 - **SM_LM_NUM_STOP** - total number of stop array entries
-- **SM_LM_STOP_DATA** - fills in the s_lmmStop array of lmm_stop_t
+- **SM_LM_STOP_DATA** - fills in the s_lmmStop array of lmm_startstop_t
   structures, one per stop item
   - *lmId* - associated logical machine (LM)
   - *mSel* - mode select tor stop command
   - *ss* - start/stop command (see table below)
   - *rsrc* - resource command should apply to
+  - *numArg* - number of arguments
+  - *arg* - array of 64-bit arguments
 - **SM_LM_FAULT_DATA** - fills in the s_lmmfault array of lmm_fault_t
   - *reaction* - fault reaction
   - *lm* - associated logical machine (LM)
@@ -332,13 +334,19 @@ Start/stop commands supported are:
 | Command        | Start                            | Stop                     |
 |----------------|----------------------------------|--------------------------|
 | ::LMM_SS_PD    | Power on power domain            | Power off power domain   |
-| ::LMM_SS_PERF  | Set perf level to arg[0]         | Set perf level to arg[0] | 
+| ::LMM_SS_PERF  | Set perf level to arg[0]         | Same as start            | 
 | ::LMM_SS_CLK   | Set clock parent to arg[0], rate to arg[1] and enable | Disable clock |
 | ::LMM_SS_CPU   | Start CPU                        | Stop CPU                 |
+| ::LMM_SS_VOLT  | Set voltage mode to arg[0]       | Same as start            |
+| ::LMM_SS_RST   | Reset domain, toggle/negate to argv[0], state to argv[1] | Same as start |
+| ::LMM_SS_CTRL  | Set control to arg[]             | Same as start |
 
 Note for ::LMM_SS_CLK the arguments are optional. With none, the clock will just
 be enabled. Any argument less than the ::SM_NUM_CLOCK will also be set as the parent
 and any larger set as the rate.
+
+For ::LMM_SS_RST bit[0] of arg[0] = toggle, bit[1] of arg[0] = assertNegate, arg[1] =
+resetState (default COLD). See LMM_ResetDomain().
 
 Fault reactions supported are:
 

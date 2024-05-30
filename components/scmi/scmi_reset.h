@@ -70,7 +70,7 @@
  * @name SCMI reset architectural reset states
  */
 /** @{ */
-/*! Max length of the returned clock name */
+/*! Cold reset - no retention */
 #define SCMI_RESET_ARCH_COLD  0x00000000U
 /** @} */
 

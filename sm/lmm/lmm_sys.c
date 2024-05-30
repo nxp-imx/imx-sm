@@ -58,7 +58,7 @@ static lmm_rst_rec_t s_lmShutdownReason[SM_NUM_LM];
 /* Global variables */
 
 const lmm_rst_rec_t g_swReason = DEV_SM_RST_REC_SW;
-static const lmm_start_t s_lmmStart[SM_LM_NUM_START] =
+static const lmm_startstop_t s_lmmStart[SM_LM_NUM_START] =
 {
     SM_LM_START_DATA
 };
@@ -415,7 +415,7 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
     /* Loop over start list */
     while ((status != SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
     {
-        const lmm_start_t *ptr = &s_lmmStart[idx];
+        const lmm_startstop_t *ptr = &s_lmmStart[idx];
 
         /* End for this LM */
         if (ptr->lmId != bootLm)
@@ -908,7 +908,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
     /* Loop over start list */
     while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
     {
-        const lmm_start_t *ptr = &s_lmmStart[idx];
+        const lmm_startstop_t *ptr = &s_lmmStart[idx];
 
         /* End for this LM? */
         if (ptr->lmId != lmId)
@@ -949,6 +949,29 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     status = LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
                         (uint8_t) ptr->arg[0]);
                     break;
+                case LMM_SS_RST:
+                    {
+                        bool assertNegate = ((ptr->arg[0] & 0x1U) != 0U);
+                        bool toggle = ((ptr->arg[0] & 0x2U) != 0U);
+
+                        status = LMM_ResetDomain(ptr->lmId, ptr->rsrc,
+                            SM_UINT64_L(ptr->arg[1]), toggle, assertNegate);
+                    }
+                    break;
+                case LMM_SS_CTRL:
+                    {
+                        uint32_t val[LMM_MAX_ARG];
+
+                        /* Copy array */
+                        for (idx = 0U; idx < LMM_MAX_ARG; idx++)
+                        {
+                            val[idx] = SM_UINT64_L(ptr->arg[idx]);
+                        }
+
+                        status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,
+                            (uint32_t) ptr->numArg, val);
+                    }
+                    break;
                 default:
                     status = SM_ERR_NOT_SUPPORTED;
                     break;
@@ -970,7 +993,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t idx = stop;
-    static const lmm_stop_t s_lmmStop[SM_LM_NUM_STOP] =
+    static const lmm_startstop_t s_lmmStop[SM_LM_NUM_STOP] =
     {
         SM_LM_STOP_DATA
     };
@@ -978,7 +1001,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
     /* Loop over stop list */
     while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_STOP))
     {
-        const lmm_stop_t *ptr = &s_lmmStop[idx];
+        const lmm_startstop_t *ptr = &s_lmmStop[idx];
 
         /* End for this LM? */
         if (ptr->lmId != lmId)
@@ -997,7 +1020,8 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                         DEV_SM_POWER_STATE_OFF);
                     break;
                 case LMM_SS_PERF:
-                    (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc, 0U);
+                    (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
+                        (uint32_t) ptr->arg[0]);
                     break;
                 case LMM_SS_CLK:
                     (void) LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);
@@ -1007,7 +1031,30 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_VOLT:
                     (void) LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
-                        DEV_SM_VOLT_MODE_OFF);
+                        (uint8_t) ptr->arg[0]);
+                    break;
+                case LMM_SS_RST:
+                    {
+                        bool assertNegate = ((ptr->arg[0] & 0x1U) != 0U);
+                        bool toggle = ((ptr->arg[0] & 0x2U) != 0U);
+
+                        (void) LMM_ResetDomain(ptr->lmId, ptr->rsrc,
+                            SM_UINT64_L(ptr->arg[1]), toggle, assertNegate);
+                    }
+                    break;
+                case LMM_SS_CTRL:
+                    {
+                        uint32_t val[LMM_MAX_ARG];
+
+                        /* Copy array */
+                        for (idx = 0U; idx < LMM_MAX_ARG; idx++)
+                        {
+                            val[idx] = SM_UINT64_L(ptr->arg[idx]);
+                        }
+
+                        status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,
+                            (uint32_t) ptr->numArg, val);
+                    }
                     break;
                 default:
                     status = SM_ERR_NOT_SUPPORTED;
