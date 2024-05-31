@@ -48,7 +48,7 @@ Improvement {#RN_CL_IMP}
 | [SM-100](https://jira.sw.nxp.com/projects/SM/issues/SM-100) | Support final SCMI 3.2 spec [[detail]](@ref RN_DETAIL_SM_100) |   | Y | Y |
 | [SM-102](https://jira.sw.nxp.com/projects/SM/issues/SM-102) | Remove A55 performance subdomains [[detail]](@ref RN_DETAIL_SM_102) |   | Y | Y |
 | [SM-114](https://jira.sw.nxp.com/projects/SM/issues/SM-114) | Clear retention mode on CPU stop [[detail]](@ref RN_DETAIL_SM_114) |   | Y | Y |
-| [SM-116](https://jira.sw.nxp.com/projects/SM/issues/SM-116) | Update Android configuration |   | Y | Y |
+| [SM-116](https://jira.sw.nxp.com/projects/SM/issues/SM-116) | Update Android configuration [[detail]](@ref RN_DETAIL_SM_116) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -63,6 +63,7 @@ Bug {#RN_CL_BUG}
 | [SM-104](https://jira.sw.nxp.com/projects/SM/issues/SM-104) | Fix issue with MRCs with ELE regions not being cleared [[detail]](@ref RN_DETAIL_SM_104) |   | Y | Y |
 | [SM-109](https://jira.sw.nxp.com/projects/SM/issues/SM-109) | LM wake sends message to all LM [[detail]](@ref RN_DETAIL_SM_109) |   | Y | Y |
 | [SM-113](https://jira.sw.nxp.com/projects/SM/issues/SM-113) | Change configs to remove Linux access to CLK_CAMCM0 [[detail]](@ref RN_DETAIL_SM_113) |   | Y | Y |
+| [SM-119](https://jira.sw.nxp.com/projects/SM/issues/SM-119) | SDK MU1 driver incorrectly reasserts pending interrupts [[detail]](@ref RN_DETAIL_SM_119) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -374,5 +375,15 @@ If CLK_CAMCM0 is disabled, then the SM will wdog when trying to load the TRDC on
 SM-114: Clear retention mode on CPU stop {#RN_DETAIL_SM_114}
 ----------
 
-Whan a CPU is stopped (inc. when an LM is reset) then clear the retention modes set for that CPU. This is required to ensure retention is not set on a power domain for which the external supply may be turned off (e.g. A55P).
+When a CPU is stopped (inc. when an LM is reset) then clear the retention modes set for that CPU. This is required to ensure retention is not set on a power domain for which the external supply may be turned off (e.g. A55P).
+
+SM-116: Update Android configuration {#RN_DETAIL_SM_116}
+----------
+
+Updated the mx95evk-android.cfg file to increase the size of secure heap.
+
+SM-119: SDK MU1 driver incorrectly reasserts pending interrupts {#RN_DETAIL_SM_119}
+----------
+
+Update SDK Mu1 driver to write interrupt request rather than do a read-modify-write. RMW will end up re-asserting interrupts cleared by the other side between the read and write. 
 

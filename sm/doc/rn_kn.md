@@ -20,6 +20,7 @@ Improvement {#RN_KN_IMP}
 | [SM-87](https://jira.sw.nxp.com/projects/SM/issues/SM-87) | Improve unit test coverage | Y | Y |
 | [SM-111](https://jira.sw.nxp.com/projects/SM/issues/SM-111) | Enable QoS to be driven from CAMERAMIX block control | Y | Y |
 | [SM-117](https://jira.sw.nxp.com/projects/SM/issues/SM-117) | Update subvendor to "IMX" to be generic, move board name | Y | Y |
+| [SM-118](https://jira.sw.nxp.com/projects/SM/issues/SM-118) | Enhance LM start/stop script options | Y | Y |
 
 Bug {#RN_KN_BUG}
 ============
