@@ -7,6 +7,37 @@ it provides access to clocking, power, sensor, and pin control via a client RPC 
 To facilitate isolation between cores, the SM partitions the SoC into logical machines (LM) which have
 statically configurable access rights to both hardware and RPC API calls.
 
+Download from GitHub
+====================
+
+To download the repo from [GitHub](https://github.com/nxp-imx/imx-sm), first install git:
+
+    sudo apt-get -y install git
+
+Then clone the repo:
+
+git clone https://github.com/nxp-imx/imx-sm
+
+Building the Documentation
+==========================
+
+To build the full documentation, install the required tools:
+
+    sudo apt-get -y install make doxygen texlive texlive-latex-extra
+
+Then change to the documentation directory (sm/doc) and execute the following:
+
+    make html
+
+The output is written to the build directory (sm/doc/build/html). The top level for the html output
+is the *index.html* file.
+
+To build the release notes:
+
+    make rn
+
+The output is sm/doc/sm-rn.pdf (also an html version in sm/doc/build/html).
+
 Installing the Toolchain
 ========================
 
@@ -33,7 +64,7 @@ See the *Release Notes* for the exact toolchain version the SM was tested with.
 Compiling an SM Image
 =====================
 
-To get started with the SM on an NXP board, download the [github](https://github.com/nxp-imx/imx-sm)
+To get started with the SM on an NXP board, download the [GitHub](https://github.com/nxp-imx/imx-sm)
 repository and then compile the SM for the target configuration.
 
 For example, in the top directory of the code base:
@@ -52,23 +83,6 @@ The above config is for Linux+M7 system testing. Another config is delivered for
 Customers will usually create their own config that partitions resources between the AP and M7 for
 their use-case.
 
-Building the Documentation
-==========================
-
-To build the full documentation, install the required tools:
-
-    sudo apt-get -y install make doxygen texlive texlive-latex-extra
-
-Then change to the documentation directory (sm/doc) and execute the following:
-
-    make html
-
-The output is written to the build directory (sm/doc/build/html). The top level for the html output
-is the *index.html* file.
-
-To build the release notes:
-
-    make rn
-
-The output is sm/doc/sm-rn.pdf (also an html version in sm/doc/build/html).
+Complete documentation on compiling the SM, building a boot image, and programming the boot image is
+contained in the *Developer's Guide* section of the full doxygen-based RM described above.
 
