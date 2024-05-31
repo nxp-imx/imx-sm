@@ -5,6 +5,36 @@ This section gives an overview of the steps needed to configure and build a Syst
 give a high level view of the System Manager generation process. More detailed explanations can be found in
 the following sections.
 
+Download from GitHub
+====================
+
+To download the repo from [GitHub](https://github.com/nxp-imx/imx-sm), first install git:
+
+    sudo apt-get -y install git
+
+Then clone the repo:
+
+git clone https://github.com/nxp-imx/imx-sm
+
+Building the Documentation
+==========================
+
+To build the full documentation, install the required tools as described in the @ref GUIDE_DOC
+section. Then change to the documentation directory (sm/doc) and execute the following:
+
+    make <TARGET>
+
+Where target can be html, rtf, latex, pdf, or clean. No target will result in building
+all the documentation types. The output is written to the build directory (sm/doc/build)
+in directories with the associated document type. The top level for the html output
+is the *index.html* file.
+
+To build the release notes:
+
+    make rn
+
+The output is sm/doc/sm-rn.pdf (also an html version in sm/doc/build/html).
+
 Installing the Toolchain
 ========================
 
@@ -106,23 +136,4 @@ The following steps are required:
     SMT_ChannelConfig(SCMI_P2A, SCMI_MU, 3, 0);     /* 2: FuSa notification channel */
 
 See the [Client API](@ref PORT_CLIENT) section of the Porting Guide.
-
-Building the Documentation
-==========================
-
-To build the full documentation, install the required tools as described in the @ref GUIDE_DOC
-section. Then change to the documentation directory (sm/doc) and execute the following:
-
-    make <TARGET>
-
-Where target can be html, rtf, latex, pdf, or clean. No target will result in building
-all the documentation types. The output is written to the build directory (sm/doc/build)
-in directories with the associated document type. The top level for the html output
-is the *index.html* file.
-
-To build the release notes:
-
-    make rn
-
-The output is sm/doc/sm-rn.pdf (also an html version in sm/doc/build/html).
 
