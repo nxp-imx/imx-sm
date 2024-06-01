@@ -45,6 +45,22 @@ else
 endif
 export AT
 
+# Get doxygen version
+DOX_VER = $(shell doxygen --version)
+DOX_VER_WORDS = $(subst ., ,$(DOX_VER))
+export DOX_VER_MAJOR = $(word 1, $(DOX_VER_WORDS))
+export DOX_VER_MINOR = $(word 2, $(DOX_VER_WORDS))
+export DOX_VER_PATCH = $(word 3, $(DOX_VER_WORDS))
+
+# Doxygen 1.9.0/1 looks like 1.8
+ifeq ($(shell test $(DOX_VER_MAJOR) -lt 2; echo $$?),0)
+ifeq ($(DOX_VER_MINOR),9)
+ifeq ($(shell test $(DOX_VER_PATCH) -lt 2; echo $$?),0)
+    export DOX_VER_MINOR = 8
+endif
+endif
+endif
+
 all: clean html rtf pdf
 
 include ../makefiles/build_info.mak
@@ -75,7 +91,7 @@ pdf : latex
 rn : rn.md
 	@echo "Generating rn"
 	$(AT)mkdir -p $(OUT)
-	$(AT)$(DOXYGEN) rn.cfg
+	$(AT)$(DOXYGEN) rn$(DOX_VER_MINOR).cfg
 	$(AT)rm -f rn.md
 	$(AT)sed -i -f refman.sed $(OUT)/latex/refman.tex
 	$(AT)cd $(OUT)/latex && $(MAKE) >/dev/null 2>/dev/null
