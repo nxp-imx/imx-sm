@@ -18,6 +18,9 @@ The tool chain used with this SM is Arm GNU Toolchain Version **12.3.Rel1** obta
 [Arm GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain).
 Use the x86_64 Linux hosted AArch32 bare-metal target (arm-none-eabi) toolchain.
 
+Supported development environments include Ubuntu 2020.04, 2022.04, and 2024.04. Supported
+versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
+
 SCMI API Changes {#RN_ADD_API}
 ================
 

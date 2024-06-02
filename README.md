@@ -7,6 +7,8 @@ it provides access to clocking, power, sensor, and pin control via a client RPC 
 To facilitate isolation between cores, the SM partitions the SoC into logical machines (LM) which have
 statically configurable access rights to both hardware and RPC API calls.
 
+Supported development environments include Ubuntu 2020.04, 2022.04, and 2024.04.
+
 Download from GitHub
 ====================
 
@@ -37,6 +39,8 @@ To build the release notes:
     make rn
 
 The output is sm/doc/sm-rn.pdf (also an html version in sm/doc/build/html).
+
+Supported versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 
 Installing the Toolchain
 ========================
