@@ -518,7 +518,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
                 wakeIdx++)
             {
-                /* Save contex of SM IRQs enabled at NVIC level */
+                /* Save context of SM IRQs enabled at NVIC level */
                 nvicISER[wakeIdx] = NVIC->ISER[wakeIdx];
 
                 /* Clear unused system-level IRQs */
@@ -574,7 +574,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK;
 
             /* Move ELE and SM clock roots to OSC_24M to allow SysPLL to be
-             * powered down.  OSC_24M may be gated by hardware during final phases
+             * powered down. OSC_24M may be gated by hardware during final phases
              * of system SUSPEND entry.
              */
             for (uint32_t sleepRootIdx = 0U;
@@ -764,7 +764,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 if (!sleepForce)
                 {
                     /* IRQs enabled at NVIC level become GPC wake sources */
-                    for (uint32_t wakeIdx = 0;
+                    for (uint32_t wakeIdx = 0U;
                         wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
                         wakeIdx++)
                     {
@@ -877,6 +877,7 @@ int32_t DEV_SM_SystemDramRetentionEnter(void)
         }
     }
 
+    /* Return status */
     return status;
 }
 
@@ -980,6 +981,7 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
         }
     }
 
+    /* Return status */
     return status;
 }
 

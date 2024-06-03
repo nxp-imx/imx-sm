@@ -95,6 +95,12 @@ int32_t DEV_SM_RdcInit(void)
     /* RDC Init */
     for (uint32_t rdcId = 0U; rdcId < DEV_SM_NUM_RDC; rdcId++)
     {
+        /* Skip if no ID */
+        if (s_trdcInfo[rdcId].apiId == 0U)
+        {
+            continue;
+        }
+
         /* Request RDC from ELE */
         ELE_RdcRelease(s_trdcInfo[rdcId].apiId);
 
