@@ -16,7 +16,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2011-2016 Freescale Semiconductor, Inc.
 *   Copyright 2017-2020, 2023 NXP

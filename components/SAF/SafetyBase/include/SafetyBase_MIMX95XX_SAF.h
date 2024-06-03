@@ -9,9 +9,15 @@
  * UPDATE HISTORY                                                         *
  * REV      AUTHOR      DATE       DESCRIPTION OF CHANGE                  *
  * ---   -----------  ---------    ---------------------                  *
- *                                                                        *
+ * 0       nxf85805   01-Sep-2023  Initial revision                       *
+ * 1       nxf85804   09-Jan-2024  Changes for EAR 0.8.0 release          *
+ * 2       nxa16961   16-Feb-2024  Added SCB module section               *
+ * 3       nxa16961   22-Feb-2024  Added SysTick core registers           *
+ * 4       nxf84805   13-Mar-2024  Added EIM, SRAM, DDR registers         *
+ * 5       nxf84805   13-Mar-2024  Added ERM registers                    *
+ * 6       nxf84805   08-Apr-2024  Added LSCTU registers                  *
  *========================================================================*
- * Copyright 2023 NXP                                                     *
+ * Copyright 2023-2024 NXP                                                *
  * Detailed license terms of software usage can be found in the           *
  * license.txt file located in the root folder of this package.           *
  *                                                                        *
@@ -45,6 +51,7 @@ extern "C" {
 #pragma pack(push,1)
 #endif
 
+#if defined(SAFETY_BASE_MIMX95XX)
 /* ============================================================================
    =============================== Module: AON_BLK_CTRL_S_AONMIX ==============
    ============================================================================ */
@@ -354,9 +361,9 @@ typedef union AON_BLK_CTRL_S_AONMIX_AXBS_AON_CTRL_union_tag { /* AXBS_AON_CTRL *
     vuint32_t M2_HIGH_PRIORITY:1;      /* M2 High Priority Control Bit */
     vuint32_t M3_HIGH_PRIORITY:1;      /* M3 High Priority Control Bit */
     vuint32_t M4_HIGH_PRIORITY:1;      /* M4 High Priority Control Bit */
-    vuint32_t M5_HIGH_PRIORITY:1;      /* M5 High Priority Control Bit */
-    vuint32_t M6_HIGH_PRIORITY:1;      /* M6 High Priority Control Bit */
-    vuint32_t _unused_0:24;
+    vuint32_t _unused_25:1;            /* Reserved */
+    vuint32_t _unused_24:1;            /* Reserved */
+    vuint32_t _unused_0:24;            /* Reserved */
   } B;
 } AON_BLK_CTRL_S_AONMIX_AXBS_AON_CTRL_tag;
 
@@ -396,7 +403,7 @@ typedef union AON_BLK_CTRL_S_AONMIX_LP_HANDSHAKE_ELE_union_tag { /* Low Power Ha
     vuint32_t NETC:1;                  /* NETC domain cold reset handshake enable */
     vuint32_t NOC:1;                   /* NOC cold reset handshake enable */
     vuint32_t NPU:1;                   /* NPU cold reset handshake enable */
-    vuint32_t VPUf:1;                  /* VPU cold reset handshake enable */
+    vuint32_t VPU:1;                   /* VPU cold reset handshake enable */
     vuint32_t WAKEUPMIX_TOP:1;         /* wakeupmix_top cold reset handshake enable */
     vuint32_t WAKEUPMIX_JTAG:1;        /* wakeupmix_jtag cold reset handshake enable */
     vuint32_t WAKEUPMIX_WDOG_3_4:1;    /* wakeupmix_wdog_3_4 cold reset handshake enable */
@@ -428,7 +435,7 @@ typedef union AON_BLK_CTRL_S_AONMIX_LP_HANDSHAKE2_ELE_union_tag { /* Low Power H
     vuint32_t NETC:1;                  /* NETC domain low power handshake enable */
     vuint32_t NOC:1;                   /* NOC low power handshake enable */
     vuint32_t NPU:1;                   /* NPU low power handshake enable */
-    vuint32_t VPUf:1;                  /* VPU low power handshake enable */
+    vuint32_t VPU:1;                   /* VPU low power handshake enable */
     vuint32_t WAKEUP:1;                /* WAKEUP low power handshake enable */
     vuint32_t OSC24MHZ:1;              /* OSC 24MHz low power handshake enable */
     vuint32_t _unused_0:11;
@@ -981,8 +988,8 @@ typedef union AON_CAN_FD_ESR1_union_tag { /* Error and Status 1 */
     vuint32_t BOFFDONEINT:1;           /* Bus Off Done Interrupt Flag */
     vuint32_t ERRINT_FAST:1;           /* Fast Error Interrupt Flag */
     vuint32_t ERROVR:1;                /* Error Overrun Flag */
-    vuint32_t ATP:1;                   /* Active to Passive State */
-    vuint32_t PTA:1;                   /* Passive to Active State */
+    vuint32_t _unused_9:1;
+    vuint32_t _unused_8:1;
     vuint32_t _unused_6:2;
     vuint32_t STFERR_FAST:1;           /* Fast Stuffing Error Flag */
     vuint32_t FRMERR_FAST:1;           /* Fast Form Error Flag */
@@ -1412,11 +1419,9 @@ struct AON_CAN_FD_tag {
   AON_CAN_FD_IMASK3_tag IMASK3;        /* Interrupt Masks 3 */
   uint8_t AON_CAN_FD_reserved3[4];
   AON_CAN_FD_IFLAG3_tag IFLAG3;        /* Interrupt Flags 3 */
-  uint8_t AON_CAN_FD_reserved4[4];
-  AON_CAN_FD_FLTCONF_IE_tag FLTCONF_IE; /* Fault Confinement Interrupt Enable */
-  uint8_t AON_CAN_FD_reserved5[2048];
+  uint8_t AON_CAN_FD_reserved4[2056];
   AON_CAN_FD_RXIMR_tag RXIMR[96];      /* Receive Individual Mask */
-  uint8_t AON_CAN_FD_reserved6[224];
+  uint8_t AON_CAN_FD_reserved5[224];
   AON_CAN_FD_MECR_tag MECR;            /* Memory Error Control */
   AON_CAN_FD_ERRIAR_tag ERRIAR;        /* Error Injection Address */
   AON_CAN_FD_ERRIDPR_tag ERRIDPR;      /* Error Injection Data Pattern */
@@ -1425,7 +1430,7 @@ struct AON_CAN_FD_tag {
   AON_CAN_FD_RERRDR_tag RERRDR;        /* Error Report Data */
   AON_CAN_FD_RERRSYNR_tag RERRSYNR;    /* Error Report Syndrome */
   AON_CAN_FD_ERRSR_tag ERRSR;          /* Error Status */
-  uint8_t AON_CAN_FD_reserved7[240];
+  uint8_t AON_CAN_FD_reserved6[240];
   AON_CAN_FD_EPRS_tag EPRS;            /* Enhanced CAN Bit Timing Prescalers */
   AON_CAN_FD_ENCBT_tag ENCBT;          /* Enhanced Nominal CAN Bit Timing */
   AON_CAN_FD_EDCBT_tag EDCBT;          /* Enhanced Data Phase CAN Bit Timing */
@@ -1436,9 +1441,9 @@ struct AON_CAN_FD_tag {
   AON_CAN_FD_ERFCR_tag ERFCR;          /* Enhanced RX FIFO Control */
   AON_CAN_FD_ERFIER_tag ERFIER;        /* Enhanced RX FIFO Interrupt Enable */
   AON_CAN_FD_ERFSR_tag ERFSR;          /* Enhanced RX FIFO Status */
-  uint8_t AON_CAN_FD_reserved8[24];
+  uint8_t AON_CAN_FD_reserved7[24];
   AON_CAN_FD_HR_TIME_STAMP_tag HR_TIME_STAMP[96]; /* High-Resolution Timestamp */
-  uint8_t AON_CAN_FD_reserved9[8784];
+  uint8_t AON_CAN_FD_reserved8[8784];
   AON_CAN_FD_ERFFEL_tag ERFFEL[128];   /* Enhanced RX FIFO Filter Element */
 };
 
@@ -1643,7 +1648,7 @@ typedef union AON_CSTCU_ERR_FM_union_tag { /* Error Fault Mapping */
   } B;
 } AON_CSTCU_ERR_FM_tag;
 
-typedef union AON_CSTCU_LSTCU_STAT_LRFSTAT_union_tag { /* LSTCU Recoverable Fault Status */
+typedef union AON_CSTCU_LRFSTAT_union_tag { /* LSTCU Recoverable Fault Status */
   vuint32_t R;
   struct {
     vuint32_t RFSLSTCU0:1;             /* Recoverable Fault Occurrence Status from LSTCU0. */
@@ -1653,9 +1658,9 @@ typedef union AON_CSTCU_LSTCU_STAT_LRFSTAT_union_tag { /* LSTCU Recoverable Faul
     vuint32_t RFSLSTCU4:1;             /* Recoverable Fault Occurrence Status from LSTCU4. */
     vuint32_t _unused_0:27;
   } B;
-} AON_CSTCU_LSTCU_STAT_LRFSTAT_tag;
+} AON_CSTCU_LRFSTAT_tag;
 
-typedef union AON_CSTCU_LSTCU_STAT_LUFSTAT_union_tag { /* LSTCU Unrecoverable Fault Status */
+typedef union AON_CSTCU_LUFSTAT_union_tag { /* LSTCU Unrecoverable Fault Status */
   vuint32_t R;
   struct {
     vuint32_t UFSLSTCU0:1;             /* Unrecoverable Fault Occurrence Status from LSTCU0. */
@@ -1665,12 +1670,12 @@ typedef union AON_CSTCU_LSTCU_STAT_LUFSTAT_union_tag { /* LSTCU Unrecoverable Fa
     vuint32_t UFSLSTCU4:1;             /* Unrecoverable Fault Occurrence Status from LSTCU4. */
     vuint32_t _unused_0:27;
   } B;
-} AON_CSTCU_LSTCU_STAT_LUFSTAT_tag;
+} AON_CSTCU_LUFSTAT_tag;
 
 typedef struct AON_CSTCU_LSTCU_STAT_struct_tag {
-  AON_CSTCU_LSTCU_STAT_LRFSTAT_tag LRFSTAT; /* LSTCU Recoverable Fault Status */
+  AON_CSTCU_LRFSTAT_tag LRFSTAT; /* LSTCU Recoverable Fault Status */
   uint8_t LSTCU_STAT_reserved0[12];
-  AON_CSTCU_LSTCU_STAT_LUFSTAT_tag LUFSTAT; /* LSTCU Unrecoverable Fault Status */
+  AON_CSTCU_LUFSTAT_tag LUFSTAT; /* LSTCU Unrecoverable Fault Status */
 } AON_CSTCU_LSTCU_STAT_tag;
 
 typedef union AON_CSTCU_RDEN_union_tag { /* Reset Domain Self-Test Enable */
@@ -1749,14 +1754,16 @@ struct AON_CSTCU_tag {
   uint8_t AON_CSTCU_reserved3[4];
   AON_CSTCU_LSTCU_STAT_tag LSTCU_STAT[1];
   uint8_t AON_CSTCU_reserved4[12];
+  AON_CSTCU_LUFSTAT_tag LUFSTAT[1];    /* LSTCU Unrecoverable Fault Status */
+  uint8_t AON_CSTCU_reserved5[12];
   AON_CSTCU_RDEN_tag RDEN;             /* Reset Domain Self-Test Enable */
   AON_CSTCU_RDENSTAT_tag RDENSTAT;     /* Reset Domain Enable Status */
   AON_CSTCU_LASTRDEN_tag LASTRDEN;     /* Last Run Reset Domain Enable */
-  uint8_t AON_CSTCU_reserved5[4];
+  uint8_t AON_CSTCU_reserved6[4];
   AON_CSTCU_BYPLSTCU_tag BYPLSTCU[1];  /* Bypass LSTCU */
-  uint8_t AON_CSTCU_reserved6[12];
+  uint8_t AON_CSTCU_reserved7[12];
   AON_CSTCU_STAG_tag STAG;             /* Stagger */
-  uint8_t AON_CSTCU_reserved7[396];
+  uint8_t AON_CSTCU_reserved8[396];
   AON_CSTCU_LMBPTR_tag LMBPTR[5];      /* LSTCU MBIST Run Phase Scheduler Pointer */
 };
 
@@ -4157,7 +4164,8 @@ typedef union AON_I3C_SINTMASKED_union_tag { /* Target Interrupt Mask */
     vuint32_t DDRMATCHED:1;            /* DDRMATCHED Interrupt Mask */
     vuint32_t CHANDLED:1;              /* CHANDLED Interrupt Mask */
     vuint32_t EVENT:1;                 /* EVENT Interrupt Mask */
-    vuint32_t _unused_0:13;
+    vuint32_t SLVRST:1;                /* Target Reset Interrupt Mask */
+    vuint32_t _unused_0:12;
   } B;
 } AON_I3C_SINTMASKED_tag;
 
@@ -4693,7 +4701,7 @@ typedef union AON_I3C_MWMSG_DDR_MWMSG_DDR_CONTROL2_union_tag { /* Controller Wri
   struct {
     vuint32_t LEN:10;                  /* Length of Message */
     vuint32_t _unused_18:4;
-    vuint32_t END:1;                   /* End of message */
+    vuint32_t END:1;                   /* End of Message */
     vuint32_t _unused_0:17;
   } B;
 } AON_I3C_MWMSG_DDR_MWMSG_DDR_CONTROL2_tag;
@@ -4734,7 +4742,7 @@ typedef union AON_I3C_SRSTACTTIME_union_tag { /* Timing Rules for TargetReset Re
   struct {
     vuint32_t PERRSTTIM:8;             /* Time to Recover from the I3C peripheral */
     vuint32_t SYSRSTTIM:8;             /* Time to Recover from Chip Reset */
-    vuint32_t CUSRSTTIM:8;             /* Custom Time to Recover */
+    vuint32_t _unused_8:8;
     vuint32_t _unused_0:8;
   } B;
 } AON_I3C_SRSTACTTIME_tag;
@@ -5638,8 +5646,8 @@ typedef union AON_LPTPM_CONF_union_tag { /* Configuration */
     vuint32_t _unused_27:5;
     vuint32_t DOZEEN:1;                /* Doze Enable */
     vuint32_t DBGMODE:2;               /* Debug Mode */
-    vuint32_t GTBSYNC:1;               /* GTB Synchronization */
-    vuint32_t GTBEEN:1;                /* GTB Enable */
+    vuint32_t _unused_23:1;
+    vuint32_t _unused_22:1;
     vuint32_t _unused_16:6;            /* Reserved */
     vuint32_t CSOT:1;                  /* Counter Start on Trigger */
     vuint32_t CSOO:1;                  /* Counter Stop on Overflow */
@@ -26262,6 +26270,2944 @@ struct TCM_ECC_MCM_tag {
   TCM_ECC_MCM_SYS_TCM_ECC_ERROR_INJEC_tag SYS_TCM_ECC_ERROR_INJEC; /* SYS_TCM ECC Error Injection Register */
 };
 
+/* ============================================================================
+   =============================== Module: SCB ================================
+   ============================================================================
+   * @usage: sCheck
+*/
+#define SCB_BFSR_PRECISERR_MASK     (0x02U)
+#define SCB_BFSR_IMPRECISERR_MASK   (0x04U)
+#define SCB_BFSR_BFARVALID_MASK     (0x80U)
+#define SCB (*(volatile struct SCB_tag *) 0xE000E000UL)
+
+typedef union SCB_CM7_IEBR_union_tag
+{
+    vuint32_t R;
+    struct
+    {
+        vuint32_t VALID:1;
+        vuint32_t LOCKED:1;
+        vuint32_t LINE_DWORD_OFFSET:2;
+        vuint32_t INDEX:9;
+        vuint32_t _reserved_13:1;
+        vuint32_t WAY:1;
+        vuint32_t _reserved_15:1;
+        vuint32_t RAM_BANK:1;
+        vuint32_t ERR_TYPE:1;
+        vuint32_t _reserved_18:12;
+        vuint32_t USER_DEF:2;
+    } B;
+} SCB_CM7_IEBR_tag;
+
+typedef union SCB_CM7_DEBR_union_tag
+{
+    vuint32_t R;
+    struct
+    {
+        vuint32_t VALID:1;
+        vuint32_t LOCKED:1;
+        vuint32_t LINE_WORD_OFFSET:3;
+        vuint32_t INDEX:8;
+        vuint32_t _reserved_13:1;
+        vuint32_t WAY:2;
+        vuint32_t RAM_BANK:1;
+        vuint32_t ERR_TYPE:1;
+        vuint32_t _reserved_18:12;
+        vuint32_t USER_DEF:2;
+    } B;
+} SCB_CM7_DEBR_tag;
+
+struct SCB_tag
+{
+    uint8_t   RESERVED_0[8];
+    vuint32_t ACTLR;                             /**< Auxiliary Control Register,, offset: 0x8 */
+    uint8_t   RESERVED_1[3316];
+    vuint32_t CPUID;                             /**< CPUID Base Register, offset: 0xD00 */
+    vuint32_t ICSR;                              /**< Interrupt Control and State Register, offset: 0xD04 */
+    vuint32_t VTOR;                              /**< Vector Table Offset Register, offset: 0xD08 */
+    vuint32_t AIRCR;                             /**< Application Interrupt and Reset Control Register, offset: 0xD0C */
+    vuint32_t SCR;                               /**< System Control Register, offset: 0xD10 */
+    vuint32_t CCR;                               /**< Configuration and Control Register, offset: 0xD14 */
+    vuint32_t SHPR1;                             /**< System Handler Priority Register 1, offset: 0xD18 */
+    vuint32_t SHPR2;                             /**< System Handler Priority Register 2, offset: 0xD1C */
+    vuint32_t SHPR3;                             /**< System Handler Priority Register 3, offset: 0xD20 */
+    vuint32_t SHCSR;                             /**< System Handler Control and State Register, offset: 0xD24 */
+    union
+    {
+        vuint32_t R;
+        struct
+        {
+            vuint32_t MMFSR : 8;                 /**< MemManage Fault Status Register, offset: 0xD28 */
+            vuint32_t BFSR  : 8;                 /**< BusFault Status Register, offset 0xD29 */
+            vuint32_t UFSR  : 16;                /**< UsageFault Status Register, offset 0xD2A */
+        } B;
+    } CFSR;                                    /**< Configurable Fault Status Registers, offset: 0xD28 */
+    vuint32_t HFSR;                              /**< HardFault Status register, offset: 0xD2C */
+    vuint32_t DFSR;                              /**< Debug Fault Status Register, offset: 0xD30 */
+    vuint32_t MMFAR;                             /**< MemManage Address Register, offset: 0xD34 */
+    vuint32_t BFAR;                              /**< BusFault Address Register, offset: 0xD38 */
+    vuint32_t AFSR;                              /**< Auxiliary Fault Status Register, offset: 0xD3C */
+    uint8_t   RESERVED_2[72];
+    vuint32_t CPACR;                             /**< Coprocessor Access Control Register, offset: 0xD88 */
+    uint8_t   RESERVED_3[424];
+    vuint32_t FPCCR;                             /**< Floating-point Context Control Register, offset: 0xF34 */
+    vuint32_t FPCAR;                             /**< Floating-point Context Address Register, offset: 0xF38 */
+    vuint32_t FPDSCR;                            /**< Floating-point Default Status Control Register, offset: 0xF3C */
+    uint8_t   RESERVED_4[80];
+    vuint32_t CM7_ITCMCR;                        /**< Instruction Tightly-Coupled Memory Control Register, offset: 0xF90 */
+    vuint32_t CM7_DTCMCR;                        /**< Data Tightly-Coupled Memory Control Register, offset: 0xF94 */
+    uint8_t   RESERVED_5[4];
+    vuint32_t CM7_CACR;                          /**< L1 Cache Control Register, offset: 0xF9C */
+    uint8_t   RESERVED_6[16];
+    SCB_CM7_IEBR_tag CM7_IEBR0;                /**< Instruction Error bank Register 0, offset 0xFB0 */
+    SCB_CM7_IEBR_tag CM7_IEBR1;                /**< Instruction Error bank Register 1, offset 0xFB4 */
+    SCB_CM7_DEBR_tag CM7_DEBR0;                /**< Data Error bank Register 0, offset 0xFB8 */
+    SCB_CM7_DEBR_tag CM7_DEBR1;                /**< Data Error bank Register 1, offset 0xFBC */
+};
+
+/* ============================================================================
+   =============================== Module: SYS_TICK ===========================
+   ============================================================================ */
+#define SYS_TICK (*(volatile struct SYS_TICK_tag *) 0xE000E010UL)
+
+typedef union SYS_TICK_CSR_union_tag { /* SysTick control and status register */
+  vuint32_t R;
+  struct {
+    vuint32_t ENABLE:1;                /* Enable Counting */
+    vuint32_t TICKINT:1;               /* Enable Debug Halt */
+    vuint32_t CLKSOURCE:1;             /* Frequency Change Request, ID 0 */
+    vuint32_t _unused_24:13;           /* Reserved */
+    vuint32_t COUNTFLAG:1;             /* Frequency Change Request, ID 0 */
+    vuint32_t _unused_0:15;            /* Reserved */
+  } B;
+} SYS_TICK_CSR_tag;
+
+typedef union SYS_TICK_RVR_union_tag { /* SysTick reload value register */
+  vuint32_t R;
+  struct {
+    vuint32_t RELOAD:24;               /* Value to load into SYST_CVR */
+    vuint32_t _unused_0:8;             /* Reserved */
+  } B;
+} SYS_TICK_RVR_tag;
+
+typedef union SYS_TICK_CVR_union_tag { /* SysTick current value register */
+  vuint32_t R;
+  struct {
+    vuint32_t CURRENT:24;              /* Reads the current value of SysTick */
+    vuint32_t _unused_0:8;             /* Reserved */
+  } B;
+} SYS_TICK_CVR_tag;
+
+typedef union SYS_TICK_CALIB_union_tag { /* SysTick calibration value register */
+  vuint32_t R;
+  struct {
+    vuint32_t TENMS:24;                /* Reload value for 10ms timing */
+    vuint32_t _unused_24:6;            /* Reserved */
+    vuint32_t SKEW:1;                  /* Indicates if TENMS is exact */
+    vuint32_t NOREF:1;                 /* Indicates whether the device provides a refclk to the CPU */
+  } B;
+} SYS_TICK_CALIB_tag;
+
+struct SYS_TICK_tag {
+  SYS_TICK_CSR_tag SYST_CSR;           /* SysTick control and status register */
+  SYS_TICK_RVR_tag SYST_RVR;           /* SysTick reload value register */
+  SYS_TICK_CVR_tag SYST_CVR;           /* SysTick current value register */
+  SYS_TICK_CALIB_tag SYST_CALIB;       /* SysTick calibration value register */
+};
+
+/* ============================================================================
+   =========================== Module: SAFETYBASE_VFCCU =======================
+   ============================================================================
+*/
+typedef union SAFETYBASE_VFCCU_GFLTRC_union_tag { /* Global Fault Recovery */
+  vuint32_t R;
+  struct {
+    vuint32_t RHWSW0:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW1:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW2:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW3:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW4:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW5:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW6:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW7:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW8:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW9:1;                /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW10:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW11:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW12:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW13:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW14:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW15:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW16:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW17:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW18:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW19:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW20:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW21:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW22:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW23:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW24:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW25:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW26:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW27:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW28:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW29:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW30:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+    vuint32_t RHWSW31:1;               /* Recovery/Clearing Mechanism Hardware Or Software */
+  } B;
+} SAFETYBASE_VFCCU_GFLTRC_tag;
+
+typedef union SAFETYBASE_VFCCU_GFLTOVDC_union_tag { /* Global Fault Overflow Detection */
+  vuint32_t R;
+  struct {
+    vuint32_t OVF_DIS0:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS1:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS2:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS3:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS4:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS5:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS6:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS7:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS8:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS9:1;              /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS10:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS11:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS12:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS13:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS14:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS15:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS16:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS17:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS18:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS19:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS20:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS21:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS22:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS23:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS24:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS25:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS26:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS27:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS28:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS29:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS30:1;             /* Fault Overflow Detection Disable */
+    vuint32_t OVF_DIS31:1;             /* Fault Overflow Detection Disable */
+  } B;
+} SAFETYBASE_VFCCU_GFLTOVDC_tag;
+
+typedef union AON_FCCU_FHFLTENC_union_tag { /* Fault Enable */
+  vuint32_t R;
+  struct {
+    vuint32_t EN0:1;                   /* Fault Enable */
+    vuint32_t EN1:1;                   /* Fault Enable */
+    vuint32_t EN2:1;                   /* Fault Enable */
+    vuint32_t EN3:1;                   /* Fault Enable */
+    vuint32_t EN4:1;                   /* Fault Enable */
+    vuint32_t EN5:1;                   /* Fault Enable */
+    vuint32_t EN6:1;                   /* Fault Enable */
+    vuint32_t EN7:1;                   /* Fault Enable */
+    vuint32_t EN8:1;                   /* Fault Enable */
+    vuint32_t EN9:1;                   /* Fault Enable */
+    vuint32_t EN10:1;                  /* Fault Enable */
+    vuint32_t EN11:1;                  /* Fault Enable */
+    vuint32_t EN12:1;                  /* Fault Enable */
+    vuint32_t EN13:1;                  /* Fault Enable */
+    vuint32_t EN14:1;                  /* Fault Enable */
+    vuint32_t EN15:1;                  /* Fault Enable */
+    vuint32_t EN16:1;                  /* Fault Enable */
+    vuint32_t EN17:1;                  /* Fault Enable */
+    vuint32_t EN18:1;                  /* Fault Enable */
+    vuint32_t EN19:1;                  /* Fault Enable */
+    vuint32_t EN20:1;                  /* Fault Enable */
+    vuint32_t EN21:1;                  /* Fault Enable */
+    vuint32_t EN22:1;                  /* Fault Enable */
+    vuint32_t EN23:1;                  /* Fault Enable */
+    vuint32_t EN24:1;                  /* Fault Enable */
+    vuint32_t EN25:1;                  /* Fault Enable */
+    vuint32_t EN26:1;                  /* Fault Enable */
+    vuint32_t EN27:1;                  /* Fault Enable */
+    vuint32_t EN28:1;                  /* Fault Enable */
+    vuint32_t EN29:1;                  /* Fault Enable */
+    vuint32_t EN30:1;                  /* Fault Enable */
+    vuint32_t EN31:1;                  /* Fault Enable */
+  } B;
+} SAFETYBASE_VFCCU_FHFLTENC_tag;
+
+typedef union SAFETYBASE_VFCCU_FHFLTS_union_tag { /* Fault Status */
+  vuint32_t R;
+  struct {
+    vuint32_t STAT0:1;                 /* Fault Status */
+    vuint32_t STAT1:1;                 /* Fault Status */
+    vuint32_t STAT2:1;                 /* Fault Status */
+    vuint32_t STAT3:1;                 /* Fault Status */
+    vuint32_t STAT4:1;                 /* Fault Status */
+    vuint32_t STAT5:1;                 /* Fault Status */
+    vuint32_t STAT6:1;                 /* Fault Status */
+    vuint32_t STAT7:1;                 /* Fault Status */
+    vuint32_t STAT8:1;                 /* Fault Status */
+    vuint32_t STAT9:1;                 /* Fault Status */
+    vuint32_t STAT10:1;                /* Fault Status */
+    vuint32_t STAT11:1;                /* Fault Status */
+    vuint32_t STAT12:1;                /* Fault Status */
+    vuint32_t STAT13:1;                /* Fault Status */
+    vuint32_t STAT14:1;                /* Fault Status */
+    vuint32_t STAT15:1;                /* Fault Status */
+    vuint32_t STAT16:1;                /* Fault Status */
+    vuint32_t STAT17:1;                /* Fault Status */
+    vuint32_t STAT18:1;                /* Fault Status */
+    vuint32_t STAT19:1;                /* Fault Status */
+    vuint32_t STAT20:1;                /* Fault Status */
+    vuint32_t STAT21:1;                /* Fault Status */
+    vuint32_t STAT22:1;                /* Fault Status */
+    vuint32_t STAT23:1;                /* Fault Status */
+    vuint32_t STAT24:1;                /* Fault Status */
+    vuint32_t STAT25:1;                /* Fault Status */
+    vuint32_t STAT26:1;                /* Fault Status */
+    vuint32_t STAT27:1;                /* Fault Status */
+    vuint32_t STAT28:1;                /* Fault Status */
+    vuint32_t STAT29:1;                /* Fault Status */
+    vuint32_t STAT30:1;                /* Fault Status */
+    vuint32_t STAT31:1;                /* Fault Status */
+  } B;
+} SAFETYBASE_VFCCU_FHFLTS_tag;
+
+typedef union SAFETYBASE_VFCCU_FHFLTRKC_union_tag { /* Fault Reaction Set Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t RKNSEL0:3;               /* Reaction Selection */
+    vuint32_t _unused_24:5;
+    vuint32_t RKNSEL1:3;               /* Reaction Selection */
+    vuint32_t _unused_16:5;
+    vuint32_t RKNSEL2:3;               /* Reaction Selection */
+    vuint32_t _unused_8:5;
+    vuint32_t RKNSEL3:3;               /* Reaction Selection */
+    vuint32_t _unused_0:5;
+  } B;
+} SAFETYBASE_VFCCU_FHFLTRKC_tag;
+
+typedef union SAFETYBASE_VFCCU_FHIMRKC_union_tag { /* Immediate Reaction Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EOUTEN0:1;               /* EOUT Enable */
+    vuint32_t EOUTEN1:1;               /* EOUT Enable */
+    vuint32_t RKNEN0:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN1:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN2:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN3:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN4:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN5:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN6:1;                /* Reaction Line Enable */
+    vuint32_t _unused_0:23;
+  } B;
+} SAFETYBASE_VFCCU_FHIMRKC_tag;
+
+typedef union SAFETYBASE_VFCCU_FHDLRKC_union_tag { /* Delayed Reaction Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EOUTEN0:1;               /* EOUT Enable */
+    vuint32_t EOUTEN1:1;               /* EOUT Enable */
+    vuint32_t RKNEN0:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN1:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN2:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN3:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN4:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN5:1;                /* Reaction Line Enable */
+    vuint32_t RKNEN6:1;                /* Reaction Line Enable */
+    vuint32_t _unused_0:23;
+  } B;
+} SAFETYBASE_VFCCU_FHDLRKC_tag;
+
+typedef struct { /* Reaction Configuration */
+    SAFETYBASE_VFCCU_FHIMRKC_tag FHIMRKC; /* Immediate Reaction Configuration */
+    uint8_t SAFETYBASE_VFCCU_reserved0[12];
+    SAFETYBASE_VFCCU_FHDLRKC_tag FHDLRKC; /* Delayed Reaction Configuration */
+    uint8_t SAFETYBASE_VFCCU_reserved1[12];
+} SAFETYBASE_VFCCU_FHRKC_tag;
+
+struct SAFETYBASE_VFCCU_tag {
+  uint8_t AON_FCCU_reserved0[768];
+  AON_FCCU_GRKNTIMC_tag GRKNTIMC[1];   /* Global Reaction Timer Period */
+  uint8_t AON_FCCU_reserved1[316];
+  SAFETYBASE_VFCCU_GFLTRC_tag GFLTRC[3];    /* Global Fault Recovery */
+  uint8_t AON_FCCU_reserved2[2100];
+  SAFETYBASE_VFCCU_GFLTOVDC_tag GFLTOVDC[3];    /* Global Fault Overflow Detection */
+  uint8_t AON_FCCU_reserved3[116];
+  AON_FCCU_GRKNTIMS_tag GRKNTIMS;      /* Global Reaction Timer Status */
+  AON_FCCU_GCTRL_tag GCTRL;            /* Global Space Control */
+  AON_FCCU_GINTOVFS_tag GINTOVFS;      /* Global DID FSM Status */
+  uint8_t AON_FCCU_reserved4[4];
+  AON_FCCU_GOVFRKC_tag GOVFRKC[1];     /* Global Overflow Reaction */
+  uint8_t AON_FCCU_reserved5[12];
+  AON_FCCU_GMEOUTDC_tag GMEOUTDC;      /* Global Minimum EOUT Duration */
+  AON_FCCU_GEOUTTCT_tag GEOUTTCT;      /* Global EOUT Timer Disable */
+  uint8_t AON_FCCU_reserved6[8];
+  AON_FCCU_GLB_EOUT_tag GLB_EOUT[2];
+  uint8_t AON_FCCU_reserved7[600];
+  AON_FCCU_GDBGCFG_tag GDBGCFG;        /* Global Debug */
+  AON_FCCU_GDBGSTAT_tag GDBGSTAT;      /* Global Debug Status */
+  AON_FCCU_GDPFSTAT_tag GDPFSTAT;      /* Global Debug Pending Fault Status */
+  AON_FCCU_GDALTRLD_tag GDALTRLD;      /* Global Debug Alternate Reload Status */
+  uint8_t AON_FCCU_reserved8[1306688];
+  AON_FCCU_FHCFG0_tag FHCFG0;          /* Fault Handler */
+  AON_FCCU_FHSRVDS0_tag FHSRVDS0;      /* Fault Handler Status */
+  uint8_t AON_FCCU_reserved9[8];
+  SAFETYBASE_VFCCU_FHFLTENC_tag FHFLTENC[3]; /* Fault Enable */
+  uint8_t AON_FCCU_reserved10[52];
+  SAFETYBASE_VFCCU_FHFLTS_tag FHFLTS[3];    /* Fault Status */
+  uint8_t AON_FCCU_reserved11[52];
+  SAFETYBASE_VFCCU_FHFLTRKC_tag FHFLTRKC[20]; /* Fault Reaction Set Configuration */
+  uint8_t AON_FCCU_reserved12[432];
+  SAFETYBASE_VFCCU_FHRKC_tag FHRKC[7]; /* Reaction Configuration */
+};
+
+/* ============================================================================
+   =============================== Module: EIM ============================
+   ============================================================================ */
+
+#define EIM_EICHD_WORDS_PER_CHANNEL (9U)                /* Maximum number ofWords per Error Injection Channel */
+#define EIM_CHANNELS_COUNT          (32U)               /* Number of Error Injection Channels */
+
+typedef union EIM_EIMCR_union_tag { /* Error Injection Module Configuration Register */
+  vuint32_t R;
+  struct {
+    vuint32_t GEIEN:1;                 /* Global Error Injection Enable */
+    vuint32_t _unused_0:31;            /* Reserved */
+  } B;
+} EIM_EIMCR_tag;
+
+typedef union EIM_EICHEN_union_tag { /* Error Injection Channel Enable register */
+  vuint32_t R;
+  struct {
+    vuint32_t EICH31EN:1;              /* Error Injection Channel 31 Enable */
+    vuint32_t EICH30EN:1;              /* Error Injection Channel 30 Enable */
+    vuint32_t EICH29EN:1;              /* Error Injection Channel 29 Enable */
+    vuint32_t EICH28EN:1;              /* Error Injection Channel 28 Enable */
+    vuint32_t EICH27EN:1;              /* Error Injection Channel 27 Enable */
+    vuint32_t EICH26EN:1;              /* Error Injection Channel 26 Enable */
+    vuint32_t EICH25EN:1;              /* Error Injection Channel 25 Enable */
+    vuint32_t EICH24EN:1;              /* Error Injection Channel 24 Enable */
+    vuint32_t EICH23EN:1;              /* Error Injection Channel 23 Enable */
+    vuint32_t EICH22EN:1;              /* Error Injection Channel 22 Enable */
+    vuint32_t EICH21EN:1;              /* Error Injection Channel 21 Enable */
+    vuint32_t EICH20EN:1;              /* Error Injection Channel 20 Enable */
+    vuint32_t EICH19EN:1;              /* Error Injection Channel 19 Enable */
+    vuint32_t EICH18EN:1;              /* Error Injection Channel 18 Enable */
+    vuint32_t EICH17EN:1;              /* Error Injection Channel 17 Enable */
+    vuint32_t EICH16EN:1;              /* Error Injection Channel 16 Enable */
+    vuint32_t EICH15EN:1;              /* Error Injection Channel 15 Enable */
+    vuint32_t EICH14EN:1;              /* Error Injection Channel 14 Enable */
+    vuint32_t EICH13EN:1;              /* Error Injection Channel 13 Enable */
+    vuint32_t EICH12EN:1;              /* Error Injection Channel 12 Enable */
+    vuint32_t EICH11EN:1;              /* Error Injection Channel 11 Enable */
+    vuint32_t EICH10EN:1;              /* Error Injection Channel 10 Enable */
+    vuint32_t EICH9EN:1;               /* Error Injection Channel 9 Enable */
+    vuint32_t EICH8EN:1;               /* Error Injection Channel 8 Enable */
+    vuint32_t EICH7EN:1;               /* Error Injection Channel 7 Enable */
+    vuint32_t EICH6EN:1;               /* Error Injection Channel 6 Enable */
+    vuint32_t EICH5EN:1;               /* Error Injection Channel 5 Enable */
+    vuint32_t EICH4EN:1;               /* Error Injection Channel 4 Enable */
+    vuint32_t EICH3EN:1;               /* Error Injection Channel 3 Enable */
+    vuint32_t EICH2EN:1;               /* Error Injection Channel 2 Enable */
+    vuint32_t EICH1EN:1;               /* Error Injection Channel 1 Enable */
+    vuint32_t EICH0EN:1;               /* Error Injection Channel 0 Enable */
+  } B;
+} EIM_EICHEN_tag;
+
+typedef struct EIM_EICHD_union_tag {
+  vuint32_t WORD[EIM_EICHD_WORDS_PER_CHANNEL];    /* Error Injection Words */
+  vuint8_t  EICHD_reserved0[28];
+} EIM_EICHD_tag;
+
+struct EIM_tag {
+  EIM_EIMCR_tag EIMCR;             /* Error Injection Module Configuration Register */
+  EIM_EICHEN_tag EICHEN;           /* Error Injection Channel Enable register */
+  vuint8_t EIM_reserved0[248];
+  EIM_EICHD_tag EICHD[EIM_CHANNELS_COUNT];
+};
+
+/* ============================================================================
+   =============================== Module: SRAMCTL ============================
+   ============================================================================
+   * @usage: sCheck
+*/
+
+typedef union SRAMCTL_RAMCR_union_tag { /* RAM Control */
+  vuint32_t R;
+  struct {
+    vuint32_t INIT:1;                  /* Initialization Request */
+    vuint32_t IWS:2;                   /* Initialization Wait States */
+    vuint32_t _unused_3:5;             /* Reserved */
+    vuint32_t INIT_SYSA:1;             /* Initialize With System Address */
+    vuint32_t _unused_9:23;            /* Reserved */
+  } B;
+} SRAMCTL_RAMCR_tag;
+
+typedef union SRAMCTL_RAMIAS_union_tag { /* RAM Initialization Address Start */
+  vuint32_t R;
+  struct {
+    vuint32_t IAS:32;                  /* Initialization Address Start */
+  } B;
+} SRAMCTL_RAMIAS_tag;
+
+typedef union SRAMCTL_RAMIAE_union_tag { /* RAM Initialization Address End */
+  vuint32_t R;
+  struct {
+    vuint32_t IAE:32;                  /* Initialization Address End */
+  } B;
+} SRAMCTL_RAMIAE_tag;
+
+typedef union SRAMCTL_RAMSR_union_tag { /* RAM Status */
+  vuint32_t R;
+  struct {
+    vuint32_t IDONE:1;                 /* Initialization Done */
+    vuint32_t BUSERR:1;                /* Bus Error */
+    vuint32_t IPEND:1;                 /* Initialization Pending */
+    vuint32_t AVALID:1;                /* Addresses Valid */
+    vuint32_t _unused_4:1;             /* Reserved */
+    vuint32_t AERR:1;                  /* ECC Address Error */
+    vuint32_t MLTERR:1;                /* ECC Multi-Bit Error */
+    vuint32_t SGLERR:1;                /* ECC Single-Bit Error */
+    vuint32_t SYND:8;                  /* ECC Syndrome Value */
+    vuint32_t EINFO:8;                 /* Event Information */
+    vuint32_t _unused_24:8;            /* Reserved */
+  } B;
+} SRAMCTL_RAMSR_tag;
+
+typedef union SRAMCTL_RAMMEMA_union_tag { /* RAM ECC Address */
+  vuint32_t R;
+  struct {
+    vuint32_t MEMA:17;                 /* RAM Bank Address */
+    vuint32_t _unused_17:3;            /* Reserved */
+    vuint32_t BANK:5;                  /* RAM Bank ID */
+    vuint32_t _unused_25:7;            /* Reserved */
+  } B;
+} SRAMCTL_RAMMEMA_tag;
+
+typedef union SRAMCTL_RAMSYSA_union_tag { /* RAM System Address */
+  vuint32_t R;
+  struct {
+    vuint32_t SYSA:32;                 /* System Address */
+  } B;
+} SRAMCTL_RAMSYSA_tag;
+
+typedef union SRAMCTL_RAMECCNT_union_tag { /* RAM Correctable Error Count */
+  vuint32_t R;
+  struct {
+    vuint32_t ECCNT:8;                 /* ECC Correctable Error Count */
+    vuint32_t _unused_8:24;            /* Reserved */
+  } B;
+} SRAMCTL_RAMECCNT_tag;
+
+typedef union SRAMCTL_RAMEID0_union_tag { /* RAM Error Injection Data 0 */
+  vuint32_t R;
+  struct {
+    vuint32_t EID_W0:32;               /* Error Injection Data Word 0 */
+  } B;
+} SRAMCTL_RAMEID0_tag;
+
+typedef union SRAMCTL_RAMEID1_union_tag { /* RAM Error Injection Data 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t EID_W1:32;               /* Error Injection Data Word 1 */
+  } B;
+} SRAMCTL_RAMEID1_tag;
+
+typedef union SRAMCTL_RAMEIDC_union_tag { /* RAM Error Injection Data Control */
+  vuint32_t R;
+  struct {
+    vuint32_t EID_CKB:8;               /* Error Injection Data Checkbits */
+    vuint32_t _unused_8:16;            /* Reserved */
+    vuint32_t EIP_EN:1;                /* Error Injection Into Pipeline Enable */
+    vuint32_t _unused_25:5;            /* Reserved */
+    vuint32_t EIA_EN:1;                /* Error Injection Address Enable */
+    vuint32_t EID_EN:1;                /* Error Injection Data Enable */
+  } B;
+} SRAMCTL_RAMEIDC_tag;
+
+typedef union SRAMCTL_RAMEIA_union_tag { /* RAM Error Injection Base Address */
+  vuint32_t R;
+  struct {
+    vuint32_t EIA:32;                  /* Error Injection Base Address */
+  } B;
+} SRAMCTL_RAMEIA_tag;
+
+typedef union SRAMCTL_RAMEIAM_union_tag { /* RAM Error Injection Address Mask */
+  vuint32_t R;
+  struct {
+    vuint32_t EIAM:32;                 /* Error Injection Address Mask */
+  } B;
+} SRAMCTL_RAMEIAM_tag;
+
+typedef union SRAMCTL_RAMMAXA_union_tag { /* RAM Maximum-Value Address */
+  vuint32_t R;
+  struct {
+    vuint32_t MAXA:32;                 /* Maximum Address */
+  } B;
+} SRAMCTL_RAMMAXA_tag;
+
+typedef union SRAMCTL_RAMCR2_union_tag { /* RAM Control 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t PREF:1;                  /* Prefetch for Read Bursts */
+    vuint32_t WBUF:2;                  /* Write Buffer Control */
+    vuint32_t DEM:1;                   /* Disable Exclusive Monitor */
+    vuint32_t _unused_4:28;            /* Reserved */
+  } B;
+} SRAMCTL_RAMCR2_tag;
+
+struct SRAMCTL_tag {
+  SRAMCTL_RAMCR_tag RAMCR;             /* RAM Control */
+  SRAMCTL_RAMIAS_tag RAMIAS;           /* RAM Initialization Address Start */
+  SRAMCTL_RAMIAE_tag RAMIAE;           /* RAM Initialization Address End */
+  SRAMCTL_RAMSR_tag RAMSR;             /* RAM Status */
+  SRAMCTL_RAMMEMA_tag RAMMEMA;         /* RAM ECC Address */
+  uint8 SRAMCTL_reserved0[4];
+  SRAMCTL_RAMSYSA_tag RAMSYSA;         /* RAM System Address */
+  SRAMCTL_RAMECCNT_tag RAMECCNT;       /* RAM Correctable Error Count */
+  SRAMCTL_RAMEID0_tag RAMEID0;         /* RAM Error Injection Data 0 */
+  SRAMCTL_RAMEID1_tag RAMEID1;         /* RAM Error Injection Data 1 */
+  SRAMCTL_RAMEIDC_tag RAMEIDC;         /* RAM Error Injection Data Control */
+  uint8 SRAMCTL_reserved1[4];
+  SRAMCTL_RAMEIA_tag RAMEIA;           /* RAM Error Injection Base Address */
+  SRAMCTL_RAMEIAM_tag RAMEIAM;         /* RAM Error Injection Address Mask */
+  uint8 SRAMCTL_reserved2[8];
+  SRAMCTL_RAMMAXA_tag RAMMAXA;         /* RAM Maximum-Value Address */
+  uint8 SRAMCTL_reserved3[60];
+  SRAMCTL_RAMCR2_tag RAMCR2;           /* RAM Control 2 */
+};
+
+/* ============================================================================
+   =============================== Module: DDR_DDRC ===========================
+   ============================================================================ */
+
+typedef union DDR_DDRC_CS_BNDS_CS_BNDS_union_tag { /* Rank 0 Memory Bounds */
+  vuint32_t R;
+  struct {
+    vuint32_t EA:16;                   /* Ending Address */
+    vuint32_t SA:16;                   /* Starting Address */
+  } B;
+} DDR_DDRC_CS_BNDS_CS_BNDS_tag;
+
+typedef struct DDR_DDRC_CS_BNDS_struct_tag {
+  DDR_DDRC_CS_BNDS_CS_BNDS_tag CS_BNDS; /* Rank 0 Memory Bounds */
+  uint8_t CS_BNDS_reserved0[4];
+} DDR_DDRC_CS_BNDS_tag;
+
+typedef union DDR_DDRC_REMAP_EXT_0_union_tag { /* Remap Extended Region 0 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_0_EA:8;          /* Region 0 Extended Ending Address */
+    vuint32_t EXT_REG_0_SA:8;          /* Region 0 Extended Starting Address */
+    vuint32_t REG_0_EXT_REMAP_ADDR:8;  /* Region 0 Extended Remap Starting Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_REMAP_EXT_0_tag;
+
+typedef union DDR_DDRC_REMAP_EXT_1_union_tag { /* Remap Extended Region 1 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_1_EA:8;          /* Region 1 Extended Ending Address */
+    vuint32_t EXT_REG_1_SA:8;          /* Region 1 Extended Starting Address */
+    vuint32_t REG_1_EXT_REMAP_ADDR:8;  /* Region 1 Extended Remap Starting Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_REMAP_EXT_1_tag;
+
+typedef union DDR_DDRC_REMAP_EXT_2_union_tag { /* Remap Extended Region 2 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_2_EA:8;          /* Region 2 Extended Ending Address */
+    vuint32_t EXT_REG_2_SA:8;          /* Region 2 Extended Starting Address */
+    vuint32_t REG_2_EXT_REMAP_ADDR:8;  /* Region 2 Extended Remap Starting Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_REMAP_EXT_2_tag;
+
+typedef union DDR_DDRC_REMAP_EXT_3_union_tag { /* Remap Extended Region 3 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_3_EA:8;          /* Region 3 Extended Ending Address */
+    vuint32_t EXT_REG_3_SA:8;          /* Region 3 Extended Starting Address */
+    vuint32_t REG_3_EXT_REMAP_ADDR:8;  /* Region 3 Extended Remap Starting Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_REMAP_EXT_3_tag;
+
+typedef union DDR_DDRC_REMAP_0A_union_tag { /* Remap Region 0A Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_0_REMAP_ADDR:12;     /* Region 0 Remap Starting Address */
+    vuint32_t _unused_1:19;
+    vuint32_t REG_0_REMAP_EN:1;        /* Region 0 Remap Enable */
+  } B;
+} DDR_DDRC_REMAP_0A_tag;
+
+typedef union DDR_DDRC_REMAP_0B_union_tag { /* Remap Region 0B Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_0_EA:12;             /* Region 0 Ending Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_0_SA:12;             /* Region 0 Starting Address */
+    vuint32_t _unused_0:4;
+  } B;
+} DDR_DDRC_REMAP_0B_tag;
+
+typedef union DDR_DDRC_REMAP_1A_union_tag { /* Remap Region 1A Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_1_REMAP_ADDR:12;     /* Region 1 Remap Starting Address */
+    vuint32_t _unused_1:19;
+    vuint32_t REG_1_REMAP_EN:1;        /* Region 1 Remap Enable */
+  } B;
+} DDR_DDRC_REMAP_1A_tag;
+
+typedef union DDR_DDRC_REMAP_1B_union_tag { /* Remap Region 1B Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_1_EA:12;             /* Region 1 Ending Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_1_SA:12;             /* Region 1 Starting Address */
+    vuint32_t _unused_0:4;
+  } B;
+} DDR_DDRC_REMAP_1B_tag;
+
+typedef union DDR_DDRC_REMAP_2A_union_tag { /* Remap Region 2A Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_2_REMAP_ADDR:12;     /* Region 2 Remap Starting Address */
+    vuint32_t _unused_1:19;
+    vuint32_t REG_2_REMAP_EN:1;        /* Region 2 Remap Enable */
+  } B;
+} DDR_DDRC_REMAP_2A_tag;
+
+typedef union DDR_DDRC_REMAP_2B_union_tag { /* Remap Region 2B Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_2_EA:12;             /* Region 2 Ending Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_2_SA:12;             /* Region 2 Starting Address */
+    vuint32_t _unused_0:4;
+  } B;
+} DDR_DDRC_REMAP_2B_tag;
+
+typedef union DDR_DDRC_REMAP_3A_union_tag { /* Remap Region 3A Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_3_REMAP_ADDR:12;     /* Region 3 Remap Starting Address */
+    vuint32_t _unused_1:19;
+    vuint32_t REG_3_REMAP_EN:1;        /* Region 3 Remap Enable */
+  } B;
+} DDR_DDRC_REMAP_3A_tag;
+
+typedef union DDR_DDRC_REMAP_3B_union_tag { /* Remap Region 3B Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_3_EA:12;             /* Region 3 Ending Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_3_SA:12;             /* Region 3 Starting Address */
+    vuint32_t _unused_0:4;
+  } B;
+} DDR_DDRC_REMAP_3B_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_0_union_tag { /* DDRC Address Decode 0 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t ROW14_OVRD:6;            /* Row 14 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t ROW15_OVRD:6;            /* Row 15 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t ROW16_OVRD:6;            /* Row 16 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t ROW17_OVRD:6;            /* Row 17 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_0_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_1_union_tag { /* DDRC Address Decode 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t ROW10_OVRD:6;            /* Row 10 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t ROW11_OVRD:6;            /* Row 11 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t ROW12_OVRD:6;            /* Row 12 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t ROW13_OVRD:6;            /* Row 13 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_1_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_2_union_tag { /* DDRC Address Decode 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t ROW6_OVRD:6;             /* Row 6 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t ROW7_OVRD:6;             /* Row 7 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t ROW8_OVRD:6;             /* Row 8 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t ROW9_OVRD:6;             /* Row 9 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_2_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_3_union_tag { /* DDRC Address Decode 3 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t ROW2_OVRD:6;             /* Row 2 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t ROW3_OVRD:6;             /* Row 3 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t ROW4_OVRD:6;             /* Row 4 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t ROW5_OVRD:6;             /* Row 5 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_3_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_4_union_tag { /* DDRC Address Decode 4 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t COL9_OVRD:6;             /* Col 9 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t COL10_OVRD:6;            /* Col 10 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t ROW0_OVRD:6;             /* Row 0 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t ROW1_OVRD:6;             /* Row 1 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_4_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_5_union_tag { /* DDRC Address Decode 5 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t COL5_OVRD:6;             /* Col 5 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t COL6_OVRD:6;             /* Col 6 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t COL7_OVRD:6;             /* Col 7 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t COL8_OVRD:6;             /* Col 8 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_5_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_6_union_tag { /* DDRC Address Decode 6 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t COL1_OVRD:6;             /* Col 1 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t COL2_OVRD:6;             /* Col 2 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t COL3_OVRD:6;             /* Col 3 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t COL4_OVRD:6;             /* Col 4 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_6_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_7_union_tag { /* DDRC Address Decode 7 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t CID1_OVRD:6;             /* CID 1 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t BA0_OVRD:6;              /* Bank 0 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t BA1_OVRD:6;              /* Bank 1 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t COL0_OVRD:6;             /* Col 0 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_7_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_8_union_tag { /* DDRC Address Decode 8 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t BG1_OVRD:6;              /* Bank Group 1 Override */
+    vuint32_t _unused_22:2;
+    vuint32_t CS0_OVRD:6;              /* Interleaved Rank 0 Override */
+    vuint32_t _unused_14:2;
+    vuint32_t CS1_OVRD:6;              /* Interleaved Rank 1 Override */
+    vuint32_t _unused_6:2;
+    vuint32_t CID0_OVRD:6;             /* CID 0 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_8_tag;
+
+typedef union DDR_DDRC_DDR_ADDR_DEC_9_union_tag { /* DDRC Address Decode 9 */
+  vuint32_t R;
+  struct {
+    vuint32_t ADDR_DEC_OVRD:1;         /* Address Decode Override */
+    vuint32_t _unused_6:25;
+    vuint32_t BG0_OVRD:6;              /* Bank Group 0 Override */
+  } B;
+} DDR_DDRC_DDR_ADDR_DEC_9_tag;
+
+typedef union DDR_DDRC_CS_CONFIG_union_tag { /* Rank 0 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t COL_BITS_CS:3;           /* Column Bits */
+    vuint32_t _unused_28:1;
+    vuint32_t BG_BITS_CS:2;            /* Bank Group Bits */
+    vuint32_t _unused_24:2;
+    vuint32_t ROW_BITS_CS:3;           /* Row Bits */
+    vuint32_t _unused_16:5;
+    vuint32_t ODT_WR_CFG:3;            /* ODT Write Configuration */
+    vuint32_t _unused_12:1;
+    vuint32_t ODT_RD_CFG:3;            /* ODT Read Configuration */
+    vuint32_t AP_EN:1;                 /* Auto-Precharge Enable */
+    vuint32_t INTLV_CTL:4;             /* Interleaving Control */
+    vuint32_t _unused_3:1;
+    vuint32_t INTLV_EN:2;              /* Interleaving Enable */
+    vuint32_t CS_EN:1;                 /* Rank Enable */
+  } B;
+} DDR_DDRC_CS_CONFIG_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_3_union_tag { /* DDR SDRAM Timing Configuration 3 */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_WRTORD:1;            /* Extended Write-To-Read Time */
+    vuint32_t EXT_ACTTOACT:1;          /* Extended Activate-To-Activate Time */
+    vuint32_t SPARE_CNFG:1;            /* Spare Config */
+    vuint32_t EXT_FOUR_ACT:1;          /* Extended Four Activate */
+    vuint32_t EXT_CKE_PLS:2;           /* Extended MCKE Pulse */
+    vuint32_t _unused_24:2;
+    vuint32_t EXT_WRREC:2;             /* Extended Write Recovery */
+    vuint32_t SPARE_CNFG2:1;           /* Spare Config */
+    vuint32_t EXT_WR_LAT_2:1;          /* Extended Write Latency 2 */
+    vuint32_t EXT_CASLAT:3;            /* Extended CAS Latency */
+    vuint32_t _unused_16:1;
+    vuint32_t EXT_REFREC:6;            /* Extended Refresh Recovery */
+    vuint32_t EXT_ACTTORW:2;           /* Extended Activate To Read Or Write Time */
+    vuint32_t EXT_ACTTOPRE:3;          /* Extended Activate-To-Precharge Time */
+    vuint32_t _unused_4:1;
+    vuint32_t EXT_PRETOACT:2;          /* Extended Precharge-To-Activate Time */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_TIMING_CFG_3_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_0_union_tag { /* DDR SDRAM Timing Configuration 0 */
+  vuint32_t R;
+  struct {
+    vuint32_t MRS_CYC:6;               /* MRW Cycle Time */
+    vuint32_t _unused_20:6;
+    vuint32_t EXT_ACT_PD_EXIT:1;       /* Extended Active Power-Down Exit */
+    vuint32_t _unused_18:1;
+    vuint32_t EXT_PRE_PD_EXIT:2;       /* Extended Precharge Power-Down Exit */
+    vuint32_t PRE_PD_EXIT:4;           /* Precharge Power-Down Exit */
+    vuint32_t ACT_PD_EXIT:4;           /* Active Powerdown Exit */
+    vuint32_t WWT:2;                   /* Write-To-Write Turnaround To Different Ranks */
+    vuint32_t RRT:2;                   /* Read-To-Read Turnaround To Different Ranks */
+    vuint32_t WRT:2;                   /* Write-To-Read Turnaround To Different Ranks */
+    vuint32_t RWT:2;                   /* Read-To-Write Turnaround To Different Ranks */
+  } B;
+} DDR_DDRC_TIMING_CFG_0_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_1_union_tag { /* DDR SDRAM Timing Configuration 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t WRTORD:4;                /* Write-To-Read Interval */
+    vuint32_t ACTTOACT:4;              /* Activate-To-Activate Interval */
+    vuint32_t WRREC:4;                 /* Write Recovery */
+    vuint32_t REFREC:4;                /* Refresh Recovery */
+    vuint32_t _unused_15:1;
+    vuint32_t CASLAT:3;                /* CAS Latency */
+    vuint32_t ACTTORW:4;               /* Activate To Read Or Write */
+    vuint32_t ACTTOPRE:4;              /* Activate-To-Precharge Time */
+    vuint32_t PRETOACT:4;              /* Precharge-To-Activate Time */
+  } B;
+} DDR_DDRC_TIMING_CFG_1_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_2_union_tag { /* DDR SDRAM Timing Configuration 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t FOUR_ACT:6;              /* Four Activate */
+    vuint32_t CKE_PLS:3;               /* MCKE Pulse */
+    vuint32_t _unused_19:4;
+    vuint32_t RD_TO_PRE:5;             /* Read-To-Precharge Time */
+    vuint32_t EXT_WR_LAT:1;            /* Extended Write Latency */
+    vuint32_t WR_LAT:4;                /* Write Latency */
+    vuint32_t _unused_4:5;
+    vuint32_t DERATE_VAL:4;            /* Derate Value */
+  } B;
+} DDR_DDRC_TIMING_CFG_2_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_CFG_union_tag { /* DDR SDRAM Control Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t BI:1;                    /* Bypass Initialization */
+    vuint32_t MEM_HALT:1;              /* DDRC Halt */
+    vuint32_t RSRVD:1;                 /* Reserved. Should be written to 0. */
+    vuint32_t _unused_28:1;
+    vuint32_t _unused_24:4;
+    vuint32_t BA_INTLV_CTL:7;          /* Rank interleaving control. */
+    vuint32_t _unused_16:1;
+    vuint32_t DC_EN:1;                 /* Dual Channel Enable */
+    vuint32_t _unused_14:1;
+    vuint32_t _unused_13:1;
+    vuint32_t DBW:2;                   /* DDR SDRAM Data Bus Width */
+    vuint32_t DYN_PWR:1;               /* Dynamic Power Management */
+    vuint32_t _unused_8:2;
+    vuint32_t SDRAM_TYPE:3;            /* DDR SDRAM Type */
+    vuint32_t _unused_4:1;
+    vuint32_t RD_EN:1;                 /* Registered DIMM Enable */
+    vuint32_t _unused_2:1;
+    vuint32_t SREN:1;                  /* Self-Refresh Enable */
+    vuint32_t MEM_EN:1;                /* DDRC Enable */
+  } B;
+} DDR_DDRC_DDR_SDRAM_CFG_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_CFG_2_union_tag { /* DDR SDRAM Control Configuration 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t SPARE_CNFG:1;            /* Spare Config */
+    vuint32_t _unused_30:1;
+    vuint32_t _unused_29:1;
+    vuint32_t SPARE_CNFG2:1;           /* Spare Config */
+    vuint32_t D_INIT:1;                /* DDR SDRAM Data Initialization */
+    vuint32_t SPARE_CNFG3:2;           /* Spare Config */
+    vuint32_t _unused_24:1;
+    vuint32_t RSRVD:1;                 /* Reserved. Must be written to 0. */
+    vuint32_t QD_EN:1;                 /* Quad-Rank Enable */
+    vuint32_t _unused_21:1;
+    vuint32_t _unused_20:1;
+    vuint32_t NUM_PR:4;                /* Number Of Posted Refreshes */
+    vuint32_t _unused_11:5;
+    vuint32_t _unused_10:1;
+    vuint32_t MT_RR_EN:1;              /* Memory Test Round-Robin Enable */
+    vuint32_t _unused_8:1;
+    vuint32_t MCK_DIS:4;               /* MCK Disable */
+    vuint32_t _unused_2:2;
+    vuint32_t _unused_1:1;
+    vuint32_t FRC_SR:1;                /* Force Self-Refresh */
+  } B;
+} DDR_DDRC_DDR_SDRAM_CFG_2_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MD_CNTL_union_tag { /* DDR SDRAM Mode Control */
+  vuint32_t R;
+  struct {
+    vuint32_t MD_VALUE:18;             /* Mode Register Value */
+    vuint32_t _unused_13:1;
+    vuint32_t _unused_12:1;
+    vuint32_t CKE_CNTL:2;              /* Clock Enable Control */
+    vuint32_t START_OSC:1;             /* Start Oscillator */
+    vuint32_t START_OSC2:1;            /* Start Oscillator 2 */
+    vuint32_t MD_SEL:4;                /* Mode Register Select */
+    vuint32_t CS_SEL:3;                /* Select Rank */
+    vuint32_t MD_EN:1;                 /* Mode Enable */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MD_CNTL_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_INTERVAL_union_tag { /* DDR SDRAM Interval Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t BSTOPRE:14;              /* Precharge Interval */
+    vuint32_t _unused_16:2;
+    vuint32_t REFINT:16;               /* Refresh Interval */
+  } B;
+} DDR_DDRC_DDR_SDRAM_INTERVAL_tag;
+
+typedef union DDR_DDRC_DDR_DATA_INIT_union_tag { /* DDR SDRAM Data Initialization */
+  vuint32_t R;
+  struct {
+    vuint32_t INIT_VALUE:32;           /* Initialization Value */
+  } B;
+} DDR_DDRC_DDR_DATA_INIT_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_4_union_tag { /* DDR SDRAM Timing Configuration 4 */
+  vuint32_t R;
+  struct {
+    vuint32_t DLL_LOCK:2;              /* DDR SDRAM DLL Lock Time */
+    vuint32_t _unused_28:2;
+    vuint32_t EXT_REFINT:1;            /* Extended Refresh Interval */
+    vuint32_t _unused_24:3;
+    vuint32_t EXT_WWT:2;               /* Extended Write-To-Write Turnaround */
+    vuint32_t EXT_RRT:2;               /* Extended Read-To-Read Turnaround */
+    vuint32_t EXT_WRT:2;               /* Extended Write-To-Read Turnaround */
+    vuint32_t EXT_RWT:2;               /* Extended Read-To-Write Turnaround */
+    vuint32_t WWT:4;                   /* Write-To-Write Turnaround For Same Rank */
+    vuint32_t RRT:4;                   /* Read-To-Read Turnaround For Same Rank */
+    vuint32_t WRT:4;                   /* Write-To-Read Turnaround For Same Rank */
+    vuint32_t RWT:4;                   /* Read-To-Write Turnaround For Same Rank */
+  } B;
+} DDR_DDRC_TIMING_CFG_4_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_5_union_tag { /* DDR SDRAM Timing Configuration 5 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_24:8;
+    vuint32_t _unused_21:3;
+    vuint32_t _unused_20:1;
+    vuint32_t _unused_15:5;
+    vuint32_t _unused_12:3;
+    vuint32_t _unused_9:3;
+    vuint32_t _unused_8:1;
+    vuint32_t _unused_3:5;
+    vuint32_t _unused_0:3;
+  } B;
+} DDR_DDRC_TIMING_CFG_5_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_7_union_tag { /* DDR SDRAM Timing Configuration 7 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_28:4;
+    vuint32_t WR_ADJ:3;                /* Write Adjustment */
+    vuint32_t RSRVD_1:1;               /* Reserved. */
+    vuint32_t _unused_16:8;
+    vuint32_t RD_ADJ:3;                /* Read Adjustment */
+    vuint32_t RSRVD:1;                 /* Reserved. */
+    vuint32_t CKSRX:4;                 /* Clock After Self-Refresh Exit */
+    vuint32_t CKSRE:4;                 /* Clock After Self-Refresh Entry */
+    vuint32_t CKE_RST:2;               /* MCKE Reset Time */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_TIMING_CFG_7_tag;
+
+typedef union DDR_DDRC_DDR_ZQ_CNTL_union_tag { /* DDR SDRAM ZQ Calibration Control */
+  vuint32_t R;
+  struct {
+    vuint32_t ZQCS_INT:4;              /* ZQCS Interval */
+    vuint32_t _unused_24:4;
+    vuint32_t ZQCS:4;                  /* ZQ Calibration Short Time */
+    vuint32_t _unused_16:4;
+    vuint32_t ZQOPER:4;                /* ZQ Calibration Operation Time */
+    vuint32_t _unused_8:4;
+    vuint32_t ZQINIT:4;                /* ZQ Calibration Initialization Time */
+    vuint32_t _unused_1:3;
+    vuint32_t ZQ_EN:1;                 /* ZQ Calibration Enable */
+  } B;
+} DDR_DDRC_DDR_ZQ_CNTL_tag;
+
+typedef union DDR_DDRC_DDR_SR_CNTR_union_tag { /* DDR SDRAM Self-Refresh Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_16:16;
+    vuint32_t SR_IT:4;                 /* Self-Refresh Idle Threshold */
+    vuint32_t _unused_0:12;
+  } B;
+} DDR_DDRC_DDR_SR_CNTR_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_8_union_tag { /* DDR SDRAM Timing Configuration 8 */
+  vuint32_t R;
+  struct {
+    vuint32_t PRE_ALL_REC:6;           /* Precharge All-To-Activate Interval */
+    vuint32_t _unused_25:1;
+    vuint32_t EXT_WRTORD_BG:1;         /* Extended Write-To-Read Same Bank Group */
+    vuint32_t WRTORD_BG:4;             /* Write-To-Read Same Bank Group */
+    vuint32_t ACTTOACT_BG:4;           /* Activate-To-Activate Same Bank Group */
+    vuint32_t WWT_BG:4;                /* Write-To-Write Turnaround For Same CS And Bank Group */
+    vuint32_t RRT_BG:4;                /* Read-To-Read Turnaround For Same Rank And Bank Group */
+    vuint32_t WRT_BG:4;                /* Write-To-Read Turnaround For Same Rank And Bank Group */
+    vuint32_t RWT_BG:4;                /* Read-To-Write Turnaround For Same Rank And Bank Group */
+  } B;
+} DDR_DDRC_TIMING_CFG_8_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_9_union_tag { /* DDR SDRAM timing configuration 9 */
+  vuint32_t R;
+  struct {
+    vuint32_t REFTOREF_PB:10;          /* Refresh-to-refresh interval for per-bank refresh. */
+    vuint32_t SPARE_CNFG:2;            /* Spare Config */
+    vuint32_t _unused_16:4;
+    vuint32_t REFREC_PB:10;            /* Refresh Recovery Per-Bank Refresh */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_TIMING_CFG_9_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_10_union_tag { /* DDR SDRAM Timing Configuration 10 */
+  vuint32_t R;
+  struct {
+    vuint32_t T_STAB:15;               /* Stabilization Wait Time */
+    vuint32_t _unused_9:8;
+    vuint32_t PBRTOACT:5;              /* Per-Bank Refresh to Activate */
+    vuint32_t _unused_0:4;
+  } B;
+} DDR_DDRC_TIMING_CFG_10_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_11_union_tag { /* DDR SDRAM Timing Configuration 11 */
+  vuint32_t R;
+  struct {
+    vuint32_t MWWT:4;                  /* Masked Write-To-Write Turnaround (tCCDMW) */
+    vuint32_t _unused_24:4;
+    vuint32_t PRE_TO_PRE:4;            /* Precharge-To-Precharge Time */
+    vuint32_t _unused_16:4;
+    vuint32_t WCKEN_FS:4;              /* WCKEN FS Time */
+    vuint32_t WCK_STOP:4;              /* WCK Stop Time */
+    vuint32_t WS_OFF:3;                /* WS_OFF Wait Time */
+    vuint32_t RSRVD:1;                 /* Reserved. Should be written to 0. */
+    vuint32_t WCKPRE_STATIC:4;         /* WCKPRE Static Time */
+  } B;
+} DDR_DDRC_TIMING_CFG_11_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_CFG_3_union_tag { /* DDR SDRAM Control Configuration 3 */
+  vuint32_t R;
+  struct {
+    vuint32_t DIS_MR13:1;              /* Disable MR13 Write for Self Refresh */
+    vuint32_t SR_FAST_WK_EN:1;         /* Self Refresh Fast Wakeup Enable */
+    vuint32_t RSRVD:1;                 /* Reserved. Should be written to 0. */
+    vuint32_t NON_PWR_2:1;             /* Non Power of 2 Enable */
+    vuint32_t SR_PD_EN:1;              /* Self Refresh Powerdown Enable */
+    vuint32_t DIS_MR28:1;              /* Disable MR28 Write for Self Refresh */
+    vuint32_t _unused_25:1;
+    vuint32_t DYN_REF_RATE_EN:1;       /* Dynamic Refresh Rate Enable */
+    vuint32_t REF_MODE:2;              /* Refresh Mode */
+    vuint32_t _unused_21:1;
+    vuint32_t DRAIN_FOR_SR:1;          /* Drain Queues For Self-Refresh */
+    vuint32_t DM_CFG:3;                /* Data Mask Configuration */
+    vuint32_t _unused_16:1;
+    vuint32_t CHB_SWP_EN:1;            /* Channel B Swap Enable */
+    vuint32_t CHA_SWP_EN:1;            /* Channel A Swap Enable */
+    vuint32_t TRM_EN:1;                /* Targeted Refresh Management */
+    vuint32_t HP_EN:1;                 /* High Performance Enable */
+    vuint32_t CMD_QUEUE_DPTH:2;        /* Command Queue Depth. */
+    vuint32_t _unused_8:2;
+    vuint32_t ECC_SCRUB_INT:4;         /* ECC Scrubbing Interval */
+    vuint32_t _unused_2:2;
+    vuint32_t ECC_FIX_EN:1;            /* ECC Fixing Enable */
+    vuint32_t DDRC_RST:1;              /* DDRC Reset */
+  } B;
+} DDR_DDRC_DDR_SDRAM_CFG_3_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_CFG_4_union_tag { /* DDR SDRAM Control Configuration 4 */
+  vuint32_t R;
+  struct {
+    vuint32_t BLK_RD_WR:3;             /* Block Read-To-Write. */
+    vuint32_t BLK_WR_RD:3;             /* Block Write-To-Read. */
+    vuint32_t BLK_RD_RD:3;             /* Block Read-To-Read. */
+    vuint32_t BLK_WR_WR:3;             /* Block Write-To-Write. */
+    vuint32_t DFI_FREQ:5;              /* DFI Frequency. */
+    vuint32_t DFI_FREQ_HS:5;           /* DFI Frequency */
+    vuint32_t _unused_8:2;
+    vuint32_t PWROK_OVRD_VAL:1;        /* PwrOkIn Override Value. */
+    vuint32_t PWROK_OVRD_EN:1;         /* PwrOkIn Override Enable. */
+    vuint32_t RESET_OVRD_VAL:1;        /* Reset Override Value. */
+    vuint32_t RESET_OVRD_EN:1;         /* Reset Override Enable. */
+    vuint32_t DFI_WAKEUP:4;            /* DFI Wakeup. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_CFG_4_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_CFG_5_union_tag { /* DDR SDRAM Control Configuration 5 */
+  vuint32_t R;
+  struct {
+    vuint32_t LNK_ECC_EN:1;            /* Link ECC enable. */
+    vuint32_t DSLP_EN:1;               /* Deep sleep enable. */
+    vuint32_t _unused_24:6;
+    vuint32_t WCK_DYN:1;               /* WCK Dynamic Mode. */
+    vuint32_t _unused_8:15;
+    vuint32_t MED_PRIO:4;              /* Medium Priority Level. */
+    vuint32_t HIGH_PRIO:4;             /* High Priority Level. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_CFG_5_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_CFG_6_union_tag { /* DDR SDRAM Control Configuration 6 */
+  vuint32_t R;
+  struct {
+    vuint32_t MR28_VAL:6;              /* MR28 Value. */
+    vuint32_t RRO:1;                   /* Refresh rate option. */
+    vuint32_t FRC_DFI_INIT:1;          /* Force dfi_init_start low. */
+    vuint32_t ALT_TRN_INT:4;           /* Force dfi_init_start low. */
+    vuint32_t ADDR_SZL_EN:1;           /* Address swizzle enable. */
+    vuint32_t RD_SPLT_EN:1;            /* Read split enable. */
+    vuint32_t SRE_DIS:1;               /* Self refresh entry disable. */
+    vuint32_t _unused_16:1;
+    vuint32_t RH_REF_SUB:3;            /* Row hammer refresh subtract value. */
+    vuint32_t RH_THRSHLD3:3;           /* Row hammer threshold 3 value. */
+    vuint32_t RH_THRSHLD2:3;           /* Row hammer threshold 2 value. */
+    vuint32_t RH_THRSHLD1:3;           /* Row hammer threshold 1 value. */
+    vuint32_t RH_CYC_RST:3;            /* Row hammer cycle reset value. */
+    vuint32_t LP5_RFM_EN:1;            /* LPDDR5 refresh management enable. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_CFG_6_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MD_CNTL2_union_tag { /* DDR SDRAM mode control 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t DQ_CNTL:18;              /* Data control. */
+    vuint32_t MPRR_RD_SEL:2;           /* MPRR read select. */
+    vuint32_t PDA_EN:1;                /* Per DDR SDRAM Addressability Enable. */
+    vuint32_t _unused_3:8;
+    vuint32_t NOP_EN:1;                /* NOP Enable. */
+    vuint32_t MPRW:1;                  /* Multi-purpose register write. */
+    vuint32_t MPRR:1;                  /* Multi-purpose register read. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MD_CNTL2_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MPR1_union_tag { /* DDR SDRAM multi-purpose register 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t MPR_READ:32;             /* MPR Read Value. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MPR1_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MPR2_union_tag { /* DDR SDRAM multi-purpose register 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t MPR_READ:32;             /* MPR Read Value. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MPR2_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MPR3_union_tag { /* DDR SDRAM multi-purpose register 3 */
+  vuint32_t R;
+  struct {
+    vuint32_t MPR_READ:32;             /* MPR Read Value. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MPR3_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MPR4_union_tag { /* DDR SDRAM multi-purpose register 4 */
+  vuint32_t R;
+  struct {
+    vuint32_t MPR_READ:32;             /* MPR Read Value. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MPR4_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_MPR5_union_tag { /* DDR SDRAM multi-purpose register 5 */
+  vuint32_t R;
+  struct {
+    vuint32_t MPR_VLD:1;               /* MPR Valid. */
+    vuint32_t _unused_16:15;
+    vuint32_t MPR_READ:16;             /* MPR Read Value. */
+  } B;
+} DDR_DDRC_DDR_SDRAM_MPR5_tag;
+
+typedef union DDR_DDRC_DDR_SDRAM_REF_RATE_union_tag { /* DDR Refresh Rate */
+  vuint32_t R;
+  struct {
+    vuint32_t REF_RATE_CS1:8;          /* Refresh Rate Rank 1 */
+    vuint32_t REF_RATE_CS0:8;          /* Refresh Rate Rank 0 */
+    vuint32_t REF_RATE_CS1_CHB:8;      /* Refresh Rate Rank 1 */
+    vuint32_t REF_RATE_CS0_CHB:8;      /* Refresh Rate Rank 0 */
+  } B;
+} DDR_DDRC_DDR_SDRAM_REF_RATE_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_12_union_tag { /* DDR SDRAM Timing Configuration 12 */
+  vuint32_t R;
+  struct {
+    vuint32_t CASLAT_HS:6;             /* CAS Latency For Half Speed */
+    vuint32_t _unused_24:2;
+    vuint32_t ACTTORW_HS:6;            /* Activate To Read Or Write For Half Speed */
+    vuint32_t _unused_16:2;
+    vuint32_t ACTTOPRE_HS:7;           /* Activate-To-Precharge Time For Half Speed */
+    vuint32_t _unused_8:1;
+    vuint32_t PRETOACT_HS:6;           /* Precharge-To-Activate Time For Half Speed */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_TIMING_CFG_12_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_13_union_tag { /* DDR SDRAM Timing Configuration 13 */
+  vuint32_t R;
+  struct {
+    vuint32_t ACTTOACT_HS:5;           /* Activate-To-Activate Interval For Half Speed */
+    vuint32_t _unused_24:3;
+    vuint32_t WRREC_HS:6;              /* Write Recovery For Half Speed */
+    vuint32_t _unused_16:2;
+    vuint32_t REFREC_HS:10;            /* Refresh Recovery For Half Speed */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_TIMING_CFG_13_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_14_union_tag { /* DDR SDRAM Timing Configuration 14 */
+  vuint32_t R;
+  struct {
+    vuint32_t REFINT_HS:17;            /* Refresh Interval For Half Speed */
+    vuint32_t _unused_14:1;
+    vuint32_t RD_TO_PRE_HS:5;          /* Read-To-Precharge Time For Half Speed */
+    vuint32_t _unused_8:1;
+    vuint32_t WRLAT_HS:6;              /* Write Latency For Half Speed */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_TIMING_CFG_14_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_15_union_tag { /* DDR SDRAM Timing Configuration 15 */
+  vuint32_t R;
+  struct {
+    vuint32_t REFTOREF_PB_HS:10;       /* Refresh-to-refresh interval for per-bank refresh. */
+    vuint32_t _unused_20:2;
+    vuint32_t _unused_16:4;
+    vuint32_t REFREC_PB_HS:10;         /* Refresh Recovery During Per-Bank Refresh. */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_TIMING_CFG_15_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_16_union_tag { /* DDR SDRAM Timing Configuration 16 */
+  vuint32_t R;
+  struct {
+    vuint32_t T_STAB_HS:15;            /* Stabilization Wait Time at Half Speed */
+    vuint32_t _unused_16:1;
+    vuint32_t WCK_CNFGS_HS:16;         /* WCK Configuration Settings at Half Speed */
+  } B;
+} DDR_DDRC_TIMING_CFG_16_tag;
+
+typedef union DDR_DDRC_TIMING_CFG_17_union_tag { /* DDR SDRAM Timing Configuration 17 */
+  vuint32_t R;
+  struct {
+    vuint32_t ZQCS_INT_HS:4;           /* ZQCS Interval */
+    vuint32_t _unused_24:4;
+    vuint32_t ZQCS_HS:4;               /* ZQ Calibration Short Time */
+    vuint32_t _unused_16:4;
+    vuint32_t ZQOPER_HS:4;             /* ZQ Calibration Operation Time */
+    vuint32_t _unused_8:4;
+    vuint32_t ZQINIT_HS:4;             /* ZQ Calibration Initialization Time */
+    vuint32_t _unused_0:4;
+  } B;
+} DDR_DDRC_TIMING_CFG_17_tag;
+
+typedef union DDR_DDRC_TX_CFG_1_union_tag { /* Transaction Configuration Register 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t WWATER:4;                /* Write Watermark. */
+    vuint32_t REAP_BLOCK_DIS:1;        /* Read Estimated Activate to Precharge Block Disable. */
+    vuint32_t WEAP_BLOCK_DIS:1;        /* Write Estimated Activate to Precharge Block Disable. */
+    vuint32_t NO_COS:1;                /* No Quality of Service. This field allows you to ignore the QOS value received by the DDR controller such that only one priority is used. */
+    vuint32_t TS_DEPTH:5;              /* Transaction Scheduler Depth */
+    vuint32_t _unused_19:1;            /* Disable read urgent mode capability */
+    vuint32_t _unused_18:1;            /* Disable write urgent mode capability */
+    vuint32_t _unused_17:1;
+    vuint32_t RSRV_RDWR:1;             /* Reserve Read and Write Entries. */
+    vuint32_t _unused_15:1;
+    vuint32_t RDFC_DIS:1;              /* Read Data Flow Control Disabled. */
+    vuint32_t NRM_OCC:2;               /* Normal Occupancy. */
+    vuint32_t BAD_DD:1;                /* Bad Dropdown. */
+    vuint32_t HPR:1;                   /* High Priority Read. */
+    vuint32_t _unused_8:2;
+    vuint32_t INF_WR_CNT:1;            /* Infinite Write Count. */
+    vuint32_t INF_RD_CNT:1;            /* Infinite Read Count. */
+    vuint32_t LT_REOD_DIS:1;           /* Large Transaction Reorder Disable. */
+    vuint32_t _unused_4:1;
+    vuint32_t SER:1;                   /* Serialize. */
+    vuint32_t _unused_2:1;
+    vuint32_t HWA_EN:1;                /* Hardware Assert Enable. */
+    vuint32_t _unused_0:1;
+  } B;
+} DDR_DDRC_TX_CFG_1_tag;
+
+typedef union DDR_DDRC_TX_CFG_2_union_tag { /* Transaction Configuration Register 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t WR_BONUS:5;              /* Write Bandwidth Bonus Count. */
+    vuint32_t RSRVD_4:3;               /* Reserved. */
+    vuint32_t WR_CNT:5;                /* Write Bandwidth Count. */
+    vuint32_t RSRVD_3:3;               /* Reserved. */
+    vuint32_t RD_BONUS:5;              /* Read Bandwidth Bonus Count. */
+    vuint32_t RSRVD_2:3;               /* Reserved. */
+    vuint32_t RD_CNT:5;                /* Read Bandwidth Count. */
+    vuint32_t RT_OPT_DIS:1;            /* Real Time Traffic Optimizaiton Disable. */
+    vuint32_t RD_EPA_DIS:1;            /* Read Precharge to Activate Disable. */
+    vuint32_t WR_EPA_DIS:1;            /* Write Precharge to Activate Disable. */
+  } B;
+} DDR_DDRC_TX_CFG_2_tag;
+
+typedef union DDR_DDRC_TX_CFG_3_union_tag { /* Transaction Configuration Register 3. */
+  vuint32_t R;
+  struct {
+    vuint32_t RSRVD_4:3;               /* Reserved. */
+    vuint32_t RMED_BDD:5;              /* Read Medium Bonus Dropdown. */
+    vuint32_t RSRVD_3:3;               /* Reserved. */
+    vuint32_t RHI_BDD:5;               /* Read High Bonus Dropdown. */
+    vuint32_t RSRVD_2:3;               /* Reserved. */
+    vuint32_t RMED_DD:5;               /* Read Medium Dropdown. */
+    vuint32_t RSRVD_1:3;               /* Reserved. */
+    vuint32_t RHI_DD:5;                /* Read High Dropdown. */
+  } B;
+} DDR_DDRC_TX_CFG_3_tag;
+
+typedef union DDR_DDRC_TX_CFG_4_union_tag { /* Transaction Configuration Register 4. */
+  vuint32_t R;
+  struct {
+    vuint32_t RSRVD_4:3;               /* Reserved. */
+    vuint32_t RMED_BDDD:5;             /* Read Medium Bonus Dropdown Duration. */
+    vuint32_t RSRVD_3:3;               /* Reserved. */
+    vuint32_t RHI_BDDD:5;              /* Read High Bonus Dropdown Duration. */
+    vuint32_t RSRVD_2:3;               /* Reserved. */
+    vuint32_t RMED_DDD:5;              /* Read Medium Dropdown Duration. */
+    vuint32_t RSRVD_1:3;               /* Reserved. */
+    vuint32_t RHI_DDD:5;               /* Read High Dropdown Duration. */
+  } B;
+} DDR_DDRC_TX_CFG_4_tag;
+
+typedef union DDR_DDRC_DDRDSR_2_union_tag { /* DDR SDRAM Debug Status 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t RPD_END:1;               /* Rapid Clear Of Memory End */
+    vuint32_t RPD_ST:1;                /* Rapid Clear Of Memory Start */
+    vuint32_t PHY_INIT_CMPLT:1;        /* DDR PHY Initialization Complete */
+    vuint32_t _unused_2:27;
+    vuint32_t NML:1;                   /* No Modified Lines */
+    vuint32_t IDLE:1;                  /* Memory controller idle (read only). */
+  } B;
+} DDR_DDRC_DDRDSR_2_tag;
+
+typedef union DDR_DDRC_DDR_IP_REV1_union_tag { /* DDRC Revision 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t IP_MN:8;                 /* Minor Revision */
+    vuint32_t IP_MJ:8;                 /* Major Revision */
+    vuint32_t IP_ID:16;                /* IP Block ID */
+  } B;
+} DDR_DDRC_DDR_IP_REV1_tag;
+
+typedef union DDR_DDRC_DDR_IP_REV2_union_tag { /* DDRC Revision 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t IP_CFG:8;                /* IP Block Configuration Options */
+    vuint32_t IP_ERRATA:8;             /* IP Errata Version. */
+    vuint32_t IP_INT:8;                /* IP Block Integration Options */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_DDR_IP_REV2_tag;
+
+typedef union DDR_DDRC_DDR_EOR_union_tag { /* DDR Enhanced Optimization Register */
+  vuint32_t R;
+  struct {
+    vuint32_t DYN_BSTOPRE_THRSHLD:6;   /* Dynamic BSTOPRE threshold. */
+    vuint32_t _unused_24:2;
+    vuint32_t DYN_BSTOPRE_EN:1;        /* Dynamic BSTOPRE enable. */
+    vuint32_t _unused_12:11;
+    vuint32_t WR_REOD_DIS:2;           /* Write reorder disable. */
+    vuint32_t _unused_8:2;
+    vuint32_t RD_REOD_DIS:3;           /* Read reorder disable. */
+    vuint32_t _unused_2:3;
+    vuint32_t ADDR_HASH_EN:1;          /* Address hash enabled. */
+    vuint32_t RD_BDW_OPT_DIS:1;        /* Read bandwidth optimization disable. */
+  } B;
+} DDR_DDRC_DDR_EOR_tag;
+
+typedef union DDR_DDRC_DDR_MTCR_union_tag { /* DDR SDRAM Memory Test Control */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_STAT:1;               /* Memory Test Status */
+    vuint32_t _unused_25:6;
+    vuint32_t _unused_24:1;
+    vuint32_t MT_ADDR2_EN:1;           /* Memory Test Address Range 2 Enable. */
+    vuint32_t MT_ADDR_EN:1;            /* Memory Test Address Range Enable */
+    vuint32_t _unused_20:2;
+    vuint32_t MT_TSIZ:3;               /* Memory Test Transaction Size. */
+    vuint32_t _unused_16:1;
+    vuint32_t MT_TRNARND:4;            /* Memory Test Turnaround */
+    vuint32_t _unused_8:4;
+    vuint32_t MT_TYP:2;                /* Memory Test Type */
+    vuint32_t _unused_1:5;
+    vuint32_t MT_EN:1;                 /* Memory Test Enable */
+  } B;
+} DDR_DDRC_DDR_MTCR_tag;
+
+typedef union DDR_DDRC_DDR_MTP_union_tag { /* DDR SDRAM Memory Test Pattern n */
+  vuint32_t R;
+  struct {
+    vuint32_t DDR_PATT:32;             /* DDR SDRAM Pattern */
+  } B;
+} DDR_DDRC_DDR_MTP_tag;
+
+typedef union DDR_DDRC_DDR_MT_ST_EXT_ADDR_union_tag { /* DDR SDRAM Memory Test Start Extended Address */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_ST_EXT_ADDR:8;        /* Memory Test Start Extended Address */
+    vuint32_t _unused_0:24;
+  } B;
+} DDR_DDRC_DDR_MT_ST_EXT_ADDR_tag;
+
+typedef union DDR_DDRC_DDR_MT_ST_ADDR_union_tag { /* DDR SDRAM Memory Test Start Address */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_ST_ADDR:32;           /* Memory Test Start Address */
+  } B;
+} DDR_DDRC_DDR_MT_ST_ADDR_tag;
+
+typedef union DDR_DDRC_DDR_MT_END_EXT_ADDR_union_tag { /* DDR SDRAM Memory Test End Extended Address */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_END_EXT_ADDR:8;       /* Memory Test End Extended Address */
+    vuint32_t _unused_0:24;
+  } B;
+} DDR_DDRC_DDR_MT_END_EXT_ADDR_tag;
+
+typedef union DDR_DDRC_DDR_MT_END_ADDR_union_tag { /* DDR SDRAM Memory Test End Address */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_END_ADDR:32;          /* Memory Test End Address */
+  } B;
+} DDR_DDRC_DDR_MT_END_ADDR_tag;
+
+typedef union DDR_DDRC_DDR_MT_ST_EXT_ADDR2_union_tag { /* DDR Memory Test Start Extended Address 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_ST_EXT_ADDR2:8;       /* Memory Test Start Extended Address 2 */
+    vuint32_t _unused_0:24;
+  } B;
+} DDR_DDRC_DDR_MT_ST_EXT_ADDR2_tag;
+
+typedef union DDR_DDRC_DDR_MT_ST_ADDR2_union_tag { /* DDR Memory Test Start Address 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_ST_ADDR2:32;          /* Memory Test Start Address 2 */
+  } B;
+} DDR_DDRC_DDR_MT_ST_ADDR2_tag;
+
+typedef union DDR_DDRC_DDR_MT_END_EXT_ADDR2_union_tag { /* DDR Memory Test End Extended Address 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_END_EXT_ADDR2:8;      /* Memory Test End Extended Address 2 */
+    vuint32_t _unused_0:24;
+  } B;
+} DDR_DDRC_DDR_MT_END_EXT_ADDR2_tag;
+
+typedef union DDR_DDRC_DDR_MT_END_ADDR2_union_tag { /* DDR Memory Test End Address 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t MT_END_ADDR2:32;         /* Memory Test End Address 2 */
+  } B;
+} DDR_DDRC_DDR_MT_END_ADDR2_tag;
+
+typedef union DDR_DDRC_DEBUG_1_union_tag { /* Debug 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_29:3;
+    vuint32_t MAPD:1;                  /* Transaction scheduler auto-precharge disable. */
+    vuint32_t _unused_17:11;
+    vuint32_t CM:1;                    /* Crawl mode. */
+    vuint32_t _unused_3:13;
+    vuint32_t FRC_ZQCS:1;              /* Force ZQCS command. */
+    vuint32_t FRC_ZQCL:1;              /* Force ZQCL command. */
+    vuint32_t UZQO:1;                  /* Update ZQ Calibration Once. */
+  } B;
+} DDR_DDRC_DEBUG_1_tag;
+
+typedef union DDR_DDRC_DEBUG_2_union_tag { /* Debug 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t NML:1;                   /* No Modified Lines */
+    vuint32_t IDLE:1;                  /* Memory controller idle (read only). */
+    vuint32_t SR_I:1;                  /* Memory controller is in self refresh due to idle (read only). */
+    vuint32_t SR:1;                    /* Memory controller is in self refresh and clocks can be gated (read only). */
+    vuint32_t _unused_26:2;
+    vuint32_t IR:1;                    /* Issue refresh. */
+    vuint32_t WRCD:1;                  /* Write Cancel Disable */
+    vuint32_t _unused_21:3;
+    vuint32_t BYTE_MODE:1;             /* Byte Mode. */
+    vuint32_t _unused_0:20;
+  } B;
+} DDR_DDRC_DEBUG_2_tag;
+
+typedef union DDR_DDRC_DEBUG_4_union_tag { /* Debug 4 */
+  vuint32_t R;
+  struct {
+    vuint32_t EDDRTQ_CFG_5:32;         /* eDDRTQ_CFG_5 used by the eDDRTQ. */
+  } B;
+} DDR_DDRC_DEBUG_4_tag;
+
+typedef union DDR_DDRC_DEBUG_19_union_tag { /* Debug 19 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_30:2;
+    vuint32_t CNTR_OVRD_VAL:3;         /* Counter Override Value. */
+    vuint32_t CNTR_OVRD:1;             /* Counter Override Enable. */
+    vuint32_t _unused_16:10;
+    vuint32_t MCK_DIS:1;               /* MCK Gating Disable. */
+    vuint32_t _unused_11:4;
+    vuint32_t ALT_TRAIN_EN:1;          /* Alternate Train Enable. */
+    vuint32_t _unused_8:2;
+    vuint32_t REF_READ_RATE:4;         /* Refresh Read Rate. */
+    vuint32_t _unused_2:2;
+    vuint32_t FRC_1X_REF_RATE:1;       /* Force 1x refresh rate. */
+    vuint32_t MCSR:1;                  /* DDRC Soft Reset. */
+  } B;
+} DDR_DDRC_DEBUG_19_tag;
+
+typedef union DDR_DDRC_DEBUG_20_union_tag { /* Debug 20 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_8:24;
+    vuint32_t DISM_CS:5;               /* DISM Current State. */
+    vuint32_t SPARE_CNFG:1;            /* Spare config bits. */
+    vuint32_t _unused_1:1;
+    vuint32_t INIT_DONE:1;             /* Initialization Done. */
+  } B;
+} DDR_DDRC_DEBUG_20_tag;
+
+typedef union DDR_DDRC_DEBUG_26_union_tag { /* Debug 26 */
+  vuint32_t R;
+  struct {
+    vuint32_t DDRC_WEOD_DIS:1;         /* Command Queue Write Reordering Disable. */
+    vuint32_t _unused_30:1;
+    vuint32_t DIS_CTRLUPD_REQ:1;       /* Disable Controller Update Request. */
+    vuint32_t FRC_WRDATA_CS0:1;        /* Force Write Data Timing to rank 0 */
+    vuint32_t DIS_WR_COMB:1;           /* Disable Write Combining for ECC */
+    vuint32_t SPARE_CNFG2:1;           /* Spare config bits. This must be set to 0. */
+    vuint32_t RESET_RAM:1;             /* Reset RAM. */
+    vuint32_t IDLE_FLUSH_DIS:1;        /* Idle Flush Disable. */
+    vuint32_t WCK_CS:2;                /* WCK_CS Debug. */
+    vuint32_t LEGACY_ROQ:1;            /* Legacy ROQ mode. */
+    vuint32_t DDRC_REOD_DIS:1;         /* Command Queue Read Reordering Disable. */
+    vuint32_t DFI_FREQ:5;              /* DFI Frequency. */
+    vuint32_t DFI_FREQ_HS:5;           /* DFI Frequency. */
+    vuint32_t EXT_DFI_WAKEUP:1;        /* Extended DFI Wakeup. */
+    vuint32_t DFI_RSTN:1;              /* DFI Reset_N. */
+    vuint32_t DFI_FREQ_FSP_HS:2;       /* DFI Frequency FSP Half-Speed. */
+    vuint32_t DFI_FREQ_FSP:2;          /* DFI Frequency FSP. */
+    vuint32_t DFI_WAKEUP:4;            /* DFI Wakeup. */
+  } B;
+} DDR_DDRC_DEBUG_26_tag;
+
+typedef union DDR_DDRC_DEBUG_27_union_tag { /* Debug 27 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_8:24;
+    vuint32_t INVC:1;                  /* Invalidate Cache */
+    vuint32_t PRE_TO_ACT_4X:1;         /* Precharge-To-Activate x4. */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_DEBUG_27_tag;
+
+typedef union DDR_DDRC_DEBUG_28_union_tag { /* Debug 28 */
+  vuint32_t R;
+  struct {
+    vuint32_t PLL_LCK:1;               /* DDR PHY PLL Lock. */
+    vuint32_t _unused_16:15;
+    vuint32_t WLAST_ERR:1;             /* WLAST error bit. */
+    vuint32_t _unused_0:15;
+  } B;
+} DDR_DDRC_DEBUG_28_tag;
+
+typedef union DDR_DDRC_ERR_EN_union_tag { /* Error Enable */
+  vuint32_t R;
+  struct {
+    vuint32_t WTE_EN:1;                /* Write Tag Error Enable */
+    vuint32_t RTE_EN:1;                /* Read Tag Error Enable */
+    vuint32_t LKSTP_2_EN:1;            /* Lockstep 2 Enable */
+    vuint32_t LKSTP_1_EN:1;            /* Lockstep 1 Enable */
+    vuint32_t _unused_27:1;
+    vuint32_t PAR_1_EN:1;              /* Parity Enable For Internal Errors */
+    vuint32_t ECC_EN_RAM_2:1;          /* ECC Enable For On-Chip RAM 2 */
+    vuint32_t ECC_EN_RAM_1:1;          /* ECC Enable For On-Chip RAM 1 */
+    vuint32_t CRC_2_EN:1;              /* CRC Enable For Group 2 Registers */
+    vuint32_t CRC_1_EN:1;              /* CRC Enable For Group 1 Registers */
+    vuint32_t _unused_8:14;
+    vuint32_t DRAM_SF1_EN:1;           /* DRAM Safety Feature 1 Enable */
+    vuint32_t DRAM_SF2_EN:1;           /* DRAM Safety Feature 2 Enable */
+    vuint32_t DRAM_SF3_EN:1;           /* DRAM Safety Feature 3 Enable */
+    vuint32_t _unused_2:3;
+    vuint32_t INLINE_ECC_EN:1;         /* Inline ECC Enable */
+    vuint32_t ECC_EN:1;                /* ECC Enable */
+  } B;
+} DDR_DDRC_ERR_EN_tag;
+
+typedef union DDR_DDRC_DATA_ERR_INJECT_HI_union_tag { /* Memory Data Path Error Injection Mask High */
+  vuint32_t R;
+  struct {
+    vuint32_t EIMH:32;                 /* Error Injection Mask High Data Path */
+  } B;
+} DDR_DDRC_DATA_ERR_INJECT_HI_tag;
+
+typedef union DDR_DDRC_DATA_ERR_INJECT_LO_union_tag { /* Memory Data Path Error Injection Mask Low */
+  vuint32_t R;
+  struct {
+    vuint32_t EIML:32;                 /* Error Injection Mask Low Data Bit */
+  } B;
+} DDR_DDRC_DATA_ERR_INJECT_LO_tag;
+
+typedef union DDR_DDRC_ERR_INJECT_union_tag { /* Memory Data Path Error Injection Mask ECC */
+  vuint32_t R;
+  struct {
+    vuint32_t EEIM:8;                  /* ECC Error Injection Mask */
+    vuint32_t EIEN:1;                  /* Error Injection Enable */
+    vuint32_t _unused_22:1;
+    vuint32_t _unused_20:2;
+    vuint32_t NUM_ECC_INJ:4;           /* Number Of ECC Errors Injected */
+    vuint32_t PIEN:1;                  /* Parity Error Injection Enable */
+    vuint32_t INTEIN:1;                /* Internal Error Injection Enable */
+    vuint32_t INTIES:3;                /* Internal Error Injection Source */
+    vuint32_t ECC_INJ_SRC:2;           /* ECC Injection Source */
+    vuint32_t FRC2B:1;                 /* Force 2-Bit Error */
+    vuint32_t PAR_INJ_SRC:2;           /* Parity Error Injection Source */
+    vuint32_t _unused_1:5;
+    vuint32_t ADDR_TEN:1;              /* Address Trigger Enable */
+  } B;
+} DDR_DDRC_ERR_INJECT_tag;
+
+typedef union DDR_DDRC_ADDR_ERR_INJ_union_tag { /* Address Error Inject */
+  vuint32_t R;
+  struct {
+    vuint32_t ADDR:32;                 /* Address */
+  } B;
+} DDR_DDRC_ADDR_ERR_INJ_tag;
+
+typedef union DDR_DDRC_EXT_ADDR_ERR_INJ_union_tag { /* Extended Address Error Inject */
+  vuint32_t R;
+  struct {
+    vuint32_t EADDR:8;                 /* Extended Address */
+    vuint32_t _unused_0:24;
+  } B;
+} DDR_DDRC_EXT_ADDR_ERR_INJ_tag;
+
+typedef union DDR_DDRC_CAPTURE_EXT_DATA_HI_union_tag { /* Memory Extended Data Path Read Capture High */
+  vuint32_t R;
+  struct {
+    vuint32_t ECEHD:32;                /* Error Capture Extended High Data Path */
+  } B;
+} DDR_DDRC_CAPTURE_EXT_DATA_HI_tag;
+
+typedef union DDR_DDRC_CAPTURE_EXT_DATA_LO_union_tag { /* Memory Extended Data Path Read Capture Low */
+  vuint32_t R;
+  struct {
+    vuint32_t ECELD:32;                /* Error Capture Extended Low Data Path */
+  } B;
+} DDR_DDRC_CAPTURE_EXT_DATA_LO_tag;
+
+typedef union DDR_DDRC_CAPTURE_DATA_HI_union_tag { /* Memory Data Path Read Capture High */
+  vuint32_t R;
+  struct {
+    vuint32_t ECHD:32;                 /* Error Capture High Data Path */
+  } B;
+} DDR_DDRC_CAPTURE_DATA_HI_tag;
+
+typedef union DDR_DDRC_CAPTURE_DATA_LO_union_tag { /* Memory Data Path Read Capture Low */
+  vuint32_t R;
+  struct {
+    vuint32_t ECLD:32;                 /* Error Capture Low Data Path */
+  } B;
+} DDR_DDRC_CAPTURE_DATA_LO_tag;
+
+typedef union DDR_DDRC_CAPTURE_ECC_union_tag { /* Memory Data Path Read Capture ECC */
+  vuint32_t R;
+  struct {
+    vuint32_t ECE:32;                  /* Error Capture ECC */
+  } B;
+} DDR_DDRC_CAPTURE_ECC_tag;
+
+typedef union DDR_DDRC_ERR_DETECT_union_tag { /* Memory Error Detect */
+  vuint32_t R;
+  struct {
+    vuint32_t MSE:1;                   /* Memory-Select Error */
+    vuint32_t _unused_30:1;
+    vuint32_t SBE:1;                   /* Single-Bit ECC Errors */
+    vuint32_t MBE:1;                   /* Multiple-Bit Error */
+    vuint32_t _unused_27:1;
+    vuint32_t _unused_25:2;
+    vuint32_t REFRATEE:1;              /* Refresh rate error. */
+    vuint32_t _unused_22:2;
+    vuint32_t _unused_21:1;
+    vuint32_t _unused_20:1;
+    vuint32_t SSBE:1;                  /* Scrubbed Single-Bit ECC Error */
+    vuint32_t LNKE:1;                  /* Link ECC Error */
+    vuint32_t DRAM1E:1;                /* DRAM 1 error. */
+    vuint32_t DRAM2E:1;                /* DRAM 2 error. */
+    vuint32_t PHYE:1;                  /* PHY error. */
+    vuint32_t CFGE:1;                  /* Configuration read error. */
+    vuint32_t REGE:1;                  /* Region error. */
+    vuint32_t IPE:1;                   /* Internal Parity Error */
+    vuint32_t UPDTMTE:1;               /* Update Timeout Error */
+    vuint32_t CRCE:1;                  /* Configuration CRC Error */
+    vuint32_t SMBE2:1;                 /* SRAM Multi-Bit Error 2 */
+    vuint32_t SMBE1:1;                 /* SRAM Multi-Bit Error 1 */
+    vuint32_t SSBE2:1;                 /* SRAM SBE 2 */
+    vuint32_t SSBE1:1;                 /* SRAM SBE 1 */
+    vuint32_t WTAGE:1;                 /* Write Tag Error */
+    vuint32_t RTAGE:1;                 /* Read Tag Error */
+    vuint32_t WTTE:1;                  /* Write Tag Timeout Error */
+    vuint32_t RTTE:1;                  /* Read Tag Timeout Error */
+    vuint32_t RTMTE:1;                 /* Read Timeout Error */
+    vuint32_t MME:1;                   /* Multiple Memory Errors */
+  } B;
+} DDR_DDRC_ERR_DETECT_tag;
+
+typedef union DDR_DDRC_ERR_DISABLE_union_tag { /* Memory Error Disable */
+  vuint32_t R;
+  struct {
+    vuint32_t MSED:1;                  /* Memory-Select Error Disable */
+    vuint32_t _unused_30:1;
+    vuint32_t SBED:1;                  /* Single-Bit ECC Error Disable */
+    vuint32_t MBED:1;                  /* Multiple-Bit ECC Error Disable */
+    vuint32_t ILLTXNED:1;              /* Illegal Transaction Error Disable */
+    vuint32_t _unused_25:2;
+    vuint32_t REFRATEED:1;             /* Refresh Rate Error Disable */
+    vuint32_t LNKED:1;                 /* Link ECC Error Disable */
+    vuint32_t SPARE:1;                 /* Spare config bit. */
+    vuint32_t _unused_20:2;
+    vuint32_t SSBED:1;                 /* Scrubbed Single-Bit ECC Error Disable */
+    vuint32_t _unused_16:3;
+    vuint32_t PHYED:1;                 /* PHY Error Disable */
+    vuint32_t _unused_12:3;
+    vuint32_t UPDTMTED:1;              /* Update Timeout Error Disable */
+    vuint32_t _unused_0:11;
+  } B;
+} DDR_DDRC_ERR_DISABLE_tag;
+
+typedef union DDR_DDRC_ERR_INT_EN_union_tag { /* Memory Error Interrupt Enable */
+  vuint32_t R;
+  struct {
+    vuint32_t MSEE:1;                  /* Memory-Select Error Interrupt Enable */
+    vuint32_t _unused_30:1;
+    vuint32_t SBEE:1;                  /* Single-Bit ECC Error Interrupt Enable */
+    vuint32_t MBEE:1;                  /* Multiple-Bit ECC Error Interrupt Enable */
+    vuint32_t SSBE12E:1;               /* SRAM Single-Bit Error Interrupt Enable */
+    vuint32_t _unused_25:2;
+    vuint32_t REFRATEEE:1;             /* Refresh Rate Interrupt Enable */
+    vuint32_t ILLTXNEE:1;              /* Illegal Transaction Interrupt Enable */
+    vuint32_t LNKEE:1;                 /* Link ECC Error Interrupt Enable */
+    vuint32_t _unused_20:2;
+    vuint32_t SSBEE:1;                 /* Scrubbed Single-Bit ECC Error Interrupt Enable */
+    vuint32_t _unused_16:3;
+    vuint32_t PHYEE:1;                 /* PHY error interrupt enable. */
+    vuint32_t _unused_12:3;
+    vuint32_t UPDTMTEE:1;              /* Update Timeout Interrupt Enable */
+    vuint32_t _unused_0:11;
+  } B;
+} DDR_DDRC_ERR_INT_EN_tag;
+
+typedef union DDR_DDRC_CAPTURE_ATTRIBUTES_union_tag { /* Memory Error Attributes Capture */
+  vuint32_t R;
+  struct {
+    vuint32_t VLD:1;                   /* Valid */
+    vuint32_t _unused_28:3;
+    vuint32_t _unused_24:4;
+    vuint32_t _unused_20:4;
+    vuint32_t TTYP:2;                  /* Error Transaction Type */
+    vuint32_t _unused_16:2;
+    vuint32_t TSRC:8;                  /* Error Transaction Source */
+    vuint32_t TSIZ:3;                  /* Error Transaction Size */
+    vuint32_t _unused_4:1;
+    vuint32_t BNUM:3;                  /* Data Beat Number */
+    vuint32_t _unused_0:1;
+  } B;
+} DDR_DDRC_CAPTURE_ATTRIBUTES_tag;
+
+typedef union DDR_DDRC_CAPTURE_ADDRESS_union_tag { /* Memory Error Address Capture */
+  vuint32_t R;
+  struct {
+    vuint32_t CADDR:32;                /* Captured Address */
+  } B;
+} DDR_DDRC_CAPTURE_ADDRESS_tag;
+
+typedef union DDR_DDRC_CAPTURE_EXT_ADDRESS_union_tag { /* Memory Error Extended Address Capture */
+  vuint32_t R;
+  struct {
+    vuint32_t CEADDR:8;                /* Captured Extended Address */
+    vuint32_t _unused_0:24;
+  } B;
+} DDR_DDRC_CAPTURE_EXT_ADDRESS_tag;
+
+typedef union DDR_DDRC_ERR_SBE_union_tag { /* Single-Bit ECC Memory Error Management */
+  vuint32_t R;
+  struct {
+    vuint32_t SBEC:8;                  /* SBE Counter */
+    vuint32_t SSBEC:8;                 /* Scrubbed SBE Counter */
+    vuint32_t SBET:8;                  /* SBE Threshold */
+    vuint32_t SSBET:8;                 /* Scrubbed SBE Threshold */
+  } B;
+} DDR_DDRC_ERR_SBE_tag;
+
+typedef union DDR_DDRC_REG_CRC_GRP_1_union_tag { /* Register CRC Code For Group 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t CRC_1:32;                /* Programmed CRC Code */
+  } B;
+} DDR_DDRC_REG_CRC_GRP_1_tag;
+
+typedef union DDR_DDRC_REG_CRC_GRP_2_union_tag { /* Register CRC Code For Group 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t CRC_2:32;                /* Programmed CRC Code */
+  } B;
+} DDR_DDRC_REG_CRC_GRP_2_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_0_union_tag { /* ECC Extended Region 0 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_0_EA:8;          /* Extended Region 0 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_0_SA:8;          /* Extended Region 0 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_0_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_1_union_tag { /* ECC Extended Region 1 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_1_EA:8;          /* Extended Region 1 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_1_SA:8;          /* Extended Region 1 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_1_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_2_union_tag { /* ECC Extended Region 2 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_2_EA:8;          /* Extended Region 2 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_2_SA:8;          /* Extended Region 2 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_2_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_3_union_tag { /* ECC Extended Region 3 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_3_EA:8;          /* Extended Region 3 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_3_SA:8;          /* Extended Region 3 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_3_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_4_union_tag { /* ECC Extended Region 4 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_4_EA:8;          /* Extended Region 4 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_4_SA:8;          /* Extended Region 4 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_4_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_5_union_tag { /* ECC Extended Region 5 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_5_EA:8;          /* Extended Region 5 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_5_SA:8;          /* Extended Region 5 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_5_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_6_union_tag { /* ECC Extended Region 6 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_6_EA:8;          /* Extended Region 6 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_6_SA:8;          /* Extended Region 6 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_6_tag;
+
+typedef union DDR_DDRC_ECC_EXT_REG_7_union_tag { /* ECC Extended Region 7 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t EXT_REG_7_EA:8;          /* Extended Region 7 End Address */
+    vuint32_t _unused_16:8;
+    vuint32_t EXT_REG_7_SA:8;          /* Extended Region 7 Start Address */
+    vuint32_t _unused_0:8;
+  } B;
+} DDR_DDRC_ECC_EXT_REG_7_tag;
+
+typedef union DDR_DDRC_ECC_REG_0_union_tag { /* ECC Region 0 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_0_EA:12;             /* Region 0 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_0_SA:12;             /* Region 0 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_0_EN:1;              /* Region 0 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_0_tag;
+
+typedef union DDR_DDRC_ECC_REG_1_union_tag { /* ECC Region 1 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_1_EA:12;             /* Region 1 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_1_SA:12;             /* Region 1 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_1_EN:1;              /* Region 1 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_1_tag;
+
+typedef union DDR_DDRC_ECC_REG_2_union_tag { /* ECC Region 2 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_2_EA:12;             /* Region 2 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_2_SA:12;             /* Region 2 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_2_EN:1;              /* Region 2 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_2_tag;
+
+typedef union DDR_DDRC_ECC_REG_3_union_tag { /* ECC Region 3 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_3_EA:12;             /* Region 3 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_3_SA:12;             /* Region 3 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_3_EN:1;              /* Region 3 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_3_tag;
+
+typedef union DDR_DDRC_ECC_REG_4_union_tag { /* ECC Region 4 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_4_EA:12;             /* Region 4 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_4_SA:12;             /* Region 4 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_4_EN:1;              /* Region 4 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_4_tag;
+
+typedef union DDR_DDRC_ECC_REG_5_union_tag { /* ECC Region 5 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_5_EA:12;             /* Region 5 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_5_SA:12;             /* Region 5 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_5_EN:1;              /* Region 5 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_5_tag;
+
+typedef union DDR_DDRC_ECC_REG_6_union_tag { /* ECC Region 6 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_6_EA:12;             /* Region 6 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_6_SA:12;             /* Region 6 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_6_EN:1;              /* Region 6 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_6_tag;
+
+typedef union DDR_DDRC_ECC_REG_7_union_tag { /* ECC Region 7 Configuration */
+  vuint32_t R;
+  struct {
+    vuint32_t REG_7_EA:12;             /* Region 7 End Address */
+    vuint32_t _unused_16:4;
+    vuint32_t REG_7_SA:12;             /* Region 7 Start Address */
+    vuint32_t _unused_1:3;
+    vuint32_t REG_7_EN:1;              /* Region 7 Enable */
+  } B;
+} DDR_DDRC_ECC_REG_7_tag;
+
+typedef union DDR_DDRC_PMCFG_1_union_tag { /* Performance Monitor Configuration 1 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_14:18;
+    vuint32_t _unused_3:11;
+    vuint32_t _unused_2:1;
+    vuint32_t RD_BT_FILT_EN:1;         /* Read Beat Filter Enable */
+    vuint32_t WR_BEAT_FILT_EN:1;       /* Write Beat Filter Enable */
+  } B;
+} DDR_DDRC_PMCFG_1_tag;
+
+typedef union DDR_DDRC_PMCFG_2_union_tag { /* Performance Monitor Configuration 2 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_14:18;
+    vuint32_t _unused_0:14;
+  } B;
+} DDR_DDRC_PMCFG_2_tag;
+
+typedef union DDR_DDRC_PMCFG_3_union_tag { /* Performance Monitor Configuration 3 */
+  vuint32_t R;
+  struct {
+    vuint32_t MSTR_ID_MSK_3:10;        /* Master ID Mask 3 */
+    vuint32_t _unused_16:6;
+    vuint32_t MSTR_ID_3:10;            /* Master ID 3 */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_PMCFG_3_tag;
+
+typedef union DDR_DDRC_PMCFG_4_union_tag { /* Performance Monitor Configuration 4 */
+  vuint32_t R;
+  struct {
+    vuint32_t MSTR_ID_MSK_2:10;        /* Master ID Mask 2 */
+    vuint32_t _unused_16:6;
+    vuint32_t MSTR_ID_2:10;            /* Master ID 2 */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_PMCFG_4_tag;
+
+typedef union DDR_DDRC_PMCFG_5_union_tag { /* Performance Monitor Configuration 5 */
+  vuint32_t R;
+  struct {
+    vuint32_t MSTR_ID_MSK_1:10;        /* Master ID Mask 1 */
+    vuint32_t _unused_16:6;
+    vuint32_t MSTR_ID_1:10;            /* Master ID 1 */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_PMCFG_5_tag;
+
+typedef union DDR_DDRC_PMCFG_6_union_tag { /* Performance Monitor Configuration 6 */
+  vuint32_t R;
+  struct {
+    vuint32_t MSTR_ID_MSK_0:10;        /* Master ID Mask 0 */
+    vuint32_t _unused_16:6;
+    vuint32_t MSTR_ID_0:10;            /* Master ID 0 */
+    vuint32_t _unused_0:6;
+  } B;
+} DDR_DDRC_PMCFG_6_tag;
+
+typedef union DDR_DDRC_PMGC0_union_tag { /* Performance Monitor Global Control */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_3:29;
+    vuint32_t FCECE:1;                 /* Freeze Counters On Enabled Condition Or Event */
+    vuint32_t PMIE:1;                  /* Performance Monitor Interrupt Enable */
+    vuint32_t FAC:1;                   /* Freeze All Counters */
+  } B;
+} DDR_DDRC_PMGC0_tag;
+
+typedef union DDR_DDRC_PMLCA0_union_tag { /* Performance Monitor Local Control A0 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_6:26;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA0_tag;
+
+typedef union DDR_DDRC_PMLCB0_union_tag { /* Performance Monitor Local Control B0 */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_16:16;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB0_tag;
+
+typedef union DDR_DDRC_PMC0A_union_tag { /* PMC 0a */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC0:32;                 /* Counter 0 */
+  } B;
+} DDR_DDRC_PMC0A_tag;
+
+typedef union DDR_DDRC_PMC0B_union_tag { /* PMC 0b */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC0:32;                 /* Counter 0 */
+  } B;
+} DDR_DDRC_PMC0B_tag;
+
+typedef union DDR_DDRC_PMLCA1_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA1_tag;
+
+typedef union DDR_DDRC_PMLCB1_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB1_tag;
+
+typedef union DDR_DDRC_PMC1_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC1:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC1_tag;
+
+typedef union DDR_DDRC_PMLCA2_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA2_tag;
+
+typedef union DDR_DDRC_PMLCB2_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB2_tag;
+
+typedef union DDR_DDRC_PMC2_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC2:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC2_tag;
+
+typedef union DDR_DDRC_PMLCA3_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA3_tag;
+
+typedef union DDR_DDRC_PMLCB3_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB3_tag;
+
+typedef union DDR_DDRC_PMC3_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC3:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC3_tag;
+
+typedef union DDR_DDRC_PMLCA4_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA4_tag;
+
+typedef union DDR_DDRC_PMLCB4_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB4_tag;
+
+typedef union DDR_DDRC_PMC4_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC4:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC4_tag;
+
+typedef union DDR_DDRC_PMLCA5_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA5_tag;
+
+typedef union DDR_DDRC_PMLCB5_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB5_tag;
+
+typedef union DDR_DDRC_PMC5_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC5:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC5_tag;
+
+typedef union DDR_DDRC_PMLCA6_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA6_tag;
+
+typedef union DDR_DDRC_PMLCB6_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB6_tag;
+
+typedef union DDR_DDRC_PMC6_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC6:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC6_tag;
+
+typedef union DDR_DDRC_PMLCA7_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA7_tag;
+
+typedef union DDR_DDRC_PMLCB7_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB7_tag;
+
+typedef union DDR_DDRC_PMC7_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC7:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC7_tag;
+
+typedef union DDR_DDRC_PMLCA8_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA8_tag;
+
+typedef union DDR_DDRC_PMLCB8_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB8_tag;
+
+typedef union DDR_DDRC_PMC8_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC8:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC8_tag;
+
+typedef union DDR_DDRC_PMLCA9_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA9_tag;
+
+typedef union DDR_DDRC_PMLCB9_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB9_tag;
+
+typedef union DDR_DDRC_PMC9_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC9:32;                 /* Event Count */
+  } B;
+} DDR_DDRC_PMC9_tag;
+
+typedef union DDR_DDRC_PMLCA10_union_tag { /* Performance Monitor Local Control A */
+  vuint32_t R;
+  struct {
+    vuint32_t BDIST:6;                 /* Burst Distance */
+    vuint32_t BGRAN:5;                 /* Burst Granularity */
+    vuint32_t BSIZE:5;                 /* Burst Size */
+    vuint32_t EVENT:7;                 /* Event Selector */
+    vuint32_t _unused_6:3;
+    vuint32_t CE:1;                    /* Condition Enable */
+    vuint32_t _unused_1:4;
+    vuint32_t FC:1;                    /* Freeze Counter */
+  } B;
+} DDR_DDRC_PMLCA10_tag;
+
+typedef union DDR_DDRC_PMLCB10_union_tag { /* Performance Monitor Local Control B */
+  vuint32_t R;
+  struct {
+    vuint32_t THRESHOLD:6;             /* Threshold */
+    vuint32_t _unused_24:2;
+    vuint32_t TBMULT:3;                /* Threshold And Burstiness Multiplier */
+    vuint32_t _unused_16:5;
+    vuint32_t TRIGOFFCNTL:2;           /* Trigger-Off Control */
+    vuint32_t TRIGONCNTL:2;            /* Trigger-On Control */
+    vuint32_t TRIGOFFSEL:4;            /* Trigger-Off Select */
+    vuint32_t _unused_6:2;
+    vuint32_t TRIGONSEL:4;             /* Trigger-On Select */
+    vuint32_t _unused_0:2;
+  } B;
+} DDR_DDRC_PMLCB10_tag;
+
+typedef union DDR_DDRC_PMC10_union_tag { /* Performance Monitor Counter */
+  vuint32_t R;
+  struct {
+    vuint32_t PMC10:32;                /* Event Count */
+  } B;
+} DDR_DDRC_PMC10_tag;
+
+struct DDR_DDRC_tag {
+  DDR_DDRC_CS_BNDS_tag CS_BNDS[2];
+  DDR_DDRC_REMAP_EXT_0_tag REMAP_EXT_0; /* Remap Extended Region 0 Configuration */
+  DDR_DDRC_REMAP_EXT_1_tag REMAP_EXT_1; /* Remap Extended Region 1 Configuration */
+  DDR_DDRC_REMAP_EXT_2_tag REMAP_EXT_2; /* Remap Extended Region 2 Configuration */
+  DDR_DDRC_REMAP_EXT_3_tag REMAP_EXT_3; /* Remap Extended Region 3 Configuration */
+  DDR_DDRC_REMAP_0A_tag REMAP_0A;      /* Remap Region 0A Configuration */
+  DDR_DDRC_REMAP_0B_tag REMAP_0B;      /* Remap Region 0B Configuration */
+  DDR_DDRC_REMAP_1A_tag REMAP_1A;      /* Remap Region 1A Configuration */
+  DDR_DDRC_REMAP_1B_tag REMAP_1B;      /* Remap Region 1B Configuration */
+  DDR_DDRC_REMAP_2A_tag REMAP_2A;      /* Remap Region 2A Configuration */
+  DDR_DDRC_REMAP_2B_tag REMAP_2B;      /* Remap Region 2B Configuration */
+  DDR_DDRC_REMAP_3A_tag REMAP_3A;      /* Remap Region 3A Configuration */
+  DDR_DDRC_REMAP_3B_tag REMAP_3B;      /* Remap Region 3B Configuration */
+  DDR_DDRC_DDR_ADDR_DEC_0_tag DDR_ADDR_DEC_0; /* DDRC Address Decode 0 */
+  DDR_DDRC_DDR_ADDR_DEC_1_tag DDR_ADDR_DEC_1; /* DDRC Address Decode 1 */
+  DDR_DDRC_DDR_ADDR_DEC_2_tag DDR_ADDR_DEC_2; /* DDRC Address Decode 2 */
+  DDR_DDRC_DDR_ADDR_DEC_3_tag DDR_ADDR_DEC_3; /* DDRC Address Decode 3 */
+  DDR_DDRC_DDR_ADDR_DEC_4_tag DDR_ADDR_DEC_4; /* DDRC Address Decode 4 */
+  DDR_DDRC_DDR_ADDR_DEC_5_tag DDR_ADDR_DEC_5; /* DDRC Address Decode 5 */
+  DDR_DDRC_DDR_ADDR_DEC_6_tag DDR_ADDR_DEC_6; /* DDRC Address Decode 6 */
+  DDR_DDRC_DDR_ADDR_DEC_7_tag DDR_ADDR_DEC_7; /* DDRC Address Decode 7 */
+  DDR_DDRC_DDR_ADDR_DEC_8_tag DDR_ADDR_DEC_8; /* DDRC Address Decode 8 */
+  DDR_DDRC_DDR_ADDR_DEC_9_tag DDR_ADDR_DEC_9; /* DDRC Address Decode 9 */
+  uint8_t DDR_DDRC_reserved0[24];
+  DDR_DDRC_CS_CONFIG_tag CS_CONFIG[2]; /* Rank 0 Configuration */
+  uint8_t DDR_DDRC_reserved1[120];
+  DDR_DDRC_TIMING_CFG_3_tag TIMING_CFG_3; /* DDR SDRAM Timing Configuration 3 */
+  DDR_DDRC_TIMING_CFG_0_tag TIMING_CFG_0; /* DDR SDRAM Timing Configuration 0 */
+  DDR_DDRC_TIMING_CFG_1_tag TIMING_CFG_1; /* DDR SDRAM Timing Configuration 1 */
+  DDR_DDRC_TIMING_CFG_2_tag TIMING_CFG_2; /* DDR SDRAM Timing Configuration 2 */
+  DDR_DDRC_DDR_SDRAM_CFG_tag DDR_SDRAM_CFG; /* DDR SDRAM Control Configuration */
+  DDR_DDRC_DDR_SDRAM_CFG_2_tag DDR_SDRAM_CFG_2; /* DDR SDRAM Control Configuration 2 */
+  uint8_t DDR_DDRC_reserved2[8];
+  DDR_DDRC_DDR_SDRAM_MD_CNTL_tag DDR_SDRAM_MD_CNTL; /* DDR SDRAM Mode Control */
+  DDR_DDRC_DDR_SDRAM_INTERVAL_tag DDR_SDRAM_INTERVAL; /* DDR SDRAM Interval Configuration */
+  DDR_DDRC_DDR_DATA_INIT_tag DDR_DATA_INIT; /* DDR SDRAM Data Initialization */
+  uint8_t DDR_DDRC_reserved3[52];
+  DDR_DDRC_TIMING_CFG_4_tag TIMING_CFG_4; /* DDR SDRAM Timing Configuration 4 */
+  DDR_DDRC_TIMING_CFG_5_tag TIMING_CFG_5; /* DDR SDRAM Timing Configuration 5 */
+  uint8_t DDR_DDRC_reserved4[4];
+  DDR_DDRC_TIMING_CFG_7_tag TIMING_CFG_7; /* DDR SDRAM Timing Configuration 7 */
+  DDR_DDRC_DDR_ZQ_CNTL_tag DDR_ZQ_CNTL; /* DDR SDRAM ZQ Calibration Control */
+  uint8_t DDR_DDRC_reserved5[8];
+  DDR_DDRC_DDR_SR_CNTR_tag DDR_SR_CNTR; /* DDR SDRAM Self-Refresh Counter */
+  uint8_t DDR_DDRC_reserved6[208];
+  DDR_DDRC_TIMING_CFG_8_tag TIMING_CFG_8; /* DDR SDRAM Timing Configuration 8 */
+  DDR_DDRC_TIMING_CFG_9_tag TIMING_CFG_9; /* DDR SDRAM timing configuration 9 */
+  DDR_DDRC_TIMING_CFG_10_tag TIMING_CFG_10; /* DDR SDRAM Timing Configuration 10 */
+  DDR_DDRC_TIMING_CFG_11_tag TIMING_CFG_11; /* DDR SDRAM Timing Configuration 11 */
+  DDR_DDRC_DDR_SDRAM_CFG_3_tag DDR_SDRAM_CFG_3; /* DDR SDRAM Control Configuration 3 */
+  DDR_DDRC_DDR_SDRAM_CFG_4_tag DDR_SDRAM_CFG_4; /* DDR SDRAM Control Configuration 4 */
+  DDR_DDRC_DDR_SDRAM_CFG_5_tag DDR_SDRAM_CFG_5; /* DDR SDRAM Control Configuration 5 */
+  DDR_DDRC_DDR_SDRAM_CFG_6_tag DDR_SDRAM_CFG_6; /* DDR SDRAM Control Configuration 6 */
+  DDR_DDRC_DDR_SDRAM_MD_CNTL2_tag DDR_SDRAM_MD_CNTL2; /* DDR SDRAM mode control 2 */
+  uint8_t DDR_DDRC_reserved7[12];
+  DDR_DDRC_DDR_SDRAM_MPR1_tag DDR_SDRAM_MPR1; /* DDR SDRAM multi-purpose register 1 */
+  DDR_DDRC_DDR_SDRAM_MPR2_tag DDR_SDRAM_MPR2; /* DDR SDRAM multi-purpose register 2 */
+  DDR_DDRC_DDR_SDRAM_MPR3_tag DDR_SDRAM_MPR3; /* DDR SDRAM multi-purpose register 3 */
+  DDR_DDRC_DDR_SDRAM_MPR4_tag DDR_SDRAM_MPR4; /* DDR SDRAM multi-purpose register 4 */
+  DDR_DDRC_DDR_SDRAM_MPR5_tag DDR_SDRAM_MPR5; /* DDR SDRAM multi-purpose register 5 */
+  uint8_t DDR_DDRC_reserved8[44];
+  DDR_DDRC_DDR_SDRAM_REF_RATE_tag DDR_SDRAM_REF_RATE; /* DDR Refresh Rate */
+  uint8_t DDR_DDRC_reserved9[60];
+  DDR_DDRC_TIMING_CFG_12_tag TIMING_CFG_12; /* DDR SDRAM Timing Configuration 12 */
+  DDR_DDRC_TIMING_CFG_13_tag TIMING_CFG_13; /* DDR SDRAM Timing Configuration 13 */
+  DDR_DDRC_TIMING_CFG_14_tag TIMING_CFG_14; /* DDR SDRAM Timing Configuration 14 */
+  DDR_DDRC_TIMING_CFG_15_tag TIMING_CFG_15; /* DDR SDRAM Timing Configuration 15 */
+  DDR_DDRC_TIMING_CFG_16_tag TIMING_CFG_16; /* DDR SDRAM Timing Configuration 16 */
+  DDR_DDRC_TIMING_CFG_17_tag TIMING_CFG_17; /* DDR SDRAM Timing Configuration 17 */
+  uint8_t DDR_DDRC_reserved10[1256];
+  DDR_DDRC_TX_CFG_1_tag TX_CFG_1;      /* Transaction Configuration Register 1 */
+  DDR_DDRC_TX_CFG_2_tag TX_CFG_2;      /* Transaction Configuration Register 2 */
+  DDR_DDRC_TX_CFG_3_tag TX_CFG_3;      /* Transaction Configuration Register 3. */
+  DDR_DDRC_TX_CFG_4_tag TX_CFG_4;      /* Transaction Configuration Register 4. */
+  uint8_t DDR_DDRC_reserved11[788];
+  DDR_DDRC_DDRDSR_2_tag DDRDSR_2;      /* DDR SDRAM Debug Status 2 */
+  uint8_t DDR_DDRC_reserved12[208];
+  DDR_DDRC_DDR_IP_REV1_tag DDR_IP_REV1; /* DDRC Revision 1 */
+  DDR_DDRC_DDR_IP_REV2_tag DDR_IP_REV2; /* DDRC Revision 2 */
+  DDR_DDRC_DDR_EOR_tag DDR_EOR;        /* DDR Enhanced Optimization Register */
+  uint8_t DDR_DDRC_reserved13[252];
+  DDR_DDRC_DDR_MTCR_tag DDR_MTCR;      /* DDR SDRAM Memory Test Control */
+  uint8_t DDR_DDRC_reserved14[28];
+  DDR_DDRC_DDR_MTP_tag DDR_MTP[10];    /* DDR SDRAM Memory Test Pattern n */
+  uint8_t DDR_DDRC_reserved15[24];
+  DDR_DDRC_DDR_MT_ST_EXT_ADDR_tag DDR_MT_ST_EXT_ADDR; /* DDR SDRAM Memory Test Start Extended Address */
+  DDR_DDRC_DDR_MT_ST_ADDR_tag DDR_MT_ST_ADDR; /* DDR SDRAM Memory Test Start Address */
+  DDR_DDRC_DDR_MT_END_EXT_ADDR_tag DDR_MT_END_EXT_ADDR; /* DDR SDRAM Memory Test End Extended Address */
+  DDR_DDRC_DDR_MT_END_ADDR_tag DDR_MT_END_ADDR; /* DDR SDRAM Memory Test End Address */
+  DDR_DDRC_DDR_MT_ST_EXT_ADDR2_tag DDR_MT_ST_EXT_ADDR2; /* DDR Memory Test Start Extended Address 2 */
+  DDR_DDRC_DDR_MT_ST_ADDR2_tag DDR_MT_ST_ADDR2; /* DDR Memory Test Start Address 2 */
+  DDR_DDRC_DDR_MT_END_EXT_ADDR2_tag DDR_MT_END_EXT_ADDR2; /* DDR Memory Test End Extended Address 2 */
+  DDR_DDRC_DDR_MT_END_ADDR2_tag DDR_MT_END_ADDR2; /* DDR Memory Test End Address 2 */
+  uint8_t DDR_DDRC_reserved16[384];
+  DDR_DDRC_DEBUG_1_tag DEBUG_1;        /* Debug 1 */
+  DDR_DDRC_DEBUG_2_tag DEBUG_2;        /* Debug 2 */
+  uint8_t DDR_DDRC_reserved17[4];
+  DDR_DDRC_DEBUG_4_tag DEBUG_4;        /* Debug 4 */
+  uint8_t DDR_DDRC_reserved18[56];
+  DDR_DDRC_DEBUG_19_tag DEBUG_19;      /* Debug 19 */
+  DDR_DDRC_DEBUG_20_tag DEBUG_20;      /* Debug 20 */
+  uint8_t DDR_DDRC_reserved19[20];
+  DDR_DDRC_DEBUG_26_tag DEBUG_26;      /* Debug 26 */
+  DDR_DDRC_DEBUG_27_tag DEBUG_27;      /* Debug 27 */
+  DDR_DDRC_DEBUG_28_tag DEBUG_28;      /* Debug 28 */
+  uint8_t DDR_DDRC_reserved20[144];
+  DDR_DDRC_ERR_EN_tag ERR_EN;          /* Error Enable */
+  uint8_t DDR_DDRC_reserved21[252];
+  DDR_DDRC_DATA_ERR_INJECT_HI_tag DATA_ERR_INJECT_HI; /* Memory Data Path Error Injection Mask High */
+  DDR_DDRC_DATA_ERR_INJECT_LO_tag DATA_ERR_INJECT_LO; /* Memory Data Path Error Injection Mask Low */
+  DDR_DDRC_ERR_INJECT_tag ERR_INJECT;  /* Memory Data Path Error Injection Mask ECC */
+  DDR_DDRC_ADDR_ERR_INJ_tag ADDR_ERR_INJ; /* Address Error Inject */
+  DDR_DDRC_EXT_ADDR_ERR_INJ_tag EXT_ADDR_ERR_INJ; /* Extended Address Error Inject */
+  uint8_t DDR_DDRC_reserved22[4];
+  DDR_DDRC_CAPTURE_EXT_DATA_HI_tag CAPTURE_EXT_DATA_HI; /* Memory Extended Data Path Read Capture High */
+  DDR_DDRC_CAPTURE_EXT_DATA_LO_tag CAPTURE_EXT_DATA_LO; /* Memory Extended Data Path Read Capture Low */
+  DDR_DDRC_CAPTURE_DATA_HI_tag CAPTURE_DATA_HI; /* Memory Data Path Read Capture High */
+  DDR_DDRC_CAPTURE_DATA_LO_tag CAPTURE_DATA_LO; /* Memory Data Path Read Capture Low */
+  DDR_DDRC_CAPTURE_ECC_tag CAPTURE_ECC; /* Memory Data Path Read Capture ECC */
+  uint8_t DDR_DDRC_reserved23[20];
+  DDR_DDRC_ERR_DETECT_tag ERR_DETECT;  /* Memory Error Detect */
+  DDR_DDRC_ERR_DISABLE_tag ERR_DISABLE; /* Memory Error Disable */
+  DDR_DDRC_ERR_INT_EN_tag ERR_INT_EN;  /* Memory Error Interrupt Enable */
+  DDR_DDRC_CAPTURE_ATTRIBUTES_tag CAPTURE_ATTRIBUTES; /* Memory Error Attributes Capture */
+  DDR_DDRC_CAPTURE_ADDRESS_tag CAPTURE_ADDRESS; /* Memory Error Address Capture */
+  DDR_DDRC_CAPTURE_EXT_ADDRESS_tag CAPTURE_EXT_ADDRESS; /* Memory Error Extended Address Capture */
+  DDR_DDRC_ERR_SBE_tag ERR_SBE;        /* Single-Bit ECC Memory Error Management */
+  uint8_t DDR_DDRC_reserved24[180];
+  DDR_DDRC_REG_CRC_GRP_1_tag REG_CRC_GRP_1; /* Register CRC Code For Group 1 */
+  DDR_DDRC_REG_CRC_GRP_2_tag REG_CRC_GRP_2; /* Register CRC Code For Group 2 */
+  uint8_t DDR_DDRC_reserved25[8];
+  DDR_DDRC_ECC_EXT_REG_0_tag ECC_EXT_REG_0; /* ECC Extended Region 0 Configuration */
+  DDR_DDRC_ECC_EXT_REG_1_tag ECC_EXT_REG_1; /* ECC Extended Region 1 Configuration */
+  DDR_DDRC_ECC_EXT_REG_2_tag ECC_EXT_REG_2; /* ECC Extended Region 2 Configuration */
+  DDR_DDRC_ECC_EXT_REG_3_tag ECC_EXT_REG_3; /* ECC Extended Region 3 Configuration */
+  DDR_DDRC_ECC_EXT_REG_4_tag ECC_EXT_REG_4; /* ECC Extended Region 4 Configuration */
+  DDR_DDRC_ECC_EXT_REG_5_tag ECC_EXT_REG_5; /* ECC Extended Region 5 Configuration */
+  DDR_DDRC_ECC_EXT_REG_6_tag ECC_EXT_REG_6; /* ECC Extended Region 6 Configuration */
+  DDR_DDRC_ECC_EXT_REG_7_tag ECC_EXT_REG_7; /* ECC Extended Region 7 Configuration */
+  DDR_DDRC_ECC_REG_0_tag ECC_REG_0;    /* ECC Region 0 Configuration */
+  DDR_DDRC_ECC_REG_1_tag ECC_REG_1;    /* ECC Region 1 Configuration */
+  DDR_DDRC_ECC_REG_2_tag ECC_REG_2;    /* ECC Region 2 Configuration */
+  DDR_DDRC_ECC_REG_3_tag ECC_REG_3;    /* ECC Region 3 Configuration */
+  DDR_DDRC_ECC_REG_4_tag ECC_REG_4;    /* ECC Region 4 Configuration */
+  DDR_DDRC_ECC_REG_5_tag ECC_REG_5;    /* ECC Region 5 Configuration */
+  DDR_DDRC_ECC_REG_6_tag ECC_REG_6;    /* ECC Region 6 Configuration */
+  DDR_DDRC_ECC_REG_7_tag ECC_REG_7;    /* ECC Region 7 Configuration */
+  uint8_t DDR_DDRC_reserved26[64352];
+  DDR_DDRC_PMCFG_1_tag PMCFG_1;        /* Performance Monitor Configuration 1 */
+  DDR_DDRC_PMCFG_2_tag PMCFG_2;        /* Performance Monitor Configuration 2 */
+  DDR_DDRC_PMCFG_3_tag PMCFG_3;        /* Performance Monitor Configuration 3 */
+  DDR_DDRC_PMCFG_4_tag PMCFG_4;        /* Performance Monitor Configuration 4 */
+  DDR_DDRC_PMCFG_5_tag PMCFG_5;        /* Performance Monitor Configuration 5 */
+  DDR_DDRC_PMCFG_6_tag PMCFG_6;        /* Performance Monitor Configuration 6 */
+  uint8_t DDR_DDRC_reserved27[40];
+  DDR_DDRC_PMGC0_tag PMGC0;            /* Performance Monitor Global Control */
+  uint8_t DDR_DDRC_reserved28[12];
+  DDR_DDRC_PMLCA0_tag PMLCA0;          /* Performance Monitor Local Control A0 */
+  DDR_DDRC_PMLCB0_tag PMLCB0;          /* Performance Monitor Local Control B0 */
+  DDR_DDRC_PMC0A_tag PMC0A;            /* PMC 0a */
+  DDR_DDRC_PMC0B_tag PMC0B;            /* PMC 0b */
+  DDR_DDRC_PMLCA1_tag PMLCA1;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB1_tag PMLCB1;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC1_tag PMC1;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved29[4];
+  DDR_DDRC_PMLCA2_tag PMLCA2;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB2_tag PMLCB2;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC2_tag PMC2;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved30[4];
+  DDR_DDRC_PMLCA3_tag PMLCA3;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB3_tag PMLCB3;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC3_tag PMC3;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved31[4];
+  DDR_DDRC_PMLCA4_tag PMLCA4;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB4_tag PMLCB4;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC4_tag PMC4;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved32[4];
+  DDR_DDRC_PMLCA5_tag PMLCA5;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB5_tag PMLCB5;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC5_tag PMC5;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved33[4];
+  DDR_DDRC_PMLCA6_tag PMLCA6;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB6_tag PMLCB6;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC6_tag PMC6;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved34[4];
+  DDR_DDRC_PMLCA7_tag PMLCA7;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB7_tag PMLCB7;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC7_tag PMC7;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved35[4];
+  DDR_DDRC_PMLCA8_tag PMLCA8;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB8_tag PMLCB8;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC8_tag PMC8;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved36[4];
+  DDR_DDRC_PMLCA9_tag PMLCA9;          /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB9_tag PMLCB9;          /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC9_tag PMC9;              /* Performance Monitor Counter */
+  uint8_t DDR_DDRC_reserved37[4];
+  DDR_DDRC_PMLCA10_tag PMLCA10;        /* Performance Monitor Local Control A */
+  DDR_DDRC_PMLCB10_tag PMLCB10;        /* Performance Monitor Local Control B */
+  DDR_DDRC_PMC10_tag PMC10;            /* Performance Monitor Counter */
+};
+
+/* ============================================================================
+   =============================== Module: ERM ================================
+   ============================================================================
+   * @usage: sCheck
+*/
+typedef union ERM_CR_union_tag {      /* ERM Configuration Registers */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_0:2;
+    vuint32_t ENCIE:1;
+    vuint32_t ESCIE:1;
+  } CH[8];
+} ERM_CR_tag;
+
+typedef union ERM_SR_union_tag {      /* ERM Status Registers */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_0:2;
+    vuint32_t NCE:1;
+    vuint32_t SBC:1;
+  } CH[8];
+} ERM_SR_tag;
+
+typedef union ERM_EAR_union_tag {     /* ERM Memory Error Address Register */
+  vuint32_t R;
+  struct {
+    vuint32_t EAR:32;                  /* EAR */
+  } B;
+} ERM_EAR_tag;
+
+typedef union ERM_SYN_union_tag {     /* ERM Memory Syndrome Register */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_0:24;            /* Reserved */
+    vuint32_t SYNDROME:8;              /* SYNDROME */
+  } B;
+} ERM_SYN_tag;
+
+typedef union ERM_CORR_ERR_CNT_union_tag { /* ERM Memory Correctable Error Count Register */
+  vuint32_t R;
+  struct {
+    vuint32_t COUNT:8;                 /* Memory Correctable Error Count */
+    vuint32_t _unused_8:24;            /* Reserved */
+  } B;
+} ERM_CORR_ERR_CNT_tag;
+
+typedef struct ERM_MEM_struct_tag {
+  ERM_EAR_tag EAR;                    /* ERM Memory Error Address Register */
+  ERM_SYN_tag SYN;                    /* ERM Memory Syndrome Register */
+  ERM_CORR_ERR_CNT_tag CORR_ERR_CNT;  /* ERM Memory Correctable Error Count Register */
+  uint8 ERM_MEM_Reserved[4];          /* Reserved */
+} ERM_MEM_tag;
+
+struct ERM_tag {
+  ERM_CR_tag CR[3];                     /* ERM Configuration Registers */
+  uint8 ERM_reserved0[4];               /* Reserved */
+  ERM_SR_tag SR[3];                     /* ERM Status Registers */
+  uint8 ERM_reserved1[228];             /* Reserved */
+  ERM_MEM_tag MEM[24];                  /* ERM Memory Error Registers */
+};
+
+/* ============================================================================
+   =============================== Module: LSTCU ==============================
+   ============================================================================ */
+
+typedef union LSTCU_ERR_STAT_union_tag { /* Error Status */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_31:1;
+    vuint32_t INVP_MB:1;               /* Invalid Pointer MBIST */
+    vuint32_t _unused_29:1;
+    vuint32_t _unused_16:13;
+    vuint32_t UFSF:1;                  /* Unrecoverable Fault Status */
+    vuint32_t RFSF:1;                  /* Recoverable Fault Status */
+    vuint32_t _unused_0:14;
+  } B;
+} LSTCU_ERR_STAT_tag;
+
+typedef union LSTCU_ERR_FM_union_tag { /* Error Fault Mapping */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_31:1;
+    vuint32_t INVPFMMB:1;              /* Invalid BIST Pointer Fault Mapping During MBIST Scheduling */
+    vuint32_t _unused_29:1;
+    vuint32_t _unused_0:29;
+  } B;
+} LSTCU_ERR_FM_tag;
+
+typedef union LSTCU_MB_RSTAT0_union_tag { /* MBIST Run Status 0 */
+  vuint32_t R;
+  struct {
+    vuint32_t MBSTAT0:1;               /* MBIST Run Result Status 0 */
+    vuint32_t _unused_16:15;
+    vuint32_t _unused_0:16;
+  } B;
+} LSTCU_MB_RSTAT0_tag;
+
+typedef union LSTCU_MBFM0_union_tag { /* MBIST Fault Mapping 0 */
+  vuint32_t R;
+  struct {
+    vuint32_t MBSTATFM0:1;             /* MBIST Fault Mapping n */
+    vuint32_t _unused_16:15;
+    vuint32_t _unused_0:16;
+  } B;
+} LSTCU_MBFM0_tag;
+
+typedef union LSTCU_STAG_union_tag { /* Stagger */
+  vuint32_t R;
+  struct {
+    vuint32_t _unused_24:8;
+    vuint32_t MB_DELAY:8;              /* MBIST Delay */
+    vuint32_t _unused_8:8;
+    vuint32_t _unused_0:8;
+  } B;
+} LSTCU_STAG_tag;
+
+typedef union LSTCU_PH1_DUR_union_tag { /* Phase 1 Duration */
+  vuint32_t R;
+  struct {
+    vuint32_t PH1DUR:10;               /* Phase 1 Duration */
+    vuint32_t _unused_0:22;
+  } B;
+} LSTCU_PH1_DUR_tag;
+
+typedef union LSTCU_MBPTR_union_tag { /* MBIST Scheduler Pointer */
+  vuint32_t R;
+  struct {
+    vuint32_t MBPTR:8;                 /* MBIST Pointer */
+    vuint32_t MBCSM:1;                 /* MBIST Mode */
+    vuint32_t _unused_1:22;
+    vuint32_t MBEOL:1;                 /* MBIST End of List */
+  } B;
+} LSTCU_MBPTR_tag;
+
+struct LSTCU_tag {
+  uint8_t LSTCU_reserved0[8];
+  LSTCU_ERR_STAT_tag ERR_STAT;      /* Error Status */
+  uint8_t LSTCU_reserved1[4];
+  LSTCU_ERR_FM_tag ERR_FM;          /* Error Fault Mapping */
+  uint8_t LSTCU_reserved2[76];
+  LSTCU_MB_RSTAT0_tag MB_RSTAT0;    /* MBIST Run Status 0 */
+  uint8_t LSTCU_reserved3[284];
+  LSTCU_MBFM0_tag MBFM0;            /* MBIST Fault Mapping 0 */
+  uint8_t LSTCU_reserved4[220];
+  LSTCU_STAG_tag STAG;              /* Stagger */
+  uint8_t LSTCU_reserved5[12];
+  LSTCU_PH1_DUR_tag PH1_DUR;        /* Phase 1 Duration */
+  uint8_t LSTCU_reserved6[140];
+  LSTCU_MBPTR_tag MBPTR[1];        /* MBIST Scheduler Pointer */
+};
+
+
 #define AON__AXBS (*(volatile struct AON_AXBS_tag *) 0x44510000UL)
 #define AON__BLK_CTRL_NS_AONMIX1 (*(volatile struct AON_BLK_CTRL_NS_AONMIX_tag *) 0x44210000UL)
 #define AON__BLK_CTRL_S_AONMIX2 (*(volatile struct AON_BLK_CTRL_S_AONMIX_tag *) 0x444F0000UL)
@@ -26306,19 +29252,39 @@ struct TCM_ECC_MCM_tag {
 #define AON__IOMUXC0__IOMUXC (*(volatile struct IOMUXC_tag *) 0x443C0000UL)
 #define AON__IOMUXC0__IOMUXC_GPR (*(volatile struct IOMUXC_GPR_tag *) 0x443D0000UL)
 #define M7__A7_MCM (*(volatile struct M7_A7_MCM_tag *) 0x4A0A0000UL)
-#define AON__MUI_A1__MUA (*(volatile struct MU_tag *) 0x44220000UL)
-#define AON__MUI_A2__MUA (*(volatile struct MU_tag *) 0x445B0000UL)
-#define AON__MUI_A3__MUA (*(volatile struct MU_tag *) 0x445D0000UL)
-#define AON__MUI_A4__MUA (*(volatile struct MU_tag *) 0x445F0000UL)
-#define AON__MUI_A5__MUA (*(volatile struct MU_tag *) 0x44610000UL)
-#define AON__MUI_A6__MUA (*(volatile struct MU_tag *) 0x44630000UL)
-#define AON__MUI_A1__MUB (*(volatile struct MU_tag *) 0x44230000UL)
-#define AON__MUI_A2__MUB (*(volatile struct MU_tag *) 0x445C0000UL)
-#define AON__MUI_A3__MUB (*(volatile struct MU_tag *) 0x445E0000UL)
-#define AON__MUI_A4__MUB (*(volatile struct MU_tag *) 0x44600000UL)
-#define AON__MUI_A5__MUB (*(volatile struct MU_tag *) 0x44620000UL)
-#define AON__MUI_A6__MUB (*(volatile struct MU_tag *) 0x44640000UL)
 #define AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM (*(volatile struct TCM_ECC_MCM_tag *) 0x44420000UL)
+
+/*= SAF =*/
+/* EIM */
+#define AON_EIMA (*(volatile struct EIM_tag *) 0x44550000UL)
+#define WAKEUP_EIMW (*(volatile struct EIM_tag *) 0x42780000UL)
+#define NOC_EIMN (*(volatile struct EIM_tag *) 0x49270000UL)
+#define M7_EIM (*(volatile struct EIM_tag *) 0x4A060000UL)
+#define NPU_EIM_NPUMIX (*(volatile struct EIM_tag *) 0x4A860000UL)
+
+/* SRAMCTL */
+#define OCRAM_BASE_ADDR (0x20480000UL)
+#define OCRAM_SIZE (0x00060000UL)
+#define NOC_SRAMCTL (*(volatile struct SRAMCTL_tag *) 0x490A0000UL)
+
+/* DDRC */
+#define DDRC (*(volatile struct DDR_DDRC_tag *) 0x4E080000UL)
+
+/* ERM */
+#define AON_ERMA (*(volatile struct ERM_tag *) 0x44560000UL)
+#define WAKEUP_ERMW (*(volatile struct ERM_tag *) 0x42790000UL)
+#define M7_ERM (*(volatile struct ERM_tag *) 0x4A070000UL)
+#define NPU_ERM_NPUMIX (*(volatile struct ERM_tag *) 0x4A870000UL)
+
+/* LSTCU */
+#define AON_LSTCUA (*(volatile struct LSTCU_tag *) 0x445A0000UL)
+#define DDRC_LSTCU (*(volatile struct LSTCU_tag *) 0x4E050000UL)
+#define M7_LSTCU_M7MIX (*(volatile struct LSTCU_tag *) 0x4A050000UL)
+#define NOC_LSTCUN (*(volatile struct LSTCU_tag *) 0x490B0000UL)
+#define NPU_LSTCU_NPUMIX (*(volatile struct LSTCU_tag *) 0x4A850000UL)
+
+/* VFCCU */
+#define AON_VFCCU (*(volatile struct SAFETYBASE_VFCCU_tag *) 0x44570000UL)
 
 /* AON_AXBS */
 #define AON__AXBS_PRS0       AON__AXBS.PRS0.R              /* Priority Slave Registers */
@@ -26373,7 +29339,7 @@ struct TCM_ECC_MCM_tag {
 #define AON__BLK_CTRL_NS_AONMIX1_SSI AON__BLK_CTRL_NS_AONMIX1.SSI.R /* SSI master low power mode control */
 #define AON__BLK_CTRL_NS_AONMIX1_fastboot_enable AON__BLK_CTRL_NS_AONMIX1.FASTBOOT_ENABLE.R /* fastboot enable */
 #define AON__BLK_CTRL_NS_AONMIX1_MQS_Settings AON__BLK_CTRL_NS_AONMIX1.MQS_SETTINGS.R /* MQS settings */
-#define AON__BLK_CTRL_NS_AONMIX1_SENTINEL_FW_PRESENT AON__BLK_CTRL_NS_AONMIX1.SENTINEL_FW_PRESENT.R /* Read only bit for fuse SENTINEL_FW_PRESENT */
+#define AON__BLK_CTRL_NS_AONMIX1_ELE_FW_PRESENT AON__BLK_CTRL_NS_AONMIX1.ELE_FW_PRESENT.R /* Read only bit for fuse ELE_FW_PRESENT */
 #define AON__BLK_CTRL_NS_AONMIX1_AOMIX_SPARE_FUSE AON__BLK_CTRL_NS_AONMIX1.AOMIX_SPARE_FUSE.R /* Spare fuse register */
 #define AON__BLK_CTRL_NS_AONMIX1_IPG_STOP_CTL AON__BLK_CTRL_NS_AONMIX1.IPG_STOP_CTL.R /* IPG_STOP Control Register */
 #define AON__BLK_CTRL_NS_AONMIX1_IPG_STOP_ACK_STATUS AON__BLK_CTRL_NS_AONMIX1.IPG_STOP_ACK_STATUS.R /* IPG_STOP_ACK Status Register */
@@ -26858,8 +29824,8 @@ struct TCM_ECC_MCM_tag {
 #define AON__CSTCU_IF        AON__CSTCU.IF.R               /* Interrupt Flag */
 #define AON__CSTCU_ERR_STAT  AON__CSTCU.ERR_STAT.R         /* Error Status */
 #define AON__CSTCU_ERR_FM    AON__CSTCU.ERR_FM.R           /* Error Fault Mapping */
-#define AON__CSTCU_LRFSTAT0  AON__CSTCU.LSTCU_STAT[0].LRFSTAT.R /* LSTCU Recoverable Fault Status */
-#define AON__CSTCU_LUFSTAT0  AON__CSTCU.LSTCU_STAT[0].LUFSTAT.R /* LSTCU Unrecoverable Fault Status */
+#define AON__CSTCU_LRFSTAT0  AON__CSTCU.LRFSTAT[0].R       /* LSTCU Recoverable Fault Status */
+#define AON__CSTCU_LUFSTAT0  AON__CSTCU.LUFSTAT[0].R       /* LSTCU Unrecoverable Fault Status */
 #define AON__CSTCU_RDEN      AON__CSTCU.RDEN.R             /* Reset Domain Self-Test Enable */
 #define AON__CSTCU_RDENSTAT  AON__CSTCU.RDENSTAT.R         /* Reset Domain Enable Status */
 #define AON__CSTCU_LASTRDEN  AON__CSTCU.LASTRDEN.R         /* Last Run Reset Domain Enable */
@@ -32191,6 +35157,8 @@ struct TCM_ECC_MCM_tag {
 #define AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM_SYS_TCM_ECC_MULTI_ERROR_ADDR AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM.SYS_TCM_ECC_MULTI_ERROR_ADDR.R /* SYS_TCM multi-bit ECC Error Address Register */
 #define AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM_CODE_TCM_ECC_ERROR_INJEC AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM.CODE_TCM_ECC_ERROR_INJEC.R /* CODE_TCM ECC Error Injection Register */
 #define AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM_SYS_TCM_ECC_ERROR_INJEC AON__M33_CACHE_CTRL_ECC0__CM33_TCM_MCM.SYS_TCM_ECC_ERROR_INJEC.R /* SYS_TCM ECC Error Injection Register */
+
+#endif /* defined(SAFETY_BASE_MIMX95XX) */
 
 #ifdef __MWERKS__
 #pragma pop

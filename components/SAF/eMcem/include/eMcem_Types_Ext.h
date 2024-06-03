@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2012-2016 Freescale
 *   Copyright 2016, 2018-2024 NXP
@@ -45,30 +45,35 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/*!
+* @name eMCEM common type definition SW version
+*/
+/** @{ */
 
 /*!
-* @brief    eMCEM types extended SW major version
+* @brief    eMCEM common type definition - SW major version
 */
 #define EMCEM_TYPES_EXT_SW_MAJOR_VERSION             0
 /*!
-* @brief    eMCEM types extended SW minor version
+* @brief    eMCEM common type definition - SW minor version
 */
 #define EMCEM_TYPES_EXT_SW_MINOR_VERSION             4
 /*!
-* @brief    eMCEM tyoes extended SW patch version
+* @brief    eMCEM common type definition - SW patch version
 */
 #define EMCEM_TYPES_EXT_SW_PATCH_VERSION             0
+
+/**@}*/
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_TYPES_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_TYPES_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_TYPES_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
     #error "Software Version Numbers of eMcem_Types_Ext.h and MIMX_SAF version are different"
 #endif
-
 
 /*==================================================================================================
 *                                          CONSTANTS

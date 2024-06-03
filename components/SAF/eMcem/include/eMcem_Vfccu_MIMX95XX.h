@@ -1,9 +1,9 @@
 /**
-*   @file    eMcem_FailurePointList_Ext.h
+*   @file    eMcem_Vfccu_MIMX95XX.h
 *   @version 0.4.0
 *
-*   @brief   MIMX_SAF eMcem - Extended diagnostics types.
-*   @details Contains declarations of types for eMcem extended diagnostics.
+*   @brief   MIMX_SAF eMcem - IP wrapper specific header.
+*   @details Contains declarations of the eMcem IP wrapper specific functions.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
@@ -15,13 +15,13 @@
 *   SW Version           : 0.4.0
 *   Build Version        : MIMX9X_SAF_0_4_0
 *
-*   Copyright 2019-2024 NXP
+*   Copyright 2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
 
-#ifndef EMCEM_FAILUREPOINTLIST_EXT_H
-#define EMCEM_FAILUREPOINTLIST_EXT_H
+#ifndef EMCEM_VFCCU_MIMX95XX_H
+#define EMCEM_VFCCU_MIMX95XX_H
 
 #ifdef __cplusplus
 extern "C"{
@@ -30,19 +30,25 @@ extern "C"{
 /**
 * @page misra_violations MISRA-C:2012 violations
 *
-* @section eMcem_FailurePointList_Ext_h_REF_0501
+* @section eMcem_Vfccu_MIMX95XX_h_REF_0410
+* Violates MISRA 2012 Required Rule 4.10, Precautions shall be taken in order to prevent the
+* contents of a header file being included twice.
+* This is not a violation since all header files are protected against multiple inclusions.
+*
+* @section eMcem_Vfccu_MIMX95XX_h_REF_0501
 * Violates MISRA 2012 Required Rule 5.1, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_FailurePointList_Ext_h_REF_0502
+* @section eMcem_Vfccu_MIMX95XX_h_REF_0502
 * Violates MISRA 2012 Required Rule 5.2, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_FailurePointList_Ext_h_REF_0504
+* @section eMcem_Vfccu_MIMX95XX_h_REF_0504
 * Violates MISRA 2012 Required Rule 5.4, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_FailurePointList_Ext_h_REF_0505
+* @section eMcem_Vfccu_MIMX95XX_h_REF_0505
 * Violates MISRA 2012 Required Rule 5.5, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
 */
+
 
 /*==================================================================================================
 *                                        INCLUDE FILES
@@ -51,34 +57,38 @@ extern "C"{
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
 #include "MIMX_SAF_Version.h"
-#include "eMcem_FailurePointList_MIMX95XX.h"
+#include "SafetyBase_Cfg.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0501 */
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0502 */
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0504 */
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0505 */
-#define EMCEM_FAILUREPOINTLIST_EXT_SW_MAJOR_VERSION             0
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0501 */
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0502 */
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0504 */
-/* @violates @ref eMcem_FailurePointList_Ext_h_REF_0505 */
-#define EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION             4
-#define EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION             0
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0501 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0502 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0504 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0505 */
+#define EMCEM_VFCCU_MIMX95XX_SW_MAJOR_VERSION             0
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0501 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0502 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0504 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0505 */
+#define EMCEM_VFCCU_MIMX95XX_SW_MINOR_VERSION             4
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0501 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0502 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0504 */
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0505 */
+#define EMCEM_VFCCU_MIMX95XX_SW_PATCH_VERSION             0
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
 /* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_FAILUREPOINTLIST_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_FailurePointList_Ext.h and MIMX_SAF version are different"
+#if ((EMCEM_VFCCU_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCU_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCU_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Vfccu_MIMX95XX.h and MIMX_SAF version are different"
 #endif
 
-#if( STD_ON == EMCEM_EXT_DIAG_ENABLED )
+#if defined(SAFETY_BASE_MIMX95XX)
 /*==================================================================================================
 *                                          CONSTANTS
 ==================================================================================================*/
@@ -87,8 +97,7 @@ extern "C"{
 /*==================================================================================================
 *                                      DEFINES AND MACROS
 ==================================================================================================*/
-/* Extended diagnostic data (logged call tree) length */
-#define EMCEM_EXT_DIAG_DATA_MAX_LENGTH    4U
+
 
 /*==================================================================================================
 *                                             ENUMS
@@ -98,17 +107,7 @@ extern "C"{
 /*==================================================================================================
 *                                STRUCTURES AND OTHER TYPEDEFS
 ==================================================================================================*/
-/**
-* @brief          Extended diagnostics struct type.
-* @details        Container for storing diagnostic data of last called API function.
-*/
-typedef struct
-{
-    eMcem_FailurePointType aFpId[EMCEM_EXT_DIAG_DATA_MAX_LENGTH]; /* Failure point ID */
-    uint8 au8FailingLoopId[EMCEM_EXT_DIAG_DATA_MAX_LENGTH];   /* ID of failing iteration */
-    uint32 u32RegisterValue;        /* Register value clarifying the failure point */
-    uint8 u8ItemsCount;             /* Logged failure points count (length of the call tree) */
-} eMcem_ExtDiagDataType;
+
 
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
@@ -119,12 +118,23 @@ typedef struct
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 
-#endif /* ( STD_ON == EMCEM_EXT_DIAG_ENABLED ) */
+#define EMCEM_START_SEC_CODE
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0410 */
+#include "eMcem_MemMap.h"
+
+void eMcem_Vfccu_Specific_AssertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx );
+void eMcem_Vfccu_Specific_DeassertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx );
+
+#define EMCEM_STOP_SEC_CODE
+/* @violates @ref eMcem_Vfccu_MIMX95XX_h_REF_0410 */
+#include "eMcem_MemMap.h"
+
+#endif /* defined(SAFETY_BASE_MIMX95XX) */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* EMCEM_FAILUREPOINTLIST_EXT_H */
+#endif /* EMCEM_VFCCU_MIMX95XX_H */
 
 /** @} */

@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -84,6 +84,7 @@ extern "C"{
 #include "eMcem_Cfg.h"
 #include "eMcem_ExtDiagApi.h"
 #include "eMcem_VfccuFaultList_MIMX95XX.h"
+#include "eMcem_Vfccu_MIMX95XX.h"
 #include "SafetyBase.h"
 
 /*==================================================================================================
@@ -141,7 +142,6 @@ extern "C"{
 #include "eMcem_MemMap.h"
 
 static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType *pVfccuCfg );
-static void eMcem_Vfccu_GetRegBitPosition( eMcem_FaultType nFaultId, uint8 *pu8RegIdx, uint8 *pu8BitIdx );
 static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVal );
 static boolean eMcem_Vfccu_AccessToCVfccuFhid( void );
 Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u32RegVal );
@@ -149,24 +149,6 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
 /*==================================================================================================
 *                                       LOCAL FUNCTIONS
 ==================================================================================================*/
-/**
-* @brief      Get register and bit position
-* @details    Function calculates and returns global register and bit position for given fault.
-*             Used for storing fault info into fault container (GetErrors functions)
-*
-* @param[in]  nFaultId    Fault ID for calculation of register and bit position
-* @param[out]  pu8RegIdx  Register index
-* @param[out]  pu8BitIdx  Bit index
-*
-*/
-static void eMcem_Vfccu_GetRegBitPosition( eMcem_FaultType nFaultId, uint8 *pu8RegIdx, uint8 *pu8BitIdx )
-{
-    /* Calculate register index for given fault (global register offset + local register offset) */
-    *pu8RegIdx = (uint8)(nFaultId / EMCEM_REG_SIZE);
-    /* Calculate fault (status bit) index within register */
-    *pu8BitIdx = (uint8)(nFaultId % EMCEM_REG_SIZE);
-}
-
 /**
 * @brief      Initialize CVFCCU
 * @details    Function configures CVFCCU registers using user generated config file.
@@ -188,200 +170,91 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
     if( (boolean)TRUE == pVfccuCfg->bConfigEnabled )
     {
         /* Configure Fault Line Recovery */
-        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GFLTRC_C0.R = pVfccuCfg->au32Recovery[0];
-
-        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GFLTRC_C1.R = pVfccuCfg->au32Recovery[1];
-
-        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GFLTRC_C2.R = pVfccuCfg->au32Recovery[2];
-
-	    /* Go through all EOUT pins and configure them */
-        for( u8i = 0U; u8i < EMCEM_EOUT_PIN_COUNT; u8i++ )
+        for( u8i = 0U; u8i < EMCEM_CVFCCU_FAULT_RECOVERY_REG_COUNT; u8i++ )
         {
-	        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.GLB_EOUT[u8i].GEOUTPNC.R = ( (uint32)pVfccuCfg->eMcem_EoutCfg.u32EoutPin[u8i] & EMCEM_EOUT_GEOUTPNC_MASK );
             /* @violates @ref eMcem_Vfccu_c_REF_1104 */
             /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.GLB_EOUT[u8i].GEOUTMC.R = ( (uint32)pVfccuCfg->eMcem_EoutCfg.u8EoutOperatingMode[u8i] & EMCEM_EOUT_GEOUTMC_MASK );
+            AON_VFCCU.GFLTRC[u8i].R = pVfccuCfg->au32Recovery[u8i];
+        }
+
+        /* Go through all EOUT pins and configure them */
+        for( u8i = 0U; u8i < EMCEM_EOUT_PIN_COUNT; u8i++ )
+        {
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.GLB_EOUT[u8i].GEOUTPNC.R = ( (uint32)pVfccuCfg->eMcem_EoutCfg.u32EoutPin[u8i] & EMCEM_EOUT_GEOUTPNC_MASK );
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.GLB_EOUT[u8i].GEOUTMC.R = ( (uint32)pVfccuCfg->eMcem_EoutCfg.u32EoutOperatingMode[u8i] & EMCEM_EOUT_GEOUTMC_MASK );
         }
         /* Configure Global Reaction Timer */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GRKNTIMC[0].R  = pVfccuCfg->u32GlobalReactionTimerPeriod;
+        AON_VFCCU.GRKNTIMC[0].R  = pVfccuCfg->u32GlobalReactionTimerPeriod;
         /* Configure Minimum EOUT Duration */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GMEOUTDC.R = pVfccuCfg->u32MinEoutDuration;
+        AON_VFCCU.GMEOUTDC.R = pVfccuCfg->u32MinEoutDuration;
         /* Global EOUT Timer Disable */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GEOUTTCT.R = (uint32)pVfccuCfg->eMcem_EoutCfg.u8EoutTimerDisabled;
+        AON_VFCCU.GEOUTTCT.R = (uint32)pVfccuCfg->eMcem_EoutCfg.u32EoutTimerDisabled;
     }
 
     /* Configure local VFCCU parameters (FHIDs)
        Check if configuration of the VFCCU FHID parameters is enabled */
     if( (boolean)TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
     {
-        /* Need to clear status flags and disable FH to be able to reconfigure it */
-        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.FHFLTS0_0.R = 0xFFFFFFFFUL;
+        for( u8i = 0U; u8i < EMCEM_VFCCU_FHFLTS_REG_COUNT; u8i++ )
+        {
+            /* Need to clear status flags and disable FH to be able to reconfigure it */
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.FHFLTS[u8i].R = 0xFFFFFFFFUL;
 
-	    /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.FHFLTS0_1.R = 0xFFFFFFFFUL;
-        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.FHFLTS0_2.R = 0xFFFFFFFFUL;
-
-        /* Prepare one variable to check for any fault present */
-        u32RegVal |= AON__FCCU.FHFLTS0_0.R;
-        u32RegVal |= AON__FCCU.FHFLTS0_1.R;
-        u32RegVal |= AON__FCCU.FHFLTS0_2.R;
+            /* Prepare one variable to check for any fault present */
+            u32RegVal |= AON_VFCCU.FHFLTS[u8i].R;
+        }
 
         /* Check if Fault Lines were cleared, if not return EMCEM_E_NOT_OK */
         if( 0UL < u32RegVal )
         {
-	        nReturnValue = EMCEM_E_NOT_OK;
+            nReturnValue = EMCEM_E_NOT_OK;
         }
         else
         {
             /* @violates @ref eMcem_Vfccu_c_REF_1104 */
             /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHCFG0.B.FHIDEN = 0U;
+            AON_VFCCU.FHCFG0.B.FHIDEN = 0U;
 
             /* Enable faults */
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTENC0_0.R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[0];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTENC0_1.R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[1];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTENC0_2.R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[2];
+            for( u8i = 0U; u8i < EMCEM_CVFCCU_FAULT_ENABLE_REG_COUNT; u8i++ )
+            {
+                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+                AON_VFCCU.FHFLTENC[u8i].R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[0];
+            }
 
             /* Configure reaction sets */
-            /* TODO: Improvement: Fill the registers using loop */
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_0.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[0];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_1.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[1];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_2.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[2];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_3.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[3];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_4.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[4];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_5.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[5];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_6.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[6];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_7.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[7];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_8.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[8];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_9.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[9];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_10.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[10];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_11.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[11];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_12.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[12];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_13.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[13];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_14.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[14];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_15.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[15];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_16.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[16];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_17.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[17];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_18.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[18];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHFLTRKC0_19.R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[19];
+            for( u8i = 0U; u8i < EMCEM_CVFCCU_REACTION_SET_REG_COUNT; u8i++ )
+            {
+                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+                AON_VFCCU.FHFLTRKC[u8i].R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[u8i];
+            }
 
             /* Configure immediate and delayed reactions */
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_00.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[0];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_10.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[1];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_20.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[2];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_30.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[3];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_VfENDccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_40.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[4];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_50.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[5];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_60.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[6];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHIMRKC0_70.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[7];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_00.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[0];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_10.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[1];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_20.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[2];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_30.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[3];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_40.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[4];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_50.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[5];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_60.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[6];
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON__FCCU.FHDLRKC0_70.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[7];
-	    }
+            for( u8i = 0U; u8i < EMCEM_REACTION_SET_COUNT; u8i++ )
+            {
+                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+                AON_VFCCU.FHRKC[u8i].FHIMRKC.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[u8i];
+
+                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+                AON_VFCCU.FHRKC[u8i].FHDLRKC.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[u8i];
+            }
+        }
     }
 
     /* Check if configuration of the global VFCCU parameters is enabled */
@@ -391,7 +264,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
         /* @violates @ref eMcem_Vfccu_c_REF_1003 */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-        AON__FCCU.GDBGCFG.B.FRZ = (pVfccuCfg->bDebugEnabled == TRUE) ? 1U : 0U;
+        AON_VFCCU.GDBGCFG.B.FRZ = (pVfccuCfg->bDebugEnabled == TRUE) ? 1U : 0U;
     }
 
     /* Check if configuration of the VFCCU FHID parameters is enabled */
@@ -401,7 +274,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
         /* @violates @ref eMcem_Vfccu_c_REF_1003 */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-		AON__FCCU.FHCFG0.B.FHIDEN = (pVfccuCfg->eMcem_FhidCfg.bEnabled == TRUE) ? 1U : 0U;
+        AON_VFCCU.FHCFG0.B.FHIDEN = (pVfccuCfg->eMcem_FhidCfg.bEnabled == TRUE) ? 1U : 0U;
     }
 
     /* Log extended diagnostic data */
@@ -432,18 +305,14 @@ static boolean eMcem_Vfccu_AccessToCVfccuFhid( void )
         }
         else
         {
-            /* no write access to CVFCCU, use IPC */
             /* Log extended diagnostic data */
             EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_1, 0U )
-            EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( EMCEM_E_NOT_OK, (uint32)u8Fhid )
         }
     }
     else
     {
-        /* no CVFCCU in config, use IPC */
         /* Log extended diagnostic data */
         EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_2, 0U )
-        EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( EMCEM_E_NOT_OK, (uint32)u8Fhid )
     }
 
     return bReturnValue;
@@ -469,9 +338,7 @@ static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVa
     uint8 u8RegIdx = (uint8)( nFaultId / EMCEM_REG_SIZE );
     uint8 u8BitPosition = (uint8)( nFaultId % EMCEM_REG_SIZE );
 
-    if( (( 0UL != ( AON__FCCU.GFLTRC_C0.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 0U) ) ||
-        (( 0UL != ( AON__FCCU.GFLTRC_C1.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 1U) ) ||
-        (( 0UL != ( AON__FCCU.GFLTRC_C2.R & ( u32RegVal << u8BitPosition ) ) ) && (u8RegIdx == 2U) ) )
+    if( 0UL != ( AON_VFCCU.GFLTRC[u8RegIdx].R & ( u32RegVal << u8BitPosition ) ) )
     {
         bReturnValue = (boolean)TRUE;
     }
@@ -504,14 +371,12 @@ boolean eMcem_Vfccu_AccessToCVfccu( void )
         }
         else
         {
-            /* no write access to CVFCCU, use IPC */
             /* Log extended diagnostic data */
             EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_1, 0U )
         }
     }
     else
     {
-        /* no CVFCCU in config, use IPC */
         /* Log extended diagnostic data */
         EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_2, 0U )
     }
@@ -548,20 +413,9 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
     if( (boolean)TRUE == bClearFault )
     {
         /* Check if any fault was detected in fault handler */
-        if( 0UL < AON__FCCU.FHSRVDS0.B.AGGFLTS )
+        if( 0UL < AON_VFCCU.FHSRVDS0.B.AGGFLTS )
         {
-            if (u8RegIdx == 0U)
-            {
-                AON__FCCU.FHFLTS0_0.R |= ( u32RegVal << u8BitIdx );
-            }
-            else if (u8RegIdx == 1U)
-            {
-                AON__FCCU.FHFLTS0_1.R |= ( u32RegVal << u8BitIdx );
-            }
-            else
-            {
-                AON__FCCU.FHFLTS0_2.R |= ( u32RegVal << u8BitIdx );
-            }
+            AON_VFCCU.FHFLTS[u8RegIdx].R |= ( u32RegVal << u8BitIdx );
         }
         else
         {
@@ -571,15 +425,13 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
     else
     {
         /* no access to CVFCCU, this will trigger IPC communication, but do it once loop is done,
-            * to avoid unnecessary IPC calls to SysMan - do nothing */
+         * to avoid unnecessary IPC calls to SysMan - do nothing */
     }
 
     /* Report EMCEM_E_NOT_OK when not all fault were cleared */
-    if((( 0UL != ( AON__FCCU.FHFLTS0_0.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 0U)) ||
-       (( 0UL != ( AON__FCCU.FHFLTS0_1.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 1U)) ||
-       (( 0UL != ( AON__FCCU.FHFLTS0_2.R & ( u32RegVal << u8BitIdx ) ) ) && (u8RegIdx == 2U)))
+    if( 0UL != ( AON_VFCCU.FHFLTS[u8RegIdx].R & ( u32RegVal << u8BitIdx ) ) )
     {
-        nReturnValue |= EMCEM_E_NOT_OK;
+        nReturnValue = EMCEM_E_NOT_OK;
     }
     else
     {
@@ -588,7 +440,7 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
 
     /* Log extended diagnostic data */
     EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VFCCU_CLEAR_CVFCCU_FAULTS, 0U )
-    EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( nReturnValue, (uint32)nLocalFaultId )
+    EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( nReturnValue, (uint32)nFaultId )
 
     return nReturnValue;
 }
@@ -618,94 +470,6 @@ Std_ReturnType eMcem_Vfccu_Init( const eMcem_ConfigType *pConfigPtr )
 }
 
 /**
-* @brief      Get SW faults function
-* @details    Function gets status of SW faults and stores this info in the error container.
-*             Some calculations have to Be made to align the SW faults after the status of the rest of VFCCU instance faults
-*
-* @param[out] pFaultContainer    Error container where the errors will be stored
-* @param[out] pFaultAccumulator  Accumulator where all fault bits are aggregated
-* @param[in]  nFaultId           ID of the first SW fault for the given VFCCU
-*
-* @return     void
-*
-*/
-void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulator, eMcem_FaultType nFaultId )
-{
-    uint8 u8RegIdx = 0U;
-    uint8 u8BitIdx = 0U;
-    uint8 u8MaxBitPos = (uint8)(EMCEM_REG_SIZE - EMCEM_SW_FAULT_OFFSET);
-    uint8 u8SWRegIdx = 0U;
-    uint32 u32RegVal[EMCEM_SW_FAULT_REG_COUNT];
-    eMcem_FaultType nFaultIdInt = nFaultId;
-
-    /* Calculate register and bit indexes out of nFaultId (as there is no offsetting per whole register - SW faults
-       are aligned after the rest of VFCCU faults) */
-    eMcem_Vfccu_GetRegBitPosition( nFaultIdInt, &u8RegIdx, &u8BitIdx );
-
-    /* Read SW fault status registers */
-    for( u8SWRegIdx = 0U; u8SWRegIdx < EMCEM_SW_FAULT_REG_COUNT; u8SWRegIdx++ )
-    {
-        if (u8SWRegIdx == 0U)
-        {
-            u32RegVal[u8SWRegIdx] = ( AON__M33_CACHE_CTRL_ECC0__CM33_CACHE_ECC_MCM.FCCU_SW_FAULTS.R );
-        }
-        else
-        {
-	        u32RegVal[u8SWRegIdx] = 0UL;
-        }
-    }
-
-    /* Go through FCCU SW faults registers.
-       Shift the value to the left properly to be able to append the SW fault status to the fault container */
-    for( u8SWRegIdx = 0U; u8SWRegIdx < EMCEM_SW_FAULT_REG_COUNT; u8SWRegIdx++ )
-    {
-        /* Check if all SW fault status bits of current SW fault register can fit into current fault container register */
-        if( u8BitIdx <= u8MaxBitPos )
-        {
-            /* Shift retrieved fault status by SW fault bit position */
-            u32RegVal[u8SWRegIdx] <<= u8BitIdx;
-
-            /* Update fault container with SW faults */
-            pFaultContainer[u8RegIdx] |= u32RegVal[u8SWRegIdx];
-
-            /* Accumulate SW faults */
-            *pFaultAccumulator |= u32RegVal[u8SWRegIdx];
-
-            /* Update Fault register and bit */
-            nFaultIdInt += EMCEM_SW_FAULT_OFFSET;
-            eMcem_Vfccu_GetRegBitPosition( nFaultIdInt, &u8RegIdx, &u8BitIdx );
-        }
-        else
-        {
-            /* Mask out the status bits not applicable for the current fault container register */
-            pFaultContainer[u8RegIdx] |= ( u32RegVal[u8SWRegIdx] & ( 0xFFFFFFFFUL >> u8BitIdx ) ) << u8BitIdx;
-
-            /* Accumulate SW faults */
-            *pFaultAccumulator |= pFaultContainer[u8RegIdx];
-
-            /* Update fault bit index */
-            u8BitIdx = ( ( u8BitIdx + EMCEM_SW_FAULT_OFFSET ) % EMCEM_REG_SIZE );
-
-            /* The rest of status bits shall be shifted and stored in the next fault container register */
-            u32RegVal[u8SWRegIdx] >>= ( EMCEM_SW_FAULT_OFFSET - u8BitIdx );
-
-            /* Update register index */
-            u8RegIdx++;
-
-            /* Update fault container with SW faults */
-            pFaultContainer[u8RegIdx] |= u32RegVal[u8SWRegIdx];
-
-            /* Accumulate SW faults */
-            *pFaultAccumulator |= u32RegVal[u8SWRegIdx];
-
-            /* Update Fault register and bit */
-            nFaultIdInt += EMCEM_SW_FAULT_OFFSET;
-            eMcem_Vfccu_GetRegBitPosition( nFaultIdInt, &u8RegIdx, &u8BitIdx );
-        }
-    }
-}
-
-/**
 * @brief      Clear fault function
 * @details    Function shall clear error flag for a specified fault.
 *
@@ -726,7 +490,7 @@ Std_ReturnType eMcem_Vfccu_ClearFaults( eMcem_FaultType nFaultId )
 
     /* Log extended diagnostic data */
     EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VFCCU_CLEAR_FAULTS_1, 0U )
-    EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( nReturnValue, (uint32)nLocalFaultId)
+    EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( nReturnValue, (uint32)nFaultId)
 
     return nReturnValue;
 }
@@ -746,25 +510,15 @@ void eMcem_Vfccu_GetErrors( uint32 pFaultContainer[], uint32 *pFaultAccumulator 
     uint8 u8RegIdx;
 
     /* Check if any fault was detected in fault handler */
-    if( 0UL < AON__FCCU.FHSRVDS0.B.AGGFLTS )
+    if( 0UL < AON_VFCCU.FHSRVDS0.B.AGGFLTS )
     {
         /* Go through fault status registers of CVFCCU */
         for( u8RegIdx = 0U; u8RegIdx < EMCEM_VFCCU_ERROR_CONTAINER_SIZE; u8RegIdx++ )
         {
             /* Read fault status register and OR it with current values in the fault container.
                Values for all Fault containers are ORed together */
-            if (u8RegIdx == 0U)
-            {
-                pFaultContainer[u8RegIdx] |= AON__FCCU.FHFLTS0_0.R;
-            }
-            else if (u8RegIdx == 1U)
-            {
-                pFaultContainer[u8RegIdx] |= AON__FCCU.FHFLTS0_1.R;
-            }
-            else
-            {
-                pFaultContainer[u8RegIdx] |= AON__FCCU.FHFLTS0_2.R;
-            }
+            pFaultContainer[u8RegIdx] |= AON_VFCCU.FHFLTS[u8RegIdx].R;
+
             /* Accumulate all faults */
             *pFaultAccumulator |= pFaultContainer[u8RegIdx];
         }
@@ -775,52 +529,36 @@ void eMcem_Vfccu_GetErrors( uint32 pFaultContainer[], uint32 *pFaultAccumulator 
 * @brief      Assert software VFCCU fault.
 * @details    Sets reaction line for software fault.
 *
-* @param[in]  nFaultId      ID of the SW fault that shall be asserted.
+* @param[in]  u8SwFaultId      ID of the SW fault that shall be asserted.
 *
 * @return     void
 *
 */
 void eMcem_Vfccu_AssertSWFault( uint8 u8SwFaultId )
 {
+    /* Get SW fault register and bit position in SW fault register */
     uint8 u8BitIdx = u8SwFaultId % EMCEM_VFCCU_SW_FAULT_COUNT;
+    uint8 u8SWRegIdx = u8SwFaultId / EMCEM_VFCCU_SW_FAULT_COUNT;
 
-    /* Check if fault is in AON(CM33) range */
-    if( u8SwFaultId < EMCEM_SW_FAULT_OFFSET )
-    {
-        /* Assert SW fault in M33 */
-        AON__M33_CACHE_CTRL_ECC0__CM33_CACHE_ECC_MCM.FCCU_SW_FAULTS.R |= ( 1UL << u8BitIdx );
-    }
-    else
-    {
-        /* Assert SW fault in M7 */
-        M7__A7_MCM.FCCU_SW_FAULTS.R |= ( 1UL << u8BitIdx );
-    }
+    eMcem_Vfccu_Specific_AssertSWFault( u8SWRegIdx, u8BitIdx );
 }
 
 /**
 * @brief      Deassert software VFCCU fault.
 * @details    Clears the software fault on the corresponding reaction line.
 *
-* @param[in]  nFaultId      ID of the SW fault that shall be deasserted.
+* @param[in]  u8SwFaultId      ID of the SW fault that shall be deasserted.
 *
 * @return     void
 *
 */
 void eMcem_Vfccu_DeassertSWFault( uint8 u8SwFaultId )
 {
+    /* Get SW fault register and bit position in SW fault register */
     uint8 u8BitIdx = u8SwFaultId % EMCEM_VFCCU_SW_FAULT_COUNT;
+    uint8 u8SWRegIdx = u8SwFaultId / EMCEM_VFCCU_SW_FAULT_COUNT;
 
-    /* Check if fault is in AON(CM33) range */
-    if( u8SwFaultId < EMCEM_SW_FAULT_OFFSET )
-    {
-        /* Deassert SW fault in M33 */
-        AON__M33_CACHE_CTRL_ECC0__CM33_CACHE_ECC_MCM.FCCU_SW_FAULTS.R &= ~( 1UL << u8BitIdx );
-    }
-    else
-    {
-        /* Deassert SW fault in M7 */
-        M7__A7_MCM.FCCU_SW_FAULTS.R &= ~( 1UL << u8BitIdx );
-    }
+    eMcem_Vfccu_Specific_DeassertSWFault( u8SWRegIdx, u8BitIdx );
 }
 
 #define EMCEM_STOP_SEC_CODE

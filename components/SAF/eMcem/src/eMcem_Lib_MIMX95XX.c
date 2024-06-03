@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2023 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -121,46 +121,6 @@ extern "C"{
 /*==================================================================================================
 *                                      LOCAL CONSTANTS
 ==================================================================================================*/
-#define EMCEM_START_SEC_CONST_UNSPECIFIED
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-#define EMCEM_STOP_SEC_CONST_UNSPECIFIED
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-#define EMCEM_START_SEC_CONST_8
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-#define EMCEM_STOP_SEC_CONST_8
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-
-#define EMCEM_START_SEC_CONST_16
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-#define EMCEM_STOP_SEC_CONST_16
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-#define EMCEM_START_SEC_CONST_32
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
-
-#define EMCEM_STOP_SEC_CONST_32
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
-#include "eMcem_MemMap.h"
 
 
 /*==================================================================================================
@@ -181,6 +141,9 @@ extern "C"{
 /*==================================================================================================
 *                                   LOCAL FUNCTION PROTOTYPES
 ==================================================================================================*/
+#define EMCEM_START_SEC_CODE
+/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
+#include "eMcem_MemMap.h"
 
 
 /*==================================================================================================
@@ -344,9 +307,6 @@ Std_ReturnType eMcem_GetErrors_Int( eMcem_FaultContainerType *pErrorContainer )
     /* Retrieve status of VFCCU faults */
     eMcem_Vfccu_GetErrors( &(pErrorContainer->au32Faults[0]), &eMcem_u32FaultAccumulator );
 
-    /* Retrieve status of VFCCU SW faults */
-    eMcem_Vfccu_GetSWFaults( &(pErrorContainer->au32Faults[0]), &eMcem_u32FaultAccumulator, EMCEM_FCCU_FLT_SWNCF00 );
-
     /* In case error status has been retrieved properly, handle global error flag */
     if( 0UL != eMcem_u32FaultAccumulator )
     {
@@ -390,8 +350,8 @@ Std_ReturnType eMcem_ClearFaults_Int( eMcem_FaultType nFaultId )
 }
 
 #define EMCEM_STOP_SEC_CODE
-/* @violates @ref eMcem_Lib_MIMX95XXXX_c_REF_0410 */
-/* @violates @ref eMcem_Lib_MIMX95XXXX_c_REF_2001 */
+/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_0410 */
+/* @violates @ref eMcem_Lib_MIMX95XX_c_REF_2001 */
 #include "eMcem_MemMap.h"
 
 

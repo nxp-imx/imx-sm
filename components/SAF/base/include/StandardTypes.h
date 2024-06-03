@@ -1,14 +1,14 @@
 /*==================================================================================================
 * Project : MIMX_SAF
 * Platform : CORTEXM
-* Peripheral : IMX95XXM33
+* Peripheral : MIMX9XXM33
 * Dependencies : none
 *
 * Autosar Version : 4.7.0
 * Autosar Revision : ASR_REL_4_7_REV_0000
 * Autosar Conf.Variant :
 * SW Version : 0.4.0
-* Build Version : IMX95_SAF_0_4_0_CD01_20231113
+* Build Version : MIMX9X_SAF_0_4_0
 *
 * Copyright 2016-2023 NXP
 * Detailed license terms of software usage can be found in the license.txt

@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2023 NXP
 *   Detailed license terms of software usage can be found in the license.txt

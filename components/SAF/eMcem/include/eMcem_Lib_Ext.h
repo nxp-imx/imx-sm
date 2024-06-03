@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2012, 2013, 2015 Freescale
 *   Copyright 2017-2024 NXP
@@ -76,7 +76,7 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_LIB_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_LIB_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_LIB_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -112,18 +112,11 @@ extern "C"{
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /*!
- * @name EMCEM SEC events
+* @brief    Macro marking the beginnning of CODE section. This is memory section for code.
  */
-/** @{ */
 #define EMCEM_START_SEC_CODE
-/** @} */
-
 /* @violates @ref eMcem_Lib_Ext_h_REF_0410 */
-
-/* Includes */
 #include "eMcem_MemMap.h"
-
-/* Functions */
 
 /*!
  * @name eMCEM Lib Ext module functions
@@ -222,9 +215,9 @@ Std_ReturnType eMcem_AssertSWFault_Int( eMcem_FaultType nFaultId );
 */
 Std_ReturnType eMcem_DeassertSWFault_Int( eMcem_FaultType nFaultId );
 
-/** @} */
+
 /**
-* @brief    eMCEM stop sec code.
+* @brief    Macro marking the end of CODE section.
 */
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_Lib_Ext_h_REF_0410 */

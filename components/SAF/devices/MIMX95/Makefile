@@ -23,6 +23,7 @@ OBJS += \
 	$(OUT)/eMcem.o  \
 	$(OUT)/eMcem_ExtDiagApi.o  \
 	$(OUT)/eMcem_Vfccu.o  \
+	$(OUT)/eMcem_Vfccu_MIMX95XX.o  \
 	$(OUT)/eMcem_VfccuFaultList_MIMX95XX.o  \
 	$(OUT)/eMcem_Lib_MIMX95XX.o \
 	$(OUT)/eMcem_cVfccu_Irq.o  \

@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -60,23 +60,21 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* Defines */
-
 /*!
- * @name EMCEM config software version
+ * @name eMCEM VFCCU internal function definitions SW version
  */
 /** @{ */
 
 /*!
-* @brief    eMCEM VFCCU SW major version
+* @brief    eMCEM VFCCU internal function definitions - SW major version
 */
 #define EMCEM_VFCCU_SW_MAJOR_VERSION             0
 /*!
-* @brief    eMCEM VFCCU SW minor version
+* @brief    eMCEM VFCCU internal function definitions - SW minor version
 */
 #define EMCEM_VFCCU_SW_MINOR_VERSION             4
 /*!
-* @brief    eMCEM VFCCU SW major version
+* @brief    eMCEM VFCCU internal function definitions - SW patch version
 */
 #define EMCEM_VFCCU_SW_PATCH_VERSION             0
 /** @} */
@@ -84,7 +82,7 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_VFCCU_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_VFCCU_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_VFCCU_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -115,56 +113,62 @@ extern "C"{
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
 /*!
-* @brief    eMCEM start sec unspecified const
+* @brief    Macro marking the beginnning of CONST_UNSPECIFIED section. The memory section is for
+*           constants with undefined size.
 */
 #define EMCEM_START_SEC_CONST_UNSPECIFIED
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM stop sec unspecified const
+* @brief    Macro marking the end of CONST_UNSPECIFIED section.
 */
 #define EMCEM_STOP_SEC_CONST_UNSPECIFIED
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM start sec u08 const
+* @brief    Macro marking the beginnning of CONST_8 section. The memory section for constants of type uint8.
 */
 #define EMCEM_START_SEC_CONST_8
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM stop sec u08 const
+* @brief    Macro marking the end of CONST_8 section.
 */
 #define EMCEM_STOP_SEC_CONST_8
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM start sec u16 const
+* @brief    Macro marking the beginnning of CONST_16 section. The memory section for constants of type uint16.
 */
 #define EMCEM_START_SEC_CONST_16
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM stop sec u16 const
+* @brief Array of offsets between SW fault register
+*/
+extern const uint16 eMcem_Vfccu_au16SwFltRegOffset[(EMCEM_SW_FAULT_REG_COUNT - 1U)];
+
+/*!
+* @brief    Macro marking the end of CONST_16 section.
 */
 #define EMCEM_STOP_SEC_CONST_16
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM start sec u32 const
+* @brief    Macro marking the beginnning of CONST_32 section. The memory section for constants of type uint32.
 */
 #define EMCEM_START_SEC_CONST_32
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief    eMCEM stop sec u32 const
+* @brief    Macro marking the end of CONST_32 section.
 */
 #define EMCEM_STOP_SEC_CONST_32
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
@@ -175,7 +179,7 @@ extern "C"{
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /*!
-* @brief    eMCEM start sec code
+* @brief    Macro marking the beginnning of CODE section. The memory section for code.
 */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */
@@ -193,18 +197,6 @@ extern "C"{
 *
 */
 Std_ReturnType eMcem_Vfccu_Init( const eMcem_ConfigType *pConfigPtr );
-
-/*!
-* @brief      Get SW faults function
-* @details    Function gets status of SW faults and stores this info in the error container.
-*             Some calculations have to Be made to align the SW faults after the status of the rest of VFCCU instance faults
-*
-* @param[out] pFaultContainer    Error container where the errors will be stored
-* @param[out] pFaultAccumulator  Accumulator where all fault bits are aggregated
-* @param[in]  nFaultId           ID of the first SW fault for the given VFCCU
-*
-*/
-void eMcem_Vfccu_GetSWFaults( uint32 pFaultContainer[], uint32 *pFaultAccumulator, eMcem_FaultType nFaultId );
 
 /*!
 * @brief      Get errors function
@@ -274,7 +266,7 @@ void eMcem_Vfccu_DeassertSWFault( uint8 u8SwFaultId );
 void VFCCU_ALARM_ISR( void );
 
 /*!
-* @brief    eMCEM stop sec code
+* @brief    Macro marking the end of CODE section.
 */
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_Vfccu_h_REF_0410 */

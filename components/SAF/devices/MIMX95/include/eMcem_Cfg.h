@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -154,9 +154,9 @@ typedef struct
  */
 typedef struct
 {
-    const uint32                            u8EoutTimerDisabled; /*!< Eout timer disabled */
+    const uint32                            u32EoutTimerDisabled; /*!< Eout timer disabled */
     const uint32                            u32EoutPin[EMCEM_EOUT_PIN_COUNT]; /*!< Control mode, InvertInput, InputBufferEnabled, OutputBufferEnableValid */
-    const uint32                            u8EoutOperatingMode[EMCEM_EOUT_PIN_COUNT]; /*!< Invert EOUT signaling, operating mode */
+    const uint32                            u32EoutOperatingMode[EMCEM_EOUT_PIN_COUNT]; /*!< Invert EOUT signaling, operating mode */
 } eMcem_EoutCfgType;
 
 /*!

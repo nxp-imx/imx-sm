@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -46,23 +46,21 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* Defines */
-
 /*!
- * @name EMCEM config software version
+ * @name EMCEM MIMX95XX-specific data type definitions SW version
  */
 /** @{ */
 
 /*!
-* @brief    eMCEM TYPES MIMX95XX SW major version
+* @brief    eMCEM MIMX95XX-specific data type definitions - SW major version
 */
 #define EMCEM_TYPES_MIMX95XX_SW_MAJOR_VERSION             0
 /*!
-* @brief   eMCEM TYPES MIMX95XX SW minor version.
+* @brief    eMCEM MIMX95XX-specific data type definitions - SW minor version
 */
 #define EMCEM_TYPES_MIMX95XX_SW_MINOR_VERSION             4
 /*!
-* @brief    eMCEM TYPES MIMX95XX SW patch version.
+* @brief    eMCEM MIMX95XX-specific data type definitions - SW patch version
 */
 #define EMCEM_TYPES_MIMX95XX_SW_PATCH_VERSION             0
 /** @} */
@@ -70,13 +68,14 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_TYPES_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_TYPES_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_TYPES_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
     #error "Software Version Numbers of eMcem_Types_MIMX95XX.h and MIMX_SAF version are different"
 #endif
 
+#if defined(SAFETY_BASE_MIMX95XX)
 /*==================================================================================================
 *                                          CONSTANTS
 ==================================================================================================*/
@@ -98,7 +97,7 @@ extern "C"{
 /*!
 * @brief   SW fault line offsets per VFCCU instance.
 */
-#define EMCEM_VFCCU_SW_FAULT_LINE_OFFSET        (66U)
+#define EMCEM_VFCCU_SW_FAULT_LINE_OFFSET        (EMCEM_FCCU_FLT_SWNCF00)
 
 /*!
 * @brief Shift used to access fault container slot
@@ -168,7 +167,7 @@ extern "C"{
 #define EMCEM_CVFCCU_FAULT_RECOVERY_REG_COUNT   (3U)
 
 /*!
-* @brief   Number of SW fault lines per VFCCU.
+* @brief   Number of SW fault lines per MIX.
 */
 #define EMCEM_VFCCU_SW_FAULT_COUNT              (6U)
 
@@ -180,12 +179,12 @@ extern "C"{
 /*!
 * @brief   Number of fields in Fault Reaction Set Configuration (FHFLTRKC) register.
 */
-#define EMCEM_VFCCU_FHFLTRKC_FIELDS_COUNT       (20U)
+#define EMCEM_VFCCU_FHFLTRKC_FIELDS_COUNT       (4U)
 
 /*!
 * @brief  FHFLTRKC bit offset between fields.
 */
-#define EMCEM_VFCCU_FHFLTRKC_FIELDS_OFFSET      (4U)
+#define EMCEM_VFCCU_FHFLTRKC_FIELDS_OFFSET      (8U)
 
 /*!
 * @brief  FHFLTRKC one field bit mask.
@@ -205,7 +204,7 @@ extern "C"{
 /*!
 * @brief  EOUT GEOUTPNC register masks.
 */
-#define EMCEM_EOUT_GEOUTPNC_MASK                (0x00000531UL)
+#define EMCEM_EOUT_GEOUTPNC_MASK                (0xFFFF0531UL)
 
 /*!
 * @brief  EOUT GEOUTMC register masks.
@@ -260,6 +259,8 @@ typedef uint32 eMcem_FaultArrayContainerType[EMCEM_VFCCU_ERROR_CONTAINER_SIZE];
 /*==================================================================================================
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
+
+#endif /* defined(SAFETY_BASE_MIMX95XX) */
 
 #ifdef __cplusplus
 }

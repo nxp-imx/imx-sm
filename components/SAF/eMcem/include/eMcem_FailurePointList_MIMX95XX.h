@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -50,7 +50,6 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-/* Includes */
 #include "MIMX_SAF_Version.h"
 #include "Std_Types.h"
 #include "eMcem_Cfg.h"
@@ -58,12 +57,17 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/*!
+ * @name EMCEM external diagnostic failure point definition SW version
+ */
+/** @{ */
+
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0501 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0502 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0505 */
 /*!
-* @brief    eMCEM failure point list software major version.
+* @brief    eMCEM external diagnostic failure point list - SW major version.
 */
 #define EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MAJOR_VERSION             0
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0501 */
@@ -71,7 +75,7 @@ extern "C"{
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0505 */
 /*!
-* @brief    eMCEM failure point list software minor version.
+* @brief    eMCEM external diagnostic failure point list - SW minor version.
 */
 #define EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MINOR_VERSION             4
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0501 */
@@ -79,14 +83,14 @@ extern "C"{
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_MIMX95XX_h_REF_0505 */
 /*!
-* @brief    eMCEM failure point list software patch version.
+* @brief    eMCEM external diagnostic failure point list - SW patch version.
 */
 #define EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_PATCH_VERSION             0
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_FAILUREPOINTLIST_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -160,18 +164,6 @@ typedef enum
     EMCEM_FP_VFCCU_IS_FHID_ENABLED,
     EMCEM_FP_VFCCU_ALARM_ISR_1,
     EMCEM_FP_VFCCU_ALARM_ISR_2,
-    EMCEM_FP_IPC_PROCESS_MESSAGE,
-    EMCEM_FP_IPC_TRANSMIT_ACK,
-    EMCEM_FP_IPC_VALIDATE_MESSAGE_STRUCT_1,
-    EMCEM_FP_IPC_VALIDATE_MESSAGE_STRUCT_2,
-    EMCEM_FP_IPC_INITIATE_TRANSMIT,
-    EMCEM_FP_IPC_IS_IDLE,
-    EMCEM_FP_IPC_IS_SLAVE,
-    EMCEM_FP_IPC_VALIDATE_RX_MESSAGE,
-    EMCEM_FP_IPC_TRANSMIT_MESSAGE,
-    EMCEM_FP_IPC_RX_CALLBACK_1,
-    EMCEM_FP_IPC_RX_CALLBACK_2,
-    EMCEM_FP_IPC_INIT
 } eMcem_FailurePointType;
 
 /*==================================================================================================

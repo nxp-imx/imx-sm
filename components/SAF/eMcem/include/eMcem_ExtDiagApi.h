@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2019-2020, 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -62,12 +62,17 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/*!
+ * @name eMCEM external diagnostic API SW version
+ */
+/** @{ */
+
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0501 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0502 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0505 */
 /**
-* @brief    eMCEM extended diagnostic API SW major version
+* @brief    eMCEM extended diagnostic API - SW major version
 */
 #define EMCEM_EXTDIAGAPI_SW_MAJOR_VERSION             0
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0501 */
@@ -75,7 +80,7 @@ extern "C"{
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0505 */
 /**
-* @brief    eMCEM extended diagnostic API SW minor version
+* @brief    eMCEM extended diagnostic API - SW minor version
 */
 #define EMCEM_EXTDIAGAPI_SW_MINOR_VERSION             4
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0501 */
@@ -83,14 +88,15 @@ extern "C"{
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0505 */
 /**
-* @brief    eMCEM extended diagnostic API SW patch version
+* @brief    eMCEM extended diagnostic API - SW patch version
 */
 #define EMCEM_EXTDIAGAPI_SW_PATCH_VERSION             0
+/** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_EXTDIAGAPI_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_EXTDIAGAPI_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_EXTDIAGAPI_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -111,24 +117,19 @@ extern "C"{
 #define EMCEM_DIAG_STORE_FAILURE_POINT( retVal, fpId, loopId ) \
     eMcem_StoreFailurePoint( retVal, fpId, loopId );
 /**
-* @brief    eMCEM diagnostic store failure point register data.
+* @brief    Store register data clarifying the failure point. Calls eMcem_StoreFailurePointRegisterData().
 */
 #define EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( retVal, regVal ) \
     eMcem_StoreFailurePointRegisterData( retVal, regVal );
 /**
-* @brief    eMCEM diagnostic clear data.
+* @brief    Clear extended diagnostic data struct. Calls eMcem_ClearExtDiagData().
 */
 #define EMCEM_DIAG_CLEAR_DATA() \
     eMcem_ClearExtDiagData();
 #else
-/*!
- * @name eMCEM config software version
- */
-/** @{ */
 #define EMCEM_DIAG_STORE_FAILURE_POINT( retVal, fpId, loopId )
 #define EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( retVal, regVal )
 #define EMCEM_DIAG_CLEAR_DATA()
-/** @} */
 #endif
 
 #if( STD_ON == EMCEM_EXT_DIAG_ENABLED )
@@ -150,7 +151,9 @@ extern "C"{
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0505 */
 /**
-* @brief    eMCEM start sec variable.
+* @brief    Macro marking the beginnning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
+*           for variables, structures, arrays, when the SIZE (alignment) does not fit the criteria
+*           of 8, 16 or 32 bit. These variables are not initialized with values after every reset.
 */
 #define EMCEM_START_SEC_VAR_NO_INIT_UNSPECIFIED
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0410 */
@@ -166,7 +169,7 @@ extern eMcem_ExtDiagDataType eMcem_ExtDiagData;
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0505 */
 /**
-* @brief    eMCEM stop sec variable.
+* @brief    Macro marking the end of VAR_NO_INIT_UNSPECIFIED section.
 */
 #define EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0410 */
@@ -176,7 +179,7 @@ extern eMcem_ExtDiagDataType eMcem_ExtDiagData;
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /**
-* @brief    eMCEM start sec code.
+* @brief    Macro marking the beginnning of CODE section. This is memory section for code.
 */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0410 */
@@ -193,7 +196,6 @@ extern eMcem_ExtDiagDataType eMcem_ExtDiagData;
 *
 */
 void eMcem_StoreFailurePoint( Std_ReturnType retVal, eMcem_FailurePointType fpId, uint8 loopId );
-
 
 /**
 * @brief        Backup register data
@@ -213,7 +215,7 @@ void eMcem_StoreFailurePointRegisterData( Std_ReturnType retVal, uint32 regVal )
 void eMcem_ClearExtDiagData( void );
 
 /**
-* @brief    eMCEM stop sec code.
+* @brief    Macro marking the end of CODE section.
 */
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0410 */

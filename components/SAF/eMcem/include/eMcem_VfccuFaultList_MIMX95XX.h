@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2018-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -56,14 +56,17 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
+/*!
+ * @name EMCEM VFCCU fault list definition SW version
+ */
+/** @{ */
+
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0501 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0502 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0505 */
-
-/* Defines */
 /*!
-* @brief    eMCEM VFCCU FAULT LIST_MIMX95XX SW major version
+* @brief    eMCEM VFCCU fault list for MIMX95XX - SW major version
 */
 #define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MAJOR_VERSION             0
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0501 */
@@ -71,7 +74,7 @@ extern "C"{
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0505 */
 /*!
-* @brief    eMCEM VFCCU FAULT LIST_MIMX95XX SW minor version
+* @brief    eMCEM VFCCU fault list for MIMX95XX - SW minor version
 */
 #define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION             4
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0501 */
@@ -79,7 +82,7 @@ extern "C"{
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0504 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0505 */
 /*!
-* @brief    eMCEM VFCCU FAULT LIST_MIMX95XX SW patch version
+* @brief    eMCEM VFCCU fault list for MIMX95XX - SW patch version
 */
 #define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION             0
 
@@ -87,13 +90,14 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
     #error "Software Version Numbers of eMcem_VfccuFaultList_MIMX95XX.h and MIMX_SAF version are different"
 #endif
 
+#if defined(SAFETY_BASE_MIMX95XX)
 /*==================================================================================================
 *                                          CONSTANTS
 ==================================================================================================*/
@@ -370,7 +374,7 @@ extern "C"{
 /*!
 * @brief   NCF[65] Parity fault from all parity gaskets and Safety relevant SSIs in WAKEUPMIX
 */
-#define EMCEM_FCCU_FLT_PARITY_WAKEUPMIX                  (65U)/*  */
+#define EMCEM_FCCU_FLT_PARITY_WAKEUPMIX                  (65U)
 /*!
 * @brief   NCF[66] Parity fault from all parity gaskets and Safety relevant SSIs in NOCMIX
 */
@@ -378,7 +382,7 @@ extern "C"{
 /*!
 * @brief   NCF[67] Parity fault from all parity gaskets and Safety relevant SSIs in M7MIX
 */
-#define EMCEM_FCCU_FLT_PARITY_M7MIX                      (67U)/*  */
+#define EMCEM_FCCU_FLT_PARITY_M7MIX                      (67U)
 /*!
 * @brief   NCF[68] Parity fault from all parity gaskets and Safety relevant SSIs in DDRMIX
 */
@@ -447,21 +451,13 @@ extern "C"{
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
-/*!
-* @brief   eMCEM start sec
-*/
-#define EMCEM_START_SEC_CONST_32
-#include "eMcem_MemMap.h"
 
-/*!
-* @brief   eMCEM stop sec
-*/
-#define EMCEM_STOP_SEC_CONST_32
-#include "eMcem_MemMap.h"
 
 /*==================================================================================================
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
+
+#endif /* defined(SAFETY_BASE_MIMX95XX) */
 
 #ifdef __cplusplus
 }

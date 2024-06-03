@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2012-2016 Freescale
 *   Copyright 2016-2024 NXP
@@ -60,22 +60,21 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* Defines */
 /*!
- * @name EMCEM config software version
+ * @name Overall eMCEM SW version
  */
 /** @{ */
 
 /*!
-* @brief    eMCEM SW major version
+* @brief    Overall eMCEM - SW major version
 */
 #define EMCEM_SW_MAJOR_VERSION             0
 /*!
-* @brief   eMCEM SW minor version.
+* @brief    Overall eMCEM - SW minor version.
 */
 #define EMCEM_SW_MINOR_VERSION             4
 /*!
-* @brief    eMCEM SW patch version.
+* @brief    Overall eMCEM - SW patch version
 */
 #define EMCEM_SW_PATCH_VERSION             0
 /** @} */
@@ -83,7 +82,7 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -146,7 +145,9 @@ extern "C"{
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
 /**
-* @brief    eMCEM start sec variable zero init.
+* @brief    Macro marking the beginnning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
+*           for variables, structures, arrays, when the SIZE (alignment) does not fit the criteria
+*           of 8, 16 or 32 bit. These variables are not initialized with values after every reset.
 */
 #define EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED
 /* @violates @ref eMcem_h_REF_0410 */
@@ -157,8 +158,9 @@ extern "C"{
 * @details        The eMCEM driver changes state during start-up or runtime from EMCEM_S_UINIT to EMCEM_S_INITIALIZED.
 */
 extern eMcem_StateType eMcem_DriverState;
+
 /**
-* @brief    eMCEM stop sec variable zero init.
+* @brief    Macro marking the end of VAR_ZERO_INIT_UNSPECIFIED.
 */
 #define EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
 /* @violates @ref eMcem_h_REF_0410 */
@@ -168,7 +170,7 @@ extern eMcem_StateType eMcem_DriverState;
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /**
-* @brief    eMCEM start sec code.
+* @brief    Macro marking the beginnning of CODE section. This is memory section for code.
 */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_h_REF_0410 */
@@ -316,7 +318,7 @@ Std_ReturnType eMcem_DeassertSWFault( eMcem_FaultType nFaultId );
 void eMcem_GetExtDiagData( eMcem_ExtDiagDataType *pExtDiagData );
 #endif
 /**
-* @brief    eMCEM stop sec code.
+* @brief    Macro marking the end of CODE section.
 */
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_h_REF_0410 */

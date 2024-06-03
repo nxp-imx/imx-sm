@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -117,6 +117,7 @@ extern "C"{
 *                                      LOCAL VARIABLES
 ==================================================================================================*/
 
+
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
 ==================================================================================================*/
@@ -201,8 +202,8 @@ static uint8 eMcem_Vfccu_GetMaxBitPosition( uint8 u8RegIdx )
     uint8 u8ReturnValue = EMCEM_VFCCU_REG_SIZE_U8;
     uint16 u16NumberOfFaults;
 
-    /* Get faults line count by getting SW faults offset minus faults line offset */
-    u16NumberOfFaults = EMCEM_VFCCU_SW_FAULT_LINE_OFFSET - EMCEM_VFCCU_FAULT_LINE_OFFSET;
+    /* Get faults line count by getting all faults  */
+    u16NumberOfFaults = EMCEM_CVFCCU_MAX_FAULTS;
 
     /* Check if we hit u8RegIdx, if yes, it means register is not full -> supply remainder as max bit position.
      * u8RegIdx will always give us number of register for faults given. Edge cases:
@@ -242,21 +243,8 @@ static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx )
 
     for( u8RegIdx = 0U; u8RegIdx < EMCEM_VFCCU_FAULT_STATUS_REG_COUNT; u8RegIdx++ )
     {
-        if (u8RegIdx == 0U)
-        {
-                u32FaultRegStatus = AON__FCCU.FHFLTS0_0.R;
-                u32FaultEnableReg = AON__FCCU.FHFLTENC0_0.R;
-        }
-        else if (u8RegIdx == 1U)
-        {
-                u32FaultRegStatus = AON__FCCU.FHFLTS0_1.R;
-                u32FaultEnableReg = AON__FCCU.FHFLTENC0_1.R;
-        }
-        else
-        {
-                u32FaultRegStatus = AON__FCCU.FHFLTS0_2.R;
-                u32FaultEnableReg = AON__FCCU.FHFLTENC0_2.R;
-        }
+        u32FaultRegStatus = AON_VFCCU.FHFLTS[u8RegIdx].R;
+        u32FaultEnableReg = AON_VFCCU.FHFLTENC[u8RegIdx].R;
 
         /* get max bits to check (like masking out reserved bits) */
         u8BitPositionMax = eMcem_Vfccu_GetMaxBitPosition( u8RegIdx );
@@ -272,12 +260,12 @@ static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx )
                 if( 0UL < ( u32FaultRegStatus & u32IEMask & u32FaultEnableReg) )
                 {
                     /* Calculate local nFaultId */
-                    nFaultId = (uint16)(( (uint16)( u8RegIdx ) * (uint16) EMCEM_VFCCU_REG_SIZE_U8 ) + (uint16)(u8BitPosition));
+                    nFaultId = (uint16)(( (uint16)u8RegIdx * (uint16)EMCEM_VFCCU_REG_SIZE_U8 ) + (uint16)u8BitPosition);
 
                     /* Calculate global nFaultId */
                     nFaultId += EMCEM_VFCCU_FAULT_LINE_OFFSET;
 
-		            nReturnValue |= eMcem_Vfccu_ProcessFhidFault( nFaultId, u8VfccuIdx );
+                    nReturnValue |= eMcem_Vfccu_ProcessFhidFault( nFaultId, u8VfccuIdx );
                 }
             }
         }
@@ -342,26 +330,18 @@ static void eMcem_Vfccu_ClearCvfccuFhidFault( eMcem_FaultType nFaultId )
     /* Check if write access to FH is enabled */
     if( (boolean)TRUE == (boolean)eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
     {
-        if (u8RegIdx == 0U)
-        {
-            AON__FCCU.FHFLTS0_0.R |= (uint32)( 1UL << ((uint32)u8BitIdx & 0x1FUL) );
-        }
-        else if (u8RegIdx == 1U)
-        {
-            AON__FCCU.FHFLTS0_1.R |= (uint32)( 1UL << ((uint32)u8BitIdx & 0x1FUL) );
-        }
-        else
-        {
-            AON__FCCU.FHFLTS0_2.R |= (uint32)( 1UL << ((uint32)u8BitIdx & 0xFUL) );
-        }
+        AON_VFCCU.FHFLTS[u8RegIdx].R |= (uint32)( 1UL << (uint32)u8BitIdx );
     }
-	else
-	{
+    else
+    {
         ; /* Intentional empty else */
-	}
-    	/* No need to call MRU since this should be called only in SysMan which has access to CVFCCU */
+    }
+        /* No need to call MRU since this should be called only in SysMan which has access to CVFCCU */
 }
 
+/*==================================================================================================
+*                                       GLOBAL FUNCTIONS
+==================================================================================================*/
 /**
 * @brief      Processing VFCCU Faults
 * @details    Function processes faults upon receiving VFCCU interrupt call
@@ -380,7 +360,7 @@ Std_ReturnType eMcem_Vfccu_ProcessFaults( uint8 u8VfccuIdx )
     Std_ReturnType nReturnValue = EMCEM_E_NOT_OK;
 
     /* Check for regular Fault */
-    if( 1U == AON__FCCU.GINTOVFS.B.FLTSERV )
+    if( 1U == AON_VFCCU.GINTOVFS.B.FLTSERV )
     {
         /* Returns EMCEM_E_OK for that specific FHID when clean. */
         nReturnValue = eMcem_Vfccu_ProcessFhid( u8VfccuIdx );
@@ -405,7 +385,7 @@ void VFCCU_ALARM_ISR( void )
     /* Check if driver was initialized */
     if( EMCEM_S_UNINIT != eMcem_DriverState )
     {
-        if( (uint32)(EMCEM_VFCCU_FSM_IDLE) != AON__FCCU.GINTOVFS.B.FSMSTATE )
+        if( (uint32)EMCEM_VFCCU_FSM_IDLE != AON_VFCCU.GINTOVFS.B.FSMSTATE )
         {
             (void) eMcem_Vfccu_ProcessFaults( EMCEM_C_VFCCU_IDX );
         }

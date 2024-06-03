@@ -1,6 +1,6 @@
 /**
 *   @file    typedefs.h
-*   @version 0.8.1
+*   @version 0.4.0
 *
 *   @brief MIMX_SAF Demo - Typedefs file.
 *   @details This file defines all of the data types for the Motorola header file.
@@ -15,7 +15,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2003 MOTOROLA
 *   Copyright 2019-2021, 2023 NXP
@@ -61,7 +61,7 @@
     typedef unsigned int uint32_t;
     typedef volatile signed int vint32_t;
     typedef volatile unsigned int vuint32_t;
-	typedef volatile signed long long vint64_t;
+    typedef volatile signed long long vint64_t;
     typedef volatile unsigned long long vuint64_t;
 
 #endif

@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2017-2023 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -77,7 +77,7 @@ extern "C"{
 /**
  * @brief Specifies PMIC type used together with the device.
  */
-#define SAFETY_BASE_PMIC_PF09		         1
+#define SAFETY_BASE_PMIC_PF09               1
 
 #ifndef SAFETY_BASE_PMIC_VR55XX
 #define SAFETY_BASE_PMIC_VR55XX             0

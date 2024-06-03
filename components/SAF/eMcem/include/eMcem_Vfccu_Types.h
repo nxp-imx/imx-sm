@@ -13,7 +13,7 @@
 *   Platform             : CORTEXM
 *
 *   SW Version           : 0.4.0
-*   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
+*   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -44,22 +44,21 @@ extern "C"{
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* Defines */
 /*!
- * @name EMCEM config software version
+ * @name eMCEM VFCCU data type definitions SW version
  */
 /** @{ */
 
 /*!
-* @brief    eMCEM VFCCU TYPES SW major version
+* @brief    eMCEM VFCCU data type definitions - SW major version
 */
 #define EMCEM_VFCCU_TYPES_SW_MAJOR_VERSION             0
 /*!
-* @brief    eMCEM VFCCU TYPES SW minor version
+* @brief    eMCEM VFCCU data type definitions - SW minor version
 */
 #define EMCEM_VFCCU_TYPES_SW_MINOR_VERSION             4
 /*!
-* @brief    eMCEM VFCCU TYPES SW patch version
+* @brief    eMCEM VFCCU data type definitions - SW patch version
 */
 #define EMCEM_VFCCU_TYPES_SW_PATCH_VERSION             0
 /** @} */
@@ -67,7 +66,7 @@ extern "C"{
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same software version */
+/* Check if current file and MIMX_SAF version header file are of the same software version */
 #if ((EMCEM_VFCCU_TYPES_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
      (EMCEM_VFCCU_TYPES_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
      (EMCEM_VFCCU_TYPES_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
@@ -178,13 +177,6 @@ typedef enum
 *
 */
 typedef eMcem_ErrRecoveryType (*eMcem_FccuHandlerType)( eMcem_FaultType nFaultId );
-
-/*!
-* @brief     Prototype of VFCCU Successful Recovery notification function
-* @details   Function takes one argument which is ID of fault that is being handled.
-*
-*/
-typedef void (*eMcem_SuccessRecNotificationType)( eMcem_FaultType nFaultId );
 
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
