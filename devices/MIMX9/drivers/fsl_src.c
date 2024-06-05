@@ -712,6 +712,7 @@ bool SRC_MixGetResetLine(uint32_t lineIdx, uint32_t *resetType)
     return updateReset;
 }
 
+#ifdef SRC_GEN_SP_ISO_CTRL_COUNT
 /*--------------------------------------------------------------------------*/
 /* Disable isolation for certain PHYs in MIXes                              */
 /*--------------------------------------------------------------------------*/
@@ -728,3 +729,5 @@ void SRC_MixIsolationSetup(uint32_t isoMask, bool enable)
         src->SP_ISO_CTRL &= ~isoMask;
     }
 }
+#endif
+

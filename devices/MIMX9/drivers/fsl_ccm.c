@@ -611,3 +611,59 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting)
     return rc;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Set CCM LPCG control mode(sw direct or cpu LPM)                          */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgModeSet(uint32_t lpcgIdx, uint32_t lpcgMode)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint32_t lpcgAuth = CCM_CTRL->LPCG[lpcgIdx].AUTHEN;
+
+        if (lpcgMode == 0x1)
+        {
+            lpcgAuth |= CCM_LPCG_AUTHEN_CPULPM_MODE_MASK;
+        }
+        else
+        {
+            lpcgAuth &= ~CCM_LPCG_AUTHEN_CPULPM_MODE_MASK;
+        }
+
+        CCM_CTRL->LPCG[lpcgIdx].AUTHEN = lpcgAuth;
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* Set CCM LPCG clock off handshake timeout enable                          */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgTimeoutSetEnable(uint32_t lpcgIdx, bool enable)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint32_t lpcgDirect = CCM_CTRL->LPCG[lpcgIdx].DIRECT;
+
+        if (enable)
+        {
+            lpcgDirect |= CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK;
+        }
+        else
+        {
+            lpcgDirect &= ~CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK;
+        }
+
+        CCM_CTRL->LPCG[lpcgIdx].DIRECT = lpcgDirect;
+
+        rc = true;
+    }
+
+    return rc;
+}

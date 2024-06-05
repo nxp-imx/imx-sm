@@ -923,6 +923,9 @@ typedef struct {
 #define SRC_GEN_COLD_RESET_SSAR_ACK_CTRL_CNT_MODE(x) (((uint32_t)(((uint32_t)(x)) << SRC_GEN_COLD_RESET_SSAR_ACK_CTRL_CNT_MODE_SHIFT)) & SRC_GEN_COLD_RESET_SSAR_ACK_CTRL_CNT_MODE_MASK)
 /*! @} */
 
+/* The count of SRC_GEN_SP_ISO_CTRL */
+#define SRC_GEN_SP_ISO_CTRL_COUNT               (1U)
+
 /*! @name ROM_LP_CTRL - ROM Low Power Control */
 /*! @{ */
 

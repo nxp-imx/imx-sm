@@ -63,7 +63,9 @@ bool SRC_MixIsPwrSwitchOn(uint32_t srcMixIdx);
 bool SRC_MixIsPwrReady(uint32_t srcMixIdx);
 bool SRC_MixSetResetLine(uint32_t lineIdx, uint32_t resetType);
 bool SRC_MixGetResetLine(uint32_t lineIdx, uint32_t *resetType);
+#ifdef SRC_GEN_SP_ISO_CTRL_COUNT
 void SRC_MixIsolationSetup(uint32_t isoMask, bool enable);
+#endif
 
 /* Externs */
 

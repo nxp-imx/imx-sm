@@ -69,6 +69,8 @@ bool CCM_GprSelSetParent(uint32_t gprSelIdx, uint32_t clkIdx);
 bool CCM_GprValSet(uint32_t gprIdx, uint32_t gprMask, uint32_t gprVal);
 bool CCM_LpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t cpuLpmSetting);
 bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting);
+bool CCM_LpcgModeSet(uint32_t lpcgIdx, uint32_t lpcgMode);
+bool CCM_LpcgTimeoutSetEnable(uint32_t lpcgIdx, bool enable);
 
 /* Externs */
 
