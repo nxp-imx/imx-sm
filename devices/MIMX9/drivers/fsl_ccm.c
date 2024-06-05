@@ -622,7 +622,7 @@ bool CCM_LpcgModeSet(uint32_t lpcgIdx, uint32_t lpcgMode)
     {
         uint32_t lpcgAuth = CCM_CTRL->LPCG[lpcgIdx].AUTHEN;
 
-        if (lpcgMode == 0x1)
+        if (lpcgMode == 0x1U)
         {
             lpcgAuth |= CCM_LPCG_AUTHEN_CPULPM_MODE_MASK;
         }
