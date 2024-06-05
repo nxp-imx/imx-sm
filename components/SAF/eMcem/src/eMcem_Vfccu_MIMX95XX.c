@@ -33,6 +33,7 @@ extern "C"{
 #include "MIMX_SAF_Version.h"
 #include "eMcem_Types_Ext.h"
 #include "SafetyBase.h"
+#include "eMcem_Vfccu_MIMX95XX.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION

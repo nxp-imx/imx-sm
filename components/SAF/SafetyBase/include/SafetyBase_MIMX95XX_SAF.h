@@ -26657,7 +26657,7 @@ struct SAFETYBASE_VFCCU_tag {
   uint8_t AON_FCCU_reserved11[52];
   SAFETYBASE_VFCCU_FHFLTRKC_tag FHFLTRKC[20]; /* Fault Reaction Set Configuration */
   uint8_t AON_FCCU_reserved12[432];
-  SAFETYBASE_VFCCU_FHRKC_tag FHRKC[7]; /* Reaction Configuration */
+  SAFETYBASE_VFCCU_FHRKC_tag FHRKC[8]; /* Reaction Configuration */
 };
 
 /* ============================================================================
