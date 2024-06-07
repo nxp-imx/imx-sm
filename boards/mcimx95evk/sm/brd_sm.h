@@ -54,6 +54,7 @@
 #include "brd_sm_control.h"
 #include "brd_sm_sensor.h"
 #include "brd_sm_voltage.h"
+#include "brd_sm_bbm.h"
 #include "board.h"
 #include "brd_sm_api.h"
 

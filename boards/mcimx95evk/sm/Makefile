@@ -42,7 +42,8 @@ INCLUDE +=  \
 	-I$(BOARD_DIR)/sm \
 	-I$(COMPONENTS_DIR)/pcal6408a  \
 	-I$(COMPONENTS_DIR)/pf09  \
-	-I$(COMPONENTS_DIR)/pf53
+	-I$(COMPONENTS_DIR)/pf53  \
+	-I$(COMPONENTS_DIR)/pca2131
 
 VPATH +=  \
 	$(BRD_SM_API_DIR)  \
@@ -51,7 +52,8 @@ VPATH +=  \
 	$(BOARD_DIR)/sm  \
 	$(COMPONENTS_DIR)/pcal6408a  \
 	$(COMPONENTS_DIR)/pf09  \
-	$(COMPONENTS_DIR)/pf53
+	$(COMPONENTS_DIR)/pf53  \
+	$(COMPONENTS_DIR)/pca2131
 
 OBJS += \
 	$(OUT)/board.o  \
@@ -60,7 +62,9 @@ OBJS += \
 	$(OUT)/brd_sm_control.o  \
 	$(OUT)/brd_sm_sensor.o  \
 	$(OUT)/brd_sm_voltage.o  \
+	$(OUT)/brd_sm_bbm.o  \
 	$(OUT)/fsl_pcal6408a.o  \
 	$(OUT)/fsl_pf09.o  \
-	$(OUT)/fsl_pf53.o
+	$(OUT)/fsl_pf53.o  \
+	$(OUT)/fsl_pca2131.o
 

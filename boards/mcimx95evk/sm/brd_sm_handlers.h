@@ -55,6 +55,7 @@
 #include "fsl_pcal6408a.h"
 #include "fsl_pf09.h"
 #include "fsl_pf53.h"
+#include "fsl_pca2131.h"
 
 /* Defines */
 
@@ -83,8 +84,14 @@ extern PF53_Type pf5301Dev;
 /*! Handle to acces PF5302 */
 extern PF53_Type pf5302Dev;
 
+/*! Handle to acces PCA2131 */
+extern PCA2131_Type pca2131Dev;
+
 /*! Array of dynamic priority info for board IRQs */
 extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
+
+/*! Indicator if bus expander bit[6] is used for the RTC */
+extern bool alarmEnabled;
 
 /* Functions */
 
@@ -94,6 +101,19 @@ extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t BRD_SM_SerialDevicesInit(void);
+
+/*!
+ * Enable/disable bus expander interrupts.
+ *
+ * @param[in]     val      Value to write
+ * @param[in]     mask     Mask of bits to modify
+ *
+ * This function allows a caller to configure the bus expander.
+ * interrupts.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t BRD_SM_BusExpMaskSet(uint8_t val, uint8_t mask);
 
 /*!
  * GPIO 1 interrupt 0 handler.

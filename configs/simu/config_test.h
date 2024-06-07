@@ -166,9 +166,9 @@
     {.testId = TEST_RST, .channel = 0U, .rsrc = DEV_SM_RST_0}, \
     {.testId = TEST_RST, .channel = 3U, .rsrc = DEV_SM_RST_1}, \
     {.testId = TEST_RST, .channel = 5U, .rsrc = DEV_SM_RST_2}, \
-    {.testId = TEST_RTC, .channel = 0U, .rsrc = DEV_SM_RTC_BBM}, \
+    {.testId = TEST_RTC, .channel = 0U, .rsrc = DEV_SM_RTC_BBNSM}, \
     {.testId = TEST_RTC, .channel = 5U, .rsrc = BRD_SM_RTC_PMIC}, \
-    {.testId = TEST_RTC, .channel = 5U, .rsrc = DEV_SM_RTC_BBM}, \
+    {.testId = TEST_RTC, .channel = 5U, .rsrc = DEV_SM_RTC_BBNSM}, \
     {.testId = TEST_SENSOR, .channel = 0U, .rsrc = DEV_SM_SENSOR_0}, \
     {.testId = TEST_SENSOR, .channel = 0U, .rsrc = DEV_SM_SENSOR_1}, \
     {.testId = TEST_SENSOR, .channel = 3U, .rsrc = DEV_SM_SENSOR_0}, \

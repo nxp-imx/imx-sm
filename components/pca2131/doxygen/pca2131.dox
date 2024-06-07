@@ -1,0 +1,14 @@
+
+/*!
+ * @addtogroup components
+ * @{
+ */
+
+/*!
+@defgroup pca2131 PCA2131 Driver
+@brief Component driver for a PCA2131 RTC
+@details Component driver for a PCA2131 RTC.
+*/
+
+/** @} */
+

@@ -70,6 +70,8 @@
 #define SCMI_MSG_BBM_RTC_NOTIFY      0xAU
 /*! Configure BBM button notifications */
 #define SCMI_MSG_BBM_BUTTON_NOTIFY   0xBU
+/*! Get the state of an an RTC */
+#define SCMI_MSG_BBM_RTC_STATE       0xCU
 /*! Read BBM RTC notification events */
 #define SCMI_MSG_BBM_RTC_EVENT       0x0U
 /*! Read BBM button notification event */
@@ -142,6 +144,16 @@
 /** @{ */
 /*! Enable button notifications */
 #define SCMI_BBM_NOTIFY_BUTTON_DETECT(x)  (((x) & 0x1U) << 0U)
+/** @} */
+
+/*!
+ * @name SCMI BBM RTC state flags
+ */
+/** @{ */
+/*! Low battery */
+#define SCMI_BBM_RTC_STATE_BATT_LOW(x)  (((x) & 0x2U) >> 1U)
+/*! State lost and reset */
+#define SCMI_BBM_RTC_STATE_RESET(x)     (((x) & 0x1U) >> 0U)
 /** @} */
 
 /*!
@@ -483,6 +495,39 @@ int32_t SCMI_BbmRtcNotify(uint32_t channel, uint32_t rtcId, uint32_t flags);
  *   button notifications.
  */
 int32_t SCMI_BbmButtonNotify(uint32_t channel, uint32_t flags);
+
+/*!
+ * Get the state of an an RTC.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     rtcId    Identifier of the RTC
+ * @param[out]    state    State of the RTC:<BR>
+ *                         Bits[31:2] Reserved, must be zero.<BR>
+ *                         Bit[1] Battery state:<BR>
+ *                         Set to 1 if battery low.<BR>
+ *                         Set to 0 if battery good.<BR>
+ *                         Bit[0] Time state:<BR>
+ *                         Set to 1 if RTC value reset.<BR>
+ *                         Set to 0 if RTC value retained
+ *
+ * This function allows an agent to get the state of an RTC (if available).
+ * State includes battery state and if the time value has been retained or
+ * reset. Clearing the reset state involves setting the time.
+ *
+ * Access macros:
+ * - ::SCMI_BBM_RTC_STATE_BATT_LOW() - Low battery
+ * - ::SCMI_BBM_RTC_STATE_RESET() - State lost and reset
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the alarm was successfully set.
+ * - ::SCMI_ERR_INVALID_PARAMETERS: if the time is not valid (beyond the
+ *   range of the RTC alarm).
+ * - ::SCMI_ERR_DENIED: if the agent does not have permission to set the RTC
+ *   alarm.
+ */
+int32_t SCMI_BbmRtcState(uint32_t channel, uint32_t rtcId, uint32_t *state);
 
 /*!
  * Negotiate the protocol version.

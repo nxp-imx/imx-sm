@@ -130,6 +130,7 @@ and some of the optional messages are supported.
 | Bbm | 0x81 | [BBM_BUTTON_GET](@ref SCMI_PROTO_BBM_BBM_BUTTON_GET) | 0x9 |  |
 | Bbm | 0x81 | [BBM_RTC_NOTIFY](@ref SCMI_PROTO_BBM_BBM_RTC_NOTIFY) | 0xA | NOTIFY |
 | Bbm | 0x81 | [BBM_BUTTON_NOTIFY](@ref SCMI_PROTO_BBM_BBM_BUTTON_NOTIFY) | 0xB | NOTIFY |
+| Bbm | 0x81 | [BBM_RTC_STATE](@ref SCMI_PROTO_BBM_BBM_RTC_STATE) | 0xC |  |
 | Bbm | 0x81 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_BBM_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Bbm\n(notification) | 0x81 | [BBM_RTC_EVENT](@ref SCMI_PROTO_BBM_BBM_RTC_EVENT) | 0x0 |  |
 | Bbm\n(notification) | 0x81 | [BBM_BUTTON_EVENT](@ref SCMI_PROTO_BBM_BBM_BUTTON_EVENT) | 0x1 |  |
@@ -2442,6 +2443,26 @@ See SCMI_BbmButtonNotify() for details.
     | uint32         | header (type=0, proto=0x81, msg=0xB                          |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Bbm: BBM_RTC_STATE ## {#SCMI_PROTO_BBM_BBM_RTC_STATE}
+
+See SCMI_BbmRtcState() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x81, msg=0xC                          |
+    ---------------------------------------------------------------------------------
+    | uint32         | rtc_id                                                       |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x81, msg=0xC                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | state                                                        |
     ---------------------------------------------------------------------------------
 
 ## Bbm: NEGOTIATE_PROTOCOL_VERSION ## {#SCMI_PROTO_BBM_NEGOTIATE_PROTOCOL_VERSION}

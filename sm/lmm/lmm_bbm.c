@@ -132,6 +132,15 @@ int32_t LMM_BbmRtcTimeGet(uint32_t lmId, uint32_t rtcId, uint64_t *val,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get BBM RTC state                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_BbmRtcStateGet(uint32_t lmId, uint32_t rtcId, uint32_t *state)
+{
+    /* Just passthru to board/device */
+    return SM_BBMRTCSTATEGET(rtcId, state);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set BBM RTC alarm                                                        */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_BbmRtcAlarmSet(uint32_t lmId, uint32_t rtcId, bool enable,

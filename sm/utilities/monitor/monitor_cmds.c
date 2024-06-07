@@ -2085,9 +2085,28 @@ static int32_t MONITOR_CmdBbRtc(int32_t argc, const char * const argv[],
 
             if (status == SM_ERR_SUCCESS)
             {
-                printf("%03u: %*s = %u seconds\n", rtcId, -wName,
+                uint32_t state = 0U;
+
+                printf("%03u: %*s = %u seconds", rtcId, -wName,
                     rtcName, SM_UINT64_L(sec));
+
+                status = LMM_BbmRtcStateGet(s_lm, rtcId, &state);
+
+                if (status == SM_ERR_SUCCESS)
+                {
+                    if ((state & LMM_BBM_STATE_RESET) != 0U)
+                    {
+                        printf (" (reset)");
+                    }
+                    if ((state & LMM_BBM_STATE_BATT_LOW) != 0U)
+                    {
+                        printf (" (batt)");
+                    }
+                }
+
+                printf ("\n");
             }
+            status = SM_ERR_SUCCESS;
         }
     }
     else
@@ -2148,6 +2167,7 @@ static int32_t MONITOR_CmdBbTicks(int32_t argc, const char * const argv[],
                 printf("%03u: %*s = %u ticks\n", rtcId, -wName,
                     rtcName, SM_UINT64_L(ticks));
             }
+            status = SM_ERR_SUCCESS;
         }
     }
     else

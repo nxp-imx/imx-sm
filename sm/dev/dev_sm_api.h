@@ -465,6 +465,11 @@
 #define SM_BBMRTCTIMEGET        DEV_SM_BbmRtcTimeGet
 #endif
 
+#ifndef SM_BBMRTCSTATEGET
+/*! Redirector (device/board) to get the BBM RTC state */
+#define SM_BBMRTCSTATEGET       DEV_SM_BbmRtcStateGet
+#endif
+
 #ifndef SM_BBMRTCALARMSET
 /*! Redirector (device/board) to set the BBM RTC alarm */
 #define SM_BBMRTCALARMSET       DEV_SM_BbmRtcAlarmSet

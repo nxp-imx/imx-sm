@@ -133,7 +133,7 @@ int32_t DEV_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
 
     static string const s_name[DEV_SM_NUM_RTC] =
     {
-        [DEV_SM_RTC_BBM] = "bbm"
+        [DEV_SM_RTC_BBNSM] = "bbnsm"
     };
 
     /* Get max string width */
@@ -210,6 +210,20 @@ int32_t DEV_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
         /* Get seconds */
         *val = s_ticks >> 15U;
     }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get BBM RTC state                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Default state */
+    *state = 0U;
 
     /* Return status */
     return status;
@@ -295,14 +309,14 @@ void DEV_SM_BbmHandler(void)
         if (s_rolloverEnable)
         {
             s_rolloverEnable = false;
-            LMM_BbmRtcRolloverEvent(DEV_SM_RTC_BBM);
+            LMM_BbmRtcRolloverEvent(DEV_SM_RTC_BBNSM);
         }
     }
 
     /* Check alarm */
     if (s_alarmEnable && (s_ticks >= s_alarm))
     {
-        LMM_BbmRtcAlarmEvent(DEV_SM_RTC_BBM);
+        LMM_BbmRtcAlarmEvent(DEV_SM_RTC_BBNSM);
     }
 
     /* Toggle button */

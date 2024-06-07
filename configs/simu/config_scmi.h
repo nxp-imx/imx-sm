@@ -188,7 +188,7 @@
         .pinPerms[DEV_SM_PIN_0] = SM_SCMI_PERM_ALL, \
         .rstPerms[DEV_SM_RST_2] = SM_SCMI_PERM_ALL, \
         .rtcPerms[BRD_SM_RTC_PMIC] = SM_SCMI_PERM_ALL, \
-        .rtcPerms[DEV_SM_RTC_BBM] = SM_SCMI_PERM_ALL, \
+        .rtcPerms[DEV_SM_RTC_BBNSM] = SM_SCMI_PERM_ALL, \
         .sensorPerms[BRD_SM_SENSOR_0] = SM_SCMI_PERM_ALL, \
         .voltPerms[DEV_SM_VOLT_2] = SM_SCMI_PERM_ALL, \
     }

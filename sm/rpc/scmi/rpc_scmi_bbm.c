@@ -60,8 +60,9 @@
 #define COMMAND_BBM_BUTTON_GET               0x9U
 #define COMMAND_BBM_RTC_NOTIFY               0xAU
 #define COMMAND_BBM_BUTTON_NOTIFY            0xBU
+#define COMMAND_BBM_RTC_STATE                0xCU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x10FFFUL
+#define COMMAND_SUPPORTED_MASK               0x11FFFUL
 
 /* SCMI BBM max argument lengths */
 #define BBM_MAX_NAME  16U
@@ -90,6 +91,10 @@
 
 /* SCMI BBM button notification flags */
 #define BBM_NOTIFY_BUTTON_DETECT(x)  (((x) & 0x1U) >> 0U)
+
+/* SCMI BBM RTC state flags */
+#define BBM_RTC_STATE_BATT_LOW(x)  (((x) & 0x1U) << 1U)
+#define BBM_RTC_STATE_RESET(x)     (((x) & 0x1U) << 0U)
 
 /* SCMI BBM RTC event flags */
 #define BBM_EVENT_RTC_ID(x)        (((x) & 0xFFU) << 24U)
@@ -285,6 +290,26 @@ typedef struct
     uint32_t flags;
 } msg_rbbm11_t;
 
+/* Request type for BbmRtcState() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier of the RTC */
+    uint32_t rtcId;
+} msg_rbbm12_t;
+
+/* Response type for BbmRtcState() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* State of the RTC */
+    uint32_t state;
+} msg_tbbm12_t;
+
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
 {
@@ -338,6 +363,8 @@ static int32_t BbmRtcNotify(const scmi_caller_t *caller,
     const msg_rbbm10_t *in, const scmi_msg_status_t *out);
 static int32_t BbmButtonNotify(const scmi_caller_t *caller,
     const msg_rbbm11_t *in, const scmi_msg_status_t *out);
+static int32_t BbmRtcState(const scmi_caller_t *caller,
+    const msg_rbbm12_t *in, msg_tbbm12_t *out);
 static int32_t BbmNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rbbm16_t *in, const scmi_msg_status_t *out);
 static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
@@ -424,6 +451,11 @@ int32_t RPC_SCMI_BbmDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(const scmi_msg_status_t);
             status = BbmButtonNotify(caller, (const msg_rbbm11_t*) in,
                 (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_BBM_RTC_STATE:
+            lenOut = sizeof(msg_tbbm12_t);
+            status = BbmRtcState(caller, (const msg_rbbm12_t*) in,
+                (msg_tbbm12_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
@@ -1193,6 +1225,63 @@ static int32_t BbmButtonNotify(const scmi_caller_t *caller,
     {
         s_buttonNotify[caller->agentId]
             = (BBM_NOTIFY_BUTTON_DETECT(in->flags) != 0U);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the state of an an RTC                                               */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->rtcId: Identifier of the RTC                                       */
+/* - out->state: State of the RTC:                                          */
+/*   Bits[31:2] Reserved, must be zero.                                     */
+/*   Bit[1] Battery state:                                                  */
+/*   Set to 1 if battery low.                                               */
+/*   Set to 0 if battery good.                                              */
+/*   Bit[0] Time state:                                                     */
+/*   Set to 1 if RTC value reset.                                           */
+/*   Set to 0 if RTC value retained                                         */
+/*                                                                          */
+/* Process the BBM_RTC_STATE message. Platform handler for                  */
+/* SCMI_BbmRtcState().                                                      */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - BBM_RTC_STATE_BATT_LOW() - Low battery                                 */
+/* - BBM_RTC_STATE_RESET() - State lost and reset                           */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the alarm was successfully set.                     */
+/* - SM_ERR_INVALID_PARAMETERS: if the time is not valid (beyond the        */
+/*   range of the RTC alarm).                                               */
+/* - SM_ERR_DENIED: if the agent does not have permission to set the RTC    */
+/*   alarm.                                                                 */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t BbmRtcState(const scmi_caller_t *caller,
+    const msg_rbbm12_t *in, msg_tbbm12_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check RTC */
+    if ((status == SM_ERR_SUCCESS) && (in->rtcId >= SM_NUM_RTC))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Get state */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_BbmRtcStateGet(caller->lmId, in->rtcId, &out->state);
     }
 
     /* Return status */

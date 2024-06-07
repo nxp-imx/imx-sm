@@ -64,6 +64,14 @@
 #define LMM_TRIGGER_PARM_RTC_UPDATE    0x2U  /*!< Trigger RTC updated */
 /** @} */
 
+/*!
+ * @name LMM BBM state parameters
+ */
+/** @{ */
+#define LMM_BBM_STATE_RESET     BIT8(0)  /*!< Time has been reset */
+#define LMM_BBM_STATE_BATT_LOW  BIT8(1)  /*!< Battery is low */
+/** @} */
+
 /* Types */
 
 /* Functions */
@@ -182,6 +190,23 @@ int32_t LMM_BbmRtcTimeSet(uint32_t lmId, uint32_t rtcId, uint64_t val,
  */
 int32_t LMM_BbmRtcTimeGet(uint32_t lmId, uint32_t rtcId, uint64_t *val,
     bool ticks);
+
+/*!
+ * Get an LM RTC state.
+ *
+ * @param[in]     lmId     LM call is for
+ * @param[in]     rtcId    Identifier of the RTC
+ * @param[out]    state    Bit mask of state flags
+ *
+ * This function allows a caller to read the RTC state.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the RTC state was successfully read.
+ * - others returned by ::SM_BBMRTCSTATEGET
+ */
+int32_t LMM_BbmRtcStateGet(uint32_t lmId, uint32_t rtcId, uint32_t *state);
 
 /*!
  * Set an LM RTC alarm.

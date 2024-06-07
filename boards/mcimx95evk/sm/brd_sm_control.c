@@ -183,21 +183,7 @@ int32_t BRD_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags)
 
     if (status == SM_ERR_SUCCESS)
     {
-        static uint8_t cachedMask = PCAL6408A_INITIAL_MASK;
-        uint8_t newMask = (cachedMask & ~mask) | ((uint8_t) val);
-
-        /* Mask changed? */
-        if (cachedMask != newMask)
-        {
-            if (PCAL6408A_IntMaskSet(&pcal6408aDev, newMask))
-            {
-                cachedMask = newMask;
-            }
-            else
-            {
-                status = SM_ERR_HARDWARE_ERROR;
-            }
-        }
+        status = BRD_SM_BusExpMaskSet((uint8_t) val, mask);
     }
 
     return status;
@@ -232,7 +218,8 @@ void BRD_SM_ControlHandler(uint8_t status, uint8_t val)
     }
 
     /* Handle PCIe2 wake */
-    if ((status & BIT8(PCAL6408A_INPUT_PCIE2_WAKE)) != 0U)
+    if (((status & BIT8(PCAL6408A_INPUT_PCIE2_WAKE)) != 0U)
+        && !alarmEnabled)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_PCIE2_WAKE,
             ((data >> PCAL6408A_INPUT_PCIE2_WAKE) & 0x1U) + 1U);

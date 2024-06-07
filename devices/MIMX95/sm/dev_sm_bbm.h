@@ -78,7 +78,7 @@
  * @name Device bbm rtc indexes
  */
 /** @{ */
-#define DEV_SM_RTC_BBM  0U  /*!< BBM RTC */
+#define DEV_SM_RTC_BBNSM  0U  /*!< BBNSM RTC */
 /** @} */
 
 /*!

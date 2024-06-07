@@ -191,6 +191,22 @@ int32_t DEV_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks);
 int32_t DEV_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks);
 
 /*!
+ * Get a device RTC state.
+ *
+ * @param[in]     rtcId    Identifier of the RTC
+ * @param[out]    state    Bit mask of state flags
+ *
+ * This function allows a caller to read the RTC state.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the RTC state was successfully read.
+ * - ::SM_ERR_NOT_FOUND: if \a rtcId pertains to a non-existent RTC.
+ */
+int32_t DEV_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state);
+
+/*!
  * Set a device RTC alarm.
  *
  * @param[in]     rtcId    Identifier of the RTC
