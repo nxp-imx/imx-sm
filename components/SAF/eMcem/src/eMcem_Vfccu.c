@@ -232,7 +232,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
             {
                 /* @violates @ref eMcem_Vfccu_c_REF_1104 */
                 /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-                AON_VFCCU.FHFLTENC[u8i].R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[0];
+                AON_VFCCU.FHFLTENC[u8i].R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[u8i];
             }
 
             /* Configure reaction sets */
