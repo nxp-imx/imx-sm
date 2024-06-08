@@ -112,67 +112,6 @@ extern "C"{
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
-/*!
-* @brief    Macro marking the beginnning of CONST_UNSPECIFIED section. The memory section is for
-*           constants with undefined size.
-*/
-#define EMCEM_START_SEC_CONST_UNSPECIFIED
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    Macro marking the end of CONST_UNSPECIFIED section.
-*/
-#define EMCEM_STOP_SEC_CONST_UNSPECIFIED
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    Macro marking the beginnning of CONST_8 section. The memory section for constants of type uint8.
-*/
-#define EMCEM_START_SEC_CONST_8
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    Macro marking the end of CONST_8 section.
-*/
-#define EMCEM_STOP_SEC_CONST_8
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    Macro marking the beginnning of CONST_16 section. The memory section for constants of type uint16.
-*/
-#define EMCEM_START_SEC_CONST_16
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief Array of offsets between SW fault register
-*/
-extern const uint16 eMcem_Vfccu_au16SwFltRegOffset[(EMCEM_SW_FAULT_REG_COUNT - 1U)];
-
-/*!
-* @brief    Macro marking the end of CONST_16 section.
-*/
-#define EMCEM_STOP_SEC_CONST_16
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    Macro marking the beginnning of CONST_32 section. The memory section for constants of type uint32.
-*/
-#define EMCEM_START_SEC_CONST_32
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    Macro marking the end of CONST_32 section.
-*/
-#define EMCEM_STOP_SEC_CONST_32
-/* @violates @ref eMcem_Vfccu_h_REF_0410 */
-#include "eMcem_MemMap.h"
 
 
 /*==================================================================================================
