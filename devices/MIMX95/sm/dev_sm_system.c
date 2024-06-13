@@ -611,13 +611,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Process SM LPIs for sleep entry */
             (void) CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
 
-            /* Check FRO system power mode flag */
-            if ((s_powerMode & DEV_SM_SPM_FRO_ACTIVE_MASK) == 0U)
-            {
-                /* Power down FRO */
-                FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
-            }
-
             /* Capture sleep entry latency */
             g_syslog.sysSleepRecord.sleepEntryUsec =
                 UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
@@ -629,11 +622,21 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 SYSCTR_FreqMode(true, true);
             }
 
+            /* Check FRO system power mode flag */
+            if ((s_powerMode & DEV_SM_SPM_FRO_ACTIVE_MASK) == 0U)
+            {
+                /* Power down FRO */
+                FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
+            }
+
             /* Enter WFI to trigger sleep entry */
             __DSB();
             // coverity[misra_c_2012_rule_1_2_violation:FALSE]
             __WFI();
             __ISB();
+
+            /* Power up FRO */
+            FRO->CSR.SET = FRO_CSR_FROEN_MASK;
 
             /* Check SYSCTR system power mode flag
              *
@@ -647,13 +650,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Capture start of sleep exit */
             sleepExitStart = DEV_SM_Usec64Get();
-
-            /* Check FRO system power mode flag */
-            if ((s_powerMode & DEV_SM_SPM_FRO_ACTIVE_MASK) != 0U)
-            {
-                /* Power up FRO */
-                FRO->CSR.SET = FRO_CSR_FROEN_MASK;
-            }
 
             /* Capture wake source */
             g_syslog.sysSleepRecord.wakeSource =
