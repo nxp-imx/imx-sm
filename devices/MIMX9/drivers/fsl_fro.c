@@ -30,14 +30,20 @@
 /* Includes */
 
 #include "fsl_fro.h"
+#include "fsl_clock.h"
 
 /* Local Defines */
-
-#define REF_CNT(x,y)    ((4000U*x)/y)
-#define TEXPCNT(x,y)    ((REF_CNT(x,y))*y/x)
-#define TEXPRANGE(x,y)  (uint32_t)((((FRO->CNFG1.RW) & \
+#define HZ_TO_MHZ_DIV    1000000ULL
+#define REF_CLK_FREQ     (CLOCK_OSC24M_HZ/HZ_TO_MHZ_DIV)  /* MHz */
+#define TRIM_DELAY       100UL                            /* Micro Seconds */
+#define TEXPCNT_RANGE    5U                               /* FRO Freq Tolerance */
+#define REF_CLK_DIV      0U                               /* OSC Ref. Clock Divider */
+#define TRIM_TEMPERATURE 31U                              /* Trim Temperature */
+#define REF_CNT(x, y)    ((4000U * x) / y)                /* Ref. Count Calculation */
+#define TEXPCNT(x, y)    ((REF_CNT(x, y)) * y / x)        /* Expected Count Calculation */
+#define TEXPRANGE(x, y)  (uint32_t)((((FRO->CNFG1.RW) & \
     FRO_CNFG1_RFCLKCNT_MASK) >> \
-    FRO_CNFG1_RFCLKCNT_SHIFT)*y/x)
+    FRO_CNFG1_RFCLKCNT_SHIFT) * y / x)
 
 /* Local Variables */
 
@@ -260,11 +266,14 @@ bool FRO_SetEnable(bool enable)
     /* Enable the FRO if it is not enabled */
     if (enable && (!s_froEnabled))
     {
+        /* Disable FRO First */
+        FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
+
         /* Configure the FRO for open-loop mode */
         if (s_configInfo.mode == OPEN_LOOP)
         {
             /* Configure the FRO trim value */
-            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(31U) |
+            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(TRIM_TEMPERATURE) |
                 (s_configInfo.trimVal & FRO_AUTOTRIM_AUTOTRIM_MASK));
 
             /* Enable the FRO */
@@ -276,23 +285,30 @@ bool FRO_SetEnable(bool enable)
         /* Configure the FRO for closed-loop mode */
         else
         {
+            /* Disable FRO First */
+            FRO->CSR.CLR = FRO_CSR_FROEN_MASK | FRO_CSR_TREN_MASK |
+                FRO_CSR_TRUPEN_MASK;
+
             /* Configure the FRO trim value to correct the
-               start frequency */
-            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(31U) |
+                   start frequency */
+            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(TRIM_TEMPERATURE) |
                 (s_configInfo.trimVal & FRO_AUTOTRIM_AUTOTRIM_MASK));
 
             /* Configure the reference count value based on
                the reference clock value */
-            FRO->CNFG1.RW = (FRO_CNFG1_RFCLKCNT(REF_CNT(24U,
-                s_configInfo.outputFreq)) | FRO_CNFG1_REFDIV(0U));
+            FRO->CNFG1.RW = (FRO_CNFG1_RFCLKCNT(REF_CNT(
+                ((uint32_t) REF_CLK_FREQ), s_configInfo.outputFreq))
+                | FRO_CNFG1_REFDIV(REF_CLK_DIV));
 
             /* Configure the expected FRO count based on output freq */
-            FRO->TEXPCNT.RW = (FRO_TEXPCNT_TEXPCNT(TEXPCNT(24U,
-                s_configInfo.outputFreq)) |
-                FRO_TEXPCNT_TEXPCNT_RANGE(TEXPRANGE(24U, 5U)));
+            FRO->TEXPCNT.RW = (FRO_TEXPCNT_TEXPCNT(TEXPCNT(
+                ((uint32_t) REF_CLK_FREQ), s_configInfo.outputFreq)) |
+                FRO_TEXPCNT_TEXPCNT_RANGE(TEXPRANGE(
+                    ((uint32_t) REF_CLK_FREQ), TEXPCNT_RANGE)));
 
             /* Configure the trim delay count  */
-            FRO->CNFG2.RW |= FRO_CNFG2_TRIM1_DELAY(2400U);
+            FRO->CNFG2.RW |= FRO_CNFG2_TRIM1_DELAY(
+                ((uint32_t) REF_CLK_FREQ) * TRIM_DELAY);
 
             /* Enable FRO, Trim enable, Trim Update enable */
             FRO->CSR.SET = FRO_CSR_FROEN_MASK | FRO_CSR_TREN_MASK
