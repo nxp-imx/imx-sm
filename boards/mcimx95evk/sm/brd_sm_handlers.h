@@ -90,8 +90,8 @@ extern PCA2131_Type pca2131Dev;
 /*! Array of dynamic priority info for board IRQs */
 extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
 
-/*! Indicator if bus expander bit[6] is used for the RTC */
-extern bool alarmEnabled;
+/*! Indicator if bus expander bit[6] is used for the PF2131 RTC */
+extern bool pca2131Used;
 
 /* Functions */
 

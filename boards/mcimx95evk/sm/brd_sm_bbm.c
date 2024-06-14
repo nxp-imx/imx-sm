@@ -353,7 +353,7 @@ int32_t BRD_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
             /* Track if enabled for PCA2131 use */
             if (status == SM_ERR_SUCCESS)
             {
-                alarmEnabled = true;
+                pca2131Used = true;
             }
         }
         else

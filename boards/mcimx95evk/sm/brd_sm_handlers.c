@@ -81,7 +81,7 @@ irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
     }
 };
 
-bool alarmEnabled = false;
+bool pca2131Used = false;
 
 /* Local functions */
 
@@ -291,7 +291,7 @@ void GPIO1_0_IRQHandler(void)
     }
 
     /* Handle PCA2131 interrupt */
-    if (alarmEnabled && ((status & BIT8(PCAL6408A_INPUT_PCA2131_INT))
+    if (pca2131Used && ((status & BIT8(PCAL6408A_INPUT_PCA2131_INT))
         != 0U))
     {
         /* Asserts low */
