@@ -54,6 +54,8 @@ static bool CPU_WdogReset(uint32_t cpuIdx);
 static bool CPU_MuReset(uint32_t cpuIdx);
 static bool CPU_MiscCtrlSet(uint32_t cpuIdx, uint32_t mask, uint32_t val);
 static bool CPU_MiscCtrlGet(uint32_t cpuIdx, uint32_t mask, uint32_t *val);
+static bool CPU_WakeMaskInit(uint32_t cpuIdx);
+static bool CPU_WakeMaskDeInit(uint32_t cpuIdx);
 static bool CPU_LpmMixDependSet(uint32_t cpuIdx, uint32_t lpmSetting);
 static bool CPU_VirtLpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx,
     uint32_t lpmSetting);
@@ -1543,6 +1545,59 @@ bool CPU_NonIrqWakeGet(uint32_t cpuIdx, uint32_t *maskVal)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Initialize CPU GPC wake mask                                             */
+/*--------------------------------------------------------------------------*/
+static bool CPU_WakeMaskInit(uint32_t cpuIdx)
+{
+    bool rc = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        /* Configure GPC IRQ wakeups to reset default */
+        for (uint32_t idx = 0;
+            idx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+            idx++)
+        {
+            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_IRQ_WAKEUP_MASK[idx] = 0x0U;
+        }
+
+        /* Configure GPC non-IRQ wakeups to reset default */
+        s_gpcCpuCtrlPtrs[cpuIdx]->CMC_NON_IRQ_WAKEUP_MASK = 0x1U;
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Deinitialize CPU GPC wake mask                                           */
+/*--------------------------------------------------------------------------*/
+static bool CPU_WakeMaskDeInit(uint32_t cpuIdx)
+{
+    bool rc = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        /* Mask all GPC IRQ wakeups */
+        for (uint32_t idx = 0;
+            idx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+            idx++)
+        {
+            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_IRQ_WAKEUP_MASK[idx] = 0xFFFFFFFFU;
+        }
+
+        /* Mask all GPC non-IRQ wakeups */
+        s_gpcCpuCtrlPtrs[cpuIdx]->CMC_NON_IRQ_WAKEUP_MASK = 0xFFFFFFFFU;
+
+        /* Reset wakeup IRQ_MUX to GPC */
+        rc = CPU_WakeMuxSet(cpuIdx, false);
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set CPU power domain LPM config                                          */
 /*--------------------------------------------------------------------------*/
 bool CPU_LpmConfigSet(uint32_t cpuIdx, uint32_t srcMixIdx,
@@ -1631,6 +1686,12 @@ bool CPU_LpmConfigInit(uint32_t cpuIdx)
                     /* Include A55P sleep status in evaluation of system suspend */
                     rc = CPU_SleepForceSet(CPU_IDX_A55P, false);
 
+                    /* Set GPC wakeup mask to default */
+                    if (rc)
+                    {
+                        rc = CPU_WakeMaskInit(CPU_IDX_A55P);
+                    }
+
                     /* Initialize A55P LPM MIX dependencies */
                     if (rc)
                     {
@@ -1642,6 +1703,12 @@ bool CPU_LpmConfigInit(uint32_t cpuIdx)
             {
                 /* Include CPU sleep status in evaluation of system suspend */
                 rc = CPU_SleepForceSet(cpuIdx, false);
+
+                /* Set GPC wakeup mask to default */
+                if (rc)
+                {
+                    rc = CPU_WakeMaskInit(cpuIdx);
+                }
             }
         }
     }
@@ -1663,6 +1730,12 @@ bool CPU_LpmConfigDeInit(uint32_t cpuIdx, uint32_t lpmSetting)
         s_cpuDdrMixDependMask &= (~cpuMask);
         s_cpuNocMixDependMask &= (~cpuMask);
         s_cpuWakeMixDependMask &= (~cpuMask);
+
+        /* Mask all GPC wakeups to ensure CPU wakeup request deasserted */
+        if (lpmSetting == CPU_PD_LPM_ON_NEVER)
+        {
+            (void) CPU_WakeMaskDeInit(cpuIdx);
+        }
 
         uint32_t cpuIdxCur = cpuIdx;
         uint32_t cpuIdxEnd = cpuIdx;
