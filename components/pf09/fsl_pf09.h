@@ -70,6 +70,16 @@ typedef struct
 /** @} */
 
 /*!
+ * @name PF09 GPIO
+ */
+/** @{ */
+#define PF09_GPIO1  0U  /*!< GPIO1 */
+#define PF09_GPIO2  1U  /*!< GPIO2 */
+#define PF09_GPIO3  2U  /*!< GPIO3 */
+#define PF09_GPIO4  3U  /*!< GPIO4 */
+/** @} */
+
+/*!
  * @name PF09 voltage state
  */
 /** @{ */
@@ -205,7 +215,7 @@ bool PF09_IntClear(const PF09_Type *dev, const uint8_t *mask,
 bool PF09_RegulatorInfoGet(uint8_t regulator, PF09_RegInfo *regInfo);
 
 /*!
- * Set the Buck regulator mode for the state
+ * Set the buck regulator mode for the state
  *
  * @param[in]     dev        Device info.
  * @param[in]     regulator  Regulator name SW or LDO.
@@ -218,7 +228,7 @@ bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     uint8_t mode);
 
 /*!
- * Get the Buck regulator mode for the state
+ * Get the buck regulator mode for the state
  *
  * @param[in]     dev        Device info.
  * @param[in]     regulator  Regulator name SW or LDO.
@@ -231,7 +241,7 @@ bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     uint8_t *mode);
 
 /*!
- * Output Enable/Disable of LDO
+ * Output enable/disable of LDO
  *
  * @param[in]     dev        Device info.
  * @param[in]     regulator  Regulator name of LDO.
@@ -255,6 +265,32 @@ bool PF09_LdoEnable(const PF09_Type *dev, uint8_t regulator, uint8_t state,
  */
 bool PF09_LdoIsEnabled(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     bool *ldoEn);
+
+/*!
+ * Set the GPIO control
+ *
+ * @param[in]     dev        Device info.
+ * @param[in]     gpio       GPIO name.
+ * @param[in]     state      RUN or STBY voltage.
+ * @param[in]     ctrl       Control value.
+ *
+ * @return True if successful.
+ */
+bool PF09_GpioCtrlSet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
+    bool ctrl);
+
+/*!
+ * Get the GPIO control
+ *
+ * @param[in]     dev        Device info.
+ * @param[in]     gpio       GPIO name.
+ * @param[in]     state      RUN or STBY voltage.
+ * @param[out]    ctrl       Pointer to return the control value.
+ *
+ * @return True if successful.
+ */
+bool PF09_GpioCtrlGet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
+    bool *ctrl);
 
 /*!
  * Get the regulator voltage microVolts

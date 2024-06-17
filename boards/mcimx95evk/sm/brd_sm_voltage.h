@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -190,6 +190,8 @@ int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel);
  * - other from BRD_SM_SupplyLevelGet()
  */
 int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel);
+
+void BRD_SM_VoltageRestore(void);
 
 #endif /* BRD_SM_VOLTAGE_H */
 

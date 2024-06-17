@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -46,6 +46,9 @@
 /* Local types */
 
 /* Local variables */
+
+static int32_t s_levelSoc = BOARD_VOLT_SOC;
+static int32_t s_levelArm = BOARD_VOLT_ARM;
 
 /*--------------------------------------------------------------------------*/
 /* Return voltage name                                                      */
@@ -172,10 +175,15 @@ int32_t BRD_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode)
                 mode);
             break;
         case DEV_SM_VOLT_ARM:
-            mode = ((voltMode == DEV_SM_VOLT_MODE_OFF)
-                ? PF53_SW_MODE_OFF : PF53_SW_MODE_PWM);
-            rc = PF53_SwModeSet(&pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                mode);
+            rc = PF09_GpioCtrlSet(&pf09Dev, PF09_GPIO4, PF53_STATE_VRUN,
+                enable);
+            if (enable && rc && (s_levelArm != BOARD_VOLT_ARM))
+            {
+                SystemTimeDelay(1000U);
+
+                /* Restore voltage as enable resets the PF53 */
+                status = BRD_SM_VoltageLevelSet(domainId, s_levelArm);
+            }
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
             rc = PF09_SwModeSet(&pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
@@ -239,9 +247,8 @@ int32_t BRD_SM_VoltageModeGet(uint32_t domainId, uint8_t *voltMode)
             enable = (mode != PF53_SW_MODE_OFF);
             break;
         case DEV_SM_VOLT_ARM:
-            rc = PF53_SwModeGet(&pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                &mode);
-            enable = (mode != PF53_SW_MODE_OFF);
+            rc = PF09_GpioCtrlGet(&pf09Dev, PF09_GPIO4, PF53_STATE_VRUN,
+                &enable);
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
             rc = PF09_SwModeGet(&pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
@@ -312,10 +319,20 @@ int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
         case DEV_SM_VOLT_SOC:
             rc = PF53_VoltageSet(&pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN,
                 level);
+
+            if (rc)
+            {
+                /* Save level to restore */
+                s_levelSoc = (int32_t) level;
+            }
             break;
         case DEV_SM_VOLT_ARM:
-            rc = PF53_VoltageSet(&pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
+            (void) PF53_VoltageSet(&pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
                 level);
+
+            /* Save level to restore */
+            s_levelArm = (int32_t) level;
+            rc = true;
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
             rc = PF09_VoltageSet(&pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
@@ -379,6 +396,17 @@ int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
         case DEV_SM_VOLT_ARM:
             rc = PF53_VoltageGet(&pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
                 &level);
+            if (rc)
+            {
+                /* Save level to restore */
+                s_levelArm = (int32_t) level;
+            }
+            else
+            {
+                /* Return saved level */
+                level = (uint32_t) s_levelArm;
+                rc = true;
+            }
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
             rc = PF09_VoltageGet(&pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
@@ -427,5 +455,23 @@ int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Restore SoC voltage                                                      */
+/*--------------------------------------------------------------------------*/
+void BRD_SM_VoltageRestore(void)
+{
+    if (s_levelSoc != BOARD_VOLT_SOC)
+    {
+        /* Restore voltage as enable resets the PF53 */
+        (void) BRD_SM_VoltageLevelSet(DEV_SM_VOLT_SOC, s_levelSoc);
+    }
+
+    if (s_levelArm != BOARD_VOLT_ARM)
+    {
+        /* Restore voltage as enable resets the PF53 */
+        (void) BRD_SM_VoltageLevelSet(DEV_SM_VOLT_ARM, s_levelArm);
+    }
 }
 

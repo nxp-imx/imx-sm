@@ -36,6 +36,14 @@
 /** @} */
 
 /*!
+ * @name Board PF09 OTP voltages (uV)
+ */
+/** @{ */
+#define BOARD_VOLT_SOC  920000  /*!< SOC OTP */
+#define BOARD_VOLT_ARM  920000  /*!< ARM OTP */
+/** @} */
+
+/*!
  * @name Watchdog modes
  */
 /** @{ */

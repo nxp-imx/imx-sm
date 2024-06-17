@@ -6,6 +6,7 @@
 
 #include "sm.h"
 #include "board.h"
+#include "brd_sm_voltage.h"
 #include "fsl_lpuart.h"
 #include "fsl_lpi2c.h"
 #include "fsl_ccm.h"
@@ -559,6 +560,8 @@ void BOARD_SystemSleepExit(uint32_t sleepMode, uint32_t sleepFlags)
 /*--------------------------------------------------------------------------*/
 void BOARD_SystemSleepUnprepare(uint32_t sleepMode, uint32_t sleepFlags)
 {
+    BRD_SM_VoltageRestore();
+
     /* Service SM LPUART wakeup events */
     if (s_uartConfig.base != NULL)
     {

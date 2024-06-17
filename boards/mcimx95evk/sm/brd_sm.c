@@ -104,9 +104,15 @@
     BRD_SM_REC_VLD_MASK)
 
 /* Performance parameters */
-#define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf level */
 #define BOARD_PERF_LEVEL  DEV_SM_PERF_LVL_ODV  /* Target perf level */
 #define BOARD_PERF_VDROP  20000                /* Perf voltage drop */
+#if BOARD_VOLT_SOC >= ES_ODV_UV_VDD_SOC
+#define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf overdrive */
+#elif BOARD_VOLT_SOC >= ES_NOM_UV_VDD_SOC
+#define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_NOM  /* Boot perf nominal */
+#else
+#define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_LOW  /* Boot perf low */
+#endif
 
 /* Local types */
 

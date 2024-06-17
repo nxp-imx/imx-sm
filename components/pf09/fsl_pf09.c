@@ -87,6 +87,8 @@
 #define PF09_REG_SECURE_WR1     0x35U
 #define PF09_REG_SECURE_WR2     0x36U
 #define PF09_REG_SYS_CFG1       0x38U
+#define PF09_REG_GPO_CFG        0x39U
+#define PF09_REG_GPO_CTRL       0x3AU
 
 #define PF09_REG_WD_CTRL1       0x4EU
 #define PF09_REG_WD_CTRL2       0x4FU
@@ -541,7 +543,7 @@ bool PF09_RegulatorInfoGet(uint8_t regulator, PF09_RegInfo *regInfo)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Change Buck regulator run/stby operation mode                            */
+/* Change buck regulator run/stby operation mode                            */
 /*--------------------------------------------------------------------------*/
 bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     uint8_t mode)
@@ -564,6 +566,10 @@ bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
                 PF09_REG_SW1_MODE + ((regulator - 1U) * 5U),
                 modeVal, modeMask);
         }
+        else
+        {
+            rc = false;
+        }
     }
 
     /* Return status */
@@ -571,7 +577,7 @@ bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get Buck regulator run/stby operation mode                               */
+/* Get buck regulator run/stby operation mode                               */
 /*--------------------------------------------------------------------------*/
 bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     uint8_t *mode)
@@ -596,6 +602,10 @@ bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
             /* Mask and shift the mode bits */
             *mode = ((*mode) & modeMask) >> (state * 2U);
         }
+        else
+        {
+            rc = false;
+        }
     }
 
     /* Return status */
@@ -603,7 +613,7 @@ bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Enable/Disable linear regulator run/standby output                       */
+/* Enable/disable linear regulator run/standby output                       */
 /*--------------------------------------------------------------------------*/
 bool PF09_LdoEnable(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     bool ldoEn)
@@ -682,6 +692,60 @@ bool PF09_LdoIsEnabled(const PF09_Type *dev, uint8_t regulator, uint8_t state,
         else
         {
             rc = false;
+        }
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Change GPIO run/stby control                                             */
+/*--------------------------------------------------------------------------*/
+bool PF09_GpioCtrlSet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
+    bool ctrl)
+{
+    bool rc = true;
+
+    if ((state > PF09_STATE_VSTBY) || (gpio > PF09_GPIO4))
+    {
+        rc = false;
+    }
+    else
+    {
+        uint8_t ctrlVal = ctrl ? 0xFFU : 0x00U;
+        uint8_t ctrlMask = 1U << ((state * 4U) + gpio);
+
+        rc = PF09_PmicWrite(dev, PF09_REG_GPO_CTRL, ctrlVal, ctrlMask);
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get GPIO run/stby control                                                */
+/*--------------------------------------------------------------------------*/
+bool PF09_GpioCtrlGet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
+    bool *ctrl)
+{
+    bool rc = true;
+
+    if ((state > PF09_STATE_VSTBY) || (ctrl == NULL) || (gpio > PF09_GPIO4))
+    {
+        rc = false;
+    }
+    else
+    {
+        uint8_t ctrlVal;
+
+        rc = PF09_PmicRead(dev, PF09_REG_GPO_CTRL, &ctrlVal);
+
+        if (rc)
+        {
+            uint8_t ctrlMask = 1U << ((state * 4U) + gpio);
+
+            *ctrl = ((ctrlVal & ctrlMask) != 0U);
         }
     }
 
