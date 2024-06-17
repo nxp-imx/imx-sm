@@ -88,6 +88,11 @@ int main(int argc, const char * const argv[])
     printf("\nHello from SM (Build %lu, Commit %08lx, %s %s)\n\n",
         SM_BUILD, SM_COMMIT, SM_DATE, SM_TIME);
 
+#if MONITOR_MODE == 2
+    printf("Press key to enter monitor mode.\n\n",
+        SM_BUILD, SM_COMMIT, SM_DATE, SM_TIME);
+#endif
+
     /* Add to subtract time */
     g_bootTime[SM_BT_SUB] += (DEV_SM_Usec64Get() - delta);
 
@@ -132,17 +137,58 @@ int main(int argc, const char * const argv[])
     }
 #endif
 
-#ifdef MONITOR
+#if MONITOR_MODE == 1
     /* Call monitor */
     MONITOR_Cmd("\n*** SM Debug Monitor ***\n");
 #endif
 
-#if !defined(RUN_TEST) && !defined(MONITOR)
+#ifndef SIMU
+#if MONITOR_MODE == 2
+    /* Idle loop */
+    while (status == SM_ERR_SUCCESS)
+    {
+        bool runMonitor = false;
+        const board_uart_config_t *uartConfig = BOARD_GetDebugUart();
+
+        /* Grab sleep count to detect idle/sleep */
+        uint32_t prevSleepCnt = g_syslog.sysSleepRecord.sleepCnt;
+
+        /* Enter system idle */
+        status = DEV_SM_SystemIdle();
+
+        /* Check if system idle succeeded */
+        if ((status == SM_ERR_SUCCESS) && (uartConfig != NULL))
+        {
+            /* Check if if system entered sleep */
+            if (prevSleepCnt != g_syslog.sysSleepRecord.sleepCnt)
+            {
+                /* Check if system sleep wake source was console UART */
+                if (g_syslog.sysSleepRecord.wakeSource ==
+                    (uartConfig->irq + 16U))
+                {
+                    runMonitor = true;
+                }
+            }
+            else
+            {
+                /* Check for console character */
+                runMonitor = MONITOR_CharPending();
+            }
+        }
+
+        if ((status == SM_ERR_SUCCESS) && runMonitor)
+        {
+            /* Call monitor */
+            MONITOR_Cmd("\n*** SM Debug Monitor ***\n");
+        }
+    }
+#elif !defined(RUN_TEST)
     /* Loop - services handled via interrupts */
-    do
+    while (status == SM_ERR_SUCCESS)
     {
         status = DEV_SM_SystemIdle();
-    } while (status == SM_ERR_SUCCESS);
+    }
+#endif
 #endif
 
     printf("\nGood-bye from SM\n\n");

@@ -1,13 +1,17 @@
 Debug Monitor {#MONITOR}
 =============
 
-If the SM is compiled using the M=1 option (default is M=1) then it will include
+If the SM is compiled using the M=1|2 option (default is M=1) then it will include
 a debug monitor. The debug monitor allows command-line interaction via the SM
 debug UART. Inclusion of the debug monitor affects SM timing and therefore should never
 be deployed in a product!
 
+- M=0 no monitor
+- M=1 will drop straight into the monitor at boot
+- M=2 will enter the monitor on SM debug UART character reception
+
 **Use of the debug monitor can change timing and cause adverse effects. No guarantees
-are made with regards to its use.**
+are made with regards to its use. M=0 is the only valid option for production.**
 
 Note the terminal needs to be in a mode that sends CR or LF for a new line (not
 CR+LF).

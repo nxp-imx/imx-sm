@@ -2922,7 +2922,7 @@ static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[])
             /* Check if if system entered sleep */
             if (prevSleepCnt != g_syslog.sysSleepRecord.sleepCnt)
             {
-                /* Check if system sleep wake source was consule UART */
+                /* Check if system sleep wake source was console UART */
                 if (g_syslog.sysSleepRecord.wakeSource ==
                     (uartConfig->irq + 16U))
                 {
