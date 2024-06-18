@@ -35,7 +35,8 @@ interaction with SM.
 
 This document covers the NXP i.MX System Manager (SM), an application that runs on a dedicated core along with
 the FuSa software (optional) to manage the system. On i.MX9, the M33 core in the AON domain is the SCP and runs
-the SM. The other cores (e.g. A55, M7) are user cores and communicate with the SM via an SCMI protocol. 
+the SM. The other cores (e.g. A55, M7) are user cores and communicate with the SM via an SCMI protocol. SM owns
+the M33 core and does **not support customers adding workloads to this core**.
 
 In the NXP SM, the independent "systems" consisting of a collection of cores and IP is called a Logical Machine
 (LM). Logical machines can be independently booted, reset, powered off, transitioned to a low power state, wake
