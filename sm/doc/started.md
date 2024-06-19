@@ -22,6 +22,7 @@ Building the Documentation
 To build the full documentation, install the required tools as described in the @ref GUIDE_DOC
 section. Then change to the documentation directory (sm/doc) and execute the following:
 
+    make clean
     make <TARGET>
 
 Where target can be html, rtf, latex, pdf, or clean. No target will result in building
@@ -31,6 +32,7 @@ is the *index.html* file.
 
 To build the release notes:
 
+    make clean
     make rn
 
 The output is sm/doc/sm-rn.pdf (also an html version in sm/doc/build/html).
@@ -41,9 +43,9 @@ Installing the Toolchain
 Compiling requires an ARM cross-compiler. Download and install the required arm-none-eabi toolchain from
 the [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare-metal target
-(arm-none-eabi) section, download the *.xv file to a directory for the tool chain (e.g. tools) and then:
+(arm-none-eabi) section, download the *.xz file to a directory for the tool chain (e.g. tools) and then:
 
-    tar xvf *.xv
+    tar xvf *.xz
 
 Set the TOOLS shell variable to the directory the toolchain is installed in. For example:
 
@@ -65,7 +67,7 @@ Compiling an SM Image
 To get started with the SM on an NXP board, download the [github](https://github.com/nxp-imx/imx-sm)
 repository and then compile the SM for the target configuration.
 
-For example, in the top directory of the code base:
+For example, in the top directory of the code base (e.g. imx-sm):
 
     make config=mx95evk all
 

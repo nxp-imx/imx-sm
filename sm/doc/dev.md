@@ -47,9 +47,9 @@ Tool Chain {#GUIDE_TOOLCHAIN}
 Compiling requires an ARM cross-compiler. Download and install the required arm-none-eabi toolchain from
 the [Arm GNU Toolchain Downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare-metal target
-(arm-none-eabi) section, download the *.xv file to a directory for the tool chain (e.g. tools) and then:
+(arm-none-eabi) section, download the *.xz file to a directory for the tool chain (e.g. tools) and then:
 
-    tar xvf *.xv
+    tar xvf *.xz
 
 The latest toolchain should work but it is highly recommended to use the specific version listed in the
 release notes as this version was used for testing. Note the Linux-based ARM cross-compile toolchain
@@ -66,7 +66,8 @@ So for example if the GCC toolchain is installed in
 Compiling the SM {#GUIDE_COMPILE}
 ==================
 
-The SM application can be fully compiled using the Makefile. The command format is:
+The SM application can be fully compiled using the top-level Makefile usually
+in imx-sm. The command format is:
 
 Usage: make TARGET OPTIONS
 
@@ -270,6 +271,7 @@ Also ensure the Linux installation is up-to-date and then install:
 
 Then change to the documentation directory (sm/doc) and execute the following:
 
+    make clean
     make <TARGET>
 
 Where target can be html, rtf, latex, pdf, or clean. No target will result in building
