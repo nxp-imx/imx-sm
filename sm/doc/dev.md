@@ -37,6 +37,7 @@ Prerequisites
 
 Assuming an Ubuntu 22.04 host, the following packages need to be installed for normal development:
 
+    sudo apt update
     sudo apt -y install git meld
     sudo apt -y install make gcc g++-multilib ddd
     sudo apt -y install srecord cppcheck
@@ -267,7 +268,7 @@ files.
 
 Also ensure the Linux installation is up-to-date and then install:
 
-    sudo apt-get -y install make doxygen texlive texlive-latex-extra
+    sudo apt -y install make doxygen texlive texlive-latex-extra
 
 Then change to the documentation directory (sm/doc) and execute the following:
 

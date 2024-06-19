@@ -14,7 +14,8 @@ Download from GitHub
 
 To download the repo from [GitHub](https://github.com/nxp-imx/imx-sm), first install git:
 
-    sudo apt-get -y install git
+    sudo apt update
+    sudo apt -y install git
 
 Then clone the repo:
 
@@ -25,7 +26,7 @@ Building the Documentation
 
 To build the full documentation, install the required tools:
 
-    sudo apt-get -y install make doxygen texlive texlive-latex-extra
+    sudo apt -y install make doxygen texlive texlive-latex-extra
 
 Then change to the documentation directory (sm/doc) and execute the following:
 
@@ -63,7 +64,7 @@ When the toolchain is in a directory like arm-gnu-toolchain-12.3.rel1-x86_64-arm
 
 Also ensure the Linux installation is up-to-date and then install:
 
-    sudo apt-get -y install make gcc g++-multilib srecord
+    sudo apt -y install make gcc g++-multilib srecord
 
 See the *Release Notes* for the exact toolchain version the SM was tested with.
 
