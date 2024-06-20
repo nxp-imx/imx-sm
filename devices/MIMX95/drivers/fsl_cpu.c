@@ -562,15 +562,15 @@ static bool CPU_SwMultiWakeup(uint32_t cpuIdx)
     uint32_t cpuIdxEnd = cpuIdx;
     if (cpuIdx == CPU_IDX_A55P)
     {
-        cpuIdxCur = CPU_IDX_A55C0;
-        cpuIdxEnd = CPU_IDX_A55P;
+        cpuIdxCur = CPU_IDX_A55P;
+        cpuIdxEnd = CPU_IDX_A55C0;
     }
     do
     {
         /* Wake each CPU */
         rc = CPU_SwWakeup(cpuIdxCur);
-        ++cpuIdxCur;
-    } while (rc && (cpuIdxCur <= cpuIdxEnd));
+        --cpuIdxCur;
+    } while (rc && (cpuIdxCur >= cpuIdxEnd));
 
     return rc;
 }
@@ -1230,17 +1230,7 @@ bool CPU_SleepModeSet(uint32_t cpuIdx, uint32_t sleepMode)
             s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MISC = cmcMisc;
         }
 
-        /* All targeted sleep modes other than RUN need GPC-controlled LPM */
-        uint32_t srcMixIdx = s_cpuMgmtInfo[cpuIdx].srcMixIdx;
-        if ((g_pwrMixMgmtInfo[srcMixIdx].authenCtrl &
-            AUTHEN_CTRL_LPM_MODE_MASK) != 0U)
-        {
-            rc = SRC_MixLpmModeSet(srcMixIdx, sleepMode != CPU_SLEEP_MODE_RUN);
-        }
-        else
-        {
-            rc = true;
-        }
+        rc = true;
     }
 
     return rc;

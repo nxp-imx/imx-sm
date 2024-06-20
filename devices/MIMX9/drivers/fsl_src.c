@@ -645,6 +645,14 @@ bool SRC_MixSoftPowerUp(uint32_t srcMixIdx)
         if ((g_pwrMixMgmtInfo[srcMixIdx].authenCtrl &
             AUTHEN_CTRL_LPM_MODE_MASK) != 0U)
         {
+            /* Switching from SW to HW control requires LPM_SETTING to
+             * configured to a common value (not always on/off).  Restore
+             * default LPM_SETTING to meet this requirement.
+             */
+            uint64_t lpmSetting = g_pwrMixMgmtInfo[srcMixIdx].lpmSetting;
+            srcMix->LPM_SETTING_1 = UINT64_L(lpmSetting);
+            srcMix->LPM_SETTING_2 = UINT64_H(lpmSetting);
+
             (void) SRC_MixLpmModeSet(srcMixIdx, true);
         }
     }
