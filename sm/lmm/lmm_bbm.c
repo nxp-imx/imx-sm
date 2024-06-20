@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -194,6 +194,19 @@ void LMM_BbmRtcAlarmEvent(uint32_t rtcId)
                     .parm[1] = LMM_TRIGGER_PARM_RTC_ALARM
                 };
 
+                /* Boot LM */
+                if ((g_lmmConfig[dstLm].autoBoot == LMM_AUTO_RTC)
+                    || (g_lmmConfig[dstLm].autoBoot == LMM_AUTO_BOTH))
+                {
+                    lmm_rst_rec_t bootRec = DEV_SM_RST_REC_BBM;
+
+                    /* Reason is BBM RTC */
+                    bootRec.errId = DEV_SM_BBM_BOOT_ALARM;
+                    bootRec.validErr = true;
+
+                    (void) LMM_SystemLmBoot(0U, 0U, dstLm, &bootRec);
+                }
+
                 s_rtcInfo[rtcId].alarmEnable[dstLm] = false;
                 (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
             }
@@ -255,6 +268,20 @@ void LMM_BbmButtonEvent(void)
             .event = LMM_TRIGGER_BUTTON,
         };
 
+        /* Boot LM */
+        if ((g_lmmConfig[dstLm].autoBoot == LMM_AUTO_BUTTON)
+            || (g_lmmConfig[dstLm].autoBoot == LMM_AUTO_BOTH))
+        {
+            lmm_rst_rec_t bootRec = DEV_SM_RST_REC_BBM;
+
+            /* Reason is BBM button */
+            bootRec.errId = DEV_SM_BBM_BOOT_BUTTON;
+            bootRec.validErr = true;
+
+            (void) LMM_SystemLmBoot(0U, 0U, dstLm, &bootRec);
+        }
+
+        /* Send notification */
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 }

@@ -1432,6 +1432,13 @@ sub generate_lmm
 	            print $out '        .group = ' . $parm . 'U, \\' . "\n";
 	        }
 
+            # Output auto boot
+   	        if ((my $parm = &param($lm, 'auto')) ne '!')
+	        {
+	            print $out '        .autoBoot = LMM_AUTO_' . uc $parm
+	                . ', \\' . "\n";
+	        }
+
 			# Output start/stop
 			my $sidx = first { $start[$_] =~ /lm=$lm_val/ } 0..$#start;
 			if (defined $sidx)

@@ -279,6 +279,8 @@ as follows:
   - *rpcType* - RPC type to link, for example ::SM_RPC_SCMI
   - *rpcInst* - RPC instance to link
   - *safeType* - safety classification, 0=NS-EENV, 1=F-EENV, 2=S-EENV
+  - *group* - LM group
+  - *autoBoot* - auto boot conditions, for example ::LMM_AUTO_NONE
   - *boot[]* - Array of boot order of LM (0=no boot, else 1, 2, 3, ...) per mSel
   - *bootSkip[]* - Array of allow boot skip if no image (1=skip, def=0) per mSel
   - *rtime* - boot time of LM in uS, relative to start of LM boot loop
@@ -699,8 +701,9 @@ The configtool supports the following commands and key=value pairs in the input 
 |             | skip     | Optional, if not 0, ignore error on boot if no image in boot container |
 |             | rtime    | Optional, boot time of LM in uS, relative to start of LM boot loop, max 178 seconds |
 |             | did      | RDC DID for this LM |
-|             | safe     | Safety type is LMM_SAFE_TYPE_\<VAL\>, e.g. ::LMM_SAFE_TYPE_SEENV, deault is NSEENV |
+|             | safe     | Safety type is LMM_SAFE_TYPE_\<VAL\>, e.g. ::LMM_SAFE_TYPE_SEENV, default is NSEENV |
 |             | group    | LM group, deault is 0 |
+|             | auto     | Auto boot type is LMM_AUTO_\<VAL\>, e.g. ::LMM_AUTO_BUTTON, default is NONE |
 |             | default  | The deault LM for the debug monitor |
 | MODE        | msel     | Alternate boot config index |
 |             | boot     | Optional, boot order starting with 1, undefined/0 = do not boot |

@@ -80,6 +80,16 @@
 #define LMM_SS_CTRL  6U  /*!< Control command */
 /** @} */
 
+/*!
+ * @name LM auto boot conditions
+ */
+/** @{ */
+#define LMM_AUTO_NONE    0x0U  /*!< No LM auto boot */
+#define LMM_AUTO_BUTTON  0x1U  /*!< Auto boot from ON/OFF button */
+#define LMM_AUTO_RTC     0x2U  /*!< Auto boot from RTC alarm */
+#define LMM_AUTO_BOTH    0x3U  /*!< Always boot from button & alarm */
+/** @} */
+
 /* Types */
 
 /*!
@@ -97,6 +107,7 @@ typedef struct
     uint8_t rpcInst;                   /*!< RPC instance */
     uint8_t safeType;                  /*!< Safety classification */
     uint8_t group;                     /*!< LMM group */
+    uint8_t autoBoot;                  /*!< LMM auto boot */
     uint8_t boot[SM_LM_NUM_MSEL];      /*!< Boot order of LM */
     uint8_t bootSkip[SM_LM_NUM_MSEL];  /*!< Skip boot in no image */
 } lmm_config_t;

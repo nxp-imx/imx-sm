@@ -1455,15 +1455,21 @@ static int32_t BbmResetAgentConfig(uint32_t lmId, uint32_t agentId,
     for (uint32_t rtcId = 0U; rtcId < SM_NUM_RTC; rtcId++)
     {
         /* Disable notifications */
-        s_rtcInfo[rtcId].alarmNotify[agentId] = false;
         s_rtcInfo[rtcId].rolloverNotify[agentId] = false;
         s_rtcInfo[rtcId].updateNotify[agentId] = false;
 
-        /* Disable RTC alarm */
-        if (s_rtcInfo[rtcId].alarmEnabled)
+        if ((g_lmmConfig[lmId].autoBoot != LMM_AUTO_RTC)
+            && (g_lmmConfig[lmId].autoBoot != LMM_AUTO_BOTH))
         {
-            s_rtcInfo[rtcId].alarmEnabled = false;
-            status = LMM_BbmRtcAlarmSet(lmId, rtcId, false, 0U);
+            /* Disable notifications */
+            s_rtcInfo[rtcId].alarmNotify[agentId] = false;
+
+            /* Disable RTC alarm */
+            if (s_rtcInfo[rtcId].alarmEnabled)
+            {
+                s_rtcInfo[rtcId].alarmEnabled = false;
+                status = LMM_BbmRtcAlarmSet(lmId, rtcId, false, 0U);
+            }
         }
     }
 
