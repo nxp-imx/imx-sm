@@ -431,7 +431,7 @@
 #endif
 
 #ifndef SM_BBMGETBOOTSTATUS
-/*! Redirector (device/board) to write a BBM GPR */
+/*! Redirector (device/board) to read the BBM boot status */
 #define SM_BBMGETBOOTSTATUS     DEV_SM_BbmGetBootStatus
 #endif
 

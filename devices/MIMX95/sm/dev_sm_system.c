@@ -250,6 +250,9 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
     int32_t status = SM_ERR_SUCCESS;
     uint32_t priMask;
 
+    /* Clear BBM */
+    status = DEV_SM_BbmClear();
+
     /* Disable interrupts */
     priMask = DisableGlobalIRQ();
 
