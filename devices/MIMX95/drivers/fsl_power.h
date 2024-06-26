@@ -135,6 +135,7 @@
 
 #define PWR_MIX_FLAG_SWITCHABLE         (1U << 0U)  /* MIX can be switched OFF */
 #define PWR_MIX_FLAG_LPMSET             (1U << 1U)  /* MIX LPM can be set */
+#define PWR_MIX_FLAG_SSI_TIMEOUT        (1U << 2U)  /* MIX supports SSI timeout */
 
 /* Macro to convert CPU ID to GPC domain ID
  * Note:  AUTHEN_CTRL.WHITE_LIST assignments use macro
@@ -239,6 +240,7 @@ typedef struct
     uint32_t gpcReqMaskPwr;     /*!< GPC power request mask */
     uint32_t authenCtrl;        /*!< MIX authentication control */
     uint64_t lpmSetting;        /*!< MIX LPM setting */
+    uint32_t ssiLpcgIdx;        /*!< SSI Q-Channel LPCG instance */
 } pwrmix_mgmt_info_t;
 
 /*!

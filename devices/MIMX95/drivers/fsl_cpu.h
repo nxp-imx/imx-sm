@@ -153,6 +153,7 @@ typedef struct
 typedef struct
 {
     uint32_t srcMixIdx;                 /*!< CPU's SRC MIX identifier */
+    __IO uint32_t *irqMaskReg;          /*!< CPU's IRQ mask register */
     __IO uint32_t *cpuWaitReg;          /*!< CPU WAIT register */
     uint32_t cpuWaitMask;               /*!< CPU WAIT register mask */
     IRQn_Type rstReqIrq;                /*!< CPU reset request IRQ number */

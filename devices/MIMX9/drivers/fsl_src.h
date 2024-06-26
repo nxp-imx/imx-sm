@@ -199,6 +199,20 @@ bool SRC_MixIsPwrSwitchOn(uint32_t srcMixIdx);
 bool SRC_MixIsPwrReady(uint32_t srcMixIdx);
 
 /*!
+ * Block until MIX slice reset phase exits
+ *
+ * @param[in]   srcMixIdx       SRC MIX identifier
+ * @param[in]   timeoutUsec     timeout in usec
+ *
+ * This function allows caller to block until the MIX reset phase has exited
+ * or timeout has been reached.
+ *
+ * @return Returns true if MIX reset sequence has exited within the specified
+ * timeout, otherwise false.
+ */
+bool SRC_MixRstExit(uint32_t srcMixIdx, uint32_t timeoutUsec);
+
+/*!
  * Configure reset signal of MIX slice
  *
  * @param[in]   lineIdx         Reset line identifier

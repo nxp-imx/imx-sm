@@ -213,7 +213,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
 
     [PWR_MIX_SLICE_IDX_A55P] =
     {
-        .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
+        .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET | PWR_MIX_FLAG_SSI_TIMEOUT,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55P) |
                    (1U << PWR_MEM_SLICE_IDX_A55L3),
         .retainMask = 0U,
@@ -223,6 +223,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_A55P),
         .authenCtrl = AUTHENCTRL_CPU(CPU_IDX_A55P),
         .lpmSetting = LPMSETTING_CPU(CPU_IDX_A55P),
+        .ssiLpcgIdx = 1U,
     },
 
     [PWR_MIX_SLICE_IDX_DDR] =

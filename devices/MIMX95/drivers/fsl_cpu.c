@@ -92,6 +92,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_M33P] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_AON,
+        .irqMaskReg = &BLK_CTRL_S_AONMIX->CM33_IRQ_MASK0,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->M33_CFG,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_M33_CFG_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -107,6 +108,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_M7P] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_M7,
+        .irqMaskReg = &BLK_CTRL_S_AONMIX->CM7_IRQ_MASK0,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->M7_CFG,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_M7_CFG_WAIT_MASK,
         .rstReqIrq = CM7_SYSRESETREQ_IRQn,
@@ -122,6 +124,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55C0] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55C0,
+        .irqMaskReg = NULL,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->CA55_CPUWAIT,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_CA55_CPUWAIT_CPU0_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -137,6 +140,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55C1] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55C1,
+        .irqMaskReg = NULL,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->CA55_CPUWAIT,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_CA55_CPUWAIT_CPU1_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -152,6 +156,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55C2] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55C2,
+        .irqMaskReg = NULL,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->CA55_CPUWAIT,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_CA55_CPUWAIT_CPU2_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -167,6 +172,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55C3] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55C3,
+        .irqMaskReg = NULL,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->CA55_CPUWAIT,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_CA55_CPUWAIT_CPU3_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -182,6 +188,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55C4] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55C4,
+        .irqMaskReg = NULL,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->CA55_CPUWAIT,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_CA55_CPUWAIT_CPU4_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -197,6 +204,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55C5] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55C5,
+        .irqMaskReg = NULL,
         .cpuWaitReg = &BLK_CTRL_S_AONMIX->CA55_CPUWAIT,
         .cpuWaitMask = BLK_CTRL_S_AONMIX_CA55_CPUWAIT_CPU5_WAIT_MASK,
         .rstReqIrq = NotAvail_IRQn,
@@ -212,6 +220,7 @@ static cpu_mgmt_info_t const s_cpuMgmtInfo[CPU_NUM_IDX] =
     [CPU_IDX_A55P] =
     {
         .srcMixIdx = PWR_MIX_SLICE_IDX_A55P,
+        .irqMaskReg = &BLK_CTRL_S_AONMIX->CA55_IRQ_MASK0,
         .cpuWaitReg = NULL,
         .cpuWaitMask = 0U,
         .rstReqIrq = NotAvail_IRQn,
@@ -792,13 +801,20 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
                         /* Wait for ChildrenAsleep */
                         while ((GICR->GICR_WAKER & GICR_WAKER_CHILDRENASLEEP_MASK) == 0U)
                         {
-                            ; /* Intentional empty while */
+                            /* Set ProcessorSleep to quiesce GIC redistributor instance */
+                            GICR->GICR_WAKER |= GICR_WAKER_PROCESSORSLEEP_MASK;
                         }
                     }
                 }
 
                 /* Apply reset to A55 cluster */
                 rc = SRC_MixSetResetLine(RST_LINE_CORTEXAMIX_PLATFORM, resetType);
+
+                if (rc && (resetType == RST_LINE_CTRL_ASSERT))
+                {
+                    /* Wait for A55 cluster reset phase to complete */
+                    rc = SRC_MixRstExit(PWR_MIX_SLICE_IDX_A55P, 100U);
+                }
 
                 /* Apply reset to all A55 CPUs */
                 uint32_t lineIdx = RST_LINE_CORTEXAMIX_CORE0;
@@ -1554,12 +1570,19 @@ static bool CPU_WakeMaskInit(uint32_t cpuIdx)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        /* Configure GPC IRQ wakeups to reset default */
+        __IO uint32_t *irqMaskReg = s_cpuMgmtInfo[cpuIdx].irqMaskReg;
+
+        /* Unmask all IRQs at GPC and top-level */
         for (uint32_t idx = 0;
             idx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
             idx++)
         {
             s_gpcCpuCtrlPtrs[cpuIdx]->CMC_IRQ_WAKEUP_MASK[idx] = 0x0U;
+
+            if (irqMaskReg != NULL)
+            {
+                irqMaskReg[idx] = 0xFFFFFFFFU;
+            }
         }
 
         /* Configure GPC non-IRQ wakeups to reset default */
@@ -1580,12 +1603,19 @@ static bool CPU_WakeMaskDeInit(uint32_t cpuIdx)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        /* Mask all GPC IRQ wakeups */
+        __IO uint32_t *irqMaskReg = s_cpuMgmtInfo[cpuIdx].irqMaskReg;
+
+        /* Mask all IRQs at GPC and top-level */
         for (uint32_t idx = 0;
             idx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
             idx++)
         {
             s_gpcCpuCtrlPtrs[cpuIdx]->CMC_IRQ_WAKEUP_MASK[idx] = 0xFFFFFFFFU;
+
+            if (irqMaskReg != NULL)
+            {
+                irqMaskReg[idx] = 0x0U;
+            }
         }
 
         /* Mask all GPC non-IRQ wakeups */
