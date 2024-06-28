@@ -140,20 +140,23 @@ rates. The protocol provides functions to:
 The clock IDs can be found in the CLOCK section of the SoC @ref DEV_SM. Board code can
 add additional clock IDs.
 
-Device clock IDs are made up of three kinds of clocks: sources, roots, and GPR mux selects. All of
-these are documented in different parts of Clock Control Module (CCM) section of the SoC RM:
+Device clock IDs are made up of four kinds of clocks: sources, roots, GPR mux selects, and CGC.
+All of these are documented in different parts of Clock Control Module (CCM) section of the SoC RM:
 
-| Clock type | Start | End | RM Documentation                                 |
-|------------|-------|-----|--------------------------------------------------|
-| Sources    | 0     | X   | Clock Sources table + 2 external clock sources   |
-| Roots      | X + 1 | Y   | Clock Root table                                 |
-| GPR Muxes  | Y + 1 | Z   | General Purpose Register (GPR_SHAREDx) registers |
+| Clock type          | Start | End | RM Documentation                                 |
+|---------------------|-------|-----|--------------------------------------------------|
+| Sources             | 0     | W   | Clock Sources table + 2 external clock sources   |
+| Roots               | W + 1 | X   | Clock Root table                                 |
+| GPR Muxes           | X + 1 | Y   | General Purpose Register (GPR_SHAREDx) registers |
+| Clock gate controls | Y + 1 | Z   | Select CGC (aka LPCG)                            |
 
 Clock enable states are aggregated across all agents and LMs. The clock state of the hardware
 will be the lowest possible state to satisfy the setting from all clients. For example, the clock
 will be disabled only if all clients with access rights to a clock have the clock disabled. Clock
 rates and parents are not aggregated. The setting will reflect the last setting which is why it is
 normal to give exclusive access to set these to one agent in the system.
+
+LPCG clocks only allow enale/disable. Calls to set the parent or rate will return an error.
 
 Note some clocks exist in a power domain that can be turned off. Making calls on these clocks may
 return SCMI_ERR_INVALID_PARAMETERS if the clock resource is unavailable.

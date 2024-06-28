@@ -65,7 +65,7 @@
  * This function gets clock root enable status.
  *
  * @return Clock root enable status. true if the clock root is enabled,
-           otherwise false.
+ *         otherwise false.
  */
 bool CCM_RootGetEnable(uint32_t rootIdx);
 
@@ -273,6 +273,79 @@ bool CCM_GprSelSetParent(uint32_t gprSelIdx, uint32_t clkIdx);
  * @return Returns true if GPR is updated.
  */
 bool CCM_GprValSet(uint32_t gprIdx, uint32_t gprMask, uint32_t gprVal);
+
+/*!
+ * Get CCM CGC enable
+ *
+ * @param[in]       cgcIdx     CCM CGC index
+ *
+ * This function gets CGC clock enable status.
+ *
+ * @return Returns true if the CGC is enabled,
+ *         otherwise false.
+ */
+bool CCM_CgcGetEnable(uint32_t cgcIdx);
+
+/*!
+ * Set CCM CGC enable
+ *
+ * @param[in]       cgcIdx     CCM CGC index
+ * @param[in]       enable     Enable flag (1=enabled, 0=disabled)
+ *
+ * This function sets the CGC clock enable status.
+ *
+ * @return Returns true if clock enable status was updated, otherwise returns
+ *         false.
+ */
+bool CCM_CgcSetEnable(uint32_t cgcIdx, bool enable);
+
+/*!
+ * Get CCM CGC clock root rate
+ *
+ * @param[in]       cgcIdx     CCM CGC index
+ *
+ * This function returns the CGC rate in Hz.
+ *
+ * @return CGC rate in Hz.
+ */
+uint64_t CCM_CgcGetRate(uint32_t cgcIdx);
+
+/*!
+ * Get CCM CGC parent
+ *
+ * @param[in]       cgcIdx      CCM CGC index
+ * @param[out]      rootIdx     CCM clock root index sourcing CGC
+ *
+ * This function gets the parent (clock root index) of the CGC.
+ *
+ * @return Returns true if a valid parent (clock root index) is found for given
+ *         CGC.
+ */
+bool CCM_CgcGetParent(uint32_t cgcIdx, uint32_t *rootIdx);
+
+/*!
+ * Get CCM LPCG direct control enable status
+ *
+ * @param[in]       lpcgIdx     LPCG register index
+ *
+ * This function queries the LPCG direct control enable status.
+ *
+ * @return LPCG direct control enable status.
+ */
+bool CCM_LpcgDirectCtrlGetEnable(uint32_t lpcgIdx);
+
+/*!
+ * Set CCM LPCG direct control enable
+ *
+ * @param[in]       lpcgIdx     LPCG register index
+ * @param[in]       enable      Enable flag (1=enabled, 0=disabled)
+ *
+ * This function configures the LPCG direct control to enable/disable
+ * the clock output of the LPCG.
+ *
+ * @return Returns true if LPCG direct control setting is updated.
+ */
+bool CCM_LpcgDirectCtrlSetEnable(uint32_t lpcgIdx, bool enable);
 
 /*!
  * Set CCM LPCG low-power mode setting for specified CPU

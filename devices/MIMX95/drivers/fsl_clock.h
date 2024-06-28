@@ -257,6 +257,10 @@
 #define CLOCK_GPR_SEL_DRAM                  8U
 #define CLOCK_GPR_SEL_TEMPSENSE             9U
 
+#define CLOCK_NUM_CGC                       1U
+
+#define CLOCK_CGC_GPU                       0U
+
 #define CLOCK_ROUND_RULE_CEILING            0U
 #define CLOCK_ROUND_RULE_FLOOR              1U
 #define CLOCK_ROUND_RULE_CLOSEST            2U
@@ -300,6 +304,18 @@ typedef struct
     uint32_t selShift;                      /*!< GPR select shift */
     uint32_t selMux[CLOCK_NUM_GPR_MUX_SEL]; /*!< GPR select mux configuration */
 } ccm_gpr_sel_attr_t;
+
+/*!
+ * CCM CGC attribute structure
+ *
+ * Structure for CCM clock-gated clock (CGC) attributes
+ */
+typedef struct
+{
+    uint32_t lpcgIdx;                       /*!< LPCG index controlling the CGC */
+    uint32_t rootIdx;                       /*!< CCM root sourcing the CGC */
+} ccm_cgc_attr_t;
+
 
 /* Functions */
 
@@ -444,6 +460,9 @@ extern const uint8_t g_clockRootMux[][CLOCK_NUM_ROOT_MUX_SEL];
 
 /*! GPR-selected clocks (clock source/clock root) */
 extern const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL];
+
+/*! CCM CGC attributes */
+extern const ccm_cgc_attr_t g_clockCgcAttr[CLOCK_NUM_CGC];
 
 #endif /* FSL_CLOCK_H */
 

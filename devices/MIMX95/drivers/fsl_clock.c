@@ -835,6 +835,16 @@ const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL] =
     }
 };
 
+/* CCM CGC attributes */
+const ccm_cgc_attr_t g_clockCgcAttr[CLOCK_NUM_CGC] =
+{
+    [CLOCK_CGC_GPU]
+    {
+        .lpcgIdx = 24U,
+        .rootIdx = CLOCK_ROOT_GPU,
+    }
+};
+
 /*--------------------------------------------------------------------------*/
 /* Check if CCM clock source power domain enabled                           */
 /*--------------------------------------------------------------------------*/

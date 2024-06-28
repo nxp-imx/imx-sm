@@ -564,6 +564,120 @@ bool CCM_GprValSet(uint32_t gprIdx, uint32_t gprMask, uint32_t gprVal)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get CCM CGC enable status                                                */
+/*--------------------------------------------------------------------------*/
+bool CCM_CgcGetEnable(uint32_t cgcIdx)
+{
+    bool rc = false;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        uint32_t lpcgIdx = g_clockCgcAttr[cgcIdx].lpcgIdx;
+
+        rc = CCM_LpcgDirectCtrlGetEnable(lpcgIdx);
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CCM CGC enable status                                                */
+/*--------------------------------------------------------------------------*/
+bool CCM_CgcSetEnable(uint32_t cgcIdx, bool enable)
+{
+    bool rc = false;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        uint32_t lpcgIdx = g_clockCgcAttr[cgcIdx].lpcgIdx;
+
+        rc = CCM_LpcgDirectCtrlSetEnable(lpcgIdx, enable);
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get CCM CGC rate                                                         */
+/*--------------------------------------------------------------------------*/
+uint64_t CCM_CgcGetRate(uint32_t cgcIdx)
+{
+    uint64_t rate = 0UL;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        uint32_t rootIdx = g_clockCgcAttr[cgcIdx].rootIdx;
+        rate = CCM_RootGetRate(rootIdx);
+    }
+
+    return rate;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get CCM CGC parent                                                       */
+/*--------------------------------------------------------------------------*/
+bool CCM_CgcGetParent(uint32_t cgcIdx, uint32_t *rootIdx)
+{
+    bool rc = false;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        *rootIdx = g_clockCgcAttr[cgcIdx].rootIdx;
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get CCM LPCG direct control enable                                       */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgDirectCtrlGetEnable(uint32_t lpcgIdx)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint32_t lpcgDirect = CCM_CTRL->LPCG[lpcgIdx].DIRECT;
+
+        if ((lpcgDirect & CCM_LPCG_DIRECT_ON_MASK) != 0U)
+        {
+            rc = true;
+        }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CCM LPCG direct control enable                                       */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgDirectCtrlSetEnable(uint32_t lpcgIdx, bool enable)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint32_t lpcgDirect = CCM_CTRL->LPCG[lpcgIdx].DIRECT;
+
+        if (enable)
+        {
+            lpcgDirect |= CCM_LPCG_DIRECT_ON_MASK;
+        }
+        else
+        {
+            lpcgDirect &= ~CCM_LPCG_DIRECT_ON_MASK;
+        }
+
+        CCM_CTRL->LPCG[lpcgIdx].DIRECT = lpcgDirect;
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set CCM LPCG low-power mode setting for specified CPU                    */
 /*--------------------------------------------------------------------------*/
 bool CCM_LpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t cpuLpmSetting)
