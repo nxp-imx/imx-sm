@@ -998,3 +998,4 @@ static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
 /*! @}*/
 
 #endif /* _FSL_IOMUXC_H_ */
+

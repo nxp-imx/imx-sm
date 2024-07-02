@@ -28,6 +28,7 @@
  */
 
 /* Includes */
+
 #include "sm.h"
 #include "fsl_ccm.h"
 #include "fsl_cpu.h"
@@ -2086,3 +2087,4 @@ bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector)
 
     return rc;
 }
+

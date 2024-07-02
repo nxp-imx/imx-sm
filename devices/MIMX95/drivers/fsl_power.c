@@ -40,6 +40,7 @@
 #endif
 
 /* Local Defines */
+
 #define WHITELIST_VAL(cpuId)    (WHITELIST_MASK(CPU_IDX_M33P) | WHITELIST_MASK(cpuId))
 #define WHITELIST_ALL           (WHITELIST_MASK(CPU_IDX_M33P) | WHITELIST_MASK(CPU_IDX_M7P) | WHITELIST_MASK(CPU_IDX_A55P))
 
@@ -638,3 +639,4 @@ void PWR_LpHandshakeAck(void)
     }
 #endif
 }
+

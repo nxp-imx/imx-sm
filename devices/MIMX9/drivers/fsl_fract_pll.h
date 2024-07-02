@@ -319,3 +319,4 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
 #endif /* FSL_FRACT_PLL_H */
 
 /** @} */
+

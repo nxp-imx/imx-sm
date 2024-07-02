@@ -227,3 +227,4 @@ extern rst_line_info_t const g_rstLineInfo[];
 #endif /* DRV_RST_H */
 
 /** @} */
+

@@ -28,6 +28,7 @@
  */
 
 /* Includes */
+
 #include "fsl_cpu.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
@@ -39,6 +40,7 @@
 /* Local Types */
 
 /* Local Functions */
+
 static void SRC_MemSetLpMode(uint32_t srcMixIdx, bool enableLpMode);
 static bool SRC_MemRetentionModeInit(uint32_t srcMixIdx);
 static void SRC_MixSetA55HdskMode(uint32_t srcMixIdx, uint8_t hdskMode);
@@ -49,6 +51,7 @@ static bool SRC_MixPowerDownCompleted(uint32_t srcMixIdx);
 static bool SRC_MixPowerUpCompleted(uint32_t srcMixIdx);
 
 /* Local Variables */
+
 static src_mix_slice_t *const s_srcMixPtrs[] = SRC_MIX_BASE_PTRS;
 static src_mem_slice_t *const s_srcMemPtrs[] = SRC_MEM_BASE_PTRS;
 

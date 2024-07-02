@@ -350,3 +350,4 @@ extern pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[];
 #endif /* DRV_PWR_H */
 
 /** @} */
+

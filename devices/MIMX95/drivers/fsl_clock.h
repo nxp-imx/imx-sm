@@ -411,3 +411,4 @@ extern const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL];
 #endif /* FSL_CLOCK_H */
 
 /** @} */
+

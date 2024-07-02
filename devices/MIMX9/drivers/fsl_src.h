@@ -245,3 +245,4 @@ void SRC_MixIsolationSetup(uint32_t isoMask, bool enable);
 #endif /* FSL_SRC_H */
 
 /** @} */
+

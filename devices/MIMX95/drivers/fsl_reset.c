@@ -28,6 +28,7 @@
  */
 
 /* Includes */
+
 #include "fsl_reset.h"
 #include "fsl_device_registers.h"
 
@@ -650,3 +651,4 @@ void RST_SystemRequestReset(void)
     /* Assert CM33 SYSRESETREQ */ 
     NVIC_SystemReset();
 }
+

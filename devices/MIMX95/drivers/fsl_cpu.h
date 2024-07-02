@@ -677,3 +677,4 @@ bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector);
 #endif /* DRV_CPU_H */
 
 /** @} */
+

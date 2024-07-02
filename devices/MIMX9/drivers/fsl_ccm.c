@@ -667,3 +667,4 @@ bool CCM_LpcgTimeoutSetEnable(uint32_t lpcgIdx, bool enable)
 
     return rc;
 }
+

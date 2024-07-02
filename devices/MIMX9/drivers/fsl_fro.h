@@ -179,3 +179,4 @@ bool FRO_GetEnable(void);
 #endif /* FSL_FRO_H */
 
 /** @} */
+
