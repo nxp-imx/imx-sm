@@ -1577,7 +1577,11 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                         case 2:
                             {
                                 errno = 0;
-                                uint32_t ext = strtoul(argv[1], NULL, 0);
+                                uint32_t ext = 0x80U;
+                                if (argc > 1)
+                                {
+                                    ext = strtoul(argv[1], NULL, 0);
+                                }
 
                                 if (errno == 0)
                                 {
