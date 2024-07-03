@@ -64,12 +64,13 @@ void TEST_DevSmFault(void)
 #ifdef SIMU
     /* FaultReactionGet */
     {
-        dev_sm_rst_rec_t resetRec;
+        dev_sm_rst_rec_t resetRec = { 0 };
+
         resetRec.errId = DEV_SM_FAULT_0;
         uint32_t reaction = 0;
         uint32_t lm = 0;
 
-        printf("DEV_SM_FaultReactionGet()");
+        printf("DEV_SM_FaultReactionGet()\n");
         CHECK(DEV_SM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
@@ -175,3 +176,4 @@ void TEST_DevSmFault(void)
 
     printf("\n");
 }
+

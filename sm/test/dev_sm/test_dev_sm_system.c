@@ -70,16 +70,16 @@ void TEST_DevSmSystem(void)
 
     /* Shutdown and Stage Reset Coverage */
     {
-        printf("DEV_SM_SystemStageReset()");
+        printf("DEV_SM_SystemStageReset()\n");
         CHECK(DEV_SM_SystemStageReset(0U, 0U));
 
-        printf("DEV_SM_SystemShutdown()");
+        printf("DEV_SM_SystemShutdown()\n");
         CHECK(DEV_SM_SystemShutdown());
     }
 
     /*System Init Coverage */
     {
-        printf("DEV_SM_SystemInit()");
+        printf("DEV_SM_SystemInit()\n");
         CHECK(DEV_SM_SystemInit());
     }
 
@@ -87,7 +87,7 @@ void TEST_DevSmSystem(void)
     {
         dev_sm_rst_rec_t shutdownRec = {0};
 
-        printf("DEV_SM_SystemShutdownRecSet()");
+        printf("DEV_SM_SystemShutdownRecSet()\n");
         DEV_SM_SystemShutdownRecSet(shutdownRec);
     }
 
@@ -95,34 +95,34 @@ void TEST_DevSmSystem(void)
     {
         dev_sm_rst_rec_t rst = {0};
 
-        printf("DEV_SM_SystemRstComp()");
+        printf("DEV_SM_SystemRstComp()\n");
         CHECK(DEV_SM_SystemRstComp(&rst));
     }
 
     /*System Error Coverage */
     {
         uint32_t status = 0, pc = 0x800U;
-        printf("DEV_SM_SystemError()");
+        printf("DEV_SM_System()\n");
         DEV_SM_SystemError(status, pc);
     }
 
     /*System Idle Coverage */
     {
-        printf("DEV_SM_SystemError()");
+        printf("DEV_SM_System()\n");
         CHECK(DEV_SM_SystemIdle());
     }
 
     /*Syslog dump Coverage */
     {
         uint32_t flags = 0x0U;
-        printf("DEV_SM_SyslogDump()");
+        printf("DEV_SM_SyslogDump()\n");
         CHECK(DEV_SM_SyslogDump(flags));
     }
 
     /*Fuse Word Address Get Coverage */
     {
         uint32_t fuseWord = 0x0U, addr = 0x0U;
-        printf("DEV_SM_FuseInfoGet()");
+        printf("DEV_SM_FuseInfoGet()\n");
         NECHECK(DEV_SM_FuseInfoGet(fuseWord, &addr), SM_ERR_NOT_SUPPORTED);
     }
 

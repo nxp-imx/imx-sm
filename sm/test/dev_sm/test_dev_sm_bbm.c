@@ -82,7 +82,7 @@ void TEST_DevSmBbm(void)
 
         printf("DEV_SM_BbmGetBootStatus\n");
         CHECK(DEV_SM_BbmGetBootStatus(&flags));
-        printf("   flags=(%u)", flags);
+        printf("   flags=(%u)\n", flags);
 
         BCHECK(flags == 0U);
     }

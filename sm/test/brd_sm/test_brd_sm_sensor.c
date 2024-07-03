@@ -78,7 +78,7 @@ void TEST_BrdSmSensor(void)
             sensor.timestampExponent);
 
         /* Enable sensor*/
-        printf("    timestampReporting = %u\n", timestampReporting);
+        printf("  timestampReporting=%u\n", timestampReporting);
         printf("BRD_SM_SensorEnable(%u)\n", sensorId);
         CHECK(BRD_SM_SensorEnable(sensorId, enable, timestampReporting));
 
