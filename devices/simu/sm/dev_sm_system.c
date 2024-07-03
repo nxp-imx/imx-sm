@@ -101,6 +101,30 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
     if (status == SM_ERR_SUCCESS)
     {
         printf("DEV_SM_SystemStageReset(%u, %u)\n", stage, container);
+
+        g_romPassover.bootStage = stage;
+        g_romPassover.imgSetSel = container;
+
+        if (stage == DEV_SM_ROM_BS_PRIMARY)
+        {
+            g_romPassover.bootDevType = DEV_SM_ROM_BD_FLEXSPINOR;
+        }
+        else if (stage == DEV_SM_ROM_BS_SECONDARY)
+        {
+            g_romPassover.bootDevType = DEV_SM_ROM_BD_SD;
+        }
+        else if (stage == DEV_SM_ROM_BS_RECOVERY)
+        {
+            g_romPassover.bootDevType = DEV_SM_ROM_BD_MMC;
+        }
+        else if (stage == DEV_SM_ROM_BS_SERIAL)
+        {
+            g_romPassover.bootDevType = DEV_SM_ROM_BD_USB;
+        }
+        else
+        {
+            g_romPassover.bootDevType = DEV_SM_ROM_BD_PRELOAD;
+        }
     }
 
     /* Return status */

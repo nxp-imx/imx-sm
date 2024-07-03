@@ -65,6 +65,15 @@
 
 static uint32_t s_imageIdx = 0U;
 
+/* Global variables */
+
+rom_passover_t g_romPassover =
+{
+    .tag = PASSOVER_TAG,
+    .size = PASSOVER_SIZE,
+    .ver = PASSOVER_VER
+};
+
 /*--------------------------------------------------------------------------*/
 /* Return handover data                                                     */
 /*--------------------------------------------------------------------------*/
@@ -106,16 +115,8 @@ int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_RomPassoverGet(const rom_passover_t **passover)
 {
-    /* Storage for fake passover data */
-    static const rom_passover_t s_romPassover =
-    {
-        .tag = PASSOVER_TAG,
-        .size = PASSOVER_SIZE,
-        .ver = PASSOVER_VER
-    };
-
     /* Return pointer to data */
-    *passover = &s_romPassover;
+    *passover = &g_romPassover;
 
     /* Return status */
     return SM_ERR_SUCCESS;

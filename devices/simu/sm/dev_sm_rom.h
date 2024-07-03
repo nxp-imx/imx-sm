@@ -159,6 +159,11 @@ typedef struct
     uint32_t imgOfs;            /*!< Image offset */
 } rom_passover_t;
 
+/* Global variables */
+
+/*! Global data to hold simu passover data */
+extern rom_passover_t g_romPassover;
+
 /* Functions */
 
 /** @} */
