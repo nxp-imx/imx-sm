@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -143,6 +143,8 @@ int32_t LMM_PerfLevelSet(uint32_t lmId, uint32_t domainId,
         /* Inform device of power state, device will check if changed */
         status = SM_PERFLEVELSET(domainId, newPerfLevel);
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

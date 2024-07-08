@@ -95,6 +95,7 @@ int32_t LMM_SystemInit(void)
         s_lmShutdownReason[lmId] = shutdownRec;
     }
 
+    /* Return status */
     return status;
 }
 
@@ -115,6 +116,7 @@ int32_t LMM_SystemModeSelSet(uint32_t mSel)
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
+    /* Return status */
     return status;
 }
 
@@ -193,6 +195,9 @@ int32_t LMM_SystemShutdown(uint32_t lmId, uint32_t agentId,
         status = SM_SYSTEMSHUTDOWN();
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
     return status;
 }
 
@@ -249,6 +254,9 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
         status = SM_SYSTEMRESET();
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
     return status;
 }
 
@@ -274,6 +282,9 @@ int32_t LMM_SystemSuspend(uint32_t lmId, uint32_t agentId)
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
     return status;
 }
 
@@ -299,6 +310,9 @@ int32_t LMM_SystemWake(uint32_t lmId, uint32_t agentId)
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
     return status;
 }
 
@@ -376,6 +390,8 @@ int32_t LMM_SystemPowerModeSet(uint32_t lmId, uint32_t powerMode)
         SM_SYSTEMPOWERMODESET(newMode);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -399,6 +415,8 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
         *state = (uint32_t) s_lmState[stateLm];
         *errStatus = s_lmError[stateLm];
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -434,6 +452,8 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
         idx++;
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -464,6 +484,8 @@ int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm)
         s_lmError[pwrLm] = status;
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -489,6 +511,7 @@ int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
 /*--------------------------------------------------------------------------*/
 /* Shutdown LM                                                              */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_2_violation:FALSE]
 int32_t LMM_SystemLmShutdown(uint32_t lmId, uint32_t agentId,
     uint32_t shutdownLm, bool graceful, const lmm_rst_rec_t *shutdownRec)
 {
@@ -528,6 +551,8 @@ int32_t LMM_SystemLmShutdown(uint32_t lmId, uint32_t agentId,
             status = LMM_DoShutdown(&trigger, shutdownRec);
         }
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -588,6 +613,8 @@ int32_t LMM_SystemLmReset(uint32_t lmId, uint32_t agentId, uint32_t resetLm,
         }
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -622,6 +649,9 @@ int32_t LMM_SystemLmSuspend(uint32_t lmId, uint32_t agentId,
         (void) LMM_RpcNotificationTrigger(suspendLm, &trigger);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
     return status;
 }
 
@@ -652,6 +682,8 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm)
         (void) LMM_RpcNotificationTrigger(wakeLm, &trigger);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -676,6 +708,8 @@ int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
         *shutdownRec = s_lmShutdownReason[reasonLm];
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -683,6 +717,7 @@ int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
 /*--------------------------------------------------------------------------*/
 /* Group boot                                                               */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_2_violation:FALSE]
 int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
     const lmm_rst_rec_t *bootRec, uint8_t group)
 {
@@ -718,6 +753,8 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
         }
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -725,6 +762,7 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
 /*--------------------------------------------------------------------------*/
 /* Group shutdown                                                           */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_2_violation:FALSE]
 int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
     bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group)
 {
@@ -747,6 +785,8 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
             }
         }
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -776,6 +816,8 @@ int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
     {
         status = SM_ERR_NOT_SUPPORTED;
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -840,6 +882,7 @@ static int32_t LMM_DoBoot(lmm_rpc_trigger_t *trigger,
 /*--------------------------------------------------------------------------*/
 /* Do LM Shutdown                                                           */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_2_violation:FALSE]
 static int32_t LMM_DoShutdown(lmm_rpc_trigger_t *trigger,
     const lmm_rst_rec_t *shutdownRec)
 {

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -87,10 +87,14 @@ void TEST_DevPerfIo(void)
 {
     uint32_t tmp = 0U;
 
-    printf("MU1_MUA read took %u nsec\n", ProfileIoRead(s_muBaseAddrs[0], &tmp));
-    printf("MU2_MUA read took %u nsec\n", ProfileIoRead(s_muBaseAddrs[0], &tmp));
-    printf("BBNSM GPR[0] read took %u nsec\n", ProfileIoRead((uint32_t) &BBNSM->GPR[0], &tmp));
-    printf("BBNSM GPR[0] write took %u nsec\n", ProfileIoWrite((uint32_t) &BBNSM->GPR[0], 0U));
+    printf("MU1_MUA read took %u nsec\n", ProfileIoRead(s_muBaseAddrs[0],
+        &tmp));
+    printf("MU2_MUA read took %u nsec\n", ProfileIoRead(s_muBaseAddrs[0],
+        &tmp));
+    printf("BBNSM GPR[0] read took %u nsec\n", ProfileIoRead(
+        (uint32_t) &BBNSM->GPR[0], &tmp));
+    printf("BBNSM GPR[0] write took %u nsec\n", ProfileIoWrite(
+        (uint32_t) &BBNSM->GPR[0], 0U));
 
     printf("\n");
 }

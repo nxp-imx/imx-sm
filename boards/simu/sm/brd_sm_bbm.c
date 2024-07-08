@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -163,6 +163,27 @@ int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
             /* Get seconds */
             *val = s_ticks >> 15U;
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get BBM RTC state                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (rtcId < DEV_SM_NUM_RTC)
+    {
+        status = DEV_SM_BbmRtcStateGet(rtcId, state);
+    }
+    else
+    {
+        /* Test state */
+        *state = LMM_BBM_STATE_RESET | LMM_BBM_STATE_BATT_LOW;
     }
 
     /* Return status */

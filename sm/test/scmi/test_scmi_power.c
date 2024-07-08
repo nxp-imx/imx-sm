@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -77,6 +77,16 @@ void TEST_ScmiPower(void)
         printf("  ver=0x%08X\n", ver);
 
         BCHECK(ver == SCMI_POWER_PROT_VER);
+    }
+
+    /* Negotiate Protocol Attributes */
+    {
+        printf("SCMI_PowerNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_POWER_PROT_VER));
+        NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            0x30002U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Test protocol attributes */
@@ -161,6 +171,19 @@ void TEST_ScmiPower(void)
         /* Branch -- Nullpointer */
         CHECK(SCMI_PowerStateGet(SM_TEST_DEFAULT_CHN, 0U, NULL));
 
+    }
+
+    /* PowerNegotiateProtocolVersion */
+    {
+        uint32_t version = 0x1234U;
+        printf("SCMI_PowerNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            version), SM_ERR_NOT_SUPPORTED);
+
+        /* Check unsupport minor version */
+        NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_POWER_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Loop over power test domains */
@@ -254,7 +277,7 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
             BCHECK(powerState == SCMI_POWER_DOMAIN_STATE_OFF);
         }
 
-        /* Test power Set ON*/
+        /* Test power Set ON */
         printf("SCMI_PowerStateSet(%u, %u, 0, STATE_ON)\n",
             channel, domainId);
         CHECK(SCMI_PowerStateSet(channel, domainId,

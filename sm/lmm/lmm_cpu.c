@@ -108,6 +108,8 @@ int32_t LMM_CpuBootCheck(uint32_t lmId, uint32_t cpuId)
         status = SM_ERR_MISSING_PARAMETERS;
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -143,6 +145,8 @@ int32_t LMM_CpuStart(uint32_t lmId, uint32_t cpuId)
         status = SM_CPUSTART(cpuId);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -177,6 +181,8 @@ int32_t LMM_CpuHold(uint32_t lmId, uint32_t cpuId)
     {
         status = SM_CPUHOLD(cpuId);
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -235,6 +241,8 @@ int32_t LMM_CpuStop(uint32_t lmId, uint32_t cpuId)
         }
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }
@@ -272,6 +280,8 @@ int32_t LMM_CpuResetVectorSet(uint32_t lmId, uint32_t cpuId,
             status = SM_CPURESETVECTORSET(cpuId, resetVector);
         }
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -380,6 +390,8 @@ int32_t LMM_CpuPdLpmConfigSet(uint32_t lmId, uint32_t cpuId,
         status = SM_CPUPDLPMCONFIGSET(cpuId, domainId, lpmSetting,
             newRetMask & pdMask);
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

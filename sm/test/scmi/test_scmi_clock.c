@@ -105,7 +105,15 @@ void TEST_ScmiClock(void)
             30U, NULL));
     }
 
-    /* Test clock attributes for invalid clock and invalid channel*/
+    /* Test Negotiate protocol version */
+    {
+        printf("SCMI_ClockNegotiateProtocolVersion(%u)\n",
+            SCMI_MISC_PROT_VER);
+        CHECK(SCMI_ClockNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_CLOCK_PROT_VER));
+    }
+
+    /* Test clock attributes for invalid clock and invalid channel */
     {
         NCHECK(SCMI_ClockAttributes(SM_TEST_DEFAULT_CHN, numClocks, NULL,
             NULL));
@@ -114,7 +122,7 @@ void TEST_ScmiClock(void)
             NULL), SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* Test clock rate set for invalid clock and invalid channel*/
+    /* Test clock rate set for invalid clock and invalid channel */
     {
         uint32_t flags = SCMI_CLOCK_RATE_FLAGS_ROUND(SCMI_CLOCK_ROUND_DOWN);
         scmi_clock_rate_t rate = {1000U, 0U};
@@ -129,7 +137,7 @@ void TEST_ScmiClock(void)
     }
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockConfigSet and invalid channel*/
+       ClockConfigSet and invalid channel */
     {
         uint32_t attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
 
@@ -141,7 +149,7 @@ void TEST_ScmiClock(void)
     }
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockConfigGet */
+       ClockConfigGet */
     {
         uint32_t flags = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
         uint32_t attr = 0U;
@@ -157,7 +165,7 @@ void TEST_ScmiClock(void)
     }
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockDescribeRates */
+       ClockDescribeRates */
     {
         scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES];
         uint32_t flags = 0;
@@ -168,7 +176,7 @@ void TEST_ScmiClock(void)
 
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockRateGet and invalid channel*/
+       ClockRateGet and invalid channel */
     {
         scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES];
 
@@ -177,7 +185,7 @@ void TEST_ScmiClock(void)
     }
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockParentSet and invalid channel*/
+       ClockParentSet and invalid channel */
     {
         uint32_t parentId = 0U;
 
@@ -189,7 +197,7 @@ void TEST_ScmiClock(void)
     }
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockParentGet and invalid channel*/
+       ClockParentGet and invalid channel */
     {
         uint32_t parentId = 0U;
 
@@ -201,7 +209,7 @@ void TEST_ScmiClock(void)
     }
 
     /* Test coverage of exceeding max amount of clocks in
-        ClockPossibleParentGet */
+       ClockPossibleParentGet */
     {
         uint32_t numParent = 0;
         uint32_t parents = 0;
@@ -213,6 +221,15 @@ void TEST_ScmiClock(void)
             0U, &numParent, &parents), SCMI_ERR_INVALID_PARAMETERS);
     }
 
+    /* Branch coverage */
+    {
+        uint32_t permissions = 0U;
+        NECHECK(SCMI_ClockGetPermissions(SM_SCMI_NUM_CHN, numClocks,
+            &permissions), SCMI_ERR_INVALID_PARAMETERS);
+
+        NECHECK(SCMI_ClockGetPermissions(SM_TEST_DEFAULT_CHN, numClocks,
+            &permissions), SCMI_ERR_NOT_FOUND);
+    }
     /* Loop over clock test domains */
     status = TEST_ConfigFirstGet(TEST_CLK, &agentId,
         &channel, &clockId, &lmId);
@@ -288,7 +305,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
     CHECK(SCMI_ClockDescribeRates(channel, clockId, 0U,
         NULL, NULL));
 
-    /* Config get test*/
+    /* Config get test */
     {
         uint32_t attributesConfigGet = 0U;
         uint32_t flagConfigGet = 0U;
@@ -328,7 +345,8 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
                 skipParents, NULL, NULL));
 
             printf("  remaining parents= %u\n",
-                SCMI_CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(numParentsFlags));
+                SCMI_CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(
+                numParentsFlags));
 
             uint32_t numParents =
                 SCMI_CLOCK_NUM_PARENT_FLAGS_NUM_PARENTS(numParentsFlags);
@@ -374,8 +392,6 @@ static void TEST_ScmiClockSet(bool pass, uint32_t channel,
         printf("  enabled=%u\n",
             SCMI_CLOCK_ATTR_ENABLED(attributes));
     }
-
-
 }
 
 /*--------------------------------------------------------------------------*/
@@ -455,6 +471,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
     {
         uint32_t parentId = 0U;
         uint32_t attributes = 0U;
+        uint32_t permissions = 0U;
         uint8_t name[SCMI_CLOCK_MAX_NAME];
 
         CHECK(SCMI_ClockAttributes(channel, clockId, &attributes, name));
@@ -470,6 +487,11 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             printf("SCMI_ClockParentSet(%u, %u)\n", channel, clockId);
             XCHECK(pass, SCMI_ClockParentSet(channel, clockId, parentId));
         }
+
+        CHECK(SCMI_ClockGetPermissions(channel, clockId, &permissions));
+
+        /* Branch Coverage */
+        CHECK(SCMI_ClockGetPermissions(channel, clockId, NULL));
     }
     else
     {

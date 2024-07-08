@@ -82,6 +82,16 @@ void TEST_ScmiPerf(void)
         BCHECK(ver == SCMI_PERF_PROT_VER);
     }
 
+    /* Negotiate Protocol Attributes */
+    {
+        printf("SCMI_PerfNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_PERF_PROT_VER));
+        NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            0x40002U), SM_ERR_NOT_SUPPORTED);
+    }
+
     /* Protocol Attributes */
     {
         uint32_t attributes = 0U;
@@ -204,6 +214,20 @@ void TEST_ScmiPerf(void)
         CHECK(SCMI_PerformanceDescribeLevels(SM_TEST_DEFAULT_CHN,
             0U, skipIndex, NULL, NULL));
     }
+
+    /* PerfNegotiateProtocolVersion */
+    {
+        uint32_t version = 0x1234U;
+        printf("SCMI_PerfNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            version), SM_ERR_NOT_SUPPORTED);
+
+        /* Check unsupport minor version */
+        NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_PERF_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+    }
+
 
     /* Loop over performance test domains */
     status = TEST_ConfigFirstGet(TEST_PERF, &agentId,
@@ -365,8 +389,8 @@ static void TEST_ScmiPerfSet(bool pass, uint32_t channel,
             rangeMin), SCMI_ERR_NOT_SUPPORTED);
 
         /* Branch -- Invalid Channel */
-        NECHECK(SCMI_PerformanceLimitsSet(SM_SCMI_NUM_CHN, domainId, rangeMax,
-            rangeMin), SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_PerformanceLimitsSet(SM_SCMI_NUM_CHN, domainId,
+            rangeMax, rangeMin), SCMI_ERR_INVALID_PARAMETERS);
     }
     /* ACCESS DENIED */
     else
@@ -401,8 +425,8 @@ static void TEST_ScmiPerfPriv(bool pass, uint32_t channel,
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_PerformanceLevelGet(SM_SCMI_NUM_CHN, domainId, NULL),
             SCMI_ERR_INVALID_PARAMETERS);
-        NECHECK(SCMI_PerformanceLevelSet(SM_SCMI_NUM_CHN, domainId, perfLevel),
-            SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_PerformanceLevelSet(SM_SCMI_NUM_CHN, domainId,
+            perfLevel), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Branch -- Nullpointer */
         CHECK(SCMI_PerformanceLevelGet(channel, domainId, NULL));
@@ -415,7 +439,8 @@ static void TEST_ScmiPerfPriv(bool pass, uint32_t channel,
         /* Reset */
         uint32_t sysManager = 0U;
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+            &g_swReason));
     }
 #endif
 }

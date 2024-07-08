@@ -71,19 +71,33 @@ void TEST_DevSmSystem(void)
     /* Shutdown and Stage Reset Coverage */
     {
         printf("DEV_SM_SystemStageReset()\n");
+
+        /* DEV_SM_ROM_BS_PRIMARY */
+        CHECK(DEV_SM_SystemStageReset(DEV_SM_ROM_BS_PRIMARY, 0U));
+
+        /* DEV_SM_ROM_BS_SECONDARY */
+        CHECK(DEV_SM_SystemStageReset(DEV_SM_ROM_BS_SECONDARY, 0U));
+
+        /* DEV_SM_ROM_BS_RECOVERY */
+        CHECK(DEV_SM_SystemStageReset(DEV_SM_ROM_BS_RECOVERY, 0U));
+
+        /* DEV_SM_ROM_BS_SERIAL */
+        CHECK(DEV_SM_SystemStageReset(DEV_SM_ROM_BS_SERIAL, 0U));
+
+        /* Default */
         CHECK(DEV_SM_SystemStageReset(0U, 0U));
 
         printf("DEV_SM_SystemShutdown()\n");
         CHECK(DEV_SM_SystemShutdown());
     }
 
-    /*System Init Coverage */
+    /* System Init Coverage */
     {
         printf("DEV_SM_SystemInit()\n");
         CHECK(DEV_SM_SystemInit());
     }
 
-    /*SystemShutdownRecSet Coverage */
+    /* SystemShutdownRecSet Coverage */
     {
         dev_sm_rst_rec_t shutdownRec = {0};
 
@@ -91,7 +105,7 @@ void TEST_DevSmSystem(void)
         DEV_SM_SystemShutdownRecSet(shutdownRec);
     }
 
-    /*Complete System Reset Processing Coverage*/
+    /* Complete System Reset Processing Coverage */
     {
         dev_sm_rst_rec_t rst = {0};
 
@@ -99,36 +113,51 @@ void TEST_DevSmSystem(void)
         CHECK(DEV_SM_SystemRstComp(&rst));
     }
 
-    /*System Error Coverage */
+    /* System Error Coverage */
     {
         uint32_t status = 0, pc = 0x800U;
         printf("DEV_SM_System()\n");
         DEV_SM_SystemError(status, pc);
     }
 
-    /*System Idle Coverage */
+    /* System Idle Coverage */
     {
         printf("DEV_SM_System()\n");
         CHECK(DEV_SM_SystemIdle());
     }
 
-    /*Syslog dump Coverage */
+    /* Syslog Dump Coverage */
     {
         uint32_t flags = 0x0U;
         printf("DEV_SM_SyslogDump()\n");
         CHECK(DEV_SM_SyslogDump(flags));
     }
 
-    /*Fuse Word Address Get Coverage */
+
+    /* Fuse Word Address Get Coverage */
     {
         uint32_t fuseWord = 0x0U, addr = 0x0U;
         printf("DEV_SM_FuseInfoGet()\n");
-        NECHECK(DEV_SM_FuseInfoGet(fuseWord, &addr), SM_ERR_NOT_SUPPORTED);
+        CHECK(DEV_SM_FuseInfoGet(fuseWord, &addr));
+        printf("  addr=0x%08X\n",  addr);
     }
 
-    /* trigger software interrupt test */
+    /* Trigger Software Interrupt Test */
     {
         SWI_Trigger();
+    }
+
+    /* Dump the error */
+    {
+        DEV_SM_ErrorDump();
+    }
+
+    /* Reason Name Get: Invalid Reason */
+    {
+        const char *name[15];
+        int32_t len = 0;
+        NECHECK(DEV_SM_SystemReasonNameGet(DEV_SM_NUM_REASON,
+            &name[0], &len), SM_ERR_NOT_FOUND);
     }
 #endif
 

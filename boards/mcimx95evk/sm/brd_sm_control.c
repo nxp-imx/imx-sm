@@ -223,40 +223,49 @@ int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
 int32_t BRD_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint8_t mask;
-    uint32_t val;
-    uint32_t enb = (flags != 0U) ? 0U : 1U;
 
-    switch (ctrlId)
+    /* Check if device or board */
+    if (ctrlId < DEV_SM_NUM_CTRL)
     {
-        case BRD_SM_CTRL_SD3_WAKE:
-            mask = BIT8(PCAL6408A_INPUT_SD3_WAKE);
-            val = (enb & 0x1U) << PCAL6408A_INPUT_SD3_WAKE;
-            break;
-        case BRD_SM_CTRL_PCIE1_WAKE:
-            mask = BIT8(PCAL6408A_INPUT_PCIE1_WAKE);
-            val = (enb & 0x1U) << PCAL6408A_INPUT_PCIE1_WAKE;
-            break;
-        case BRD_SM_CTRL_BT_WAKE:
-            mask = BIT8(PCAL6408A_INPUT_BT_WAKE);
-            val = (enb & 0x1U) << PCAL6408A_INPUT_BT_WAKE;
-            break;
-        case BRD_SM_CTRL_PCIE2_WAKE:
-            mask = BIT8(PCAL6408A_INPUT_PCIE2_WAKE);
-            val = (enb & 0x1U) << PCAL6408A_INPUT_PCIE2_WAKE;
-            break;
-        case BRD_SM_CTRL_BUTTON:
-            mask = BIT8(PCAL6408A_INPUT_BUTTON);
-            val = (enb & 0x1U) << PCAL6408A_INPUT_BUTTON;
-            break;
-        default:
-            status = SM_ERR_NOT_SUPPORTED;
-            break;
+        status = DEV_SM_ControlFlagsSet(ctrlId, flags);
     }
-
-    if (status == SM_ERR_SUCCESS)
+    else
     {
-        status = BRD_SM_BusExpMaskSet((uint8_t) val, mask);
+        uint8_t mask;
+        uint32_t val;
+        uint32_t enb = (flags != 0U) ? 0U : 1U;
+
+        switch (ctrlId)
+        {
+            case BRD_SM_CTRL_SD3_WAKE:
+                mask = BIT8(PCAL6408A_INPUT_SD3_WAKE);
+                val = (enb & 0x1U) << PCAL6408A_INPUT_SD3_WAKE;
+                break;
+            case BRD_SM_CTRL_PCIE1_WAKE:
+                mask = BIT8(PCAL6408A_INPUT_PCIE1_WAKE);
+                val = (enb & 0x1U) << PCAL6408A_INPUT_PCIE1_WAKE;
+                break;
+            case BRD_SM_CTRL_BT_WAKE:
+                mask = BIT8(PCAL6408A_INPUT_BT_WAKE);
+                val = (enb & 0x1U) << PCAL6408A_INPUT_BT_WAKE;
+                break;
+            case BRD_SM_CTRL_PCIE2_WAKE:
+                mask = BIT8(PCAL6408A_INPUT_PCIE2_WAKE);
+                val = (enb & 0x1U) << PCAL6408A_INPUT_PCIE2_WAKE;
+                break;
+            case BRD_SM_CTRL_BUTTON:
+                mask = BIT8(PCAL6408A_INPUT_BUTTON);
+                val = (enb & 0x1U) << PCAL6408A_INPUT_BUTTON;
+                break;
+            default:
+                status = SM_ERR_NOT_FOUND;
+                break;
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            status = BRD_SM_BusExpMaskSet((uint8_t) val, mask);
+        }
     }
 
     return status;

@@ -161,7 +161,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  37U
+#define SM_SCMI_NUM_TEST  38U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
@@ -186,6 +186,7 @@
     {.testId = TEST_PERF, .channel = 3U, .rsrc = DEV_SM_PERF_1}, \
     {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_1}, \
     {.testId = TEST_PIN, .channel = 5U, .rsrc = DEV_SM_PIN_0}, \
+    {.testId = TEST_PIN, .channel = 5U, .rsrc = DEV_SM_PIN_1}, \
     {.testId = TEST_RST, .channel = 0U, .rsrc = DEV_SM_RST_0}, \
     {.testId = TEST_RST, .channel = 3U, .rsrc = DEV_SM_RST_1}, \
     {.testId = TEST_RST, .channel = 5U, .rsrc = DEV_SM_RST_2}, \

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -65,6 +65,7 @@ void TEST_DevSmClock(void)
     uint32_t parent = 0U;
     uint32_t mux = 0U;
     uint32_t numMuxes = 0U;
+    uint32_t extConfigVal = 0U;
 #endif
 
     /* Device tests */
@@ -154,6 +155,9 @@ void TEST_DevSmClock(void)
         CHECK(DEV_SM_ClockParentSet(clockId, parent));
         CHECK(DEV_SM_ClockEnable(clockId, false));
         CHECK(DEV_SM_ClockIsEnabled(clockId, &enabled));
+        CHECK(DEV_SM_ClockExtendedSet(clockId, DEV_SM_CLOCK_EXT_SSC, 0x0U));
+        CHECK(DEV_SM_ClockExtendedGet(clockId, DEV_SM_CLOCK_EXT_SSC,
+            &extConfigVal));
 #endif
     }
 
@@ -182,6 +186,13 @@ void TEST_DevSmClock(void)
         SM_ERR_NOT_FOUND);
 #endif
 
+#ifdef SIMU
+    NECHECK(DEV_SM_ClockExtendedSet(DEV_SM_NUM_CLOCK,
+        DEV_SM_CLOCK_EXT_SSC, 0x0U), SM_ERR_NOT_FOUND);
+    NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
+        DEV_SM_CLOCK_EXT_SSC,
+        &extConfigVal), SM_ERR_NOT_FOUND);
+#endif
     printf("\n");
 }
 

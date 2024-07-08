@@ -102,8 +102,8 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
     {
         printf("DEV_SM_SystemStageReset(%u, %u)\n", stage, container);
 
-        g_romPassover.bootStage = stage;
-        g_romPassover.imgSetSel = container;
+        g_romPassover.bootStage = (uint8_t)stage;
+        g_romPassover.imgSetSel = (uint8_t)container;
 
         if (stage == DEV_SM_ROM_BS_PRIMARY)
         {

@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2024 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -58,6 +58,8 @@ ifeq ($(T), all)
 		$(OUT)/test_lmm_sys.o           \
 		$(OUT)/test_lmm_cpu.o           \
 		$(OUT)/test_lmm_fusa.o          \
+		$(OUT)/test_lmm_sensor.o        \
+		$(OUT)/test_lmm_misc.o        \
 		$(OUT)/test_lmm_voltage.o       \
 		$(OUT)/test_dev_sm_power.o      \
 		$(OUT)/test_dev_sm_fault.o      \

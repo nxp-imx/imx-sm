@@ -381,7 +381,7 @@ bool PF09_IntEnable(const PF09_Type *dev, const uint8_t *mask,
                         1U, 0xFFU, mask[idx]);
                 }
             }
-        
+
             /* Exit on error */
             if (!rc)
             {

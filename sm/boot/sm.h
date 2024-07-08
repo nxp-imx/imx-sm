@@ -55,6 +55,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "build_info.h"
+#include "sm_test_mode.h"
 
 /* Defines */
 

@@ -99,8 +99,8 @@ void TEST_ScmiLmm(void)
         uint32_t version = 1234U;
 
         printf(" SCMI_LmmNegotiateProtocolVersion\n");
-        NECHECK( SCMI_LmmNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN, version),
-            SCMI_ERR_NOT_SUPPORTED);
+        NECHECK( SCMI_LmmNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            version), SCMI_ERR_NOT_SUPPORTED);
     }
 
     /* Test LMM message attributes */
@@ -204,10 +204,12 @@ void TEST_ScmiLmm(void)
     /* LmmPowerOn Invalid lm Invalid channel */
     {
         printf("SCMI_LmmPowerOn(%u, %u)\n", SM_TEST_DEFAULT_CHN, numLm);
-        NECHECK(SCMI_LmmPowerOn(SM_TEST_DEFAULT_CHN, numLm), SCMI_ERR_NOT_FOUND);
+        NECHECK(SCMI_LmmPowerOn(SM_TEST_DEFAULT_CHN, numLm),
+            SCMI_ERR_NOT_FOUND);
 
         printf("SCMI_LmmPowerOn(%u, %u)\n", SM_SCMI_NUM_CHN, numLm);
-        NECHECK(SCMI_LmmPowerOn(SM_SCMI_NUM_CHN, numLm), SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_LmmPowerOn(SM_SCMI_NUM_CHN, numLm),
+            SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Invalid notification */
@@ -392,6 +394,23 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
             BCHECK(SCMI_LMM_EVENT_BOOT(flags) == 1U);
         }
 
+#if 0
+        /* Branch coverage */
+        {
+            flags = 0U;
+            uint32_t eventLm = 0U;
+            uint32_t recId = 0U;
+
+            CHECK(SCMI_LmmBoot(channel, lm));
+            CHECK(SCMI_LmmEvent(channel + 1U, NULL, &eventLm, &flags));
+
+            CHECK(SCMI_LmmBoot(channel, lm));
+            CHECK(SCMI_LmmEvent(channel + 1U, &recId, NULL, &flags));
+
+            CHECK(SCMI_LmmBoot(channel, lm));
+            CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, NULL));
+        }
+#endif
         /* No notification */
         flags = SCMI_LMM_NOTIFY_BOOT(0U) | SCMI_LMM_NOTIFY_SHUTDOWN(0U);
         printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, lm, flags);
@@ -458,6 +477,16 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
             printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
             CHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
                 &shutdownFlags, &extInfo));
+
+            /* Branch coverage */
+            {
+                CHECK(SCMI_LmmResetReason(channel, lmId, NULL,
+                    &shutdownFlags, &extInfo));
+                CHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
+                    NULL, &extInfo));
+                CHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
+                    &shutdownFlags, NULL));
+            }
         }
         /* LM_00020 Reset Config */
 #ifdef SIMU
@@ -466,7 +495,8 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
             /* Reset */
             uint32_t sysManager = 0U;
             printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-            CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
+            CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+                &g_swReason));
         }
 #endif
     }

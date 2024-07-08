@@ -117,6 +117,8 @@ int32_t LMM_BbmRtcTimeSet(uint32_t lmId, uint32_t rtcId, uint64_t val,
         LMM_BbmRtcUpdateEvent(rtcId);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

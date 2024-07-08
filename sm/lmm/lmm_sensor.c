@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -130,6 +130,8 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
         /* Inform device of sensor state, device will check if changed */
         status = SM_SENSORENABLE(sensorId, newEnable, timestampReporting);
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

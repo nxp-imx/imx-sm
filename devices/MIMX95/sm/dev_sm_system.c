@@ -324,7 +324,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         [CLOCK_PLL_HSIO] = CLOCK_SRC_HSIOPLL_VCO,
         [CLOCK_PLL_LDB] = CLOCK_SRC_LDBPLL_VCO
     };
-    static src_mem_slice_t *const s_srcMemPtrs[] = SRC_MEM_BASE_PTRS;
+    static src_mem_slice_t const *const s_srcMemPtrs[] = SRC_MEM_BASE_PTRS;
 
     int32_t status = SM_ERR_SUCCESS;
     uint32_t s_clkRootCtrl[DEV_SM_NUM_SLEEP_ROOTS];

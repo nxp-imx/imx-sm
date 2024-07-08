@@ -136,6 +136,7 @@ static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSpm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
 
 /* Local Variables */
 
@@ -207,7 +208,8 @@ int32_t MONITOR_Dispatch(char *line)
         "syslog",
         "grp",
         "spm",
-        "custom"
+        "custom",
+        "test"
     };
 
     /* Parse Line */
@@ -392,6 +394,9 @@ int32_t MONITOR_Dispatch(char *line)
                 break;
             case 54:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
+                break;
+            case 55:  /* test */
+                status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
             default:
                 status = SM_ERR_NOT_FOUND;
@@ -820,6 +825,7 @@ static int32_t MONITOR_CmdReason(int32_t argc, const char * const argv[])
         BRD_SM_ResetRecordPrint("Shutdown:", shutdownRec);
     }
 
+    /* Return status */
     return SM_ERR_SUCCESS;
 }
 
@@ -3219,5 +3225,34 @@ static int32_t MONITOR_CmdSpm(int32_t argc, const char * const argv[])
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[])
 {
     return BRD_SM_Custom(argc, argv);
+}
+
+/*--------------------------------------------------------------------------*/
+/* Test command                                                             */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (argc < 1)
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
+    else
+    {
+        uint32_t testMode;
+
+        /* Parse data */
+        status = MONITOR_ConvU32(argv[0], &testMode);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Set test mode */
+            g_testMode = testMode;
+        }
+    }
+
+    /* Return status */
+    return status;
 }
 

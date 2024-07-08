@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -32,42 +32,51 @@
 ** ###################################################################
 */
 
-#ifndef BRD_SM_H
-#define BRD_SM_H
+/*==========================================================================*/
+/* Unit test for the device SM System API.                                  */
+/*==========================================================================*/
 
-/*==========================================================================*/
-/*!
- * @addtogroup BRD_SM_SIMU
- * @{
- *
- * @file
- * @brief
- *
- * Header file containing the API for the SM abstraction of the board.
- */
-/*==========================================================================*/
+/* Include Config */
 
 /* Includes */
 
+#include "test.h"
+#include "lmm.h"
+#include "dev_sm_api.h"
 #include "sm.h"
-#include "brd_sm_control.h"
-#include "brd_sm_sensor.h"
-#include "brd_sm_bbm.h"
-#include "brd_sm_api.h"
 
-/* Defines */
+/* Local defines */
 
-/*! Board nanme string */
-#define BRD_SM_NAME  "Simulation"
+/* Local types */
 
-/*! Board attributes */
-#define BRD_SM_ATTR  0x0
+/* Local variables */
 
-/* Types */
+/* Local functions */
 
-/* Functions */
+/*--------------------------------------------------------------------------*/
+/* Test device SM Sensor                                                    */
+/*--------------------------------------------------------------------------*/
+void TEST_LmmMisc(void)
+{
+    /* LM_00010 LM tests */
+    printf("**** LMM Misc API Tests ***\n\n");
 
-/** @} */
+    /* Test API bounds */
+    printf("\n**** LMM Misc API Err Tests ***\n\n");
 
-#endif /* BRD_SM_H */
+#ifdef SIMU
+    /* Update control notification flags: Invalid LmId */
+    uint32_t lmId = SM_NUM_LM, ctrlId = 0U, flags = 0U;
+
+    NECHECK(LMM_MiscControlFlagsSet(lmId, ctrlId, flags),
+        SM_ERR_INVALID_PARAMETERS);
+
+    /* Update control notification flags: Invalid LmId */
+    lmId = 0U, ctrlId = SM_NUM_CTRL;
+    NECHECK(LMM_MiscControlFlagsSet(lmId, ctrlId, flags),
+        SM_ERR_NOT_FOUND);
+
+#endif
+    printf("\n");
+}
 

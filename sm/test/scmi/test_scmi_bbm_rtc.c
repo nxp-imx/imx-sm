@@ -130,6 +130,18 @@ void TEST_ScmiBbmRtc(void)
             numRtc, flags), SCMI_ERR_INVALID_PARAMETERS);
     }
 
+    /* Branch coverage */
+    {
+        uint32_t state = 0U;
+        printf("SCMI_BbmRtcState(%u)\n", SM_SCMI_NUM_CHN);
+        NECHECK(SCMI_BbmRtcState(SM_SCMI_NUM_CHN, 0U, &state),
+            SM_ERR_INVALID_PARAMETERS);
+
+        NECHECK(SCMI_BbmRtcState(0U, SM_NUM_RTC, &state), SM_ERR_NOT_FOUND);
+
+        CHECK(SCMI_BbmRtcState(0U, 0U, NULL));
+    }
+
     /* Alarm Set -- invalid RTC and invalid */
     {
         uint32_t flags = 0U;
@@ -142,6 +154,12 @@ void TEST_ScmiBbmRtc(void)
 
         NECHECK(SCMI_BbmRtcAlarmSet(SM_SCMI_NUM_CHN,
             numRtc, flags, val), SCMI_ERR_INVALID_PARAMETERS);
+    }
+
+    /* Negotiate Protocol Version */
+    {
+        CHECK(SCMI_BbmNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_BBM_PROT_VER));
     }
 
     /* Invalid channel */
@@ -199,6 +217,7 @@ static void TEST_ScmiRtcNone(uint32_t channel, uint32_t resource)
     {
         uint32_t flags = SCMI_BBM_RTC_FLAGS_TICKS(1U);
         scmi_rtc_time_t val = {0U, 0U};
+        uint32_t state = 0U;
 
         printf("SCMI_BbmRtcTimeGet(%u, 0x%X)\n", channel, flags);
         CHECK(SCMI_BbmRtcTimeGet(channel, resource, flags, &val));
@@ -208,6 +227,9 @@ static void TEST_ScmiRtcNone(uint32_t channel, uint32_t resource)
         CHECK(SCMI_BbmRtcTimeGet(channel, resource, flags, &val));
 
         CHECK(SCMI_BbmRtcTimeGet(channel, resource, flags, NULL));
+
+        printf("SCMI_BbmRtcState(%u %u)\n", channel, resource);
+        CHECK(SCMI_BbmRtcState(channel, resource, &state));
     }
 
     /* RTC Attributes  */
@@ -435,7 +457,8 @@ static void TEST_ScmiRtcExclusive(bool pass, uint32_t channel,
         /* Reset */
         uint32_t sysManager = 0U;
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+            &g_swReason));
     }
 #endif
 }

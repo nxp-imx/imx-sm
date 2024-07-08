@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -66,8 +66,10 @@ void TEST_DevSmPin(void)
     printf("\n**** Device SM Pin API Err Tests ***\n\n");
 
     uint32_t value = 0U;
+    const char *name[15];
+    int32_t len = 0;
 
-    /* Branch Testing ------------------------------------------------------ */
+    /* Branch Testing */
 
     /* Case 1: type=MUX identifier=DEV_SM_NUM_PIN */
     printf("DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_MUX, SM (0U))\n");
@@ -96,6 +98,10 @@ void TEST_DevSmPin(void)
     /* Case 4: type=invalid */
     DEV_SM_PinConfigSet(8U, DEV_SM_NUM_PIN, value);
     DEV_SM_PinConfigGet(8U, DEV_SM_NUM_PIN, &value);
+
+    /* Invalid PIN Identifier */
+    NECHECK(DEV_SM_PinNameGet(DEV_SM_NUM_PIN, &name[0], &len),
+        SM_ERR_NOT_FOUND);
 
     printf("\n");
 }

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -105,13 +105,14 @@ void TEST_BrdSmSensor(void)
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
 
-        /* Run ReadingGet with sensor disabled to make sure it returns error*/
+        /* Run ReadingGet with sensor disabled to make sure it returns
+           error*/
         printf("BRD_SM_SensorReadingGet(%u)\n", sensorId);
         NECHECK(BRD_SM_SensorReadingGet(sensorId, &sensorValue,
             &sensorTimestamp), SM_ERR_NOT_SUPPORTED);
 
         /* Check if timestampSupport is on and then return error or does
-            timestamping */
+           timestamping */
         if (!sensor.timestampSupport)
         {
             printf("BRD_SM_SensorEnable(%u)\n", sensorId);

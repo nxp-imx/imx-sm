@@ -78,6 +78,16 @@ void TEST_ScmiReset(void)
         BCHECK(ver == SCMI_RESET_PROT_VER);
     }
 
+    /* Negotiate Protocol Attributes */
+    {
+        printf("SCMI_ResetNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_RESET_PROT_VER));
+        NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            0x30002U), SM_ERR_NOT_SUPPORTED);
+    }
+
     /* Protocol Attributes */
     {
         uint32_t attributes = 0U;
@@ -102,7 +112,7 @@ void TEST_ScmiReset(void)
         BCHECK(attributes == 0U);
 
         /* Pass in invalid Message ID,
-            will come out to SCMI_ERR_NOT_FOUND */
+           will come out to SCMI_ERR_NOT_FOUND */
         NECHECK(SCMI_ResetProtocolMessageAttributes(SM_TEST_DEFAULT_CHN,
             30U, NULL), SCMI_ERR_NOT_FOUND);
     }
@@ -132,7 +142,8 @@ void TEST_ScmiReset(void)
     /* Reset */
     {
         /* Reset -- Invalid domainId */
-        uint32_t flags = SCMI_RESET_FLAGS_ASYNC(0U) | SCMI_RESET_FLAGS_SIGNAL(0U)
+        uint32_t flags = SCMI_RESET_FLAGS_ASYNC(0U)
+            | SCMI_RESET_FLAGS_SIGNAL(0U)
             | SCMI_RESET_FLAGS_AUTO(1U);
 
         NECHECK(SCMI_Reset(SM_TEST_DEFAULT_CHN, numDomains,
@@ -143,6 +154,18 @@ void TEST_ScmiReset(void)
             flags, SCMI_RESET_ARCH_COLD), SCMI_ERR_INVALID_PARAMETERS);
     }
 
+    /* ResetNegotiateProtocolVersion */
+    {
+        uint32_t version = 0x1234U;
+        printf("SCMI_ResetNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            version), SM_ERR_NOT_SUPPORTED);
+
+        /* Check unsupport minor version */
+        NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_RESET_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+    }
 
     /* Loop over reset test domains */
     status = TEST_ConfigFirstGet(TEST_RST, &agentId,

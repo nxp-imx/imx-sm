@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
- ** Copyright 2024 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -40,6 +40,7 @@
 
 #include "test.h"
 #include "brd_sm.h"
+#include "lmm_sys.h"
 
 /*--------------------------------------------------------------------------*/
 /* Test board SM sensor                                                     */
@@ -50,11 +51,35 @@ void TEST_BrdSm(void)
     printf("**** Board SM API Tests ***\n\n");
 
     {
-        uint32_t argc = 1;
-        char status[5] = "0";
+        int32_t argc = 1;
+        const char status[5] = "0";
         const char * const argv[1] = {status};
+        dev_sm_rst_rec_t resetRec = {0};
+        uint32_t reaction = LMM_REACT_NONE + 1U;
+        uint32_t LmId = 0U;
 
         CHECK(BRD_SM_Custom(argc, &argv[0]));
+
+        /* Branch coverage */
+        CHECK(BRD_SM_Custom(0U, &argv[0]));
+        NECHECK(BRD_SM_FaultReactionGet(resetRec, &reaction, &LmId),
+            SM_ERR_INVALID_PARAMETERS);
+
+        /* BRD_SM_SupplyModeSet: Invalid domain Id */
+        NECHECK(BRD_SM_SupplyModeSet(DEV_SM_NUM_VOLT, 0U),
+            SM_ERR_HARDWARE_ERROR);
+
+        /* BRD_SM_SupplyModeGet: Invalid domain Id */
+        NECHECK(BRD_SM_SupplyModeGet(DEV_SM_NUM_VOLT, NULL),
+            SM_ERR_HARDWARE_ERROR);
+
+        /* BRD_SM_SupplyLevelSet: Invalid domain Id */
+        NECHECK(BRD_SM_SupplyLevelSet(DEV_SM_NUM_VOLT, 0U),
+            SM_ERR_HARDWARE_ERROR);
+
+        /* BRD_SM_SupplyLevelGet: Invalid domain Id */
+        NECHECK(BRD_SM_SupplyLevelGet(DEV_SM_NUM_VOLT, NULL),
+            SM_ERR_HARDWARE_ERROR);
     }
 }
 

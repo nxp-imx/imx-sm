@@ -253,6 +253,8 @@ int32_t LMM_LmNameGet(uint32_t lmId, uint32_t lm, string *lmNameAddr,
     /* Return pointer to name */
     *lmNameAddr = g_lmmConfig[lm].name;
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL2, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -79,7 +79,7 @@ void TEST_ScmiBbmGpr(void)
         printf("  numGpr=%u\n", numGpr);
     }
 
-    /* Test for invalid GPR Get and invalid channel*/
+    /* Test for invalid GPR Get and invalid channel */
     {
         NECHECK(SCMI_BbmGprGet(SM_TEST_DEFAULT_CHN, numGpr, NULL),
             SCMI_ERR_NOT_FOUND);

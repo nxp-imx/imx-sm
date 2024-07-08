@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -294,6 +294,8 @@ void TEST_LmmPerf(void);
 void TEST_LmmPower(void);
 void TEST_LmmSys(void);
 void TEST_LmmCpu(void);
+void TEST_LmmSensor(void);
+void TEST_LmmMisc(void);
 void TEST_LmmFuSa(void);
 void TEST_LmmVoltage(void);
 void TEST_Scmi(void);

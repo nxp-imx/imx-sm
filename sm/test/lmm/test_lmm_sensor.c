@@ -32,42 +32,51 @@
 ** ###################################################################
 */
 
-#ifndef BRD_SM_H
-#define BRD_SM_H
+/*==========================================================================*/
+/* Unit test for the device SM System API.                                  */
+/*==========================================================================*/
 
-/*==========================================================================*/
-/*!
- * @addtogroup BRD_SM_SIMU
- * @{
- *
- * @file
- * @brief
- *
- * Header file containing the API for the SM abstraction of the board.
- */
-/*==========================================================================*/
+/* Include Config */
 
 /* Includes */
 
+#include "test.h"
+#include "lmm.h"
+#include "dev_sm_api.h"
 #include "sm.h"
-#include "brd_sm_control.h"
-#include "brd_sm_sensor.h"
-#include "brd_sm_bbm.h"
-#include "brd_sm_api.h"
 
-/* Defines */
+/* Local defines */
 
-/*! Board nanme string */
-#define BRD_SM_NAME  "Simulation"
+/* Local types */
 
-/*! Board attributes */
-#define BRD_SM_ATTR  0x0
+/* Local variables */
 
-/* Types */
+/* Local functions */
 
-/* Functions */
+/*--------------------------------------------------------------------------*/
+/* Test device SM Sensor                                                    */
+/*--------------------------------------------------------------------------*/
+void TEST_LmmSensor(void)
+{
+    /* LM_00010 LM tests */
+    printf("**** LMM Sensor API Tests ***\n\n");
 
-/** @} */
+    /* Test API bounds */
+    printf("\n**** LMM Sensor API Err Tests ***\n\n");
 
-#endif /* BRD_SM_H */
+#ifdef SIMU
+    /* Enable/disable sensor Invalid LmId */
+    uint32_t lmId = SM_NUM_LM, sensorId = 0U;
+    bool enable = true, timestampReporting = false;
+
+    NECHECK(LMM_SensorEnable(lmId, sensorId, enable, timestampReporting),
+        SM_ERR_INVALID_PARAMETERS);
+
+    lmId = 0U, sensorId = SM_NUM_SENSOR;
+    NECHECK(LMM_SensorEnable(lmId, sensorId, enable, timestampReporting),
+        SM_ERR_NOT_FOUND);
+
+#endif
+    printf("\n");
+}
 

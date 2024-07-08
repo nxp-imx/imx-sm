@@ -93,13 +93,13 @@ void TEST_DevSmCpu(void)
 #ifdef SIMU
     /* CPU InfoGet */
     {
-	uint32_t runmode = 0U, sleepmode = 0U;
-	uint64_t vector = 0UL;
+        uint32_t runmode = 0U, sleepmode = 0U;
+        uint64_t vector = 0UL;
 
         /* Invalid cpuId */
         printf("DEV_SM_CpuInfoGet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuInfoGet(DEV_SM_NUM_CPU, &runmode, &sleepmode,
-				&vector), SM_ERR_NOT_FOUND);
+            &vector), SM_ERR_NOT_FOUND);
     }
 #endif
 
@@ -138,8 +138,8 @@ void TEST_DevSmCpu(void)
 
         /* Invalid cpuId */
         printf("DEV_SM_CpuSleepModeSet(%u)\n", DEV_SM_NUM_CPU);
-        NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_NUM_CPU, sleepMode, sleepflag),
-            SM_ERR_NOT_FOUND);
+        NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_NUM_CPU, sleepMode,
+            sleepflag), SM_ERR_NOT_FOUND);
 
         /* Invalid Sleep Mode */
         sleepMode = 5U;

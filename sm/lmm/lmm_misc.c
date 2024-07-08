@@ -138,6 +138,8 @@ int32_t LMM_MiscControlFlagsSet(uint32_t lmId, uint32_t ctrlId,
         status = SM_CONTROLFLAGSSET(ctrlId, newFlags);
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

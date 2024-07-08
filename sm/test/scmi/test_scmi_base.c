@@ -132,11 +132,12 @@ void TEST_ScmiBase(void)
         printf("  implementationVersion=0x%08X\n", implementationVersion);
 
         /* Branch -- Invalid Channel */
-        NECHECK(SCMI_BaseDiscoverImplementationVersion(SM_SCMI_NUM_CHN, NULL),
-            SCMI_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_BaseDiscoverImplementationVersion(SM_SCMI_NUM_CHN,
+            NULL), SCMI_ERR_INVALID_PARAMETERS);
 
         /* Branch -- Nullpointer */
-        CHECK(SCMI_BaseDiscoverImplementationVersion(SM_TEST_DEFAULT_CHN, NULL));
+        CHECK(SCMI_BaseDiscoverImplementationVersion(SM_TEST_DEFAULT_CHN,
+            NULL));
     }
 
     /* Test abort */
@@ -150,8 +151,8 @@ void TEST_ScmiBase(void)
 
         printf("SCMI_BaseDiscoverImplementationVersion(%u)\n",
             SM_TEST_DEFAULT_CHN);
-        localStatus = SCMI_BaseDiscoverImplementationVersion(SM_TEST_DEFAULT_CHN,
-            &implementationVersion);
+        localStatus = SCMI_BaseDiscoverImplementationVersion(
+            SM_TEST_DEFAULT_CHN, &implementationVersion);
 
         /* Check for abort */
         if (localStatus != SCMI_ERR_ABORT_ERROR)
@@ -200,7 +201,8 @@ void TEST_ScmiBase(void)
         TEST_ScmiBaseNone(channel);
 
         /* Test functions with PRIV perm required */
-        TEST_ScmiBasePriv(perm >= SM_SCMI_PERM_PRIV, channel, resource, agentId);
+        TEST_ScmiBasePriv(perm >= SM_SCMI_PERM_PRIV, channel, resource,
+            agentId);
 
         /* Get next test case */
         status = TEST_ConfigNextGet(TEST_BASE, &agentId,
@@ -250,7 +252,8 @@ static void TEST_ScmiBaseNone(uint32_t channel)
 
         uint32_t version = 0x1234U;
         printf("SCMI_BaseNegotiateProtocolVersion(%u)\n", channel);
-        NECHECK(SCMI_BaseNegotiateProtocolVersion(channel, version), SM_ERR_NOT_SUPPORTED);
+        NECHECK(SCMI_BaseNegotiateProtocolVersion(channel, version),
+            SM_ERR_NOT_SUPPORTED);
 
         /* Invalid agent */
         tempAgent = 100000U;
@@ -337,6 +340,5 @@ static void TEST_ScmiBasePriv(bool pass, uint32_t channel, uint32_t resource,
         NECHECK(SCMI_BaseResetAgentConfiguration(channel, agent, 0U),
             SCMI_ERR_DENIED);
     }
-
 }
 

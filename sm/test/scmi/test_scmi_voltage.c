@@ -113,6 +113,16 @@ void TEST_ScmiVoltage(void)
 
     }
 
+    /*Negotiate Protocol Attributes */
+    {
+        printf("SCMI_VoltageNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_VOLT_PROT_VER));
+        NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            0x20002U), SM_ERR_NOT_SUPPORTED);
+    }
+
     /* Domain Attributes -- Invalid domainId  */
     {
         uint32_t attributes = 0U;
@@ -196,6 +206,20 @@ void TEST_ScmiVoltage(void)
         CHECK(SCMI_VoltageDescribeLevels(SM_TEST_DEFAULT_CHN,
             0U, levelIndex, NULL, NULL));
     }
+
+    /* VoltageNegotiateProtocolVersion */
+    {
+        uint32_t version = 0x1234U;
+        printf("SCMI_VoltageNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            version), SM_ERR_NOT_SUPPORTED);
+
+        /* Check unsupport minor version */
+        NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_VOLT_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+    }
+
 
     /* Loop over voltage test domains */
     status = TEST_ConfigFirstGet(TEST_VOLT, &agentId,
@@ -284,7 +308,8 @@ static void TEST_ScmiVoltageNone(uint32_t channel, uint32_t domainId)
         uint32_t attributes = 0U;
         uint8_t name[SCMI_VOLTAGE_MAX_NAME] = { 0 };
 
-        printf("SCMI_VoltageDomainAttributes(%u, %u)\n", channel, domainId);
+        printf("SCMI_VoltageDomainAttributes(%u, %u)\n", channel,
+            domainId);
         CHECK(SCMI_VoltageDomainAttributes(channel, domainId,
             &attributes, name));
 
@@ -373,7 +398,8 @@ static void TEST_ScmiVoltageSet(bool pass, uint32_t channel,
         /* Reset */
         uint32_t sysManager = 0U;
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+            &g_swReason));
 
         /* Ensure Correctness */
         CHECK(SCMI_VoltageConfigGet(channel, domainId, &config));

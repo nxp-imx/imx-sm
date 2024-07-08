@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -32,42 +32,64 @@
 ** ###################################################################
 */
 
-#ifndef BRD_SM_H
-#define BRD_SM_H
-
 /*==========================================================================*/
 /*!
- * @addtogroup BRD_SM_SIMU
+ * @addtogroup BOOT
  * @{
  *
  * @file
  * @brief
  *
- * Header file containing the API for the SM abstraction of the board.
+ * Header file for test mode functionality.
  */
 /*==========================================================================*/
 
-/* Includes */
+#ifndef SM_TEST_MODE_H
+#define SM_TEST_MODE_H
 
-#include "sm.h"
-#include "brd_sm_control.h"
-#include "brd_sm_sensor.h"
-#include "brd_sm_bbm.h"
-#include "brd_sm_api.h"
+#if defined(RUN_TEST) || defined(MONITOR)
+
+/* Includes */
 
 /* Defines */
 
-/*! Board nanme string */
-#define BRD_SM_NAME  "Simulation"
+/*! Indicator test mode support is included */
+#define HAS_SM_TEST_MODE
 
-/*! Board attributes */
-#define BRD_SM_ATTR  0x0
-
-/* Types */
-
-/* Functions */
-
+/*!
+ * @name SM test modes
+ */
+/** @{ */
+#define SM_TEST_MODE_OFF        0U    /*!< None */
+#define SM_TEST_MODE_DEV_LVL1   100U  /*!< Device first level error response */
+#define SM_TEST_MODE_DEV_ALT1   120U  /*!< Device alt reponse 1 */
+#define SM_TEST_MODE_BRD_LVL1   200U  /*!< Board first level error response */
+#define SM_TEST_MODE_LMM_LVL1   300U  /*!< LMM first level error response */
+#define SM_TEST_MODE_LMM_LVL2   301U  /*!< LMM second level error response */
+#define SM_TEST_MODE_RPC_LVL1   400U  /*!< RPC first level error response */
 /** @} */
 
-#endif /* BRD_SM_H */
+/*! Set status on mode */
+#define SM_TEST_MODE_ERR(testMode, testErr) \
+    if (g_testMode == (testMode)) \
+    { \
+        status = (testErr); \
+    }
+
+/* Global Variables */
+
+/*! Current test mode */
+extern uint32_t g_testMode;
+
+#else
+
+/* Defines */
+
+#define SM_TEST_MODE_ERR(testMode, testErr)
+
+#endif
+
+#endif /* SM_TEST_MODE_H */
+
+/** @} */
 

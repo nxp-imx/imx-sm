@@ -85,7 +85,8 @@ void TEST_ScmiCpu(void)
 
         printf("SCMI_CpuProtocolAttributes(%u)\n",
             SM_TEST_DEFAULT_CHN);
-        CHECK(SCMI_CpuProtocolAttributes(SM_TEST_DEFAULT_CHN, &attributes));
+        CHECK(SCMI_CpuProtocolAttributes(SM_TEST_DEFAULT_CHN,
+            &attributes));
         numCpu = SCMI_CPU_PROTO_ATTR_NUM_CPUS(attributes);
         printf("  numCpu=%u\n", numCpu);
     }
@@ -107,7 +108,7 @@ void TEST_ScmiCpu(void)
 
     /* Use numCpu to overwrite the bounds */
 
-    /* CpuAttributes -- invalid cpuId and invalid channel*/
+    /* CpuAttributes -- invalid cpuId and invalid channel */
     {
         uint32_t attributes = 0U;
         uint8_t name[SCMI_CPU_MAX_NAME];
@@ -120,10 +121,9 @@ void TEST_ScmiCpu(void)
 
         NECHECK(SCMI_CpuAttributes(SM_SCMI_NUM_CHN, numCpu,
             &attributes, name), SCMI_ERR_INVALID_PARAMETERS);
-
     }
 
-    /* CpuStart -- invalid cpuId and invalid channel*/
+    /* CpuStart -- invalid cpuId and invalid channel */
     {
         printf("SCMI_CpuStart(%u, %u)\n", SM_TEST_DEFAULT_CHN, numCpu);
         NECHECK(SCMI_CpuStart(SM_TEST_DEFAULT_CHN, numCpu),
@@ -133,7 +133,7 @@ void TEST_ScmiCpu(void)
             SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* CpuStop -- invalid cpuId and invalid channel*/
+    /* CpuStop -- invalid cpuId and invalid channel */
     {
         printf("SCMI_CpuStop(%u, %u)\n", SM_TEST_DEFAULT_CHN, numCpu);
         NECHECK(SCMI_CpuStop(SM_TEST_DEFAULT_CHN, numCpu),
@@ -143,7 +143,7 @@ void TEST_ScmiCpu(void)
             SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* CpuResetVecorSet -- invalid cpuId and invalid channel*/
+    /* CpuResetVecorSet -- invalid cpuId and invalid channel */
     {
         uint32_t flags = SCMI_CPU_VEC_FLAGS_RESUME(1UL);
         uint32_t resetVectorLow = 1U;
@@ -160,7 +160,7 @@ void TEST_ScmiCpu(void)
             SCMI_ERR_INVALID_PARAMETERS);
     }
 
-    /* CpuInfoGet -- invalid cpuId and invalid channel*/
+    /* CpuInfoGet -- invalid cpuId and invalid channel */
     {
         uint32_t runmode = 0U, sleepmode = 0U;
         uint32_t low_vector = 0U, high_vector = 0U;
@@ -177,7 +177,7 @@ void TEST_ScmiCpu(void)
             SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* CpuSleepModeSet -- invalid cpuId and invalid channel*/
+    /* CpuSleepModeSet -- invalid cpuId and invalid channel */
     {
         uint32_t flags = 0U;
         printf("SCMI_CpuSleepModeSet(%u, %u)\n",
@@ -191,7 +191,7 @@ void TEST_ScmiCpu(void)
             SCMI_CPU_SLEEP_SUSPEND), SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* CPUIrqWakeSet -- invalid cpuId and invalid channel*/
+    /* CPUIrqWakeSet -- invalid cpuId and invalid channel */
     {
         uint32_t maskidx = 0U, mask = 0U;
 
@@ -206,7 +206,7 @@ void TEST_ScmiCpu(void)
             1U, &mask), SM_ERR_INVALID_PARAMETERS);
     }
 
-    /* CPUNonIrqWakeSet -- invalid cpuId and invalid channel*/
+    /* CPUNonIrqWakeSet -- invalid cpuId and invalid channel */
     {
         uint32_t maskidx = 0U, mask = 0U;
 
@@ -222,7 +222,7 @@ void TEST_ScmiCpu(void)
 
     }
 
-    /* CpuPdLpmConfigsSet -- Invalid cpuId and Invalid channel*/
+    /* CpuPdLpmConfigsSet -- Invalid cpuId and Invalid channel */
     {
         uint32_t numConfigs = 1U;
         scmi_pd_lpm_config_t lpm_config = {0U};
@@ -232,8 +232,8 @@ void TEST_ScmiCpu(void)
 
         printf("SCMI_CpuPdLpmConfigSet:(%u, %u)\n",
             SM_TEST_DEFAULT_CHN, numCpu);
-        NECHECK(SCMI_CpuPdLpmConfigSet(SM_TEST_DEFAULT_CHN, numCpu, numConfigs,
-            &lpm_config), SM_ERR_NOT_FOUND);
+        NECHECK(SCMI_CpuPdLpmConfigSet(SM_TEST_DEFAULT_CHN, numCpu,
+            numConfigs, &lpm_config), SM_ERR_NOT_FOUND);
 
         printf("SCMI_CpuPdLpmConfigSet:(%u, %u)\n",
             SM_SCMI_NUM_CHN, numCpu);
@@ -242,7 +242,7 @@ void TEST_ScmiCpu(void)
 
     }
 
-    /* CpuPerLpmConfigSet -- Invalid cpuId and Invalid channel*/
+    /* CpuPerLpmConfigSet -- Invalid cpuId and Invalid channel */
     {
         uint32_t numConfigs = 1U;
         scmi_per_lpm_config_t per_lpm_config = {0U};
@@ -253,19 +253,19 @@ void TEST_ScmiCpu(void)
         per_lpm_config.perId= 1U;
         printf("SCMI_CpuPerLpmConfigSet (%u, %u) Invalid perID\n",
             SM_TEST_DEFAULT_CHN, numCpu);
-        NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, 1 /*CPUID*/, numConfigs,
+        NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, 1U, numConfigs,
             &per_lpm_config), SM_ERR_NOT_FOUND);
 #endif
 
         printf("SCMI_CpuPerLpmConfigSet:(%u, %u)\n",
             SM_TEST_DEFAULT_CHN, numCpu);
-        NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, numCpu, numConfigs,
-            &per_lpm_config), SM_ERR_NOT_FOUND);
+        NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, numCpu,
+            numConfigs, &per_lpm_config), SM_ERR_NOT_FOUND);
 
         printf("SCMI_CpuPerLpmConfigSet:(%u, %u)\n",
             SM_SCMI_NUM_CHN, numCpu);
-        NECHECK(SCMI_CpuPerLpmConfigSet(SM_SCMI_NUM_CHN, numCpu, numConfigs,
-            &per_lpm_config), SM_ERR_INVALID_PARAMETERS);
+        NECHECK(SCMI_CpuPerLpmConfigSet(SM_SCMI_NUM_CHN, numCpu,
+            numConfigs, &per_lpm_config), SM_ERR_INVALID_PARAMETERS);
     }
 
     /* Loop over cpu test domains */
@@ -303,7 +303,15 @@ static void TEST_ScmiCpuNone(uint32_t channel, uint32_t domainId)
     CHECK(SCMI_CpuAttributes(channel, domainId,
         &attributes, name));
 
-    /* NegotiateProtocolVersion -- valid cpuId and valid channel*/
+    /* Branch: attributes = NULL */
+    CHECK(SCMI_CpuAttributes(channel, domainId,
+        NULL, name));
+
+    /* Branch: name = NULL */
+    CHECK(SCMI_CpuAttributes(channel, domainId,
+        &attributes, NULL));
+
+    /* NegotiateProtocolVersion -- valid cpuId and valid channel */
     {
         uint32_t version = 1234U;
         printf("SCMI_CpuNegotiateProtocolVersion(%u, %u)\n",
@@ -312,7 +320,7 @@ static void TEST_ScmiCpuNone(uint32_t channel, uint32_t domainId)
             SCMI_ERR_NOT_SUPPORTED);
     }
 
-    /* CpuInfoGet -- valid cpuId and valid channel*/
+    /* CpuInfoGet -- valid cpuId and valid channel */
     {
         uint32_t runmode = 0U, sleepmode = 0U;
         uint32_t low_vector = 0U, high_vector = 0U;
@@ -320,6 +328,22 @@ static void TEST_ScmiCpuNone(uint32_t channel, uint32_t domainId)
         printf("SCMI_CpuInfoGet(%u, %u)\n", channel, domainId);
         CHECK(SCMI_CpuInfoGet(channel, domainId, &runmode,
             &sleepmode, &low_vector, &high_vector));
+
+        /*Branch: RunMode =  NULL */
+        CHECK(SCMI_CpuInfoGet(channel, domainId, NULL,
+            &sleepmode, &low_vector, &high_vector));
+
+        /*Branch: sleepMode =  NULL */
+        CHECK(SCMI_CpuInfoGet(channel, domainId, &runmode,
+            NULL, &low_vector, &high_vector));
+
+        /*Branch: low_vector =  NULL */
+        CHECK(SCMI_CpuInfoGet(channel, domainId, &runmode,
+            &sleepmode, NULL, &high_vector));
+
+        /*Branch: high_vector =  NULL */
+        CHECK(SCMI_CpuInfoGet(channel, domainId, &runmode,
+            &sleepmode, &low_vector, NULL));
     }
 }
 
@@ -365,11 +389,13 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
                 /* Reset */
                 uint32_t sysManager = 0U;
                 printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-                CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
+                CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+                    &g_swReason));
             }
 #endif
 
         }
+
         /* CPU Sleep mode set */
         {
             uint32_t flags = 0U;
@@ -486,6 +512,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
             channel, domainId);
         NECHECK(SCMI_CpuNonIrqWakeSet(channel, domainId, maskidx,
             1U, &mask), SCMI_ERR_DENIED);
+
         /* CpuPdLpmConfigsSet */
         {
             uint32_t numConfig = 1U;
@@ -512,7 +539,6 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
             NECHECK(SCMI_CpuPerLpmConfigSet(channel, domainId,
                 numConfig, &per_lpm_config), SCMI_ERR_DENIED);
         }
-
     }
 }
 

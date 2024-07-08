@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -100,6 +100,22 @@ void TEST_DevSmVoltage(void)
         BCHECK(tempMode == voltMode);
     }
 
+    /* Invalid domainId */
+    {
+        uint8_t voltMode = 0U;
+
+        /* Set the Volt Mode */
+        printf("DEV_SM_VoltageModeSet(%u)\n", voltMode);
+        NECHECK(DEV_SM_VoltageModeSet(DEV_SM_NUM_VOLT, voltMode),
+            SM_ERR_NOT_FOUND);
+
+        /* Get the Volt Mode */
+        printf("DEV_SM_VoltageModeGet(%u)\n", voltMode);
+        NECHECK(DEV_SM_VoltageModeGet(DEV_SM_NUM_VOLT, &voltMode),
+            SM_ERR_NOT_FOUND);
+
+    }
+
     /* Test All Voltage Levels */
     {
         dev_sm_voltage_range_t range;
@@ -129,6 +145,20 @@ void TEST_DevSmVoltage(void)
             /* Ensure Correctness */
             BCHECK(tempLevel == level);
         }
+
+        /* Invalid volt num */
+        {
+            int32_t level = 0;
+
+            /* Invalid: Set the Level */
+            NECHECK(DEV_SM_VoltageLevelSet(DEV_SM_NUM_VOLT, level),
+                SM_ERR_NOT_FOUND);
+
+            /* Invalid Get the Level */
+            NECHECK(DEV_SM_VoltageLevelGet(DEV_SM_NUM_VOLT, &level),
+                SM_ERR_NOT_FOUND);
+        }
+
         printf("Level tests completed\n");
     }
 #endif
@@ -143,8 +173,8 @@ void TEST_DevSmVoltage(void)
             SM_ERR_NOT_FOUND);
 
         printf("DEV_SM_VoltageModeNameGet(%u)\n", DEV_SM_NUM_VOLT_MODE);
-        NECHECK(DEV_SM_VoltageModeNameGet(DEV_SM_NUM_VOLT_MODE, &name, &len),
-            SM_ERR_NOT_FOUND);
+        NECHECK(DEV_SM_VoltageModeNameGet(DEV_SM_NUM_VOLT_MODE, &name,
+            &len), SM_ERR_NOT_FOUND);
     }
 
     printf("\n");

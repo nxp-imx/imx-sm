@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2024 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -45,6 +45,7 @@ VPATH += \
 
 OBJS += \
 	$(OUT)/brd_sm.o  \
+	$(OUT)/brd_sm_control.o  \
 	$(OUT)/brd_sm_sensor.o  \
 	$(OUT)/brd_sm_bbm.o
 

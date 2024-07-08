@@ -79,8 +79,6 @@ static void write_memory(uint32_t start_addr, uint32_t numbytes,
     uint32_t pattern1, uint32_t pattern2);
 
 /*--------------------------------------------------------------------------*/
-/* Register write                                                           */
-/*--------------------------------------------------------------------------*/
 /* Test SM driver DDR                                                       */
 /*--------------------------------------------------------------------------*/
 void TEST_DrvDdrRetention(void)
@@ -119,7 +117,8 @@ void TEST_DrvDdrRetention(void)
         if (status == SM_ERR_SUCCESS)
         {
             /* Power off DDRMIX */
-            status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF);
+            status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR,
+                DEV_SM_POWER_STATE_OFF);
         }
 #endif
 
@@ -130,7 +129,8 @@ void TEST_DrvDdrRetention(void)
         {
             printf("Power up DDRMIX\n");
             /* Power up DDRMIX */
-            status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_ON);
+            status = DEV_SM_PowerStateSet(DEV_SM_PD_DDR,
+                DEV_SM_POWER_STATE_ON);
         }
 #endif
 
@@ -143,7 +143,8 @@ void TEST_DrvDdrRetention(void)
         if (status == SM_ERR_SUCCESS)
         {
             /* verify the test pattern integrity in memory */
-            if (verify_memory(memSrc, numbytes, pattern1, pattern2) == true)
+            if (verify_memory(memSrc, numbytes, pattern1, pattern2)
+                == true)
             {
                 success_count++;
                 loop_counter--;
@@ -228,8 +229,8 @@ static void write_memory(uint32_t start_addr, uint32_t numbytes,
     /* Fill memory source */
     for (i = 0U; i < numbytes; i+=8U)
     {
-        // update patterns pseudo-randomly by adding to them each of their unique patterns
-        // in an effort to eliminate repeating patterns
+        /* Update patterns pseudo-randomly by adding to them each of their
+           unique patterns in an effort to eliminate repeating patterns */
         Write32((start_addr+i), pattern1 + i*pattern1);
         Write32((start_addr+(i+4U)), pattern2 + i*pattern2);
 

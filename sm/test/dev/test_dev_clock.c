@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -194,7 +194,8 @@ void TEST_DevClock(void)
         int32_t rc = DEV_SM_ClockRateGet(clkIdx, &s_clkRates[clkIdx]);
         if (rc == SM_ERR_SUCCESS)
         {
-            rc = DEV_SM_ClockRateSet(clkIdx, s_clkRates[clkIdx], DEV_SM_CLOCK_ROUND_DOWN);
+            rc = DEV_SM_ClockRateSet(clkIdx, s_clkRates[clkIdx],
+                DEV_SM_CLOCK_ROUND_DOWN);
 
             /* Assume SM_ERR_INVALID_PARAMETERS imples node not setable */
             if (rc == SM_ERR_SUCCESS)
@@ -301,7 +302,8 @@ void TEST_DevClock(void)
             /* Set parent as 24M for lowest rate testing */
             (void) DEV_SM_ClockParentSet(clkIdx, DEV_SM_CLK_OSC24M);
 
-            rc = DEV_SM_ClockRateSet(clkIdx, range.lowestRate, DEV_SM_CLOCK_ROUND_DOWN);
+            rc = DEV_SM_ClockRateSet(clkIdx, range.lowestRate,
+                DEV_SM_CLOCK_ROUND_DOWN);
             if (rc == SM_ERR_SUCCESS)
             {
                 uint64_t rate;
@@ -350,7 +352,8 @@ void TEST_DevClock(void)
         }
 
         DEV_SM_ClockParentSet(clkIdx, s_clkParents[clkIdx]);
-        DEV_SM_ClockRateSet(clkIdx, s_clkRates[clkIdx], DEV_SM_CLOCK_ROUND_DOWN);
+        DEV_SM_ClockRateSet(clkIdx, s_clkRates[clkIdx],
+            DEV_SM_CLOCK_ROUND_DOWN);
         DEV_SM_ClockEnable(clkIdx, s_clkEnables[clkIdx]);
     }
 

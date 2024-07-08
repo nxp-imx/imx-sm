@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -62,6 +62,7 @@
 #define SM_BBMRTCDESCRIBE      BRD_SM_BbmRtcDescribe      /*!< RTC describe */
 #define SM_BBMRTCTIMESET       BRD_SM_BbmRtcTimeSet       /*!< RTC time set */
 #define SM_BBMRTCTIMEGET       BRD_SM_BbmRtcTimeGet       /*!< RTC time get */
+#define SM_BBMRTCSTATEGET      BRD_SM_BbmRtcStateGet      /*!< RTC state get */
 #define SM_BBMRTCALARMSET      BRD_SM_BbmRtcAlarmSet      /*!< RTC alarm set */
 #define SM_BBMRTCROLLOVER      BRD_SM_BbmRtcRollover      /*!< RTC rollover */
 /** @} */
@@ -160,6 +161,22 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks);
  * - ::SM_ERR_NOT_FOUND: if \a rtcId pertains to a non-existent RTC.
  */
 int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks);
+
+/*!
+ * Get a board RTC state.
+ *
+ * @param[in]     rtcId    Identifier of the RTC
+ * @param[out]    state    Bit mask of state flags
+ *
+ * This function allows a caller to read the RTC state.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the RTC state was successfully read.
+ * - ::SM_ERR_NOT_FOUND: if \a rtcId pertains to a non-existent RTC.
+ */
+int32_t BRD_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state);
 
 /*!
  * Set a board RTC alarm.

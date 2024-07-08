@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -64,7 +64,7 @@ void TEST_LmmVoltage(void)
 
     printf("\n**** LMM Voltage API Tests ***\n\n");
 
-    /* Branch -- Invalid Params ------------------------------------ */
+    /* Branch -- Invalid Params */
 
     /* Case 1: Invalid lmId */
     NECHECK(LMM_VoltageModeSet(SM_NUM_LM, 0U, 0U),

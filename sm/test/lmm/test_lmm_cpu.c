@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -63,10 +63,28 @@ void TEST_LmmCpu(void)
     /* LM tests */
     printf("**** LMM CPU API Tests ***\n\n");
 
+#ifdef SIMU
     uint32_t LmId = 0U, CpuId = 0U;
+
+    /* CPU Reset Vector set */
+    {
+        uint64_t resetvector = 0x123456789U;
+        CHECK(LMM_CpuResetVectorSet(LmId, CpuId, resetvector,
+            false, true, false, true))
+
+        /* CPU Hold */
+        CHECK(LMM_CpuHold(LmId, CpuId));
+
+        /* CPU Vector Reset */
+        CHECK(LMM_CpuResetVectorReset(LmId, CpuId));
+
+        /* CPU Stop */
+        CHECK(LMM_CpuStop(LmId, CpuId));
+    }
 
     /* Test API bounds */
     printf("\n**** LMM CPU API Err Tests ***\n\n");
+
     /* CPU Hold Invalid CpuId */
     {
         CpuId = DEV_SM_NUM_CPU;
@@ -80,14 +98,48 @@ void TEST_LmmCpu(void)
 
     /* CPU Start CPU Start flag not valid */
     {
-        NECHECK(LMM_CpuStart(LmId, (CpuId - 1)), SM_ERR_MISSING_PARAMETERS);
+        NECHECK(LMM_CpuStart(LmId, (CpuId - 1U)), SM_ERR_MISSING_PARAMETERS);
     }
-    /*CPU Hold test CPU start flag not set */
+
+    /* CPU Hold test CPU start flag not set */
     {
         CpuId = 0U;
         NECHECK(LMM_CpuHold(LmId, CpuId), SM_ERR_MISSING_PARAMETERS);
     }
 
+    /* CPU Boot address check */
+    {
+        CpuId = 0U;
+        NECHECK(LMM_CpuHold(LmId, CpuId), SM_ERR_MISSING_PARAMETERS);
+    }
+
+    /* CPU Stop: Invalid CPU NUM */
+    {
+        CpuId = 0U;
+        NECHECK(LMM_CpuHold(LmId, DEV_SM_NUM_CPU), SM_ERR_NOT_FOUND);
+    }
+
+    /* Reset Vector Reset: Invalid CPU NUM */
+    {
+        CpuId = 0U;
+        NECHECK(LMM_CpuResetVectorReset(LmId, DEV_SM_NUM_CPU),
+            SM_ERR_NOT_FOUND);
+    }
+
+    /* pdLPMConfigSet: Invalid CPU NUM */
+    {
+        CpuId = 0U;
+        NECHECK(LMM_CpuPdLpmConfigSet(LmId, DEV_SM_NUM_CPU, 0U, 0U, 0U),
+            SM_ERR_INVALID_PARAMETERS);
+    }
+
+    /* LMM_CpuBootCheck: Invalid */
+    {
+        CpuId = 0U;
+        NECHECK(LMM_CpuBootCheck(LmId, CpuId), SM_ERR_MISSING_PARAMETERS);
+    }
     printf("\n");
+
+#endif
 }
 
