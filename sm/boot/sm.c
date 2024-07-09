@@ -54,7 +54,12 @@
 
 /* Local variables */
 
-/*! Boot times */
+/* Flag to indicate if the LMM has initialized */
+static bool s_lmmInited = false;
+
+/* Global variables */
+
+/* Boot times */
 // coverity[misra_c_2012_rule_8_9_violation:FALSE]
 uint64_t g_bootTime[SM_BT_SUB + 1U];
 
@@ -102,9 +107,12 @@ int main(int argc, const char * const argv[])
         status = LMM_Init(&mSel, LMM_INIT_FLAGS);
     }
 
-    /* Boot LMs */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Mark LMM inited */
+        s_lmmInited = true;
+
+        /* Boot LMs */
         /* mSel from BRD_SM_Init(), LMM_INIT_FLAGS from Makefile */
         status = LMM_Boot();
     }
@@ -201,21 +209,29 @@ int main(int argc, const char * const argv[])
 /*--------------------------------------------------------------------------*/
 void SM_Error(int32_t status)
 {
-    uint32_t pc = 0U;
+    if (s_lmmInited)
+    {
+        uint32_t pc = 0U;
 
 #if !defined(SIMU) && !defined(CPPCHECK)
-    /* Get the LR as PC */
-    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
-    __ASM ("MOV %0, LR\n" : "=r" (pc));
+        /* Get the LR as PC */
+        // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+        __ASM ("MOV %0, LR\n" : "=r" (pc));
 #endif
 
 #ifdef USES_FUSA
-    /* Report to FuSa */
-    LMM_FuSaAssertionFailure(status);
+        /* Report to FuSa */
+        LMM_FuSaAssertionFailure(status);
 #endif
 
-    /* Request board reset */
-    BRD_SM_Exit(status, pc);
+        /* Request board reset */
+        BRD_SM_Exit(status, pc);
+    }
+    else
+    {
+        /* Reset when LMM not initialized */
+        (void) SM_SYSTEMRESET();
+    }
 }
 
 #if !defined(SIMU) && !defined(INC_LIBC)
@@ -226,15 +242,23 @@ void SM_Error(int32_t status)
 // coverity[misra_c_2012_rule_21_8_violation:FALSE]
 void exit(int status)
 {
-    uint32_t pc;
+    if (s_lmmInited)
+    {
+        uint32_t pc;
 
-    /* Get the LR as PC */
-    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
-    __ASM ("MOV %0, LR\n" : "=r" (pc));
+        /* Get the LR as PC */
+        // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+        __ASM ("MOV %0, LR\n" : "=r" (pc));
 
-    /* Request board reset */
-    BRD_SM_Exit((int32_t) status, pc);
-    __builtin_unreachable();
+        /* Request board reset */
+        BRD_SM_Exit((int32_t) status, pc);
+        __builtin_unreachable();
+    }
+    else
+    {
+        /* Reset when LMM not initialized */
+        (void) SM_SYSTEMRESET();
+    }
 }
 #endif
 
