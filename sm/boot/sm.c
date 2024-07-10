@@ -259,6 +259,12 @@ void exit(int status)
         /* Reset when LMM not initialized */
         (void) SM_SYSTEMRESET();
     }
+
+    /* Hang */
+    while (true)
+    {
+        ; /* Intentional empty while */
+    }
 }
 #endif
 
