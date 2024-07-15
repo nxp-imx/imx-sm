@@ -94,10 +94,9 @@ bool PF53_Init(const PF53_Type *dev)
 /*--------------------------------------------------------------------------*/
 /* Get info                                                                 */
 /*--------------------------------------------------------------------------*/
-bool PF53_PmicInfoGet(const PF53_Type *dev, uint8_t **info, uint8_t *len)
+bool PF53_PmicInfoGet(PF53_Type *dev, uint8_t **info, uint8_t *len)
 {
     bool rc = true;
-    static uint8_t devId[4];
 
     if ((info == NULL) || (len == NULL))
     {
@@ -105,11 +104,11 @@ bool PF53_PmicInfoGet(const PF53_Type *dev, uint8_t **info, uint8_t *len)
     }
     else
     {
-        if (devId[0] == 0U)
+        if (dev->id[0] == 0U)
         {
-            for (uint8_t addr = 0U; addr < 4U; addr++)
+            for (uint8_t addr = 0U; addr < PF53_ID_LEN; addr++)
             {
-                rc = PF53_PmicRead(dev, addr, &devId[addr]);
+                rc = PF53_PmicRead(dev, addr, &(dev->id[addr]));
                 if (!rc)
                 {
                     break;
@@ -121,8 +120,8 @@ bool PF53_PmicInfoGet(const PF53_Type *dev, uint8_t **info, uint8_t *len)
     /* Return results */
     if (rc)
     {
-        *info = devId;
-        *len = 4U;
+        *info = dev->id;
+        *len = PF53_ID_LEN;
     }
 
     /* Return status */

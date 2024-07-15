@@ -163,7 +163,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
                 [PF09_MASK_IDX_STATUS1] = 0x08U
             };
 
-            if (!PF09_IntEnable(&pf09Dev, mask, false))
+            if (!PF09_IntEnable(&pf09Dev, mask, PF09_MASK_LEN, false))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
@@ -318,10 +318,10 @@ static void BRD_SM_Pf09Handler(void)
     uint8_t stat[PF09_MASK_LEN] = { 0 };
 
     /* Read status of interrupts */
-    (void) PF09_IntStatus(&pf09Dev, stat);
+    (void) PF09_IntStatus(&pf09Dev, stat, PF09_MASK_LEN);
 
     /* Clear pending */
-    (void) PF09_IntClear(&pf09Dev, stat);
+    (void) PF09_IntClear(&pf09Dev, stat, PF09_MASK_LEN);
 
     /* Handle pending temp interrupts */
     if ((stat[PF09_MASK_IDX_STATUS2] & 0x0FU) != 0U)

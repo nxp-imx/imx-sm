@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -203,10 +203,9 @@ bool PF09_Init(const PF09_Type *dev)
 /*--------------------------------------------------------------------------*/
 /* Get info                                                                 */
 /*--------------------------------------------------------------------------*/
-bool PF09_PmicInfoGet(const PF09_Type *dev, uint8_t **info, uint8_t *len)
+bool PF09_PmicInfoGet(PF09_Type *dev, uint8_t **info, uint8_t *len)
 {
     bool rc = true;
-    static uint8_t devId[5];
 
     if ((info == NULL) || (len == NULL))
     {
@@ -214,11 +213,11 @@ bool PF09_PmicInfoGet(const PF09_Type *dev, uint8_t **info, uint8_t *len)
     }
     else
     {
-        if (devId[1] == 0U)
+        if (dev->id[1] == 0U)
         {
-            for (uint8_t addr = 0U; addr < 5U; addr++)
+            for (uint8_t addr = 0U; addr < PF09_ID_LEN; addr++)
             {
-                rc = PF09_PmicRead(dev, addr, &devId[addr]);
+                rc = PF09_PmicRead(dev, addr, &(dev->id[addr]));
                 if (!rc)
                 {
                     break;
@@ -230,8 +229,8 @@ bool PF09_PmicInfoGet(const PF09_Type *dev, uint8_t **info, uint8_t *len)
     /* Return results */
     if (rc)
     {
-        *info = devId;
-        *len = 5U;
+        *info = dev->id;
+        *len = PF09_ID_LEN;
     }
 
     /* Return status */
@@ -357,33 +356,42 @@ bool PF09_PmicRead(const PF09_Type *dev, uint8_t regAddr, uint8_t *val)
 /*--------------------------------------------------------------------------*/
 /*  Interrupt enable/disable                                                */
 /*--------------------------------------------------------------------------*/
-bool PF09_IntEnable(const PF09_Type *dev, const uint8_t *mask, bool enable)
+bool PF09_IntEnable(const PF09_Type *dev, const uint8_t *mask,
+    uint32_t maskLen, bool enable)
 {
     bool rc = true;
 
-    /* Loop over all mask registers */
-    for (uint32_t idx = 0U; idx < PF09_MASK_LEN; idx++)
+    /* Check mask array size */
+    if (maskLen <= PF09_MASK_LEN)
     {
-        /* State change? */
-        if (mask[idx] != 0U)
+        /* Loop over  mask registers */
+        for (uint32_t idx = 0U; idx < maskLen; idx++)
         {
-            if (enable)
+            /* State change? */
+            if (mask[idx] != 0U)
             {
-                rc = PF09_PmicWrite(dev, maskInfo[idx].addr + 1U, 0x00U,
-                    mask[idx]);
+                if (enable)
+                {
+                    rc = PF09_PmicWrite(dev, maskInfo[idx].addr +
+                        1U, 0x00U, mask[idx]);
+                }
+                else
+                {
+                    rc = PF09_PmicWrite(dev, maskInfo[idx].addr +
+                        1U, 0xFFU, mask[idx]);
+                }
             }
-            else
+        
+            /* Exit on error */
+            if (!rc)
             {
-                rc = PF09_PmicWrite(dev, maskInfo[idx].addr + 1U, 0xFFU,
-                    mask[idx]);
+                break;
             }
         }
-
-        /* Exit on error */
-        if (!rc)
-        {
-            break;
-        }
+    }
+    else
+    {
+        rc = false;
     }
 
     /* Return status */
@@ -393,32 +401,41 @@ bool PF09_IntEnable(const PF09_Type *dev, const uint8_t *mask, bool enable)
 /*--------------------------------------------------------------------------*/
 /*  Interrupt status                                                        */
 /*--------------------------------------------------------------------------*/
-bool PF09_IntStatus(const PF09_Type *dev, uint8_t *mask)
+bool PF09_IntStatus(const PF09_Type *dev, uint8_t *mask, uint32_t maskLen)
 {
     bool rc = true;
     uint8_t stat;
 
-    rc = PF09_PmicRead(dev, PF09_REG_SYSTEM_INT, &stat);
-    if (rc)
+    /* Check mask array size */
+    if (maskLen <= PF09_MASK_LEN)
     {
-        /* Loop over all mask registers */
-        for (uint32_t idx = 0U; idx < PF09_MASK_LEN; idx++)
+        rc = PF09_PmicRead(dev, PF09_REG_SYSTEM_INT, &stat);
+        if (rc)
         {
-            if ((stat & maskInfo[idx].sysStat) != 0U)
+            /* Loop over mask registers */
+            for (uint32_t idx = 0U; idx < maskLen; idx++)
             {
-                rc = PF09_PmicRead(dev, maskInfo[idx].addr, &mask[idx]);
-
-                /* Exit on error */
-                if (!rc)
+                if ((stat & maskInfo[idx].sysStat) != 0U)
                 {
-                    break;
+                    rc = PF09_PmicRead(dev, maskInfo[idx].addr,
+                        &mask[idx]);
+
+                    /* Exit on error */
+                    if (!rc)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    mask[idx] = 0U;
                 }
             }
-            else
-            {
-                mask[idx] = 0U;
-            }
         }
+    }
+    else
+    {
+        rc = false;
     }
 
     /* Return status */
@@ -428,24 +445,34 @@ bool PF09_IntStatus(const PF09_Type *dev, uint8_t *mask)
 /*--------------------------------------------------------------------------*/
 /*  Interrupt clear                                                         */
 /*--------------------------------------------------------------------------*/
-bool PF09_IntClear(const PF09_Type *dev, const uint8_t *mask)
+bool PF09_IntClear(const PF09_Type *dev, const uint8_t *mask,
+    uint32_t maskLen)
 {
     bool rc = true;
 
-    /* Loop over all mask registers */
-    for (uint32_t idx = 0U; idx < PF09_MASK_LEN; idx++)
+    /* Check mask array size */
+    if (maskLen <= PF09_MASK_LEN)
     {
-        /* Clear any? */
-        if (mask[idx] != 0U)
+        /* Loop over mask registers */
+        for (uint32_t idx = 0U; idx < maskLen; idx++)
         {
-            rc = PF09_PmicWrite(dev, maskInfo[idx].addr, mask[idx], 0xFFU);
-
-            /* Exit on error */
-            if (!rc)
+            /* Clear any? */
+            if (mask[idx] != 0U)
             {
-                break;
+                rc = PF09_PmicWrite(dev, maskInfo[idx].addr, mask[idx],
+                    0xFFU);
+
+                /* Exit on error */
+                if (!rc)
+                {
+                    break;
+                }
             }
         }
+    }
+    else
+    {
+        rc = false;
     }
 
     /* Return status */

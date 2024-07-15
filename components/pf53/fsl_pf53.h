@@ -25,13 +25,17 @@
 /*! PF53 driver version. */
 #define FSL_PF53_DRIVER_VERSION (MAKE_VERSION(1, 0, 0))
 
+/*! PF53 device ID length. */
+#define PF53_ID_LEN  4U
+
 /*! PF53 device info. */
 typedef struct
 {
-    LPI2C_Type *i2cBase;  /*!< I2C base address */
-    uint8_t devAddr;      /*!< Device I2C address */
-    bool crcEn;           /*!< CRC enabled */
-    bool secureEn;        /*!< Secure writes enabled */
+    LPI2C_Type *i2cBase;      /*!< I2C base address */
+    uint8_t devAddr;          /*!< Device I2C address */
+    bool crcEn;               /*!< CRC enabled */
+    bool secureEn;            /*!< Secure writes enabled */
+    uint8_t id[PF53_ID_LEN];  /*!< Id buffer */
 } PF53_Type;
 
 /*! PF53 regulator info. */
@@ -94,7 +98,7 @@ bool PF53_Init(const PF53_Type *dev);
  *
  * @return True if successful.
  */
-bool PF53_PmicInfoGet(const PF53_Type *dev, uint8_t **info, uint8_t *len);
+bool PF53_PmicInfoGet(PF53_Type *dev, uint8_t **info, uint8_t *len);
 
 /*!
  * Write a PF53 register
