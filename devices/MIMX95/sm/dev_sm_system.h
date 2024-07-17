@@ -124,15 +124,14 @@
     }
 
 /*!
- * @name System power mode flags
+ * @name System sleep flags
  */
 /** @{ */
-#define DEV_SM_SPM_SM_ACTIVE_MASK           (1U << 0U)  /*!< Keep SM active */
-#define DEV_SM_SPM_FRO_ACTIVE_MASK          (1U << 1U)  /*!< Keep FRO active */
-#define DEV_SM_SPM_SYSCTR_ACTIVE_MASK       (1U << 2U)  /*!< Keep SYSCTR active */
-#define DEV_SM_SPM_PMIC_STBY_INACTIVE_MASK  (1U << 3U)  /*!< No PMIC_STBY assertion */
-#define DEV_SM_SPM_OSC24M_ACTIVE_MASK       (1U << 4U)  /*!< Keep OSC24M active */
-#define DEV_SM_SPM_DRAM_ACTIVE_MASK         (1U << 5U)  /*!< Keep DRAM active */
+#define DEV_SM_SSF_SM_ACTIVE_MASK           (1U << 0U)  /*!< Keep SM active */
+#define DEV_SM_SSF_FRO_ACTIVE_MASK          (1U << 1U)  /*!< Keep FRO active */
+#define DEV_SM_SSF_SYSCTR_ACTIVE_MASK       (1U << 2U)  /*!< Keep SYSCTR active */
+#define DEV_SM_SSF_PMIC_STBY_INACTIVE_MASK  (1U << 3U)  /*!< No PMIC_STBY assertion */
+#define DEV_SM_SSF_OSC24M_ACTIVE_MASK       (1U << 4U)  /*!< Keep OSC24M active */
 /** @} */
 
 /* Types */
@@ -163,8 +162,11 @@ typedef struct
     /*! PLL power status */
     uint32_t pllPwrStat;
 
-    /*! System power mode */
-    uint32_t sysPwrMode;
+    /*! System sleep mode */
+    uint32_t sysSleepMode;
+
+    /*! System sleep flags */
+    uint32_t sysSleepFlags;
 } dev_sm_sys_sleep_rec_t;
 
 /* Functions */

@@ -134,7 +134,7 @@ static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdAssert(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSyslog(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
-static int32_t MONITOR_CmdSpm(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
 
@@ -207,7 +207,7 @@ int32_t MONITOR_Dispatch(char *line)
         "assert",
         "syslog",
         "grp",
-        "spm",
+        "ssm",
         "custom",
         "test"
     };
@@ -389,8 +389,8 @@ int32_t MONITOR_Dispatch(char *line)
             case 52:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 53:  /* spm */
-                status = MONITOR_CmdSpm(argc - 1, &argv[1]);
+            case 53:  /* ssm */
+                status = MONITOR_CmdSsm(argc - 1, &argv[1]);
                 break;
             case 54:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
@@ -3172,25 +3172,28 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
 }
 
 /*--------------------------------------------------------------------------*/
-/* System power mode                                                        */
+/* System sleep mode                                                        */
 /*--------------------------------------------------------------------------*/
-static int32_t MONITOR_CmdSpm(int32_t argc, const char * const argv[])
+static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[])
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (argc < 1)
+    if (argc < 2)
     {
         status = SM_ERR_MISSING_PARAMETERS;
     }
     else
     {
-        int32_t spm;
+        uint32_t mode, flags;
 
         /* Parse data */
-        spm = strtol(argv[0], NULL, 0);
+        mode = strtoul(argv[0], NULL, 0);
 
-        /* Set system power mode for the SM */
-        status = LMM_SystemPowerModeSet(0U, spm);
+        /* Parse data */
+        flags = strtoul(argv[1], NULL, 0);
+
+        /* Set system sleep mode/flags for the SM */
+        status = LMM_SystemSleepModeSet(0U, mode, flags);
     }
 
     /* Return status */

@@ -361,9 +361,10 @@ void LM_SystemReason(uint32_t lmId, lmm_rst_rec_t *bootRec,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set system power mode                                                    */
+/* Set system sleep mode                                                    */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_SystemPowerModeSet(uint32_t lmId, uint32_t powerMode)
+int32_t LMM_SystemSleepModeSet(uint32_t lmId, uint32_t sleepMode,
+    uint32_t sleepFlags)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -374,20 +375,24 @@ int32_t LMM_SystemPowerModeSet(uint32_t lmId, uint32_t powerMode)
     }
     else
     {
-        static uint32_t s_powerMode[SM_NUM_LM];
+        static uint32_t s_sleepMode[SM_NUM_LM] = { 0 };
+        static uint32_t s_sleepFlags[SM_NUM_LM] = { 0 };
         uint32_t newMode = 0U;
+        uint32_t newFlags = 0U;
 
-        /* Record new power mode */
-        s_powerMode[lmId] = powerMode;
+        /* Record new sleep mode/flags */
+        s_sleepMode[lmId] = sleepMode;
+        s_sleepFlags[lmId] = sleepFlags;
 
-        /* Aggregate power mode */
+        /* Aggregate sleep mode/flags */
         for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
         {
-            newMode |= s_powerMode[lm];
+            newMode = MAX(newMode, s_sleepMode[lm]);
+            newFlags |= s_sleepFlags[lm];
         }
 
-        /* Inform device of power mode */
-        SM_SYSTEMPOWERMODESET(newMode);
+        /* Inform device of sleep mode/flags */
+        SM_SYSTEMSLEEPMODESET(newMode, newFlags);
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)

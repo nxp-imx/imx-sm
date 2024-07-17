@@ -90,7 +90,7 @@
 #define SCMI_SYS_STATE_GRP_SHUTDOWN   0x80000005U
 /*! Reset LM group 0 */
 #define SCMI_SYS_STATE_GRP_RESET      0x80000006U
-/*! Set suspend/shutdown mode */
+/*! Set sleep mode */
 #define SCMI_SYS_STATE_MODE           0xC0000000U
 /** @} */
 
@@ -112,6 +112,16 @@
 /** @{ */
 /*! Graceful request */
 #define SCMI_SYS_FLAGS_GRACEFUL(x)  (((x) & 0x1U) << 0U)
+/** @} */
+
+/*!
+ * @name SCMI system sleep mode fields
+ */
+/** @{ */
+/*! Sleep mode */
+#define SCMI_SYS_SLEEP_MODE(x)   (((x) & 0xFFU) << 16U)
+/*! Sleep flags */
+#define SCMI_SYS_SLEEP_FLAGS(x)  (((x) & 0xFFFFU) << 0U)
 /** @} */
 
 /*!
@@ -225,18 +235,18 @@ int32_t SCMI_SysProtocolMessageAttributes(uint32_t channel,
  *                             0x4 System suspend (sleep).<BR>
  *                             0x5 - 0x7FFFFFFF Reserved, must not be
  *                             used.<BR>
- *                             0x80000000 - 0xFFFFFFFF Might be used for
- *                             vendor-defined implementations of system power
- *                             state. These can include additional parameters.
- *                             The prototype for vendor-defined calls is beyond
- *                             the scope of this specification
+ *                             0x80000000 - 0xBFFFFFFF NXP defined power
+ *                             states.<BR>
+ *                             0xC0000000 - 0xFFFFFFFF NXP defined sleep
+ *                             modes (mode + flags)
  *
  * This function is used to power down or reset the LM or full SoC. An example
  * power state is ::SCMI_SYS_STATE_SHUTDOWN. The ::SCMI_SYS_STATE_MODE state is
  * unique in that it does not cause an immediate state change. Instead,
- * bits[29:0] are aggregated and the and the resulting mode used the next time
- * the SoC suspends or is shutdown to determine what mode is entered. The
- * setting of the bits is SoC and board specific.
+ * bits[23:16] are the sleep mode and bits[15:0] are sleep flags. These are
+ * aggregated and the and the result used the next time the SoC enters sleep to
+ * determine what mode is entered and which features stay on. The setting of
+ * the bits is SoC and board specific.
  *
  * Note the SCMI spec defines the standard states to affect the system. In SM,
  * the system in this case is defined as the LM the SCMI agent is a part of.

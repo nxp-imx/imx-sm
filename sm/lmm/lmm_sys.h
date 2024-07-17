@@ -262,19 +262,22 @@ void LM_SystemReason(uint32_t lmId, lmm_rst_rec_t *bootRec,
     lmm_rst_rec_t *shutdownRec);
 
 /*!
- * Store the power mode.
+ * Store the sleep mode.
  *
- * @param[in]     lmId       Requesting LM
- * @param[in]     powerMode  Mode to store
+ * @param[in]     lmId        Requesting LM
+ * @param[in]     sleepMode   Mode to store
+ * @param[in]     sleepFlags  Flags to store
  *
- * This function stores the power mode for the LM. The aggregation
- * policy is to OR the words for all LM and pass to the device layer.
-
+ * This function stores the sleep mode/flags for the LM. The aggregation
+ * policy is to MAX the modes and OR the flags for all LM and pass to the
+ * device layer.
+ *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
  */
-int32_t LMM_SystemPowerModeSet(uint32_t lmId, uint32_t powerMode);
+int32_t LMM_SystemSleepModeSet(uint32_t lmId, uint32_t sleepMode,
+    uint32_t sleepFlags);
 
 /** @} */
 

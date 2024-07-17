@@ -83,8 +83,11 @@
  */
 typedef struct
 {
-    /*! System power mode */
-    uint32_t sysPwrMode;
+    /*! System sleep mode */
+    uint32_t sysSleepMode;
+
+    /*! System sleep flags */
+    uint32_t sysSleepFlags;
 } dev_sm_syslog_t;
 
 /* Global variables */

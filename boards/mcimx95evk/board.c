@@ -492,7 +492,7 @@ void BOARD_InitSerialBus(void)
 /*--------------------------------------------------------------------------*/
 /* System sleep prepare                                                     */
 /*--------------------------------------------------------------------------*/
-void BOARD_SystemSleepPrepare(uint32_t sleepMode)
+void BOARD_SystemSleepPrepare(uint32_t sleepMode, uint32_t sleepFlags)
 {
     /* Configure SM LPUART for wakeup */
     if (s_uartConfig.base != NULL)
@@ -517,7 +517,7 @@ void BOARD_SystemSleepPrepare(uint32_t sleepMode)
 /*--------------------------------------------------------------------------*/
 /* System sleep entry                                                       */
 /*--------------------------------------------------------------------------*/
-void BOARD_SystemSleepEnter(uint32_t sleepMode)
+void BOARD_SystemSleepEnter(uint32_t sleepMode, uint32_t sleepFlags)
 {
     /* Disable SysTick */
     uint32_t sysTickMask = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
@@ -542,7 +542,7 @@ void BOARD_SystemSleepEnter(uint32_t sleepMode)
 /*--------------------------------------------------------------------------*/
 /* System sleep exit                                                        */
 /*--------------------------------------------------------------------------*/
-void BOARD_SystemSleepExit(uint32_t sleepMode)
+void BOARD_SystemSleepExit(uint32_t sleepMode, uint32_t sleepFlags)
 {
     if (s_wdogConfig.enableWdog32)
     {
@@ -559,7 +559,7 @@ void BOARD_SystemSleepExit(uint32_t sleepMode)
 /*--------------------------------------------------------------------------*/
 /* System sleep unprepare                                                   */
 /*--------------------------------------------------------------------------*/
-void BOARD_SystemSleepUnprepare(uint32_t sleepMode)
+void BOARD_SystemSleepUnprepare(uint32_t sleepMode, uint32_t sleepFlags)
 {
     /* Service SM LPUART wakeup events */
     if (s_uartConfig.base != NULL)

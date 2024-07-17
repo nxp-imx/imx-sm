@@ -205,9 +205,9 @@
 #define SM_POWERRETMASKGET      DEV_SM_PowerRetMaskGet
 #endif
 
-#ifndef SM_SYSTEMPOWERMODESET
-/*! Redirector (device/board) to set the system power mode */
-#define SM_SYSTEMPOWERMODESET   DEV_SM_SystemPowerModeSet
+#ifndef SM_SYSTEMSLEEPMODESET
+/*! Redirector (device/board) to set the system sleep mode */
+#define SM_SYSTEMSLEEPMODESET   DEV_SM_SystemSleepModeSet
 #endif
 
 #ifndef SM_SYSTEMRESET

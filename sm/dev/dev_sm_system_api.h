@@ -53,6 +53,12 @@
 
 /* Defines */
 
+/*! System sleep mode */
+#define DEV_SM_SLEEP_MODE(x)   (((x) & 0xFF0000U) >> 16U)
+
+/*! System sleep flags */
+#define DEV_SM_SLEEP_FLAGS(x)  (((x) & 0xFFFFU) >> 0U)
+
 /* Types */
 
 /*!
@@ -96,11 +102,12 @@ typedef struct
 int32_t DEV_SM_SystemInit(void);
 
 /*!
- * Store the power mode.
+ * Store the sleep mode and flags.
  *
- * @param[in]     powerMode  Mode to store
+ * @param[in]     sleepMode   Mode to store
+ * @param[in]     sleepFlags  Flags to store
  */
-void DEV_SM_SystemPowerModeSet(uint32_t powerMode);
+void DEV_SM_SystemSleepModeSet(uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
  * Reset the system.
@@ -209,7 +216,7 @@ void DEV_SM_SystemError(int32_t status, uint32_t pc);
 /*!
  * Transition the system to sleep mode.
  *
- * @param[in]     sleepMode  system sleep mode
+ * @param[in]     sleepMode   system sleep mode
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *

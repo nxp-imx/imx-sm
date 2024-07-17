@@ -62,11 +62,12 @@ int32_t DEV_SM_SystemInit(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Save power mode                                                          */
+/* Save sleep mode                                                          */
 /*--------------------------------------------------------------------------*/
-void DEV_SM_SystemPowerModeSet(uint32_t powerMode)
+void DEV_SM_SystemSleepModeSet(uint32_t sleepMode, uint32_t sleepFlags)
 {
-    g_syslog.sysPwrMode = powerMode;
+    g_syslog.sysSleepMode = sleepMode;
+    g_syslog.sysSleepFlags = sleepFlags;
 }
 
 /*--------------------------------------------------------------------------*/

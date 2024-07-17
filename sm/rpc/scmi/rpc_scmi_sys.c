@@ -80,6 +80,10 @@
 /* SCMI system power state flags */
 #define SYS_FLAGS_GRACEFUL(x)  (((x) & 0x1U) >> 0U)
 
+/* SCMI system sleep mode fields */
+#define SYS_SLEEP_MODE(x)   (((x) & 0xFF0000U) >> 16U)
+#define SYS_SLEEP_FLAGS(x)  (((x) & 0xFFFFU) >> 0U)
+
 /* SCMI system notification flags */
 #define SYS_NOTIFY_ENABLE(x)  (((x) & 0x1U) >> 0U)
 
@@ -300,14 +304,15 @@ int32_t RPC_SCMI_SysDispatchReset(uint32_t lmId, uint32_t agentId,
 
 /* Local variables */
 
-static uint32_t s_powerMode[SM_SCMI_NUM_AGNT];
+static uint32_t s_sleepMode[SM_SCMI_NUM_AGNT];
+static uint32_t s_sleepFlags[SM_SCMI_NUM_AGNT];
 static bool s_sysNotify[SM_SCMI_NUM_AGNT];
 
 /* Local functions */
 
 static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
     uint32_t systemState, bool *graceful);
-static int32_t SystemPowerMode(uint32_t lmId, uint32_t agentId,
+static int32_t SystemSleepMode(uint32_t lmId, uint32_t agentId,
     uint32_t powerMode);
 
 /*--------------------------------------------------------------------------*/
@@ -495,10 +500,8 @@ static int32_t SysProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   0x3 System power-up (boot).                                            */
 /*   0x4 System suspend (sleep).                                            */
 /*   0x5 - 0x7FFFFFFF Reserved, must not be used.                           */
-/*   0x80000000 - 0xFFFFFFFF Might be used for vendor-defined               */
-/*   implementations of system power state. These can include additional    */
-/*   parameters. The prototype for vendor-defined calls is beyond the       */
-/*   scope of this specification                                            */
+/*   0x80000000 - 0xBFFFFFFF NXP defined power states.                      */
+/*   0xC0000000 - 0xFFFFFFFF NXP defined sleep modes (mode + flags)         */
 /* - len: Pointer to length (can modify)                                    */
 /*                                                                          */
 /* Process the SYSTEM_POWER_STATE_SET message. Platform handler for         */
@@ -569,7 +572,7 @@ static int32_t SystemPowerStateSet(const scmi_caller_t *caller,
         if (mode)
         {
             /* Update mode */
-            status = SystemPowerMode(caller->lmId, agentId,
+            status = SystemSleepMode(caller->lmId, agentId,
                 in->systemState & ~SYS_STATE_MODE);
         }
         else
@@ -750,10 +753,10 @@ static int32_t SysResetAgentConfig(uint32_t lmId, uint32_t agentId,
     /* Disable notifications */
     s_sysNotify[agentId] = false;
 
-    /* Reset power mode */
-    if (s_powerMode[agentId] != 0U)
+    /* Reset sleep mode */
+    if ((s_sleepMode[agentId] != 0U) || (s_sleepFlags[agentId] != 0U))
     {
-        status = SystemPowerMode(lmId, agentId, 0U);
+        status = SystemSleepMode(lmId, agentId, 0U);
     }
 
     /* Return status */
@@ -842,31 +845,34 @@ static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Aggregate and update the system power mode                               */
+/* Aggregate and update the system sleep mode                               */
 /*                                                                          */
 /* Parameters:                                                              */
 /* - lmId: LM to update                                                     */
 /* - agentId: Message to update                                             */
 /* - mode: New system mode                                                  */
 /*--------------------------------------------------------------------------*/
-static int32_t SystemPowerMode(uint32_t lmId, uint32_t agentId,
+static int32_t SystemSleepMode(uint32_t lmId, uint32_t agentId,
     uint32_t powerMode)
 {
     uint32_t scmiInst = g_scmiAgentConfig[agentId].scmiInst;
     uint32_t firstAgent = g_scmiConfig[scmiInst].firstAgent;
     uint32_t numAgents = g_scmiConfig[scmiInst].numAgents;
     uint32_t newMode = 0U;
+    uint32_t newFlags = 0U;
 
-    /* Record power mode for this agent */
-    s_powerMode[agentId] = powerMode;
+    /* Record sleep mode and flags for this agent */
+    s_sleepMode[agentId] = SYS_SLEEP_MODE(powerMode);
+    s_sleepFlags[agentId] = SYS_SLEEP_FLAGS(powerMode);
 
-    /* Calculate new aggregate mode for the LM */
+    /* Calculate new aggregate mode and flags for the LM */
     for (uint32_t a = firstAgent; a < (firstAgent + numAgents); a++)
     {
-        newMode |= s_powerMode[a];
+        newMode = MAX(newMode, s_sleepMode[a]);
+        newFlags |= s_sleepFlags[a];
     }
 
-    /* Inform LMM of system mode */
-    return LMM_SystemPowerModeSet(lmId, newMode);
+    /* Inform LMM of sleep mode and flags */
+    return LMM_SystemSleepModeSet(lmId, newMode, newFlags);
 }
 

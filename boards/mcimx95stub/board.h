@@ -105,30 +105,34 @@ void BOARD_InitSerialBus(void);
 /*!
  * Board-level prepare for system sleep entry
  *
- * @param sleepMode Sleep mode being entered.
+ * @param sleepMode  Sleep mode being entered.
+ * @param sleepFlags Sleep flag options.
  */
-void BOARD_SystemSleepPrepare(uint32_t sleepMode);
+void BOARD_SystemSleepPrepare(uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
  * Board-level system sleep entry
  *
- * @param sleepMode Sleep mode being entered.
+ * @param sleepMode  Sleep mode being entered.
+ * @param sleepFlags Sleep flag options.
  */
-void BOARD_SystemSleepEnter(uint32_t sleepMode);
+void BOARD_SystemSleepEnter(uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
  * Board-level system sleep exit
  *
- * @param sleepMode Sleep mode being exited.
+ * @param sleepMode  Sleep mode being exited.
+ * @param sleepFlags Sleep flag options.
  */
-void BOARD_SystemSleepExit(uint32_t sleepMode);
+void BOARD_SystemSleepExit(uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
  * Board-level unprepare for system sleep entry
  *
- * @param sleepMode Sleep mode being entered.
+ * @param sleepMode  Sleep mode being entered.
+ * @param sleepFlags Sleep flag options.
  */
-void BOARD_SystemSleepUnprepare(uint32_t sleepMode);
+void BOARD_SystemSleepUnprepare(uint32_t sleepMode, uint32_t sleepFlags);
 
 /*!
  * Set the watchdog mode

@@ -108,7 +108,8 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
 
     if (status == SM_ERR_SUCCESS)
     {
-        printf("Sys power mode = 0x%08X\n", syslog->sysPwrMode);
+        printf("Sys sleep mode  = %u\n", syslog->sysSleepMode);
+        printf("Sys sleep flags = 0x%08X\n", syslog->sysSleepFlags);
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)

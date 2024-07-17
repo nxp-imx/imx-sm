@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -201,6 +201,37 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel);
  * - ::SM_ERR_NOT_FOUND: if \a domainId is invalid.
  */
 int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel);
+
+/*!
+ * Configure performance level for system sleep.
+ *
+ * @param[in]   perfLevelSleep  Level for system sleep performance domains
+ *
+ * This function configures the level for system sleep performance
+ * domains.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the domain level was returned successfully.
+ * - ::SM_ERR_OUT_OF_RANGE: if \a perfLevelSleep is invalid.
+ */
+int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep);
+
+/*!
+ * Configure performance level for system wakeup.
+ *
+ * @param[in]   perfLevelSleep  Level for system sleep performance domains
+ *
+ * This function restores the level for system sleep performance
+ * domains.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the domain level was returned successfully.
+ */
+int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep);
 
 #endif /* DEV_SM_PERF_API_H */
 
