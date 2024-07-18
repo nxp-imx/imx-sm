@@ -54,7 +54,7 @@
 #define COMMAND_RESET_DOMAIN_ATTRIBUTES      0x3U
 #define COMMAND_RESET                        0x4U
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x1001FUL
+#define COMMAND_SUPPORTED_MASK               0x1001FULL
 
 /* SCMI max reset argument lengths */
 #define RESET_MAX_NAME  16U
@@ -377,14 +377,14 @@ static int32_t ResetProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }

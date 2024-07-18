@@ -50,6 +50,32 @@ extern "C" {
 bool PCA2131_Init(const PCA2131_Type *dev);
 
 /*!
+ * Write PCA2131 registers.
+ *
+ * @param[in]     dev      Device info.
+ * @param[in]     regAddr  Register address.
+ * @param[in]     len      Bytes to write.
+ * @param[in]     val      Pointer to values to write.
+ *
+ * @return True if successful.
+ */
+bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
+    uint8_t *val);
+
+/*!
+ * Read PCA2131 registers.
+ *
+ * @param[in]     dev      Device info.
+ * @param[in]     regAddr  Register address.
+ * @param[in]     len      Bytes to read.
+ * @param[out]    val      Pointer to return value.
+ *
+ * @return True if successful.
+ */
+bool PCA2131_RtcRead(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
+    uint8_t *val);
+
+/*!
  * Write a PCA2131 register.
  *
  * @param[in]     dev      Device info.
@@ -59,19 +85,8 @@ bool PCA2131_Init(const PCA2131_Type *dev);
  *
  * @return True if successful.
  */
-bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t val,
-    uint8_t mask);
-
-/*!
- * Read a PCA2131 register.
- *
- * @param[in]     dev      Device info.
- * @param[in]     regAddr  Register address.
- * @param[out]    val      Pointer to return value.
- *
- * @return True if successful.
- */
-bool PCA2131_RtcRead(const PCA2131_Type *dev, uint8_t regAddr, uint8_t *val);
+bool PCA2131_RtcWriteOne(const PCA2131_Type *dev, uint8_t regAddr,
+    uint8_t val, uint8_t mask);
 
 /*!
  * Write the date/time into the PCA2131.

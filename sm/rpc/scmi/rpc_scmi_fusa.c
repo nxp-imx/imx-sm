@@ -61,7 +61,7 @@
 #define COMMAND_FUSA_SCHECK_EVNTRIG          0xBU
 #define COMMAND_FUSA_SCHECK_TEST_EXEC        0xEU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x14FEFUL
+#define COMMAND_SUPPORTED_MASK               0x14FEFULL
 
 /* SCMI FuSa F-EENV states */
 #define FUSA_FEENV_STATE_INIT             0U
@@ -285,7 +285,7 @@ typedef struct
     uint32_t feenvState;
     /* Mode selector value as returned by SAF */
     uint32_t mselMode;
-} msg_rfusa32_t;
+} msg_rfusa64_t;
 
 /* Request type for FusaSeenvStateReqEvent() */
 typedef struct
@@ -294,7 +294,7 @@ typedef struct
     uint32_t header;
     /* Random cookie value */
     uint32_t pingCookie;
-} msg_rfusa33_t;
+} msg_rfusa65_t;
 
 /* Request type for FusaFaultEvent() */
 typedef struct
@@ -305,7 +305,7 @@ typedef struct
     uint32_t faultId;
     /* Fault state flags */
     uint32_t flags;
-} msg_rfusa34_t;
+} msg_rfusa66_t;
 
 /* Local functions */
 
@@ -631,14 +631,14 @@ static int32_t FusaProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -1414,7 +1414,7 @@ static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
         if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (BITARRAY_GET(stateNotify, dstAgent) != 0U))
         {
-            msg_rfusa32_t out;
+            msg_rfusa64_t out;
 
             /* Fill in data */
             out.feenvState = trigger->parm[0];
@@ -1458,7 +1458,7 @@ static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
         if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (BITARRAY_GET(stateNotify, dstAgent) != 0U))
         {
-            msg_rfusa33_t out;
+            msg_rfusa65_t out;
 
             /* Fill in data */
             out.pingCookie = trigger->parm[0];
@@ -1504,7 +1504,7 @@ static int32_t FusaFaultEvent(scmi_msg_id_t msgId,
             && (BITARRAY_GET(s_fusaInfo[dstAgent].faultNotify, fault)
             != 0U))
         {
-            msg_rfusa34_t out;
+            msg_rfusa66_t out;
 
             /* Fill in data */
             out.faultId = fault;

@@ -118,6 +118,8 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
     int32_t rw);
 static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
     int32_t rw);
+static int32_t MONITOR_CmdExtCtrl(int32_t argc, const char * const argv[],
+    int32_t rw);
 static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
     int32_t len);
 static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
@@ -188,6 +190,8 @@ int32_t MONITOR_Dispatch(char *line)
         "ctrl.r",
         "ctrl.w",
         "ctrl.notify",
+        "extctrl.r",
+        "extctrl.w",
         "md.b",
         "md.w",
         "md",
@@ -333,54 +337,60 @@ int32_t MONITOR_Dispatch(char *line)
             case 36:  /* ctrl.notify */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], NOTIFY);
                 break;
-            case 37:  /* md.b */
+            case 37:  /* extctrl.r */
+                status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], READ);
+                break;
+            case 38:  /* extctrl.w */
+                status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], WRITE);
+                break;
+            case 39:  /* md.b */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], BYTE);
                 break;
-            case 38:  /* md.w */
+            case 40:  /* md.w */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], WORD);
                 break;
-            case 39:  /* md.l */
+            case 41:  /* md.l */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], LONG);
                 break;
-            case 40:  /* mm.b */
+            case 42:  /* mm.b */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], BYTE);
                 break;
-            case 41:  /* mm.w */
+            case 43:  /* mm.w */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], WORD);
                 break;
-            case 42:  /* mm.l */
+            case 44:  /* mm.l */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
-            case 43:  /* fuse.r */
+            case 45:  /* fuse.r */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
                 break;
-            case 44:  /* fuse.w */
+            case 46:  /* fuse.w */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
                 break;
 #ifdef BOARD_HAS_PMIC
-            case 45:  /* pmic.r */
+            case 47:  /* pmic.r */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], READ);
                 break;
-            case 46:  /* pmic.w */
+            case 48:  /* pmic.w */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 47:  /* idle */
+            case 49:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-            case 48:  /* assert */
+            case 50:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 49:  /* syslog */
+            case 51:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 50:  /* group */
+            case 52:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 51:  /* spm */
+            case 53:  /* spm */
                 status = MONITOR_CmdSpm(argc - 1, &argv[1]);
                 break;
-            case 52:  /* custom */
+            case 54:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
             default:
@@ -2502,6 +2512,104 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                 }
             }
             break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Extctrl command                                                          */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdExtCtrl(int32_t argc, const char * const argv[],
+    int32_t rw)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (argc >= 2)
+    {
+        uint32_t ctrl;
+        uint32_t addr;
+        uint32_t len = 0U;
+        uint32_t val[24];
+
+        /* Get control */
+        status = MONITOR_ConvU32(argv[0], &ctrl);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Convert control */
+            if ((ctrl & LMM_CTRL_FLAG_BRD) != 0U)
+            {
+                ctrl &= ~LMM_CTRL_FLAG_BRD;
+                ctrl += DEV_SM_NUM_CTRL;
+            }
+
+            /* Get address */
+            status = MONITOR_ConvU32(argv[1], &addr);
+        }
+
+        if (rw == READ)
+        {
+            if (argc != 3)
+            {
+                status = SM_ERR_MISSING_PARAMETERS;
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Get length */
+                status = MONITOR_ConvU32(argv[2], &len);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Read data */
+                status = LMM_MiscControlExtGet(s_lm, ctrl, addr,
+                    len, val);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                if (ctrl < DEV_SM_NUM_CTRL)
+                {
+                    printf("0x%04X:", ctrl);
+                }
+                else
+                {
+                    printf("0x%04X:", (ctrl
+                        - (uint32_t) DEV_SM_NUM_CTRL)
+                        | LMM_CTRL_FLAG_BRD);
+                }
+                for (uint32_t idx = 0U; idx < len; idx++)
+                {
+                    printf(" 0x%02X", val[idx]);
+                }
+                printf("\n");
+            }
+        }
+        else
+        {
+            /* Get data */
+            while ((status == SM_ERR_SUCCESS) && (len <
+                ((uint32_t) argc) - 2U))
+            {
+                status = MONITOR_ConvU32(argv[len + 2U],
+                    &val[len]);
+                len++;
+            }
+
+            /* Write to control */
+            if (status == SM_ERR_SUCCESS)
+            {
+                status = LMM_MiscControlExtSet(s_lm, ctrl, addr,
+                    len, val);
+            }
+        }
+    }
+    else
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
     }
 
     /* Return status */

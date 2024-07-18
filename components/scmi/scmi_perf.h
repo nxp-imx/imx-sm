@@ -64,6 +64,8 @@
 #define SCMI_MSG_PERFORMANCE_LEVEL_SET          0x7U
 /*! Get performance level */
 #define SCMI_MSG_PERFORMANCE_LEVEL_GET          0x8U
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION     0x10U
 /** @} */
 
 /*!

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -67,6 +67,26 @@ int32_t LMM_MiscControlGet(uint32_t lmId, uint32_t ctrlId, uint32_t *numRtn,
 {
     /* Just passthru to board/device */
     return SM_CONTROLGET(ctrlId, numRtn, rtn);
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set an extended control value                                            */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_MiscControlExtSet(uint32_t lmId, uint32_t ctrlId, uint32_t addr,
+    uint32_t numVal, const uint32_t *val)
+{
+    /* Just passthru to board/device */
+    return SM_CONTROLEXTSET(ctrlId, addr, numVal, val);
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get an extended control value                                            */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_MiscControlExtGet(uint32_t lmId, uint32_t ctrlId, uint32_t addr,
+    uint32_t numRtn, uint32_t *rtn)
+{
+    /* Just passthru to board/device */
+    return SM_CONTROLEXTGET(ctrlId, addr, numRtn, rtn);
 }
 
 /*--------------------------------------------------------------------------*/

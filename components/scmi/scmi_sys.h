@@ -56,6 +56,8 @@
 #define SCMI_MSG_SYSTEM_POWER_STATE_SET       0x3U
 /*! Configure system state notifications */
 #define SCMI_MSG_SYSTEM_POWER_STATE_NOTIFY    0x5U
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION   0x10U
 /*! Read system state notification event */
 #define SCMI_MSG_SYSTEM_POWER_STATE_NOTIFIER  0x0U
 /** @} */

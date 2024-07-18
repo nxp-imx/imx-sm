@@ -64,7 +64,9 @@
 #define COMMAND_MISC_SYSLOG                  0xDU
 #define COMMAND_MISC_BOARD_INFO              0xEU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x17FFFUL
+#define COMMAND_MISC_CONTROL_EXT_SET         0x20U
+#define COMMAND_MISC_CONTROL_EXT_GET         0x21U
+#define COMMAND_SUPPORTED_MASK               0x300017FFFULL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
@@ -74,7 +76,9 @@
 #define MISC_MAX_CFGNAME    16U
 #define MISC_MAX_BRDNAME    16U
 #define MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
+#define MISC_MAX_EXTVAL_T   SCMI_ARRAY(16U, uint32_t)
 #define MISC_MAX_VAL        SCMI_ARRAY(8U, uint32_t)
+#define MISC_MAX_EXTVAL     SCMI_ARRAY(16U, uint32_t)
 #define MISC_MAX_ARG_T      SCMI_ARRAY(12U, uint32_t)
 #define MISC_MAX_RTN        SCMI_ARRAY(8U, uint32_t)
 #define MISC_MAX_PASSOVER   SCMI_ARRAY(8U, uint32_t)
@@ -385,6 +389,49 @@ typedef struct
     uint32_t version;
 } msg_rmisc16_t;
 
+/* Request type for MiscControlExtSet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the control */
+    uint32_t ctrlId;
+    /* Address of the control set */
+    uint32_t addr;
+    /* Requested size of the set */
+    uint32_t len;
+    /* Size of the value data */
+    uint32_t numVal;
+    /* Value data array */
+    uint32_t extVal[MISC_MAX_EXTVAL_T];
+} msg_rmisc32_t;
+
+/* Request type for MiscControlExtGet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the control */
+    uint32_t ctrlId;
+    /* Address of the control get */
+    uint32_t addr;
+    /* Requested size of the get */
+    uint32_t len;
+} msg_rmisc33_t;
+
+/* Response type for MiscControlExtGet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Size of the return data in words */
+    uint32_t numVal;
+    /* Return data array */
+    uint32_t extVal[MISC_MAX_EXTVAL];
+} msg_tmisc33_t;
+
 /* Request type for MiscControlEvent() */
 typedef struct
 {
@@ -394,7 +441,7 @@ typedef struct
     uint32_t ctrlId;
     /* Event flags, varies by control */
     uint32_t flags;
-} msg_rmisc32_t;
+} msg_rmisc64_t;
 
 /* Local functions */
 
@@ -430,6 +477,10 @@ static int32_t MiscBoardInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc14_t *out);
 static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rmisc16_t *in, const scmi_msg_status_t *out);
+static int32_t MiscControlExtSet(const scmi_caller_t *caller,
+    const msg_rmisc32_t *in, const scmi_msg_status_t *out);
+static int32_t MiscControlExtGet(const scmi_caller_t *caller,
+    const msg_rmisc33_t *in, msg_tmisc33_t *out, uint32_t *len);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
     const lmm_rpc_trigger_t *trigger);
 static int32_t MiscResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -532,6 +583,16 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(const scmi_msg_status_t);
             status = MiscNegotiateProtocolVersion(caller,
                 (const msg_rmisc16_t*) in, (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_MISC_CONTROL_EXT_SET:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = MiscControlExtSet(caller, (const msg_rmisc32_t*) in,
+                (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_MISC_CONTROL_EXT_GET:
+            lenOut = sizeof(msg_tmisc33_t);
+            status = MiscControlExtGet(caller, (const msg_rmisc33_t*) in,
+                (msg_tmisc33_t*) out, &lenOut);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -715,12 +776,14 @@ static int32_t MiscProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
+
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U)
-            || (((COMMAND_SUPPORTED_MASK >> in->messageId) & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -1649,6 +1712,182 @@ static int32_t MiscNegotiateProtocolVersion(const scmi_caller_t *caller,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Set an extended control value                                            */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->ctrlId: Identifier for the control                                 */
+/* - in->addr: Address of the control set                                   */
+/* - in->len: Requested size of the set                                     */
+/* - in->numVal: Size of the value data                                     */
+/* - in->extVal: Value data array                                           */
+/*                                                                          */
+/* Process the MISC_CONTROL_EXT_SET message. Platform handler for           */
+/* SCMI_MiscControlExtSet(). Requires access greater than or equal to       */
+/* EXCLUSIVE.                                                               */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the control is set successfully.                    */
+/* - SM_ERR_NOT_FOUND: if ctrlId does not point to a valid control.         */
+/* - SM_ERR_DENIED: if the calling agent is not allowed to set this         */
+/*   control.                                                               */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscControlExtSet(const scmi_caller_t *caller,
+    const msg_rmisc32_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+
+    /* Check request length */
+    if (caller->lenCopy < ((5U + in->numVal) * sizeof(uint32_t)))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check parameters */
+    if (in->len != in->numVal)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Check and generate unified ctrlId */
+    if (status == SM_ERR_SUCCESS)
+    {
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+        if ((in->ctrlId & MISC_CTRL_FLAG_BRD) == 0U)
+#endif
+        {
+            /* Check control */
+            if (uCtrlId >= DEV_SM_NUM_CTRL)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+        }
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+        else
+        {
+            /* Check control */
+            if (uCtrlId >= (SM_NUM_CTRL - DEV_SM_NUM_CTRL))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+
+            /* Adjust to end of device controls */
+            uCtrlId += DEV_SM_NUM_CTRL;
+        }
+#endif
+    }
+
+    /* Check permissions */
+    if ((status == SM_ERR_SUCCESS)
+        && (g_scmiAgentConfig[caller->agentId].ctrlPerms[uCtrlId]
+        < SM_SCMI_PERM_EXCLUSIVE))
+    {
+        status = SM_ERR_DENIED;
+    }
+
+    /* Set control */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_MiscControlExtSet(caller->lmId, uCtrlId, in->addr,
+            in->numVal, in->extVal);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get an extended control value                                            */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->ctrlId: Identifier for the control                                 */
+/* - in->addr: Address of the control get                                   */
+/* - in->len: Requested size of the get                                     */
+/* - out->numVal: Size of the return data in words                          */
+/* - out->extVal: Return data array                                         */
+/* - len: Pointer to length (can modify)                                    */
+/*                                                                          */
+/* Process the MISC_CONTROL_EXT_GET message. Platform handler for           */
+/* SCMI_MiscControlExtGet(). Requires access greater than or equal to GET.  */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the control is returned successfully.               */
+/* - SM_ERR_NOT_FOUND: if ctrlId does not point to a valid control.         */
+/* - SM_ERR_DENIED: if the calling agent is not allowed to get this         */
+/*   control.                                                               */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscControlExtGet(const scmi_caller_t *caller,
+    const msg_rmisc33_t *in, msg_tmisc33_t *out, uint32_t *len)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check and generate unified ctrlId */
+    if (status == SM_ERR_SUCCESS)
+    {
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+        if ((in->ctrlId & MISC_CTRL_FLAG_BRD) == 0U)
+#endif
+        {
+            /* Check control */
+            if (uCtrlId >= DEV_SM_NUM_CTRL)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+        }
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+        else
+        {
+            /* Check control */
+            if (uCtrlId >= (SM_NUM_CTRL - DEV_SM_NUM_CTRL))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+
+            /* Adjust to end of device controls */
+            uCtrlId += DEV_SM_NUM_CTRL;
+        }
+#endif
+    }
+
+    /* Check permissions */
+    if ((status == SM_ERR_SUCCESS)
+        && (g_scmiAgentConfig[caller->agentId].ctrlPerms[uCtrlId]
+        < SM_SCMI_PERM_GET))
+    {
+        status = SM_ERR_DENIED;
+    }
+
+    /* Get control */
+    if (status == SM_ERR_SUCCESS)
+    {
+        out->numVal = in->len;
+
+        status = LMM_MiscControlExtGet(caller->lmId, uCtrlId, in->addr,
+            in->len, out->extVal);
+    }
+
+    /* Update length */
+    if (status == SM_ERR_SUCCESS)
+    {
+        *len = (3U + out->numVal) * sizeof(uint32_t);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Send misc control event                                                  */
 /*                                                                          */
 /* Parameters:                                                              */
@@ -1681,7 +1920,7 @@ static int32_t MiscControlEvent(scmi_msg_id_t msgId,
         if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && ((s_ctrlNotify[uCtrlId][dstAgent] & flags) != 0U))
         {
-            msg_rmisc32_t out;
+            msg_rmisc64_t out;
 
             /* Fill in data */
             out.ctrlId = ctrlId;

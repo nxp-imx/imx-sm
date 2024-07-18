@@ -62,7 +62,7 @@
 #define COMMAND_BBM_BUTTON_NOTIFY            0xBU
 #define COMMAND_BBM_RTC_STATE                0xCU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x11FFFUL
+#define COMMAND_SUPPORTED_MASK               0x11FFFULL
 
 /* SCMI BBM max argument lengths */
 #define BBM_MAX_NAME  16U
@@ -326,7 +326,7 @@ typedef struct
     uint32_t header;
     /* RTC events */
     uint32_t flags;
-} msg_rbbm32_t;
+} msg_rbbm64_t;
 
 /* Request type for BbmButtonEvent() */
 typedef struct
@@ -335,7 +335,7 @@ typedef struct
     uint32_t header;
     /* Button events */
     uint32_t flags;
-} msg_rbbm33_t;
+} msg_rbbm65_t;
 
 /* Local functions */
 
@@ -649,12 +649,14 @@ static int32_t BbmProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
+
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U)
-            || (((COMMAND_SUPPORTED_MASK >> in->messageId) & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -1356,7 +1358,7 @@ static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
         {
             uint32_t rtcId = trigger->parm[0];
             uint32_t event = trigger->parm[1];
-            msg_rbbm33_t out;
+            msg_rbbm64_t out;
 
             if ((event == LMM_TRIGGER_PARM_RTC_ALARM)
                 && (s_rtcInfo[rtcId].alarmNotify[dstAgent]))
@@ -1420,7 +1422,7 @@ static int32_t BbmButtonEvent(scmi_msg_id_t msgId,
         if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && s_buttonNotify[dstAgent])
         {
-            msg_rbbm33_t out;
+            msg_rbbm65_t out;
 
             /* Fill in data */
             out.flags = BBM_EVENT_BUTTON_DETECTED(1U);

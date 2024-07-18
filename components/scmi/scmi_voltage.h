@@ -53,17 +53,19 @@
  */
 /** @{ */
 /*! Get voltage domain attributes */
-#define SCMI_MSG_VOLTAGE_DOMAIN_ATTRIBUTES  0x3U
+#define SCMI_MSG_VOLTAGE_DOMAIN_ATTRIBUTES   0x3U
 /*! Get voltage level descriptions */
-#define SCMI_MSG_VOLTAGE_DESCRIBE_LEVELS    0x4U
+#define SCMI_MSG_VOLTAGE_DESCRIBE_LEVELS     0x4U
 /*! Set voltage configuration */
-#define SCMI_MSG_VOLTAGE_CONFIG_SET         0x5U
+#define SCMI_MSG_VOLTAGE_CONFIG_SET          0x5U
 /*! Get voltage configuration */
-#define SCMI_MSG_VOLTAGE_CONFIG_GET         0x6U
+#define SCMI_MSG_VOLTAGE_CONFIG_GET          0x6U
 /*! Set voltage level */
-#define SCMI_MSG_VOLTAGE_LEVEL_SET          0x7U
+#define SCMI_MSG_VOLTAGE_LEVEL_SET           0x7U
 /*! Get voltage level */
-#define SCMI_MSG_VOLTAGE_LEVEL_GET          0x8U
+#define SCMI_MSG_VOLTAGE_LEVEL_GET           0x8U
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /** @} */
 
 /*!

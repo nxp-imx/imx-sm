@@ -62,6 +62,8 @@
 #define SCMI_MSG_PINCTRL_REQUEST             0x7U
 /*! Release a pin */
 #define SCMI_MSG_PINCTRL_RELEASE             0x8U
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /** @} */
 
 /*!

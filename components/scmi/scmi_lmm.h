@@ -53,25 +53,27 @@
  */
 /** @{ */
 /*! Get logical machine attributes */
-#define SCMI_MSG_LMM_ATTRIBUTES    0x3U
+#define SCMI_MSG_LMM_ATTRIBUTES              0x3U
 /*! Boot (power on and start) an LM */
-#define SCMI_MSG_LMM_BOOT          0x4U
+#define SCMI_MSG_LMM_BOOT                    0x4U
 /*! Reset an LM */
-#define SCMI_MSG_LMM_RESET         0x5U
+#define SCMI_MSG_LMM_RESET                   0x5U
 /*! Shutdown (power off) an LM */
-#define SCMI_MSG_LMM_SHUTDOWN      0x6U
+#define SCMI_MSG_LMM_SHUTDOWN                0x6U
 /*! Wake (resume) an LM from a low power state */
-#define SCMI_MSG_LMM_WAKE          0x7U
+#define SCMI_MSG_LMM_WAKE                    0x7U
 /*! Request an LM gracefully suspend (sleep) */
-#define SCMI_MSG_LMM_SUSPEND       0x8U
+#define SCMI_MSG_LMM_SUSPEND                 0x8U
 /*! Configure LM notifications */
-#define SCMI_MSG_LMM_NOTIFY        0x9U
+#define SCMI_MSG_LMM_NOTIFY                  0x9U
 /*! Read the reason the LM last booted/shutdown/reset */
-#define SCMI_MSG_LMM_RESET_REASON  0xAU
+#define SCMI_MSG_LMM_RESET_REASON            0xAU
 /*! Power up an LM */
-#define SCMI_MSG_LMM_POWER_ON      0xBU
+#define SCMI_MSG_LMM_POWER_ON                0xBU
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /*! Read LM notification event */
-#define SCMI_MSG_LMM_EVENT         0x0U
+#define SCMI_MSG_LMM_EVENT                   0x0U
 /** @} */
 
 /*!

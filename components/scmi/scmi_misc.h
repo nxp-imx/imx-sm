@@ -53,31 +53,37 @@
  */
 /** @{ */
 /*! Set a control value */
-#define SCMI_MSG_MISC_CONTROL_SET          0x3U
+#define SCMI_MSG_MISC_CONTROL_SET            0x3U
 /*! Get a control value */
-#define SCMI_MSG_MISC_CONTROL_GET          0x4U
+#define SCMI_MSG_MISC_CONTROL_GET            0x4U
 /*! Initiate an action on a control value */
-#define SCMI_MSG_MISC_CONTROL_ACTION       0x5U
+#define SCMI_MSG_MISC_CONTROL_ACTION         0x5U
 /*! Get implementation build info */
-#define SCMI_MSG_MISC_DISCOVER_BUILD_INFO  0x6U
+#define SCMI_MSG_MISC_DISCOVER_BUILD_INFO    0x6U
 /*! Get ROM passover data */
-#define SCMI_MSG_MISC_ROM_PASSOVER_GET     0x7U
+#define SCMI_MSG_MISC_ROM_PASSOVER_GET       0x7U
 /*! Configure control notifications */
-#define SCMI_MSG_MISC_CONTROL_NOTIFY       0x8U
+#define SCMI_MSG_MISC_CONTROL_NOTIFY         0x8U
 /*! Get (reset) reason attributes */
-#define SCMI_MSG_MISC_REASON_ATTRIBUTES    0x9U
+#define SCMI_MSG_MISC_REASON_ATTRIBUTES      0x9U
 /*! Read the reason the LM/system last booted/shutdown/reset */
-#define SCMI_MSG_MISC_RESET_REASON         0xAU
+#define SCMI_MSG_MISC_RESET_REASON           0xAU
 /*! Get silicon info */
-#define SCMI_MSG_MISC_SI_INFO              0xBU
+#define SCMI_MSG_MISC_SI_INFO                0xBU
 /*! Get build config info */
-#define SCMI_MSG_MISC_CFG_INFO             0xCU
+#define SCMI_MSG_MISC_CFG_INFO               0xCU
 /*! Get system log */
-#define SCMI_MSG_MISC_SYSLOG               0xDU
+#define SCMI_MSG_MISC_SYSLOG                 0xDU
 /*! Get board info */
-#define SCMI_MSG_MISC_BOARD_INFO           0xEU
+#define SCMI_MSG_MISC_BOARD_INFO             0xEU
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
+/*! Set an extended control value */
+#define SCMI_MSG_MISC_CONTROL_EXT_SET        0x20U
+/*! Get an extended control value */
+#define SCMI_MSG_MISC_CONTROL_EXT_GET        0x21U
 /*! Read control notification event */
-#define SCMI_MSG_MISC_CONTROL_EVENT        0x0U
+#define SCMI_MSG_MISC_CONTROL_EVENT          0x0U
 /** @} */
 
 /*!
@@ -98,8 +104,12 @@
 #define SCMI_MISC_MAX_BRDNAME    16U
 /*! Max number value words */
 #define SCMI_MISC_MAX_VAL_T      SCMI_ARRAY(8U, uint32_t)
+/*! Max number extended value words */
+#define SCMI_MISC_MAX_EXTVAL_T   SCMI_ARRAY(16U, uint32_t)
 /*! Max number return words */
 #define SCMI_MISC_MAX_VAL        SCMI_ARRAY(8U, uint32_t)
+/*! Max number extended return words */
+#define SCMI_MISC_MAX_EXTVAL     SCMI_ARRAY(16U, uint32_t)
 /*! Max number argument words */
 #define SCMI_MISC_MAX_ARG_T      SCMI_ARRAY(12U, uint32_t)
 /*! Max number return words */
@@ -120,6 +130,10 @@
 #define SCMI_MISC_NUM_VAL_T     msgTx->numVal
 /*! Actual number of return words returned */
 #define SCMI_MISC_NUM_VAL       msgRx->numVal
+/*! Actual number of extended value words sent */
+#define SCMI_MISC_NUM_EXTVAL_T  msgTx->numVal
+/*! Actual number of return extended words returned */
+#define SCMI_MISC_NUM_EXTVAL    msgRx->numVal
 /*! Actual number of argument words sent */
 #define SCMI_MISC_NUM_ARG_T     msgTx->numArg
 /*! Actual number of return words returned */
@@ -637,6 +651,59 @@ int32_t SCMI_MiscBoardInfo(uint32_t channel, uint32_t *attributes,
  */
 int32_t SCMI_MiscNegotiateProtocolVersion(uint32_t channel,
     uint32_t version);
+
+/*!
+ * Set an extended control value.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     ctrlId   Identifier for the control
+ * @param[in]     addr     Address of the control set
+ * @param[in]     len      Requested size of the set
+ * @param[in]     numVal   Size of the value data
+ * @param[in]     extVal   Value data array
+ *
+ * This function allows the calling agent to set an extended control value. No
+ * aggregation is done and controls are exclusively access controlled. Max
+ * number of data words is ::SCMI_MISC_MAX_EXTVAL_T. The \a ctrlId parameter is
+ * a device control unless the ::SCMI_MISC_CTRL_FLAG_BRD bit is set to make it
+ * a board control.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the control is set successfully.
+ * - ::SCMI_ERR_NOT_FOUND: if \a ctrlId does not point to a valid control.
+ * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to set this
+ *   control.
+ */
+int32_t SCMI_MiscControlExtSet(uint32_t channel, uint32_t ctrlId,
+    uint32_t addr, uint32_t len, uint32_t numVal, const uint32_t *extVal);
+
+/*!
+ * Get an extended control value.
+ *
+ * @param[in]     channel  A2P channel for comms
+ * @param[in]     ctrlId   Identifier for the control
+ * @param[in]     addr     Address of the control get
+ * @param[in]     len      Requested size of the get
+ * @param[out]    numVal   Size of the return data in words
+ * @param[out]    extVal   Return data array
+ *
+ * This function allows the calling agent to get an extended control value. Max
+ * number of data words is ::SCMI_MISC_MAX_EXTVAL. The \a ctrlId parameter is a
+ * device control unless the ::SCMI_MISC_CTRL_FLAG_BRD bit is set to make it a
+ * board control.
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the control is returned successfully.
+ * - ::SCMI_ERR_NOT_FOUND: if \a ctrlId does not point to a valid control.
+ * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to get this
+ *   control.
+ */
+int32_t SCMI_MiscControlExtGet(uint32_t channel, uint32_t ctrlId,
+    uint32_t addr, uint32_t len, uint32_t *numVal, uint32_t *extVal);
 
 /*!
  * Read control notification event.

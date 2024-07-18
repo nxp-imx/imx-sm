@@ -72,6 +72,8 @@
 #define SCMI_MSG_CLOCK_PARENT_GET            0xEU
 /*! Get clock permissions */
 #define SCMI_MSG_CLOCK_GET_PERMISSIONS       0xFU
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /** @} */
 
 /*!

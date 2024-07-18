@@ -54,7 +54,7 @@
 #define COMMAND_SYSTEM_POWER_STATE_SET       0x3U
 #define COMMAND_SYSTEM_POWER_STATE_NOTIFY    0x5U
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x1002FUL
+#define COMMAND_SUPPORTED_MASK               0x1002FULL
 
 /* SCMI system power states */
 #define SYS_STATE_SHUTDOWN       0x00000000U
@@ -172,7 +172,7 @@ typedef struct
     uint32_t systemState;
     /* Timeout */
     uint32_t timeout;
-} msg_rsys32_t;
+} msg_rsys64_t;
 
 /* Local functions */
 
@@ -433,14 +433,14 @@ static int32_t SysProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Initially zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -716,7 +716,7 @@ static int32_t SystemPowerStateNotifier(scmi_msg_id_t msgId,
         if ((g_scmiAgentConfig[dstAgent].scmiInst == trigger->rpcInst)
             && (s_sysNotify[dstAgent]))
         {
-            msg_rsys32_t out;
+            msg_rsys64_t out;
 
             /* Fill in data */
             out.agentId = trigger->parm[1];

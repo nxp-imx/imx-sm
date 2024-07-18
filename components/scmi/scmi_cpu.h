@@ -53,25 +53,27 @@
  */
 /** @{ */
 /*! Get CPU attributes */
-#define SCMI_MSG_CPU_ATTRIBUTES          0x3U
+#define SCMI_MSG_CPU_ATTRIBUTES              0x3U
 /*! Start a CPU */
-#define SCMI_MSG_CPU_START               0x4U
+#define SCMI_MSG_CPU_START                   0x4U
 /*! Stop a CPU */
-#define SCMI_MSG_CPU_STOP                0x5U
+#define SCMI_MSG_CPU_STOP                    0x5U
 /*! Set reset vector */
-#define SCMI_MSG_CPU_RESET_VECTOR_SET    0x6U
+#define SCMI_MSG_CPU_RESET_VECTOR_SET        0x6U
 /*! Set a CPU sleep target mode */
-#define SCMI_MSG_CPU_SLEEP_MODE_SET      0x7U
+#define SCMI_MSG_CPU_SLEEP_MODE_SET          0x7U
 /*! Set a CPU IRQ wake mask */
-#define SCMI_MSG_CPU_IRQ_WAKE_SET        0x8U
+#define SCMI_MSG_CPU_IRQ_WAKE_SET            0x8U
 /*! Set a CPU non-IRQ wake mask */
-#define SCMI_MSG_CPU_NON_IRQ_WAKE_SET    0x9U
+#define SCMI_MSG_CPU_NON_IRQ_WAKE_SET        0x9U
 /*! Configure a list of power domain LPM configs */
-#define SCMI_MSG_CPU_PD_LPM_CONFIG_SET   0xAU
+#define SCMI_MSG_CPU_PD_LPM_CONFIG_SET       0xAU
 /*! Configure a list of peripheral LPM configs */
-#define SCMI_MSG_CPU_PER_LPM_CONFIG_SET  0xBU
+#define SCMI_MSG_CPU_PER_LPM_CONFIG_SET      0xBU
 /*! Get info for a CPU */
-#define SCMI_MSG_CPU_INFO_GET            0xCU
+#define SCMI_MSG_CPU_INFO_GET                0xCU
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /** @} */
 
 /*!

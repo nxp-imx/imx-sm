@@ -55,7 +55,7 @@
 #define COMMAND_POWER_STATE_SET              0x4U
 #define COMMAND_POWER_STATE_GET              0x5U
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x1003FUL
+#define COMMAND_SUPPORTED_MASK               0x1003FULL
 
 /* SCMI max power argument lengths */
 #define POWER_MAX_NAME  16U
@@ -427,14 +427,14 @@ static int32_t PowerProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }

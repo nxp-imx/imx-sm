@@ -61,7 +61,7 @@
 #define COMMAND_LMM_RESET_REASON             0xAU
 #define COMMAND_LMM_POWER_ON                 0xBU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x10FFFUL
+#define COMMAND_SUPPORTED_MASK               0x10FFFULL
 
 /* SCMI LMM max argument lengths */
 #define LMM_MAX_NAME     16U
@@ -297,7 +297,7 @@ typedef struct
     uint32_t eventLm;
     /* LM events */
     uint32_t flags;
-} msg_rlmm32_t;
+} msg_rlmm64_t;
 
 /* Local functions */
 
@@ -586,12 +586,14 @@ static int32_t LmmProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
+
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U)
-            || (((COMMAND_SUPPORTED_MASK >> in->messageId) & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -1361,7 +1363,7 @@ static int32_t LmmEvent(scmi_msg_id_t msgId,
             uint32_t event = trigger->parm[0];
             uint32_t lmId = trigger->parm[1];
             uint32_t eventLm = trigger->parm[2];
-            msg_rlmm32_t out;
+            msg_rlmm64_t out;
 
             if ((event == LMM_TRIGGER_PARM_LM_BOOT)
                 && (LMM_NOTIFY_BOOT(s_lmmNotify[eventLm][dstAgent]) != 0U))

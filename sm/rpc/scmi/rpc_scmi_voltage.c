@@ -58,7 +58,7 @@
 #define COMMAND_VOLTAGE_LEVEL_SET            0x7U
 #define COMMAND_VOLTAGE_LEVEL_GET            0x8U
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x101FFUL
+#define COMMAND_SUPPORTED_MASK               0x101FFULL
 
 /* SCMI max voltage argument lengths */
 #define VOLTAGE_MAX_NAME     16U
@@ -499,14 +499,14 @@ static int32_t VoltageProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }

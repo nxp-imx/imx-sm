@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -71,6 +71,10 @@ int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
         {
             status = DEV_SM_ControlSet(ctrlId, numVal, val);
         }
+        else if (ctrlId == BRD_SM_CTRL_PCA2131)
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
         else if (ctrlId == BRD_SM_CTRL_TEST)
         {
             /* Test response to an reported SM error */
@@ -105,7 +109,8 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
         {
             status = DEV_SM_ControlGet(ctrlId, numRtn, rtn);
         }
-        else if (ctrlId == BRD_SM_CTRL_TEST)
+        else if ((ctrlId == BRD_SM_CTRL_PCA2131)
+            || (ctrlId == BRD_SM_CTRL_TEST))
         {
             *numRtn = 0U;
             status = SM_ERR_NOT_SUPPORTED;
@@ -137,6 +142,74 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
     else
     {
         *numRtn = 0U;
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set an extended control value                                            */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numVal, const uint32_t *val)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check to see if ctrlId is within bounds*/
+    if (ctrlId < SM_NUM_CTRL)
+    {
+        /* Check if device or board */
+        if (ctrlId < DEV_SM_NUM_CTRL)
+        {
+            status = DEV_SM_ControlExtSet(ctrlId, addr, numVal, val);
+        }
+        else if (ctrlId == BRD_SM_CTRL_PCA2131)
+        {
+            status = BRD_SM_BbmRtcWrite(addr, numVal, val);
+        }
+        else
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get an extended control value                                            */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numRtn, uint32_t *rtn)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check to see if ctrlId is within bounds*/
+    if (ctrlId < SM_NUM_CTRL)
+    {
+        /* Check if device or board */
+        if (ctrlId < DEV_SM_NUM_CTRL)
+        {
+            status = DEV_SM_ControlExtGet(ctrlId, addr, numRtn, rtn);
+        }
+        else if (ctrlId == BRD_SM_CTRL_PCA2131)
+        {
+            status = BRD_SM_BbmRtcRead(addr, numRtn, rtn);
+        }
+        else
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
+    }
+    else
+    {
         status = SM_ERR_NOT_FOUND;
     }
 

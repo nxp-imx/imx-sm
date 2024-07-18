@@ -53,29 +53,31 @@
  */
 /** @{ */
 /*! Write a GPR value */
-#define SCMI_MSG_BBM_GPR_SET         0x3U
+#define SCMI_MSG_BBM_GPR_SET                 0x3U
 /*! Read a GPR value */
-#define SCMI_MSG_BBM_GPR_GET         0x4U
+#define SCMI_MSG_BBM_GPR_GET                 0x4U
 /*! Get attributes for an RTC */
-#define SCMI_MSG_BBM_RTC_ATTRIBUTES  0x5U
+#define SCMI_MSG_BBM_RTC_ATTRIBUTES          0x5U
 /*! Set an RTC time */
-#define SCMI_MSG_BBM_RTC_TIME_SET    0x6U
+#define SCMI_MSG_BBM_RTC_TIME_SET            0x6U
 /*! Get an RTC time */
-#define SCMI_MSG_BBM_RTC_TIME_GET    0x7U
+#define SCMI_MSG_BBM_RTC_TIME_GET            0x7U
 /*! Set an RTC alarm */
-#define SCMI_MSG_BBM_RTC_ALARM_SET   0x8U
+#define SCMI_MSG_BBM_RTC_ALARM_SET           0x8U
 /*! Read the button state */
-#define SCMI_MSG_BBM_BUTTON_GET      0x9U
+#define SCMI_MSG_BBM_BUTTON_GET              0x9U
 /*! Configure BBM RTC notifications */
-#define SCMI_MSG_BBM_RTC_NOTIFY      0xAU
+#define SCMI_MSG_BBM_RTC_NOTIFY              0xAU
 /*! Configure BBM button notifications */
-#define SCMI_MSG_BBM_BUTTON_NOTIFY   0xBU
+#define SCMI_MSG_BBM_BUTTON_NOTIFY           0xBU
 /*! Get the state of an an RTC */
-#define SCMI_MSG_BBM_RTC_STATE       0xCU
+#define SCMI_MSG_BBM_RTC_STATE               0xCU
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /*! Read BBM RTC notification events */
-#define SCMI_MSG_BBM_RTC_EVENT       0x0U
+#define SCMI_MSG_BBM_RTC_EVENT               0x0U
 /*! Read BBM button notification event */
-#define SCMI_MSG_BBM_BUTTON_EVENT    0x1U
+#define SCMI_MSG_BBM_BUTTON_EVENT            0x1U
 /** @} */
 
 /*!

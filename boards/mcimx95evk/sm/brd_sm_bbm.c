@@ -60,6 +60,77 @@ static void date2days(uint32_t year, uint32_t month, uint32_t day,
     uint32_t *days);
 
 /*--------------------------------------------------------------------------*/
+/* Write RTC raw data                                                       */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_BbmRtcWrite(uint32_t addr, uint32_t numVal,
+    const uint32_t *val)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check read size */
+    if (numVal > 24U)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+    else
+    {
+        uint8_t buf[24];
+
+        /* Copy buffer (convert to 8-bit) */
+        for (uint32_t idx = 0U; idx < numVal; idx++)
+        {
+            buf[idx] = (uint8_t) val[idx];
+        }
+
+        /* Write data */
+        if (!PCA2131_RtcWrite(&pca2131Dev, (uint8_t) addr,
+            (uint8_t) numVal, buf))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Read RTC raw data                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_BbmRtcRead(uint32_t addr, uint32_t numVal, uint32_t *val)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check read size */
+    if (numVal > 24U)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+    else
+    {
+        uint8_t buf[24] = { 0 };
+
+        /* Read data */
+        if (PCA2131_RtcRead(&pca2131Dev, (uint8_t) addr,
+            (uint8_t) numVal, buf))
+        {
+            /* Copy buffer (convert to 32-bit) */
+            for (uint32_t idx = 0U; idx < numVal; idx++)
+            {
+                val[idx] = (uint32_t) buf[idx];
+            }
+        }
+        else
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Return RTC name                                                          */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,

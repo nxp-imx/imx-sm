@@ -555,6 +555,16 @@
 #define SM_CONTROLGET           DEV_SM_ControlGet
 #endif
 
+#ifndef SM_CONTROLEXTSET
+/*! Redirector (device/board) to write an extended control */
+#define SM_CONTROLEXTSET        DEV_SM_ControlExtSet
+#endif
+
+#ifndef SM_CONTROLEXTGET
+/*! Redirector (device/board) to read an extended control */
+#define SM_CONTROLEXTGET        DEV_SM_ControlExtGet
+#endif
+
 #ifndef SM_CONTROLACTION
 /*! Redirector (device/board) to do a control action */
 #define SM_CONTROLACTION        DEV_SM_ControlAction

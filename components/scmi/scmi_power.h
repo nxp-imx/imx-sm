@@ -53,11 +53,13 @@
  */
 /** @{ */
 /*! Get power domain attributes */
-#define SCMI_MSG_POWER_DOMAIN_ATTRIBUTES  0x3U
+#define SCMI_MSG_POWER_DOMAIN_ATTRIBUTES     0x3U
 /*! Set power state */
-#define SCMI_MSG_POWER_STATE_SET          0x4U
+#define SCMI_MSG_POWER_STATE_SET             0x4U
 /*! Get power state */
-#define SCMI_MSG_POWER_STATE_GET          0x5U
+#define SCMI_MSG_POWER_STATE_GET             0x5U
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /** @} */
 
 /*!

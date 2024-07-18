@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -93,6 +93,48 @@ int32_t DEV_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
 int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn);
 
 /*!
+ * Set an extended device control value.
+ *
+ * @param[in]     ctrlId   Index of control to write
+ * @param[in]     addr     Address of write
+ * @param[in]     numVal   Number of array elements
+ * @param[in]     val      Pointer to array of values to set
+ *
+ * This function allows a caller to write an array of values for
+ * a control. Extra parameters allow this write to be more complex
+ * such as to an I2C.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if addr or numVal are not valid.
+ */
+int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numVal, const uint32_t *val);
+
+/*!
+ * Get an extended device control value.
+ *
+ * @param[in]     ctrlId   Index of control to read
+ * @param[in]     addr     Address of read
+ * @param[in]     numRtn   Number of array elements
+ * @param[out]    rtn      Pointer to array to store return
+ *
+ * This function allows a caller to read an array of values for
+ * a control. Extra parameters allow this read to be more complex
+ * such as from an I2C.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if addr or numRtn are not valid.
+ */
+int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numRtn, uint32_t *rtn);
+
+/*!
  * Perform action on a device control.
  *
  * @param[in]     ctrlId   Index of control to take action
@@ -109,6 +151,7 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn);
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if action or numArg are not valid.
  */
 int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
     uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn);
@@ -126,6 +169,7 @@ int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if flags is not valid.
  */
 int32_t DEV_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags);
 

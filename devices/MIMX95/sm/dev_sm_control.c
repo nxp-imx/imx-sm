@@ -156,6 +156,29 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Set an extended control value                                            */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numVal, const uint32_t *val)
+{
+    return SM_ERR_NOT_SUPPORTED;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get an extended control value                                            */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numRtn, uint32_t *rtn)
+{
+    if (numRtn > 0U)
+    {
+        *rtn = 0U;
+    }
+
+    return SM_ERR_NOT_SUPPORTED;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Do a control action                                                      */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,

@@ -77,7 +77,7 @@ void TEST_Scmi(void)
 
             /* Test with bad message ID */
             NECHECK(SCMI_ProtocolMessageAttributes(SM_TEST_DEFAULT_CHN,
-                prot, 32U, NULL), SCMI_ERR_NOT_FOUND);
+                prot, 64U, NULL), SCMI_ERR_NOT_FOUND);
 
             /* Test with NULL */
             CHECK(SCMI_ProtocolMessageAttributes(SM_TEST_DEFAULT_CHN,

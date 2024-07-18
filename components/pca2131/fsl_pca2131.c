@@ -118,10 +118,70 @@ bool PCA2131_Init(const PCA2131_Type *dev)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Register write                                                           */
+/* Registers write                                                          */
 /*--------------------------------------------------------------------------*/
-bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t val,
-    uint8_t mask)
+bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
+    uint8_t *val)
+{
+    bool rc = true;
+
+    if (regAddr < PCA2131_NUM_REG)
+    {
+        if ((dev == NULL) || (val == NULL))
+        {
+            rc = false;
+        }
+        else
+        {
+            /* Write data */
+            rc = (PCA2131_LPI2C_Send(dev->i2cBase, dev->devAddr,
+                regAddr, 1U, val, len, 0U) == kStatus_Success);
+        }
+    }
+    else
+    {
+        rc = false;
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Registers read                                                           */
+/*--------------------------------------------------------------------------*/
+bool PCA2131_RtcRead(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
+    uint8_t *val)
+{
+    bool rc = true;
+
+    if (regAddr < PCA2131_NUM_REG)
+    {
+        if ((dev == NULL) || (val == NULL))
+        {
+            rc = false;
+        }
+        else
+        {
+            /* Read data */
+            rc = (PCA2131_LPI2C_Receive(dev->i2cBase, dev->devAddr,
+                regAddr, 1U, val, len, 0U) == kStatus_Success);
+        }
+    }
+    else
+    {
+        rc = false;
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Register write one byte                                                  */
+/*--------------------------------------------------------------------------*/
+bool PCA2131_RtcWriteOne(const PCA2131_Type *dev, uint8_t regAddr,
+    uint8_t val, uint8_t mask)
 {
     bool rc = true;
 
@@ -139,7 +199,7 @@ bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t val,
             if (mask != 0xFFU)
             {
                 /* Read data */
-                rc = PCA2131_RtcRead(dev, regAddr, &data);
+                rc = PCA2131_RtcRead(dev, regAddr, 1U, &data);
                 if (rc)
                 {
                     data = (val & mask) | (data & (~mask));
@@ -164,36 +224,6 @@ bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t val,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Register read                                                            */
-/*--------------------------------------------------------------------------*/
-bool PCA2131_RtcRead(const PCA2131_Type *dev, uint8_t regAddr, uint8_t *val)
-{
-    bool rc = true;
-
-    if (regAddr < PCA2131_NUM_REG)
-    {
-
-        if ((dev == NULL) || (val == NULL))
-        {
-            rc = false;
-        }
-        else
-        {
-            /* Read data */
-            rc = (PCA2131_LPI2C_Receive(dev->i2cBase, dev->devAddr,
-                regAddr, 1U, val, 1U, 0U) == kStatus_Success);
-        }
-    }
-    else
-    {
-        rc = false;
-    }
-
-    /* Return status */
-    return rc;
-}
-
-/*--------------------------------------------------------------------------*/
 /*  Write RTC time                                                          */
 /*--------------------------------------------------------------------------*/
 bool PCA2131_RtcSet(const PCA2131_Type *dev, uint32_t year, uint32_t month,
@@ -203,7 +233,7 @@ bool PCA2131_RtcSet(const PCA2131_Type *dev, uint32_t year, uint32_t month,
     bool rc;
 
     /* Stop timer */
-    rc = PCA2131_RtcWrite(dev, PCA2131_REG_CONTROL_1, 0x20U, 0x20U);
+    rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_1, 0x20U, 0x20U);
 
     if (rc)
     {
@@ -219,16 +249,14 @@ bool PCA2131_RtcSet(const PCA2131_Type *dev, uint32_t year, uint32_t month,
         txBuf[6] = PCA2131_Dec2Bcd(month);
         txBuf[7] = PCA2131_Dec2Bcd(year);
 
-        /* Set all alarm date/time values */
-        rc = (PCA2131_LPI2C_Send(dev->i2cBase, dev->devAddr,
-            PCA2131_REG_100TH_SECONDS, 1U, txBuf, 8U, 0U)
-            == kStatus_Success);
+        /* Set all date/time values */
+        rc = PCA2131_RtcWrite(dev, PCA2131_REG_100TH_SECONDS, 8U, txBuf);
     }
 
     if (rc)
     {
         /* Start timer */
-        rc = PCA2131_RtcWrite(dev, PCA2131_REG_CONTROL_1, 0x00U, 0x20U);
+        rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_1, 0x00U, 0x20U);
     }
 
     /* Return status */
@@ -246,9 +274,7 @@ bool PCA2131_RtcGet(const PCA2131_Type *dev, uint32_t *year, uint32_t *month,
     uint8_t rxBuf[8] = { 0 };
 
     /* Read all date/time values */
-    rc = (PCA2131_LPI2C_Receive(dev->i2cBase, dev->devAddr,
-        PCA2131_REG_100TH_SECONDS, 1U, rxBuf, 8U, 0U)
-        == kStatus_Success);
+    rc = PCA2131_RtcRead(dev, PCA2131_REG_100TH_SECONDS, 8U, rxBuf);
 
     if (rc)
     {
@@ -293,9 +319,7 @@ bool PCA2131_AlarmSet(const PCA2131_Type *dev, uint32_t day, uint32_t hour,
         txBuf[4] = PCA2131_Dec2Bcd(weekday);
 
         /* Set all alarm date/time values */
-        rc = (PCA2131_LPI2C_Send(dev->i2cBase, dev->devAddr,
-            PCA2131_REG_SECONDS_ALARM, 1U, txBuf, 5U, 0U)
-            == kStatus_Success);
+        rc = PCA2131_RtcWrite(dev, PCA2131_REG_SECONDS_ALARM, 5U, txBuf);
     }
 
     /* Return status */
@@ -310,7 +334,7 @@ bool PCA2131_PowerModeSet(const PCA2131_Type *dev, uint32_t mode)
     bool rc;
 
     /* Set mode */
-    rc = PCA2131_RtcWrite(dev, PCA2131_REG_CONTROL_3,
+    rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_3,
         ((uint8_t) mode) << 5U, 0xE0U);
 
     /* Return status */
@@ -326,18 +350,18 @@ bool PCA2131_IntEnable(const PCA2131_Type *dev, bool enable)
     uint8_t val = enable ? 0xFFU : 0x00U;
 
     /* Set AIE */
-    rc = PCA2131_RtcWrite(dev, PCA2131_REG_CONTROL_2, val, 0x02U);
+    rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_2, val, 0x02U);
 
     /* Set mask */
     if (rc)
     {
-        rc = PCA2131_RtcWrite(dev, PCA2131_REG_INT_A_MASK1, ~val, 0x04U);
+        rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_INT_A_MASK1, ~val, 0x04U);
     }
 
     /* Clear interrupt if disable */
     if (rc && !enable)
     {
-        rc = PCA2131_RtcWrite(dev, PCA2131_REG_CONTROL_2, 0U, 0x10U);
+        rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_2, 0U, 0x10U);
     }
 
     /* Return status */
@@ -352,7 +376,7 @@ bool PCA2131_IntClear(const PCA2131_Type *dev)
     bool rc;
 
     /* Clear interrupt */
-    rc = PCA2131_RtcWrite(dev, PCA2131_REG_CONTROL_2, 0U, 0x10U);
+    rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_2, 0U, 0x10U);
 
     /* Return status */
     return rc;
@@ -367,7 +391,7 @@ bool PCA2131_TimeStatusGet(const PCA2131_Type *dev, bool *status)
     uint8_t val;
 
     /* Set mode */
-    rc = PCA2131_RtcRead(dev, PCA2131_REG_SECONDS, &val);
+    rc = PCA2131_RtcRead(dev, PCA2131_REG_SECONDS, 1U, &val);
 
     /* Return status */
     if (rc)
@@ -388,7 +412,7 @@ bool PCA2131_BattStatusGet(const PCA2131_Type *dev, bool *status)
     uint8_t val;
 
     /* Set mode */
-    rc = PCA2131_RtcRead(dev, PCA2131_REG_CONTROL_3, &val);
+    rc = PCA2131_RtcRead(dev, PCA2131_REG_CONTROL_3, 1U, &val);
 
     /* Return status */
     if (rc)

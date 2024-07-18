@@ -62,7 +62,7 @@
 #define COMMAND_CPU_PER_LPM_CONFIG_SET       0xBU
 #define COMMAND_CPU_INFO_GET                 0xCU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x11FFFUL
+#define COMMAND_SUPPORTED_MASK               0x11FFFULL
 
 /* SCMI max cpu argument lengths */
 #define CPU_MAX_NAME          16U
@@ -590,14 +590,14 @@ static int32_t CpuProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }

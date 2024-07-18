@@ -58,7 +58,7 @@
 #define COMMAND_SENSOR_CONFIG_GET            0x9U
 #define COMMAND_SENSOR_CONFIG_SET            0xAU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x1067FUL
+#define COMMAND_SUPPORTED_MASK               0x1067FULL
 
 /* SCMI max sensor argument lengths */
 #define SENSOR_MAX_NAME      16U
@@ -321,7 +321,7 @@ typedef struct
     uint32_t sensorId;
     /* Event flags */
     uint32_t tripPointDesc;
-} msg_rsensor32_t;
+} msg_rsensor64_t;
 
 /* Local functions */
 
@@ -623,14 +623,14 @@ static int32_t SensorProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -1298,7 +1298,7 @@ static int32_t SensorTripPointEvent(scmi_msg_id_t msgId,
         {
             uint32_t tripPointDesc = SENSOR_EVENT_TP_ID(trigger->parm[1])
                 | SENSOR_EVENT_DIRECTION(trigger->parm[2]);
-            msg_rsensor32_t out;
+            msg_rsensor64_t out;
 
             /* Fill in data */
             out.agentId = 0U;

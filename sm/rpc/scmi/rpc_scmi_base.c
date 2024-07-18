@@ -59,7 +59,7 @@
 #define COMMAND_BASE_SET_DEVICE_PERMISSIONS           0x9U
 #define COMMAND_BASE_RESET_AGENT_CONFIGURATION        0xBU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION            0x10U
-#define COMMAND_SUPPORTED_MASK                        0x10AFFUL
+#define COMMAND_SUPPORTED_MASK                        0x10AFFULL
 
 /* SCMI max base argument lengths */
 #define BASE_MAX_NAME              16U
@@ -485,14 +485,14 @@ static int32_t BaseProtocolMessageAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mask = COMMAND_SUPPORTED_MASK;
+        uint64_t mask = COMMAND_SUPPORTED_MASK;
 
         /* Always zero */
         out->attributes = 0U;
 
         /* Is message supported ? */
-        if ((in->messageId >= 32U) || (((mask >> in->messageId)
-            & 0x1U) == 0U))
+        if ((in->messageId >= 64U)
+            || (((mask >> in->messageId) & 0x1ULL) == 0ULL))
         {
             status = SM_ERR_NOT_FOUND;
         }

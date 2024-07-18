@@ -90,6 +90,37 @@
  */
 
 /*!
+ * Read raw byte data from the RTC.
+ *
+ * @param[in]     addr    I2C address to read
+ * @param[in]     numVal  Number of bytes to read
+ * @param[out]    val     Return pointer for data
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_INVALID_PARAMETERS: if \a numVal is invalid.
+ * - ::SM_ERR_HARDWARE_ERROR: if I2C transfer fails.
+ */
+int32_t BRD_SM_BbmRtcWrite(uint32_t addr, uint32_t numVal,
+    const uint32_t *val);
+
+/*!
+ * Write raw byte data to the RTC.
+ *
+ * @param[in]     addr    I2C address to write
+ * @param[in]     numVal  Number of bytes to write
+ * @param[in]     val     Pointer to data
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_INVALID_PARAMETERS: if \a numVal is invalid.
+ * - ::SM_ERR_HARDWARE_ERROR: if I2C transfer fails.
+ */
+int32_t BRD_SM_BbmRtcRead(uint32_t addr, uint32_t numVal, uint32_t *val);
+
+/*!
  * Get a board RTC name.
  *
  * @param[in]     rtcId        RTC name to get

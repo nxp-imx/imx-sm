@@ -53,19 +53,21 @@
  */
 /** @{ */
 /*! Get sensor descriptors */
-#define SCMI_MSG_SENSOR_DESCRIPTION_GET    0x3U
+#define SCMI_MSG_SENSOR_DESCRIPTION_GET      0x3U
 /*! Configure sensor trip point notification */
-#define SCMI_MSG_SENSOR_TRIP_POINT_NOTIFY  0x4U
+#define SCMI_MSG_SENSOR_TRIP_POINT_NOTIFY    0x4U
 /*! Configure sensor trip point */
-#define SCMI_MSG_SENSOR_TRIP_POINT_CONFIG  0x5U
+#define SCMI_MSG_SENSOR_TRIP_POINT_CONFIG    0x5U
 /*! Read sensor */
-#define SCMI_MSG_SENSOR_READING_GET        0x6U
+#define SCMI_MSG_SENSOR_READING_GET          0x6U
 /*! Get sensor configuration */
-#define SCMI_MSG_SENSOR_CONFIG_GET         0x9U
+#define SCMI_MSG_SENSOR_CONFIG_GET           0x9U
 /*! Set sensor configuration */
-#define SCMI_MSG_SENSOR_CONFIG_SET         0xAU
+#define SCMI_MSG_SENSOR_CONFIG_SET           0xAU
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /*! Read sensor event */
-#define SCMI_MSG_SENSOR_TRIP_POINT_EVENT   0x0U
+#define SCMI_MSG_SENSOR_TRIP_POINT_EVENT     0x0U
 /** @} */
 
 /*!

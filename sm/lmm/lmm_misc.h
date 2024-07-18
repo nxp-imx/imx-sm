@@ -102,6 +102,50 @@ int32_t LMM_MiscControlGet(uint32_t lmId, uint32_t ctrlId, uint32_t *numRtn,
     uint32_t *rtn);
 
 /*!
+ * Set an extended LM control value.
+ *
+ * @param[in]     lmId     LM call is for
+ * @param[in]     ctrlId   Index of control to write
+ * @param[in]     addr     Address of write
+ * @param[in]     numVal   Number of array elements
+ * @param[in]     val      Pointer to array of values to set
+ *
+ * This function allows a caller to write an array of values for
+ * a control. Extra parameters allow this write to be more complex
+ * such as to an I2C.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the value is set.
+ * - others returned by ::SM_CONTROLEXTSET
+ */
+int32_t LMM_MiscControlExtSet(uint32_t lmId, uint32_t ctrlId, uint32_t addr,
+    uint32_t numVal, const uint32_t *val);
+
+/*!
+ * Get an extended LM control value.
+ *
+ * @param[in]     lmId     LM call is for
+ * @param[in]     ctrlId   Index of control to read
+ * @param[in]     addr     Address of read
+ * @param[in]     numRtn   Number of array elements
+ * @param[out]    rtn      Pointer to array to store return
+ *
+ * This function allows a caller to read an array of values for
+ * a control. Extra parameters allow this read to be more complex
+ * such as from an I2C.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the value returned.
+ * - others returned by ::SM_CONTROLEXTGET
+ */
+int32_t LMM_MiscControlExtGet(uint32_t lmId, uint32_t ctrlId, uint32_t addr,
+    uint32_t numRtn, uint32_t *rtn);
+
+/*!
  * Perform action on an LM control.
  *
  * @param[in]     lmId     LM call is for

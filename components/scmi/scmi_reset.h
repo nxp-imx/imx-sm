@@ -53,9 +53,11 @@
  */
 /** @{ */
 /*! Get reset domain attributes */
-#define SCMI_MSG_RESET_DOMAIN_ATTRIBUTES  0x3U
+#define SCMI_MSG_RESET_DOMAIN_ATTRIBUTES     0x3U
 /*! Reset domain */
-#define SCMI_MSG_RESET                    0x4U
+#define SCMI_MSG_RESET                       0x4U
+/*! Negotiate the protocol version */
+#define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /** @} */
 
 /*!
