@@ -329,7 +329,7 @@
 #define DEV_SM_DAISY_XSPI_5                126U  /*!< XSPI 5 daisy */
 #define DEV_SM_DAISY_XSPI_6                127U  /*!< XSPI 6 daisy */
 #define DEV_SM_DAISY_XSPI_7                128U  /*!< XSPI 7 daisy */
-#define DEV_SM_DAISY_JTAG_TCK              139U  /*!< JTAG TCK daisy */
+#define DEV_SM_DAISY_JTAG_TCK              129U  /*!< JTAG TCK daisy */
 #define DEV_SM_DAISY_JTAG_TDI              130U  /*!< JTAG TDI daisy */
 #define DEV_SM_DAISY_JTAG_TMS              131U  /*!< JTAG TMS daisy */
 /** @} */

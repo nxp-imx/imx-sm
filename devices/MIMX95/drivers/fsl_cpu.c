@@ -1021,7 +1021,7 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         {
                             /* Perform SW wakeup */
                             rc = CPU_SwMultiWakeup(cpuIdx);
-                        }                        
+                        }
                         
                         if (rc)
                         {
@@ -1784,7 +1784,7 @@ bool CPU_PerLpiConfigGet(uint32_t cpuIdx, uint32_t perLpiIdx,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Initialize CPU peripheral low-power interface config                      */
+/* Initialize CPU peripheral low-power interface config                     */
 /*--------------------------------------------------------------------------*/
 bool CPU_PerLpiConfigInit(uint32_t cpuIdx)
 {

@@ -286,6 +286,7 @@ int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId)
                 /* Wait for A55P to fully wake */
                 bool rc;
                 uint32_t fsmState;
+
                 do
                 {
                     rc = CPU_FsmStateGet(CPU_IDX_A55P, &fsmState);
