@@ -10,3 +10,10 @@ New Feature {#RN_KN_NEW}
 |------------|-------------------------------|---|---|
 | [SM-75](https://jira.sw.nxp.com/projects/SM/issues/SM-75) | Support i.MX95 B0 | | |
 
+Bug {#RN_KN_BUG}
+============
+
+| Key     | Summary                        | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|---|---|
+| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes | Y | Y |
+
