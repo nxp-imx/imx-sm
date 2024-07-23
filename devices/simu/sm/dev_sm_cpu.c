@@ -78,6 +78,8 @@ int32_t DEV_SM_CpuNameGet(uint32_t cpuId, string *cpuNameAddr,
         *cpuNameAddr = s_name[cpuId];
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

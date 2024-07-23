@@ -175,6 +175,9 @@ void MONITOR_Cmd(string banner)
             case SM_ERR_POWER:
                 printf("Power dependency!\n");
                 break;
+            case SM_ERR_TEST:
+                printf("Test error!\n");
+                break;
             case SM_ERR_LAST:
                 break;
             default:

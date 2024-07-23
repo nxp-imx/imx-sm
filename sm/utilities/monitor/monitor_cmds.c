@@ -1843,56 +1843,60 @@ static int32_t MONITOR_CmdSensor(int32_t argc, const char * const argv[],
                         status = LMM_SensorIsEnabled(s_lm, sensor,
                             &enabled, &timestampReporting);
                     }
-                    if (enabled)
+                    if (status == SM_ERR_SUCCESS)
                     {
-                        if (status == SM_ERR_SUCCESS)
+                        if (enabled)
                         {
-                            status = LMM_SensorReadingGet(s_lm, sensor,
-                                &sensorValue, &sensorTimestamp);
-                        }
-
-                        if (status == SM_ERR_SUCCESS)
-                        {
-                            int64_t exponent = 1;
-                            int64_t sensorWhole;
-                            int64_t sensorFrac;
-
-                            /* Calculate exponent factor */
-                            if (desc.sensorExponent > 0)
+                            if (status == SM_ERR_SUCCESS)
                             {
-                                while (desc.sensorExponent > 0)
-                                {
-                                    exponent *= 10;
-                                    desc.sensorExponent--;
-                                }
-                                sensorWhole = sensorValue * exponent;
-                                sensorFrac = 0;
-                            }
-                            else
-                            {
-                                while (desc.sensorExponent < 0)
-                                {
-                                    exponent *= 10;
-                                    desc.sensorExponent++;
-                                }
-                                sensorWhole = sensorValue / exponent;
-                                sensorFrac = sensorValue % exponent;
-                                sensorFrac = (sensorFrac < 0) ? -sensorFrac
-                                    : sensorFrac;
+                                status = LMM_SensorReadingGet(s_lm, sensor,
+                                    &sensorValue, &sensorTimestamp);
                             }
 
-                            /* Print status */
-                            int32_t sensorWhole32 = (int32_t) sensorWhole;
-                            int32_t sensorFrac32 = (int32_t) sensorFrac;
-                            printf("%03u: %*s = %s, %d.%dC\n", sensor, -wName,
-                                sensorNameAddr, sensorModes[1],
-                                sensorWhole32, sensorFrac32);
+                            if (status == SM_ERR_SUCCESS)
+                            {
+                                int64_t exponent = 1;
+                                int64_t sensorWhole;
+                                int64_t sensorFrac;
+
+                                /* Calculate exponent factor */
+                                if (desc.sensorExponent > 0)
+                                {
+                                    while (desc.sensorExponent > 0)
+                                    {
+                                        exponent *= 10;
+                                        desc.sensorExponent--;
+                                    }
+                                    sensorWhole = sensorValue * exponent;
+                                    sensorFrac = 0;
+                                }
+                                else
+                                {
+                                    while (desc.sensorExponent < 0)
+                                    {
+                                        exponent *= 10;
+                                        desc.sensorExponent++;
+                                    }
+                                    sensorWhole = sensorValue / exponent;
+                                    sensorFrac = sensorValue % exponent;
+                                    sensorFrac = (sensorFrac < 0) ? -sensorFrac
+                                        : sensorFrac;
+                                }
+
+                                /* Print status */
+                                int32_t sensorWhole32 = (int32_t) sensorWhole;
+                                int32_t sensorFrac32 = (int32_t) sensorFrac;
+                                printf("%03u: %*s = %s, %d.%dC\n",
+                                    sensor, -wName,
+                                    sensorNameAddr, sensorModes[1],
+                                    sensorWhole32, sensorFrac32);
+                            }
                         }
-                    }
-                    else
-                    {
-                        printf("%03u: %*s = %s\n", sensor, -wName,
-                            sensorNameAddr, sensorModes[0]);
+                        else
+                        {
+                            printf("%03u: %*s = %s\n", sensor, -wName,
+                                sensorNameAddr, sensorModes[0]);
+                        }
                     }
                 }
             }

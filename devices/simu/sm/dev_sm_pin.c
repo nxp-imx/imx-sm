@@ -82,6 +82,8 @@ int32_t DEV_SM_PinNameGet(uint32_t identifier, string *pinNameAddr,
         *pinNameAddr = s_name[identifier];
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

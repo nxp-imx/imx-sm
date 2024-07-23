@@ -102,6 +102,8 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
         *perfNameAddr = s_name[domainId];
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

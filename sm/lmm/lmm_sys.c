@@ -496,6 +496,7 @@ int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm)
 int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
     const lmm_rst_rec_t *bootRec)
 {
+    int32_t status = SM_ERR_SUCCESS;
     lmm_rpc_trigger_t trigger =
     {
         .event = LMM_TRIGGER_SYSTEM,
@@ -505,7 +506,13 @@ int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
         .parm[3] = lmId
     };
 
-    return LMM_DoBoot(&trigger, bootRec);
+    /* Boot LM */
+    status = LMM_DoBoot(&trigger, bootRec);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
