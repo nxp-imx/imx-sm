@@ -164,7 +164,7 @@ void TEST_ScmiReset(void)
 
         /* Check unsupport minor version */
         NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_RESET_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+            SCMI_RESET_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Loop over reset test domains */

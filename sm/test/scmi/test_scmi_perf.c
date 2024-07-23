@@ -225,7 +225,7 @@ void TEST_ScmiPerf(void)
 
         /* Check unsupport minor version */
         NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_PERF_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+            SCMI_PERF_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
 

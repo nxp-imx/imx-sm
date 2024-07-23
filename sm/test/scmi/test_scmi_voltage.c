@@ -217,7 +217,7 @@ void TEST_ScmiVoltage(void)
 
         /* Check unsupport minor version */
         NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_VOLT_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+            SCMI_VOLT_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
 

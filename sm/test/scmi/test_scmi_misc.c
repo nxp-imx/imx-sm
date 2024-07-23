@@ -273,7 +273,7 @@ void TEST_ScmiMisc(void)
 
         /* Check unsupport minor version */
         NECHECK(SCMI_MiscNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_MISC_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+            SCMI_MISC_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* RPC_00370 Test ROM data */

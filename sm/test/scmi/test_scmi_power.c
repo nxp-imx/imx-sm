@@ -183,7 +183,7 @@ void TEST_ScmiPower(void)
 
         /* Check unsupport minor version */
         NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_POWER_PROT_VER + 1), SM_ERR_NOT_SUPPORTED);
+            SCMI_POWER_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Loop over power test domains */

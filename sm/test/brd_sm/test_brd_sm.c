@@ -61,7 +61,7 @@ void TEST_BrdSm(void)
         CHECK(BRD_SM_Custom(argc, &argv[0]));
 
         /* Branch coverage */
-        CHECK(BRD_SM_Custom(0U, &argv[0]));
+        CHECK(BRD_SM_Custom(0, &argv[0]));
         NECHECK(BRD_SM_FaultReactionGet(resetRec, &reaction, &LmId),
             SM_ERR_INVALID_PARAMETERS);
 

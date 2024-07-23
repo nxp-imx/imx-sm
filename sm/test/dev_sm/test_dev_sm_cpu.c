@@ -141,10 +141,10 @@ void TEST_DevSmCpu(void)
         NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_NUM_CPU, sleepMode,
             sleepflag), SM_ERR_NOT_FOUND);
 
+#ifdef SIMU
         /* Invalid Sleep Mode */
         sleepMode = 5U;
 
-#ifdef SIMU
         printf("DEV_SM_CpuSleepModeSet(%u)\n", 0U);
         NECHECK(DEV_SM_CpuSleepModeSet(0U, sleepMode, sleepflag),
             SM_ERR_INVALID_PARAMETERS);
