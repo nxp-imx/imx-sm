@@ -78,6 +78,12 @@ void TEST_DevSmSensor(void)
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
 
+        /*Branch coverage */
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK((DEV_SM_SensorNameGet(sensorId, &name, &len)),
+            SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+
         printf("DEV_SM_SensorDescribe(%u)\n", sensorId);
         CHECK(DEV_SM_SensorDescribe(sensorId, &sensor));
 

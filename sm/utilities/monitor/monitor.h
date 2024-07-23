@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -58,6 +58,15 @@
 #define EOL         '\x00'  /*!< End of line character */
 
 /* Types */
+
+/*!
+ * Key:string pair
+ */
+typedef struct
+{
+    uint32_t key;   /*!< Key */
+    string str;     /*!< String */
+} monitor_key_pair_t;
 
 /*! Callback function type for searching for a name */
 typedef int32_t (*func_t)(uint32_t lm, uint32_t id, string *addr,
@@ -195,6 +204,17 @@ int32_t MONITOR_ConvU64(const char *str, uint64_t *val);
  * Return errors (see @ref STATUS "SM error codes"):
  */
 int32_t MONITOR_ConvI32(const char *str, int32_t *val);
+
+/*!
+ * Find matching string.
+ *
+ * @param[in]     key          Key to find
+ * @param[in]     pair         Key:String pair array
+ *
+ * @return Matching string.
+ */
+string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair);
+
 #endif
 
 #endif /* SM_MONITOR_H */

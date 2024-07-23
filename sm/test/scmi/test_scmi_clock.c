@@ -182,6 +182,9 @@ void TEST_ScmiClock(void)
 
         NECHECK(SCMI_ClockRateGet(SM_SCMI_NUM_CHN, numClocks,
             rates), SCMI_ERR_INVALID_PARAMETERS);
+
+        NECHECK(SCMI_ClockRateGet(SM_TEST_DEFAULT_CHN, numClocks,
+            rates), SCMI_ERR_NOT_FOUND);
     }
 
     /* Test coverage of exceeding max amount of clocks in
@@ -305,6 +308,17 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
     CHECK(SCMI_ClockDescribeRates(channel, clockId, 0U,
         NULL, NULL));
 
+    /* Test coverage for set extended clock configuration */
+    {
+        uint32_t attr = 0U;
+
+        attr = SCMI_CLOCK_CONFIG_SET_ENABLE(3U) |
+            SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0U);
+
+        NECHECK(SCMI_ClockConfigSet(channel, clockId, attr, 0U),
+            SM_ERR_INVALID_PARAMETERS);
+    }
+
     /* Config get test */
     {
         uint32_t attributesConfigGet = 0U;
@@ -318,8 +332,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
 
         printf("  enabled=%u\n",
             SCMI_CLOCK_CONFIG_GET_ENABLE(config));
-        printf("  ext=%u\n",
-            SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG(extendedConfigVal));
+        printf("  ext=0x%08X\n", extendedConfigVal);
 
         CHECK(SCMI_ClockConfigGet(channel, clockId, flagConfigGet,
             NULL, NULL, NULL));
@@ -492,6 +505,33 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 
         /* Branch Coverage */
         CHECK(SCMI_ClockGetPermissions(channel, clockId, NULL));
+
+        /* Test coverage for set extended clock configuration */
+        {
+            uint32_t attr = 0U;
+            uint32_t extendedConfigVal = 0U;
+            uint32_t extFlags = SCMI_CLOCK_CONFIG_FLAGS_EXT_CONFIG(0x80U);
+            uint32_t config = 0U;
+
+            attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U) |
+                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80U);
+
+            /* OEM defined extended config value
+             * For spread spectrum (type 0x80) :
+             *     Bit [7:0]   - spread percentage (%)
+             *     Bit [23:8]  - Modulation Frequency (KHz)
+             *     Bit [24]    - Enable/Disable
+             *     Bit [31:25] - Reserved
+             *
+             * 0x1753014 = for 2% spread specturm, 30000 Modulation Freq.
+             */
+            extendedConfigVal = 0x1753014;
+            CHECK(SCMI_ClockConfigSet(channel, clockId, attr,
+                extendedConfigVal));
+
+            CHECK(SCMI_ClockConfigGet(channel, clockId, extFlags, &attr,
+                &config, &extendedConfigVal));
+        }
     }
     else
     {
@@ -499,6 +539,18 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 
         NECHECK(SCMI_ClockParentSet(channel, clockId, parentId),
             SCMI_ERR_DENIED);
+
+        /* Test coverage for extended clock configuration */
+        {
+            uint32_t attr = 0U;
+            uint32_t extendedConfigVal = 0U;
+
+            attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U) |
+                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80U);
+
+            NECHECK(SCMI_ClockConfigSet(channel, clockId, attr,
+                extendedConfigVal), SCMI_ERR_DENIED);
+        }
     }
 }
 

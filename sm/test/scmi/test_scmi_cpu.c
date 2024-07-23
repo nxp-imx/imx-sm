@@ -79,6 +79,14 @@ void TEST_ScmiCpu(void)
         BCHECK(ver == SCMI_CPU_PROT_VER);
     }
 
+    /* NegotiateProtocolVersion */
+    {
+        printf("SCMI_CpuNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_CpuNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_CPU_PROT_VER));
+    }
+
     /* Test Protocol Attributes */
     {
         uint32_t attributes = 0U;
@@ -311,15 +319,6 @@ static void TEST_ScmiCpuNone(uint32_t channel, uint32_t domainId)
     CHECK(SCMI_CpuAttributes(channel, domainId,
         &attributes, NULL));
 
-    /* NegotiateProtocolVersion -- valid cpuId and valid channel */
-    {
-        uint32_t version = 1234U;
-        printf("SCMI_CpuNegotiateProtocolVersion(%u, %u)\n",
-            channel, domainId);
-        NECHECK(SCMI_CpuNegotiateProtocolVersion(channel, version),
-            SCMI_ERR_NOT_SUPPORTED);
-    }
-
     /* CpuInfoGet -- valid cpuId and valid channel */
     {
         uint32_t runmode = 0U, sleepmode = 0U;
@@ -396,7 +395,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
 
         }
 
-        /* CPU Sleep mode set */
+        /* RPC_00310 - CPU Sleep mode set */
         {
             uint32_t flags = 0U;
 
@@ -431,7 +430,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
                 SCMI_CPU_SLEEP_SUSPEND + 1U), SCMI_ERR_INVALID_PARAMETERS);
         }
 
-        /* CpuIrqWakeSet */
+        /* RPC_00320 - CpuIrqWakeSet */
         {
             uint32_t maskidx = 0U, mask = 0U;
             printf("SCMI_CpuIrqWakeSet(%u, %u)\n",
@@ -440,7 +439,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
                 1U, &mask));
         }
 
-        /* CpuNonIrqWakeSet */
+        /* RPC_00320 - CpuNonIrqWakeSet */
         {
             uint32_t maskidx = 0U, mask = 0U;
             printf("SCMI_CpuNonIrqWakeSet(%u, %u)\n",
@@ -449,7 +448,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
                 1U, &mask));
         }
 
-        /* CpuPdLpmConfigsSet */
+        /* RPC_00330 RPC_00340 - CpuPdLpmConfigsSet */
         {
             uint32_t numConfig = 1U;
             scmi_pd_lpm_config_t lpm_config = {0U};
@@ -463,7 +462,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
                 numConfig, &lpm_config));
         }
 
-        /* CpuPerLpmConfigSet */
+        /* RPC_00330 RPC_00340 - CpuPerLpmConfigSet */
         {
             uint32_t numConfig = 1U;
             scmi_per_lpm_config_t per_lpm_config = {0U};

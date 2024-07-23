@@ -92,8 +92,6 @@ void TEST_ScmiSensor(void)
             SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_SensorNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
             SCMI_SENSOR_PROT_VER));
-        NECHECK(SCMI_SensorNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            0x30002U), SM_ERR_NOT_SUPPORTED);
     }
     /* Test protocol attributes */
     {

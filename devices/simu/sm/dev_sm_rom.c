@@ -238,6 +238,8 @@ int32_t DEV_SM_RomStageSet(uint32_t stage)
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
     /* Return status */
     return status;
 }

@@ -44,11 +44,14 @@
 
 /* Local defines */
 
+#define MAX_EXTCTRL_WORDS  20U
+
 /* Local types */
 
 /* Local variables */
 
 static uint32_t s_ctrl[DEV_SM_NUM_CTRL];
+static uint32_t s_extCtrl[DEV_SM_NUM_CTRL][MAX_EXTCTRL_WORDS];
 
 /*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
@@ -108,7 +111,30 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
 int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
     uint32_t numVal, const uint32_t *val)
 {
-    return SM_ERR_NOT_SUPPORTED;
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check control */
+    if (ctrlId == DEV_SM_CTRL_TEST_E)
+    {
+        if ((addr + numVal) <= MAX_EXTCTRL_WORDS)
+        {
+            for (uint32_t idx = 0U; idx < numVal; idx++)
+            {
+                s_extCtrl[ctrlId][addr + idx] = val[idx];
+            }
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -117,12 +143,30 @@ int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
 int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
     uint32_t numRtn, uint32_t *rtn)
 {
-    if (numRtn > 0U)
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check control */
+    if (ctrlId == DEV_SM_CTRL_TEST_E)
     {
-        *rtn = 0U;
+        if ((addr + numRtn) <= MAX_EXTCTRL_WORDS)
+        {
+            for (uint32_t idx = 0U; idx < numRtn; idx++)
+            {
+                rtn[idx] = s_extCtrl[ctrlId][addr + idx];
+            }
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
     }
 
-    return SM_ERR_NOT_SUPPORTED;
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,13 +54,14 @@
 /* Defines */
 
 /*! Number of device controls */
-#define DEV_SM_NUM_CTRL  1UL
+#define DEV_SM_NUM_CTRL  2UL
 
 /*!
  * @name Device control indexes
  */
 /** @{ */
-#define DEV_SM_CTRL_TEST  0U  /*!< Control for test */
+#define DEV_SM_CTRL_TEST   0U  /*!< Control for test 0 */
+#define DEV_SM_CTRL_TEST_E 1U  /*!< Control for test 1 */
 /** @} */
 
 /* Types */

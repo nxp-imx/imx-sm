@@ -104,6 +104,7 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
 
         g_romPassover.bootStage = (uint8_t) stage;
         g_romPassover.imgSetSel = (uint8_t) container;
+        g_romPassover.bootDevInst = 0U;
 
         if (stage == DEV_SM_ROM_BS_PRIMARY)
         {
@@ -115,11 +116,13 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
         }
         else if (stage == DEV_SM_ROM_BS_RECOVERY)
         {
-            g_romPassover.bootDevType = DEV_SM_ROM_BD_MMC;
+            g_romPassover.bootDevType = DEV_SM_ROM_BD_USB;
+            g_romPassover.bootDevInst = 1U;
         }
         else if (stage == DEV_SM_ROM_BS_SERIAL)
         {
             g_romPassover.bootDevType = DEV_SM_ROM_BD_USB;
+            g_romPassover.bootDevInst = 3U;
         }
         else
         {

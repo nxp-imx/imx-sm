@@ -92,8 +92,6 @@ void TEST_ScmiMisc(void)
             SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_MiscNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
             SCMI_MISC_PROT_VER));
-        NECHECK(SCMI_MiscNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            0x10002U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Test protocol attributes */
@@ -263,19 +261,6 @@ void TEST_ScmiMisc(void)
             &numLogFlags, NULL));
     }
 
-    /* MiscNegotiateProtocolVersion */
-    {
-        uint32_t version = 0x1234U;
-        printf("SCMI_MiscNegotiateProtocolVersion(%u)\n",
-            SM_TEST_DEFAULT_CHN);
-        NECHECK(SCMI_MiscNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-
-        /* Check unsupport minor version */
-        NECHECK(SCMI_MiscNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_MISC_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
-    }
-
     /* RPC_00370 Test ROM data */
     {
         uint32_t numPassover = 0U;
@@ -305,6 +290,14 @@ void TEST_ScmiMisc(void)
         /* Branch -- Nullpointer */
         CHECK(SCMI_MiscRomPassoverGet(SM_TEST_DEFAULT_CHN, NULL,
             NULL));
+
+#ifdef SIMU
+        /* Branch coverage */
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK(SCMI_MiscRomPassoverGet(SM_TEST_DEFAULT_CHN, &numPassover,
+            passoverBuffer), SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* Control Set */

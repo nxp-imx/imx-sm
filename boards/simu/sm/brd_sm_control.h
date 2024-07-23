@@ -60,10 +60,12 @@
  */
 #define SM_CONTROLSET          BRD_SM_ControlSet          /*!< Control set */
 #define SM_CONTROLGET          BRD_SM_ControlGet          /*!< Control get */
+#define SM_CONTROLEXTSET       BRD_SM_ControlExtSet       /*!< Extended control set */
+#define SM_CONTROLEXTGET       BRD_SM_ControlExtGet       /*!< Extended control get */
 /** @} */
 
 /*! Number of board controls */
-#define BRD_SM_NUM_CTRL  2UL
+#define BRD_SM_NUM_CTRL  3UL
 
 /*! Total number of controls */
 #define SM_NUM_CTRL  (DEV_SM_NUM_CTRL + BRD_SM_NUM_CTRL)
@@ -72,8 +74,9 @@
  * @name BRD_SM control domain indexes
  */
 /** @{ */
-#define BRD_SM_CTRL_0     (DEV_SM_NUM_CTRL + 0U)  /*!< Sample ctrl */
-#define BRD_SM_CTRL_TEST  (DEV_SM_NUM_CTRL + 1U)  /*!< Test */
+#define BRD_SM_CTRL_0       (DEV_SM_NUM_CTRL + 0U)  /*!< Sample ctrl */
+#define BRD_SM_CTRL_TEST    (DEV_SM_NUM_CTRL + 1U)  /*!< Test ctrl */
+#define BRD_SM_CTRL_TEST_E  (DEV_SM_NUM_CTRL + 2U)  /*!< Test ext ctrl */
 /** @} */
 
 /* Types */
@@ -121,20 +124,46 @@ int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
 int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn);
 
 /*!
- * Configure notification flags for a control.
+ * Set an extended board control value.
  *
- * @param[in]     ctrlId   Index of control to take action
- * @param[in]     flags    Action to take
+ * @param[in]     ctrlId   Index of control to write
+ * @param[in]     addr     Address of write
+ * @param[in]     numVal   Number of array elements
+ * @param[in]     val      Pointer to array of values to set
  *
- * This function allows a caller to configure the notification flags.
- * These often enable/disable hardware interrupts.
+ * This function allows a caller to write an array of values for
+ * a control. Extra parameters allow this write to be more complex
+ * such as to an I2C.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if addr or numVal are not valid.
  */
-int32_t BRD_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags);
+int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numVal, const uint32_t *val);
+
+/*!
+ * Get an extended board control value.
+ *
+ * @param[in]     ctrlId   Index of control to read
+ * @param[in]     addr     Address of read
+ * @param[in]     numRtn   Number of array elements
+ * @param[out]    rtn      Pointer to array to store return
+ *
+ * This function allows a caller to read an array of values for
+ * a control. Extra parameters allow this read to be more complex
+ * such as from an I2C.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if addr or numRtn are not valid.
+ */
+int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
+    uint32_t numRtn, uint32_t *rtn);
 
 /*!
  * Control handler.

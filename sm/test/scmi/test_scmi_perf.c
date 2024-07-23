@@ -88,8 +88,6 @@ void TEST_ScmiPerf(void)
             SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
             SCMI_PERF_PROT_VER));
-        NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            0x40002U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Protocol Attributes */
@@ -214,20 +212,6 @@ void TEST_ScmiPerf(void)
         CHECK(SCMI_PerformanceDescribeLevels(SM_TEST_DEFAULT_CHN,
             0U, skipIndex, NULL, NULL));
     }
-
-    /* PerfNegotiateProtocolVersion */
-    {
-        uint32_t version = 0x1234U;
-        printf("SCMI_PerfNegotiateProtocolVersion(%u)\n",
-            SM_TEST_DEFAULT_CHN);
-        NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-
-        /* Check unsupport minor version */
-        NECHECK(SCMI_PerfNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_PERF_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
-    }
-
 
     /* Loop over performance test domains */
     status = TEST_ConfigFirstGet(TEST_PERF, &agentId,

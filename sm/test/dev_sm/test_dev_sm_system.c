@@ -87,6 +87,15 @@ void TEST_DevSmSystem(void)
         /* Default */
         CHECK(DEV_SM_SystemStageReset(0U, 0U));
 
+        /* Error Condition */
+        {
+
+            SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+            NECHECK(DEV_SM_SystemStageReset(DEV_SM_ROM_BS_SERIAL, 0U),
+                SM_ERR_TEST);
+            SM_TestModeSet(SM_TEST_MODE_OFF);
+        }
+
         printf("DEV_SM_SystemShutdown()\n");
         CHECK(DEV_SM_SystemShutdown());
     }
@@ -115,9 +124,12 @@ void TEST_DevSmSystem(void)
 
     /* System Error Coverage */
     {
-        uint32_t status = 0, pc = 0x800U;
+        uint32_t status = 0U, pc = 0x800U;
         printf("DEV_SM_System()\n");
         DEV_SM_SystemError(status, pc);
+
+        /* PC = 0U */
+        DEV_SM_SystemError(status, 0U);
     }
 
     /* System Idle Coverage */
@@ -131,6 +143,12 @@ void TEST_DevSmSystem(void)
         uint32_t flags = 0x0U;
         printf("DEV_SM_SyslogDump()\n");
         CHECK(DEV_SM_SyslogDump(flags));
+
+        /*Branch coverage */
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK((DEV_SM_SyslogDump(flags)),
+            SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
     }
 
 
@@ -152,12 +170,43 @@ void TEST_DevSmSystem(void)
         DEV_SM_ErrorDump();
     }
 
+    /* DEV_SM_SiInfoGet Err Test*/
+    {
+        uint32_t deviceId = 0U, siRev = 0U, partNum = 0U;
+        const char *siName = NULL;
+
+
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName),
+            SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
     /* Reason Name Get: Invalid Reason */
     {
         const char *name[15];
         int32_t len = 0;
         NECHECK(DEV_SM_SystemReasonNameGet(DEV_SM_NUM_REASON,
             &name[0], &len), SM_ERR_NOT_FOUND);
+    }
+
+    /* Branch coverage: DEV_SM_RomHandoverGet */
+    {
+        const rom_handover_t *handover = NULL;
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK(DEV_SM_RomHandoverGet(&handover),
+            SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
+
+    /* Branch coverage: DEV_SM_RomBootImgNGet */
+    {
+        uint32_t type = 0U, cpuId = 0U, mSel = 0U, flags = 0U;
+        uint64_t addr = 0U;
+
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK(DEV_SM_RomBootImgNGet(type, &cpuId, &addr, &mSel, &flags),
+            SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
     }
 #endif
 

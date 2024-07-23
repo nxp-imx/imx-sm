@@ -65,7 +65,7 @@ void TEST_ScmiBase(void)
     /* RPC_00010 RPC_00060 RPC_00160 Base tests */
     printf("**** Base Protocol Tests ***\n\n");
 
-    /* Test protocol version */
+    /* Test protocol version and negotiate protocol version */
     {
         uint32_t ver = 0U;
 
@@ -74,6 +74,10 @@ void TEST_ScmiBase(void)
         printf("  ver=0x%08X\n", ver);
 
         BCHECK(ver == SCMI_BASE_PROT_VER);
+
+        printf("SCMI_BaseNegotiateProtocolVersion(%u)\n", SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_BaseNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_BASE_PROT_VER));
     }
 
     /* Test build info */
@@ -249,11 +253,6 @@ static void TEST_ScmiBaseNone(uint32_t channel)
         tempAgent = 0U;
         CHECK(SCMI_BaseDiscoverAgent(channel, &tempAgent, name));
         printf("   name=%s\n", name);
-
-        uint32_t version = 0x1234U;
-        printf("SCMI_BaseNegotiateProtocolVersion(%u)\n", channel);
-        NECHECK(SCMI_BaseNegotiateProtocolVersion(channel, version),
-            SM_ERR_NOT_SUPPORTED);
 
         /* Invalid agent */
         tempAgent = 100000U;

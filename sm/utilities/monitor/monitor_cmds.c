@@ -445,78 +445,56 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     /* Display ROM passover info */
     if (LMM_MiscRomPassoverGet(0U, &passover) == SM_ERR_SUCCESS)
     {
-        /* Display boot mode */
-        printf("Boot mode     = ");
-        switch (passover->bootMode)
+        const monitor_key_pair_t bootModePairs[] =
         {
-            default:
-                printf("fuse\n");
-                break;
-            case DEV_SM_ROM_BM_USB:
-                printf("USB serial download\n");
-                break;
-            case DEV_SM_ROM_BM_NORMAL:
-                printf("normal\n");
-                break;
-            case DEV_SM_ROM_BM_LOOP:
-                printf("infinite loop\n");
-                break;
-            case DEV_SM_ROM_BM_TEST:
-                printf("test\n");
-                break;
-        }
+            {4U,                   "fuse"},
+            {DEV_SM_ROM_BM_USB,    "USB serial download"},
+            {DEV_SM_ROM_BM_NORMAL, "normal"},
+            {DEV_SM_ROM_BM_LOOP,   "infinite loop"},
+            {DEV_SM_ROM_BM_TEST,   "test"}
+        };
+        const monitor_key_pair_t devTypePairs[] =
+        {
+            {6U,                         "preload"},
+            {DEV_SM_ROM_BD_SD,           "SD"},
+            {DEV_SM_ROM_BD_MMC,          "MMC"},
+            {DEV_SM_ROM_BD_FLEXSPINAND,  "NAND FLEXSPI"},
+            {DEV_SM_ROM_BD_FLEXSPINOR,   "NOR FLEXSPI"},
+            {DEV_SM_ROM_BD_LPSPIEEPROM,  "EPROM LPSPI"},
+            {DEV_SM_ROM_BD_USB,          "USB"}
+        };
+        const monitor_key_pair_t bootStagePairs[] =
+        {
+            {3U,                       "primary"},
+            {DEV_SM_ROM_BS_SECONDARY,  "secondary"},
+            {DEV_SM_ROM_BS_RECOVERY,   "recovery"},
+            {DEV_SM_ROM_BS_SERIAL,     "serial"}
+        };
+
+        /* Display boot mode */
+        printf("Boot mode     = %s\n", MONITOR_Key2Str(passover->bootMode,
+            bootModePairs));
 
         /* Display boot device */
-        printf("Boot device   = ");
-        switch (passover->bootDevType)
+        printf("Boot device   = %s", MONITOR_Key2Str(passover->bootDevType,
+            devTypePairs));
+        if (passover->bootDevType != DEV_SM_ROM_BD_PRELOAD)
         {
-            default:
-                printf("preload\n");
-                break;
-            case DEV_SM_ROM_BD_SD:
-                printf("SD%u\n", passover->bootDevInst + 1U);
-                break;
-            case DEV_SM_ROM_BD_MMC:
-                printf("MMC%u\n", passover->bootDevInst + 1U);
-                break;
-            case DEV_SM_ROM_BD_FLEXSPINAND:
-                printf("FLEXSPI (NAND)\n");
-                break;
-            case DEV_SM_ROM_BD_FLEXSPINOR:
-                printf("FLEXSPI (NOR)\n");
-                break;
-            case DEV_SM_ROM_BD_LPSPIEEPROM:
-                printf("LPSPI (EEPROM)\n");
-                break;
-            case DEV_SM_ROM_BD_USB:
-                if (passover->bootDevInst == 3U)
-                {
-                    printf("USB%u\n", 1U);
-                }
-                else
-                {
-                    printf("USB%u\n", passover->bootDevInst + 1U);
-                }
-                break;
+            if ((passover->bootDevType == DEV_SM_ROM_BD_USB)
+                && (passover->bootDevInst == 3U))
+            {
+                printf("%u", 1U);
+            }
+            else
+            {
+                printf("%u", passover->bootDevInst + 1U);
+            }
         }
+        printf("\n");
 
-        /* Display boot type */
-        printf("Boot type     = ");
-        switch (passover->bootStage)
-        {
-            default:
-                printf("primary\n");
-                break;
-            case DEV_SM_ROM_BS_SECONDARY:
-                printf("secondary\n");
-                break;
-            case DEV_SM_ROM_BS_RECOVERY:
-                printf("recovery\n");
-                break;
-            case DEV_SM_ROM_BS_SERIAL:
-                printf("serial\n");
-                break;
-        }
+        /* Display boot stage */
+        printf("Boot stage    = %s\n", MONITOR_Key2Str(passover->bootStage,
+            bootStagePairs));
 
         /* Display container */
         printf("Boot set      = %d\n", passover->imgSetSel + 1U);
@@ -1477,6 +1455,7 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
 
                         if (status == SM_ERR_SUCCESS)
                         {
+                            uint32_t enb = (enabled ? 1U : 0U);
                             string const displayModes[] =
                             {
                                 "off",
@@ -1485,7 +1464,6 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
 
                             if (SM_UINT64_H(rate) == 0U)
                             {
-                                uint32_t enb = (enabled ? 1U : 0U);
                                 printf("%03u: %*s = %3s, %10uHz\n", clockId,
                                     -wName, clockNameAddr,
                                     displayModes[enb],
@@ -1493,7 +1471,6 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                             }
                             else
                             {
-                                uint32_t enb = (enabled ? 1U : 0U);
                                 printf("%03u: %*s = %3s, %10sHz\n",
                                     clockId,
                                     -wName, clockNameAddr,
@@ -1847,11 +1824,8 @@ static int32_t MONITOR_CmdSensor(int32_t argc, const char * const argv[],
                     {
                         if (enabled)
                         {
-                            if (status == SM_ERR_SUCCESS)
-                            {
-                                status = LMM_SensorReadingGet(s_lm, sensor,
-                                    &sensorValue, &sensorTimestamp);
-                            }
+                            status = LMM_SensorReadingGet(s_lm, sensor,
+                                &sensorValue, &sensorTimestamp);
 
                             if (status == SM_ERR_SUCCESS)
                             {
@@ -3252,7 +3226,7 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
         if (status == SM_ERR_SUCCESS)
         {
             /* Set test mode */
-            g_testMode = testMode;
+            SM_TestModeSet(testMode);
         }
     }
 

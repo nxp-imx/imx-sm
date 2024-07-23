@@ -140,10 +140,20 @@ uint64_t DEV_SM_Usec64Get(void)
 // coverity[misra_c_2012_rule_8_13_violation:FALSE]
 int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 {
-    uint32_t val = 0x80008000U + (fuseWord * 4U);
-    *addr = val;
+    int32_t status = SM_ERR_SUCCESS;
 
-    return SM_ERR_SUCCESS;
+    if (fuseWord != 50U)
+    {
+        uint32_t val = 0x80008000U + (fuseWord * 4U);
+        *addr = val;
+    }
+    else
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return result */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

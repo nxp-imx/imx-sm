@@ -96,11 +96,9 @@ void TEST_ScmiLmm(void)
 
     /* Test SCMI_LmmNegotiateProtocolVersion */
     {
-        uint32_t version = 1234U;
-
-        printf(" SCMI_LmmNegotiateProtocolVersion\n");
-        NECHECK( SCMI_LmmNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SCMI_ERR_NOT_SUPPORTED);
+        printf(" SCMI_LmmNegotiateProtocolVersion(%u)\n", SM_TEST_DEFAULT_CHN);
+        CHECK( SCMI_LmmNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_LMM_PROT_VER));
     }
 
     /* Test LMM message attributes */

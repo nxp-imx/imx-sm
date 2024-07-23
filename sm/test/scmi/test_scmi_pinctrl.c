@@ -339,15 +339,10 @@ void TEST_ScmiPinctrl(void)
 
     /* PinctrlNegotiateProtocolVersion */
     {
-        uint32_t version = 0x1234U;
-        printf("SCMI_PinctrlNegotiateProtocolVersion(%u, %x)\n",
-            SM_TEST_DEFAULT_CHN, version);
-        NECHECK(SCMI_PinctrlNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-        printf("SCMI_PinctrlNegotiateProtocolVersion(%u, %x)\n",
-            SM_TEST_DEFAULT_CHN, (SCMI_PINCTRL_PROT_VER + 1U));
-        NECHECK(SCMI_PinctrlNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_PINCTRL_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
+        printf("SCMI_PinctrlNegotiateProtocolVersion(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_PinctrlNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_PINCTRL_PROT_VER));
     }
 
     int32_t status = 0;

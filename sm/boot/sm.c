@@ -238,6 +238,16 @@ void SM_Error(int32_t status)
     }
 }
 
+#ifdef HAS_SM_TEST_MODE
+/*--------------------------------------------------------------------------*/
+/* Set test mode                                                            */
+/*--------------------------------------------------------------------------*/
+void SM_TestModeSet(uint32_t mode)
+{
+    g_testMode = mode;
+}
+#endif
+
 #if !defined(SIMU) && !defined(INC_LIBC)
 /*--------------------------------------------------------------------------*/
 /* Exit function for no clib                                                */

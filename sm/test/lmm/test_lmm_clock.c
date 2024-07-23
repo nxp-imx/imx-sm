@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -177,6 +177,15 @@ void TEST_LmmClock(void)
 
     printf("LMM_ClockEnable(%lu, %u)\n", SM_NUM_CLOCK, lmId);
     NECHECK(LMM_ClockEnable(lmId, SM_NUM_CLOCK, enabled),
+        SM_ERR_NOT_FOUND);
+
+    printf("LMM_ClockExtendedSet(%lu, %u)\n",SM_NUM_CLOCK, lmId);
+    NECHECK(LMM_ClockExtendedSet(lmId, SM_NUM_CLOCK, 0U, 0U),
+        SM_ERR_NOT_FOUND);
+
+    uint32_t extCfgValue = 0U;
+    printf("LMM_ClockExtendedGet(%lu, %u)\n",SM_NUM_CLOCK, lmId);
+    NECHECK(LMM_ClockExtendedGet(lmId, SM_NUM_CLOCK, 0U, &extCfgValue),
         SM_ERR_NOT_FOUND);
 
     printf("\n");

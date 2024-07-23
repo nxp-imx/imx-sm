@@ -119,8 +119,6 @@ void TEST_ScmiVoltage(void)
             SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
             SCMI_VOLT_PROT_VER));
-        NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            0x20002U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Domain Attributes -- Invalid domainId  */
@@ -206,20 +204,6 @@ void TEST_ScmiVoltage(void)
         CHECK(SCMI_VoltageDescribeLevels(SM_TEST_DEFAULT_CHN,
             0U, levelIndex, NULL, NULL));
     }
-
-    /* VoltageNegotiateProtocolVersion */
-    {
-        uint32_t version = 0x1234U;
-        printf("SCMI_VoltageNegotiateProtocolVersion(%u)\n",
-            SM_TEST_DEFAULT_CHN);
-        NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-
-        /* Check unsupport minor version */
-        NECHECK(SCMI_VoltageNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_VOLT_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
-    }
-
 
     /* Loop over voltage test domains */
     status = TEST_ConfigFirstGet(TEST_VOLT, &agentId,

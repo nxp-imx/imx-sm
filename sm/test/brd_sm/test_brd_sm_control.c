@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -33,77 +33,75 @@
 */
 
 /*==========================================================================*/
-/*!
- * @addtogroup BOOT
- * @{
- *
- * @file
- * @brief
- *
- * Header file for test mode functionality.
- */
+/* Unit test for the board SM control API.                                  */
 /*==========================================================================*/
 
-#ifndef SM_TEST_MODE_H
-#define SM_TEST_MODE_H
 
-#if defined(RUN_TEST) || defined(MONITOR)
+/* Include Config */
 
 /* Includes */
 
-/* Defines */
+#include "test.h"
 
-/*! Indicator test mode support is included */
-#define HAS_SM_TEST_MODE
-
-/*!
- * @name SM test modes
- */
-/** @{ */
-#define SM_TEST_MODE_OFF        0U    /*!< None */
-#define SM_TEST_MODE_DEV_LVL1   100U  /*!< Device first level error response */
-#define SM_TEST_MODE_DEV_LVL2   101U  /*!< Device second level error response */
-#define SM_TEST_MODE_DEV_ALT1   120U  /*!< Device alt reponse 1 */
-#define SM_TEST_MODE_BRD_LVL1   200U  /*!< Board first level error response */
-#define SM_TEST_MODE_BRD_LVL2   201U  /*!< Board second level error response */
-#define SM_TEST_MODE_BRD_ALT1   220U  /*!< Board alt reponse 1 */
-#define SM_TEST_MODE_LMM_LVL1   300U  /*!< LMM first level error response */
-#define SM_TEST_MODE_LMM_LVL2   301U  /*!< LMM second level error response */
-#define SM_TEST_MODE_LMM_ALT1   320U  /*!< LMM alt reponse 1 */
-#define SM_TEST_MODE_RPC_LVL1   400U  /*!< RPC first level error response */
-#define SM_TEST_MODE_RPC_LVL2   401U  /*!< RPC second level error response */
-#define SM_TEST_MODE_RPC_ALT1   420U  /*!< RPC alt reponse 1 */
-/** @} */
-
-/*! Set status on mode */
-#define SM_TEST_MODE_ERR(testMode, testErr) \
-    if (g_testMode == (testMode)) \
-    { \
-        status = (testErr); \
-    }
-
-/*! Execute code on mode */
-#define SM_TEST_MODE_EXEC(testMode, CODE) \
-    if (g_testMode == (testMode)) \
-    { \
-        CODE; \
-    }
-
-/* Global Variables */
-
-/*! Current test mode */
-extern uint32_t g_testMode;
-
-#else
-
-/* Defines */
-
-#define SM_TEST_MODE_ERR(testMode, testErr)
-#define SM_TEST_MODE_EXEC(testMode, CODE)
-
+#ifdef SIMU
+#include "brd_sm_control.h"
 #endif
 
-#endif /* SM_TEST_MODE_H */
+/* Local defines */
 
-/** @} */
+/* Local types */
+
+/* Local variables */
+
+/* Local functions */
+
+/*--------------------------------------------------------------------------*/
+/* Test device SM control                                                   */
+/*--------------------------------------------------------------------------*/
+void TEST_BrdSmControl(void)
+{
+#ifdef SIMU
+    printf("**** Board SM Control API Tests ***\n\n");
+    {
+        uint32_t numRtn = 0U;
+        uint32_t rtn[1] = { 1 };
+
+        printf("BRD_SM_ControlGet(BRD_SM_CTRL_0)\n");
+        CHECK(BRD_SM_ControlGet(BRD_SM_CTRL_0, &numRtn, rtn));
+        printf("numRtn: %u rtn: %u\n", numRtn, rtn[0]);
+
+        numRtn = 1U;
+        printf("BRD_SM_ControlSet(BRD_SM_CTRL_0)\n");
+        CHECK(BRD_SM_ControlSet(BRD_SM_CTRL_0, numRtn, rtn));
+    }
+
+    /* Test API bounds */
+    printf("\n**** Board SM Control API Err Tests ***\n\n");
+
+    /* Test invalid ctrlId */
+    {
+        uint32_t numRtn = 0U;
+        uint32_t rtn[1] = { 0 };
+
+        printf("BRD_SM_ControlGet(SM_NUM_CTRL)\n");
+        NECHECK(BRD_SM_ControlGet(SM_NUM_CTRL, &numRtn, rtn),
+            SM_ERR_NOT_FOUND);
+
+        printf("BRD_SM_ControlGet(BRD_SM_CTRL_TEST)\n");
+        NECHECK(BRD_SM_ControlGet(BRD_SM_CTRL_TEST, &numRtn, rtn),
+            SM_ERR_NOT_SUPPORTED);
+
+        numRtn = 0U;
+        printf("BRD_SM_ControlSet(BRD_SM_CTRL_0)\n");
+        NECHECK(BRD_SM_ControlSet(BRD_SM_CTRL_0, numRtn, rtn),
+            SM_ERR_INVALID_PARAMETERS);
+
+        printf("BRD_SM_ControlSet(SM_NUM_CTRL)\n");
+        NECHECK(BRD_SM_ControlSet(SM_NUM_CTRL, numRtn, rtn),
+            SM_ERR_NOT_FOUND);
+    }
+
+    printf("\n");
+#endif
+}
 

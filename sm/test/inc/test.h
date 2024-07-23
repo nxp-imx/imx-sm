@@ -275,6 +275,7 @@ void TEST(void);
 #ifdef TEST_ALL
 void TEST_BrdSmSensor(void);
 void TEST_BrdSm(void);
+void TEST_BrdSmControl(void);
 void TEST_DevSmPower(void);
 void TEST_DevSmClock(void);
 void TEST_DevSmSensor(void);

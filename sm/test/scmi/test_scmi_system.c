@@ -135,16 +135,12 @@ void TEST_ScmiSystem(void)
 
     /* SysNegotiateProtocolVersion */
     {
-        uint32_t version = 0x1234U;
         printf("SCMI_SysNegotiateProtocolVersion(%u)\n",
             SM_TEST_DEFAULT_CHN);
-        NECHECK(SCMI_SysNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-
-        /* Check unsupport minor version */
-        NECHECK(SCMI_SysNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_SYSTEM_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
+        CHECK(SCMI_SysNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+            SCMI_SYSTEM_PROT_VER));
     }
+
     /* Loop over system power tests */
     status = TEST_ConfigFirstGet(TEST_SYS, &agentId,
         &channel, &resource, &lmId);

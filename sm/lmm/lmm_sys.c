@@ -416,6 +416,7 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
         *errStatus = s_lmError[stateLm];
     }
 
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, *errStatus = SM_ERR_TEST)
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
@@ -715,6 +716,8 @@ int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
         *shutdownRec = s_lmShutdownReason[reasonLm];
     }
 
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, shutdownRec->errId = \
+        bootRec->errId + 1U)
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */

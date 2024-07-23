@@ -257,11 +257,10 @@ void TEST_ScmiFusa(void)
 
         /* Fusa negotiate protocol version */
         {
-            uint32_t version = 0x10000U;
             printf("SCMI_FusaNegotiateProtocolVersion(%u)\n",
                 SM_TEST_DEFAULT_CHN);
             CHECK(SCMI_FusaNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-                version));
+                SCMI_FUSA_PROT_VER));
         }
 
         /* Send notification */
@@ -310,13 +309,73 @@ void TEST_ScmiFusa(void)
             CHECK(SCMI_FusaSeenvStateReqEvent(2, &pingcookie));
             printf(":SCMI_FusaSeenvStateReqEvent pingcookie: %u\n",
                 pingcookie);
+        }
 
-            /* FusaFeenv State Notify */
+        /* Branch coverage */
+        {
+            for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
             {
-                printf("SCMI_FusaFeenvStateNotify(%u)\n", SM_TEST_DEFAULT_CHN);
-                CHECK(SCMI_FusaFeenvStateNotify(SM_TEST_DEFAULT_CHN,
-                    0U /*notifyenable*/));
+                lmm_rpc_trigger_t trigger =
+                {
+                    .event = LMM_TRIGGER_FUSA_FEENV,
+                    .parm[0] = 0U,
+                    .parm[1] = 0U,
+                    .parm[2] = 1U
+                };
+
+                /* Send notification */
+                (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
             }
+
+            uint32_t mSelMode = 0U, feenvState = 0U;
+
+            CHECK(SCMI_FusaFeenvStateEvent(2, NULL, &mSelMode));
+
+            for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
+            {
+                lmm_rpc_trigger_t trigger =
+                {
+                    .event = LMM_TRIGGER_FUSA_FEENV,
+                    .parm[0] = 0U,
+                    .parm[1] = 0U,
+                    .parm[2] = 1U
+                };
+
+                /* Send notification */
+                (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
+            }
+
+            CHECK(SCMI_FusaFeenvStateEvent(2, &feenvState, NULL));
+
+            /* Invalid channel number */
+            NECHECK(SCMI_FusaFeenvStateEvent(SM_NUM_TEST_CHN, &feenvState,
+                NULL), SCMI_ERR_INVALID_PARAMETERS);
+
+            for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
+            {
+                lmm_rpc_trigger_t trigger =
+                {
+                    .event = LMM_TRIGGER_FUSA_SEENV,
+                    .parm[0] = 0U,
+                    .parm[1] = 0U,
+                    .parm[2] = 1U
+                };
+                /* Send notification */
+                (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
+            }
+
+            CHECK(SCMI_FusaSeenvStateReqEvent(2, NULL));
+
+            /* Invalid channel number */
+            NECHECK(SCMI_FusaSeenvStateReqEvent(SM_NUM_TEST_CHN, NULL),
+                SCMI_ERR_INVALID_PARAMETERS);
+        }
+
+        /* FusaFeenv State Notify */
+        {
+            printf("SCMI_FusaFeenvStateNotify(%u)\n", SM_TEST_DEFAULT_CHN);
+            CHECK(SCMI_FusaFeenvStateNotify(SM_TEST_DEFAULT_CHN,
+                0U /*notifyenable*/));
         }
 
         /* Fusa fault Set */
@@ -350,14 +409,29 @@ void TEST_ScmiFusa(void)
             printf("SCMI_FusaFaultEvent: faultId: %u flag: %x\n",
                 faultId, flag);
         }
-#if 0
+
+        /* Branch coverage */
         {
-            uint32_t mSelMode = 0U, feenvState = 0U;
-            /* Branch coverage */
-            CHECK(SCMI_FusaFeenvStateEvent(2, NULL, &mSelMode));
-            CHECK(SCMI_FusaFeenvStateEvent(2, &feenvState, NULL));
+            uint32_t faultId = 3U, flag = 0U;
+
+            CHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, faultId,
+                flag));
+
+            /* Branch coverage: faultId == NULL */
+            CHECK(SCMI_FusaFaultEvent(2 /*SCMI_PRIORITY_Q*/, NULL,
+                &flag));
+
+            faultId = 3U;
+            CHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, faultId,
+                flag));
+
+            /* Branch coverage: flag == NULL */
+            CHECK(SCMI_FusaFaultEvent(2 /*SCMI_PRIORITY_Q*/, &faultId,
+                NULL));
+
+            NECHECK(SCMI_FusaFaultEvent(SM_NUM_TEST_CHN, &faultId,
+                NULL), SCMI_ERR_INVALID_PARAMETERS);
         }
-#endif
 #endif
     }
     else

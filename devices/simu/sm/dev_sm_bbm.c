@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -226,6 +226,8 @@ int32_t DEV_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
 
     /* Default state */
     *state = 0U;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL2, SM_ERR_TEST)
 
     /* Return status */
     return status;

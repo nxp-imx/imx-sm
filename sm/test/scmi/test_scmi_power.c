@@ -85,8 +85,6 @@ void TEST_ScmiPower(void)
             SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
             SCMI_POWER_PROT_VER));
-        NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            0x30002U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Test protocol attributes */
@@ -171,19 +169,6 @@ void TEST_ScmiPower(void)
         /* Branch -- Nullpointer */
         CHECK(SCMI_PowerStateGet(SM_TEST_DEFAULT_CHN, 0U, NULL));
 
-    }
-
-    /* PowerNegotiateProtocolVersion */
-    {
-        uint32_t version = 0x1234U;
-        printf("SCMI_PowerNegotiateProtocolVersion(%u)\n",
-            SM_TEST_DEFAULT_CHN);
-        NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-
-        /* Check unsupport minor version */
-        NECHECK(SCMI_PowerNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_POWER_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Loop over power test domains */

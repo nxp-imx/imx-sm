@@ -47,7 +47,31 @@
 
 /* Local types */
 
+typedef struct
+{
+    uint32_t protNum;
+    uint32_t protVer;
+} scmi_prot_info_t;
+
 /* Local variables */
+
+static const scmi_prot_info_t s_scmiProtInfo[] =
+{
+    {SCMI_PROTOCOL_BASE,  SCMI_BASE_PROT_VER},
+    {SCMI_PROTOCOL_POWER,  SCMI_POWER_PROT_VER},
+    {SCMI_PROTOCOL_SYS,  SCMI_SYSTEM_PROT_VER},
+    {SCMI_PROTOCOL_PERF,  SCMI_PERF_PROT_VER },
+    {SCMI_PROTOCOL_CLOCK,  SCMI_CLOCK_PROT_VER},
+    {SCMI_PROTOCOL_SENSOR,  SCMI_SENSOR_PROT_VER},
+    {SCMI_PROTOCOL_RESET,  SCMI_RESET_PROT_VER},
+    {SCMI_PROTOCOL_VOLTAGE,  SCMI_VOLT_PROT_VER},
+    {SCMI_PROTOCOL_PINCTRL,  SCMI_PINCTRL_PROT_VER},
+    {SCMI_PROTOCOL_LMM,  SCMI_LMM_PROT_VER},
+    {SCMI_PROTOCOL_BBM,  SCMI_BBM_PROT_VER},
+    {SCMI_PROTOCOL_CPU,  SCMI_CPU_PROT_VER},
+    {SCMI_PROTOCOL_FUSA,  SCMI_FUSA_PROT_VER},
+    {SCMI_PROTOCOL_MISC,  SCMI_MISC_PROT_VER},
+};
 
 /* Local functions */
 
@@ -64,10 +88,54 @@ void TEST_Scmi(void)
         uint32_t numProtocols = 0U;
         uint32_t protocols[SCMI_BASE_MAX_PROTOCOLS] = { 0 };
 
-        printf("**** SCMI Test Invalid Message Lengths ***\n\n");
         CHECK(SCMI_BaseDiscoverListProtocols(SM_TEST_DEFAULT_CHN, 0U,
             &numProtocols, protocols));
 
+        printf("Test SCMI_ProtocolVersion() and "
+            "SCMI_NegotiateProtocolVersion(%u) \n", SM_TEST_DEFAULT_CHN);
+
+        /* Loop over protocols */
+        for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
+        {
+            uint32_t prot = (protocols[protIndex/4U]
+                >> ((protIndex % 4U) * 8U)) & 0xFFU;
+
+            /* Test protocol version and negotiate protocol attributes */
+            {
+                uint32_t ver = 0U;
+                uint32_t index = 0U;
+
+                for (index = 0U; index < sizeof(s_scmiProtInfo)/
+                    sizeof(scmi_prot_info_t); index++)
+                {
+                    if (s_scmiProtInfo[index].protNum == prot)
+                    {
+                        break;
+                    }
+                }
+
+                /* Check protocol version */
+                CHECK(SCMI_ProtocolVersion(SM_TEST_DEFAULT_CHN, prot, &ver));
+                printf("protocol=0x%x  ver=0x%08X\n", prot, ver);
+
+                BCHECK(ver == s_scmiProtInfo[index].protVer);
+
+                /* Check valid major and minor version */
+                CHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN, prot,
+                    ver));
+
+                /* Check invalid major version */
+                NECHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+                    prot, ver + 0x10000U), SM_ERR_NOT_SUPPORTED);
+
+                /* Check invalid minor version */
+                NECHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+                    prot, ver + 0x1U), SM_ERR_NOT_SUPPORTED);
+            }
+        }
+        printf("\n");
+
+        printf("**** SCMI Test Invalid Message Lengths ***\n\n");
         /* Loop over protocols */
         for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
         {
@@ -118,6 +186,7 @@ void TEST_Scmi(void)
             /* Check to ensure protocol error returned */
             NECHECK(SCMI_A2pRx(SM_TEST_DEFAULT_CHN, 2U,
                 header), SCMI_ERR_PROTOCOL_ERROR);
+
         }
     }
 

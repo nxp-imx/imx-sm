@@ -52,6 +52,7 @@ ifeq ($(T), all)
 	OBJS += \
 		$(OUT)/test_brd_sm_sensor.o     \
 		$(OUT)/test_brd_sm.o            \
+		$(OUT)/test_brd_sm_control.o    \
 		$(OUT)/test_lmm_clock.o         \
 		$(OUT)/test_lmm_perf.o          \
 		$(OUT)/test_lmm_power.o         \
@@ -59,7 +60,7 @@ ifeq ($(T), all)
 		$(OUT)/test_lmm_cpu.o           \
 		$(OUT)/test_lmm_fusa.o          \
 		$(OUT)/test_lmm_sensor.o        \
-		$(OUT)/test_lmm_misc.o        \
+		$(OUT)/test_lmm_misc.o          \
 		$(OUT)/test_lmm_voltage.o       \
 		$(OUT)/test_dev_sm_power.o      \
 		$(OUT)/test_dev_sm_fault.o      \

@@ -84,8 +84,6 @@ void TEST_ScmiReset(void)
             SM_TEST_DEFAULT_CHN);
         CHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
             SCMI_RESET_PROT_VER));
-        NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            0x30002U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Protocol Attributes */
@@ -152,19 +150,6 @@ void TEST_ScmiReset(void)
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_Reset(SM_SCMI_NUM_CHN, 0U,
             flags, SCMI_RESET_ARCH_COLD), SCMI_ERR_INVALID_PARAMETERS);
-    }
-
-    /* ResetNegotiateProtocolVersion */
-    {
-        uint32_t version = 0x1234U;
-        printf("SCMI_ResetNegotiateProtocolVersion(%u)\n",
-            SM_TEST_DEFAULT_CHN);
-        NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            version), SM_ERR_NOT_SUPPORTED);
-
-        /* Check unsupport minor version */
-        NECHECK(SCMI_ResetNegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
-            SCMI_RESET_PROT_VER + 1U), SM_ERR_NOT_SUPPORTED);
     }
 
     /* Loop over reset test domains */

@@ -379,6 +379,8 @@ void LMM_Handler(void)
 /*--------------------------------------------------------------------------*/
 uint64_t LMM_BootTimeGet(uint32_t lmId)
 {
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, s_lmStartTime[lmId] = 0ULL)
+
     return s_lmStartTime[lmId];
 }
 

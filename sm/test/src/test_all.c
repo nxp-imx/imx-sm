@@ -82,6 +82,7 @@ void TEST_All(void)
 #ifdef SIMU
     TEST_BrdSmSensor();
     TEST_BrdSm();
+    TEST_BrdSmControl();
 #endif
 
     /* Run LMM tests */

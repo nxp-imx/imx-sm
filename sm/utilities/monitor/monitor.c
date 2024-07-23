@@ -927,3 +927,29 @@ int32_t MONITOR_ConvI32(const char *str, int32_t *val)
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Search for a key:string pair                                             */
+/*--------------------------------------------------------------------------*/
+string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
+{
+    uint32_t len = pair->key;
+    string rtn = pair->str;
+    const monitor_key_pair_t *ptr = pair;
+
+    while (len > 0U)
+    {
+        ptr++;
+
+        if (key == ptr->key)
+        {
+            rtn = ptr->str;
+            break;
+        }
+
+        len--;
+    }
+
+    /* Return string */
+    return rtn;
+}
+
