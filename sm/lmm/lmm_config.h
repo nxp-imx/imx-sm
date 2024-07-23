@@ -109,7 +109,7 @@ typedef struct
     uint8_t group;                     /*!< LMM group */
     uint8_t autoBoot;                  /*!< LMM auto boot */
     uint8_t boot[SM_LM_NUM_MSEL];      /*!< Boot order of LM */
-    uint8_t bootSkip[SM_LM_NUM_MSEL];  /*!< Skip boot in no image */
+    uint8_t bootSkip[SM_LM_NUM_MSEL];  /*!< Skip boot if no image */
 } lmm_config_t;
 
 /*!

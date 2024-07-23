@@ -825,7 +825,7 @@ Notes:
 - When the *api* key is used, it is replaced during processing with \<PROTO\> keys for each
   type of protocol resource found on the same line.
 - If no MBC/MRC resources are on the line then any *perm* key will be removed during
-  processing. The value is also erplaced with the numerical value defined in the TRDC
+  processing. The value is also replaced with the numerical value defined in the TRDC
   section in the SoC RM and listed below.
 - See the [LMM config file](@ref LMM_CONFIG) for start/stop commands associated with
   resource types. The parameter is of the format a|b|c where *a* is the order, *b* is
@@ -906,8 +906,8 @@ Below is an explanation of each line:
 - **Line 43** - Start a new LM section for the M7, RPC is SCMI, TRDC DID=4 (see SoC RM TRDC section)
 - **Lines 45-47** - Defines, OWNER and DATA used below, DFMT0 used in include files for CPU masters
 - **Line 51** - Indicates this core should start and stop when LM1 is booted and shutdown.
-- **Line 55** - Sart a new SCMI agent section with the specified name
-- **Line 56** - Sart a new mailbox section, type is MU, use SDK MU base pointer array index 9 for
+- **Line 55** - Start a new SCMI agent section with the specified name
+- **Line 56** - Start a new mailbox section, type is MU, use SDK MU base pointer array index 9 for
   the platform side and index 8 for the unit test side.
 - **Lines 57-58** - Define a channel on doorbell 0. Transport is SMT, use CRC32, linked RPC is SCMI,
   and the SCMI channel type is A2P (agent to platform). The channel is also the default to use for
