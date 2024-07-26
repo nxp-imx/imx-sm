@@ -316,7 +316,6 @@
         .clkPerms[DEV_SM_CLK_USDHC1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_USDHC2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_USDHC3] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_V2XPK] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VIDEOPLL1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VIDEOPLL1_VCO] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_VPUDSP] = SM_SCMI_PERM_ALL, \
