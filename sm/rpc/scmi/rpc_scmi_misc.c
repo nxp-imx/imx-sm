@@ -1365,8 +1365,8 @@ static int32_t MiscResetReason(const scmi_caller_t *caller,
     const msg_rmisc10_t *in, msg_tmisc10_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    lmm_rst_rec_t bootRec;
-    lmm_rst_rec_t shutdownRec;
+    lmm_rst_rec_t bootRec = { 0 };
+    lmm_rst_rec_t shutdownRec = { 0 };
     bool sys = MISC_REASON_FLAG_SYSTEM(in->flags) != 0U;
 
     /* Check request length */

@@ -55,24 +55,6 @@ typedef struct
 
 /* Local variables */
 
-static const scmi_prot_info_t s_scmiProtInfo[] =
-{
-    {SCMI_PROTOCOL_BASE,  SCMI_BASE_PROT_VER},
-    {SCMI_PROTOCOL_POWER,  SCMI_POWER_PROT_VER},
-    {SCMI_PROTOCOL_SYS,  SCMI_SYSTEM_PROT_VER},
-    {SCMI_PROTOCOL_PERF,  SCMI_PERF_PROT_VER },
-    {SCMI_PROTOCOL_CLOCK,  SCMI_CLOCK_PROT_VER},
-    {SCMI_PROTOCOL_SENSOR,  SCMI_SENSOR_PROT_VER},
-    {SCMI_PROTOCOL_RESET,  SCMI_RESET_PROT_VER},
-    {SCMI_PROTOCOL_VOLTAGE,  SCMI_VOLT_PROT_VER},
-    {SCMI_PROTOCOL_PINCTRL,  SCMI_PINCTRL_PROT_VER},
-    {SCMI_PROTOCOL_LMM,  SCMI_LMM_PROT_VER},
-    {SCMI_PROTOCOL_BBM,  SCMI_BBM_PROT_VER},
-    {SCMI_PROTOCOL_CPU,  SCMI_CPU_PROT_VER},
-    {SCMI_PROTOCOL_FUSA,  SCMI_FUSA_PROT_VER},
-    {SCMI_PROTOCOL_MISC,  SCMI_MISC_PROT_VER},
-};
-
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
@@ -105,14 +87,37 @@ void TEST_Scmi(void)
                 uint32_t ver = 0U;
                 uint32_t index = 0U;
 
-                for (index = 0U; index < sizeof(s_scmiProtInfo)/
-                    sizeof(scmi_prot_info_t); index++)
+                static const scmi_prot_info_t s_scmiProtInfo[] =
+                {
+                    {SCMI_PROTOCOL_BASE,  SCMI_BASE_PROT_VER},
+                    {SCMI_PROTOCOL_POWER,  SCMI_POWER_PROT_VER},
+                    {SCMI_PROTOCOL_SYS,  SCMI_SYSTEM_PROT_VER},
+                    {SCMI_PROTOCOL_PERF,  SCMI_PERF_PROT_VER },
+                    {SCMI_PROTOCOL_CLOCK,  SCMI_CLOCK_PROT_VER},
+                    {SCMI_PROTOCOL_SENSOR,  SCMI_SENSOR_PROT_VER},
+                    {SCMI_PROTOCOL_RESET,  SCMI_RESET_PROT_VER},
+                    {SCMI_PROTOCOL_VOLTAGE,  SCMI_VOLT_PROT_VER},
+                    {SCMI_PROTOCOL_PINCTRL,  SCMI_PINCTRL_PROT_VER},
+                    {SCMI_PROTOCOL_LMM,  SCMI_LMM_PROT_VER},
+                    {SCMI_PROTOCOL_BBM,  SCMI_BBM_PROT_VER},
+                    {SCMI_PROTOCOL_CPU,  SCMI_CPU_PROT_VER},
+                    {SCMI_PROTOCOL_FUSA,  SCMI_FUSA_PROT_VER},
+                    {SCMI_PROTOCOL_MISC,  SCMI_MISC_PROT_VER}
+                };
+
+                /* Find protocol */
+                for (index = 0U; index < (sizeof(s_scmiProtInfo) /
+                    sizeof(scmi_prot_info_t)); index++)
                 {
                     if (s_scmiProtInfo[index].protNum == prot)
                     {
                         break;
                     }
                 }
+
+                /* Check protocol found */
+                BCHECK(index < (sizeof(s_scmiProtInfo)
+                    / sizeof(scmi_prot_info_t)));
 
                 /* Check protocol version */
                 CHECK(SCMI_ProtocolVersion(SM_TEST_DEFAULT_CHN, prot, &ver));
@@ -121,8 +126,8 @@ void TEST_Scmi(void)
                 BCHECK(ver == s_scmiProtInfo[index].protVer);
 
                 /* Check valid major and minor version */
-                CHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN, prot,
-                    ver));
+                CHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
+                    prot, ver));
 
                 /* Check invalid major version */
                 NECHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,

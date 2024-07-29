@@ -313,7 +313,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         uint32_t attr = 0U;
 
         attr = SCMI_CLOCK_CONFIG_SET_ENABLE(3U) |
-            SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0U);
+            SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0UL);
 
         NECHECK(SCMI_ClockConfigSet(channel, clockId, attr, 0U),
             SM_ERR_INVALID_PARAMETERS);
@@ -548,7 +548,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             uint32_t extendedConfigVal = 0U;
 
             attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U) |
-                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80U);
+                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80UL);
 
             NECHECK(SCMI_ClockConfigSet(channel, clockId, attr,
                 extendedConfigVal), SCMI_ERR_DENIED);
