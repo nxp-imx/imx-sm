@@ -43,6 +43,7 @@
 #include "MIMX95_BLK_CTRL_S_AONMIX.h"
 #include "MIMX95_BLK_CTRL_NOCMIX.h"
 #include "MIMX95_BLK_CTRL_WAKEUPMIX.h"
+#include "MIMX95_BLK_CTRL_DDRMIX.h"
 #include "MIMX95_CCM.h"
 #include "MIMX95_CM33_MCM.h"
 #include "MIMX95_DDRC.h"

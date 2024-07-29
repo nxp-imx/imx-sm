@@ -57,6 +57,7 @@
 static uint32_t s_sysSleepMode = 0U;
 static uint32_t s_sysSleepFlags = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
+static BLK_CTRL_DDRMIX_Type ddr_blk_ctrl;
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -889,6 +890,19 @@ int32_t DEV_SM_SystemDramRetentionEnter(void)
 
     if (status == SM_ERR_SUCCESS)
     {
+        /* Save DDRMIX block control */
+        ddr_blk_ctrl.HWFFC_CTRL = BLK_CTRL_DDRMIX->HWFFC_CTRL;
+        ddr_blk_ctrl.DDRC_STOP_CTRL = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
+        ddr_blk_ctrl.AUTO_CG_CTRL = BLK_CTRL_DDRMIX->AUTO_CG_CTRL;
+        ddr_blk_ctrl.DDRC_EXCLUSIVE_EN = BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN;
+        ddr_blk_ctrl.DDRC_URGENT_EN = BLK_CTRL_DDRMIX->DDRC_URGENT_EN;
+        ddr_blk_ctrl.RT_MASTER_ID_0_1 = BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1;
+        ddr_blk_ctrl.RT_MASTER_ID_2_3 = BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3;
+        ddr_blk_ctrl.AXI_PARITY_ERR_INJECT =
+            BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT;
+        ddr_blk_ctrl.RT_MASTER_ID_4_5 = BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5;
+        ddr_blk_ctrl.RT_MASTER_ID_6_7 = BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7;
+
         /* Enter retention */
         if (!DDR_EnterRetention(ddr))
         {
@@ -1018,6 +1032,19 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
+
+        /* Restore DDRMIX block control */
+        BLK_CTRL_DDRMIX->HWFFC_CTRL = ddr_blk_ctrl.HWFFC_CTRL;
+        BLK_CTRL_DDRMIX->DDRC_STOP_CTRL = ddr_blk_ctrl.DDRC_STOP_CTRL;
+        BLK_CTRL_DDRMIX->AUTO_CG_CTRL = ddr_blk_ctrl.AUTO_CG_CTRL;
+        BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN = ddr_blk_ctrl.DDRC_EXCLUSIVE_EN;
+        BLK_CTRL_DDRMIX->DDRC_URGENT_EN = ddr_blk_ctrl.DDRC_URGENT_EN;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1 = ddr_blk_ctrl.RT_MASTER_ID_0_1;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3 = ddr_blk_ctrl.RT_MASTER_ID_2_3;
+        BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT =
+            ddr_blk_ctrl.AXI_PARITY_ERR_INJECT;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5 = ddr_blk_ctrl.RT_MASTER_ID_4_5;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7 = ddr_blk_ctrl.RT_MASTER_ID_6_7;
     }
 
     /* Return status */
