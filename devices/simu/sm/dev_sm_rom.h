@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -115,48 +115,48 @@
 /*! This type is used to store a CPU start request */
 typedef struct
 {
-    uint64_t addr;   //!< 64-bit address to boot from
-    uint16_t cpu;    //!< CPU to start
-    uint16_t resv;   //!< Reserved
-    uint32_t flags;  //!< Start flags
+    uint64_t addr;   /*!< 64-bit address to boot from */
+    uint16_t cpu;    /*!< CPU to start */
+    uint16_t resv;   /*!< Reserved */
+    uint32_t flags;  /*!< Start flags */
 } rom_bootlist_t;
 
 /*! This type is used pass handover from the ROM to the SM */
 typedef struct
 {
-    uint32_t barker;                       //!< Barker code
-    uint16_t ver;                          //!< Version
-    uint16_t size;                         //!< Size, 0x100
-    uint8_t num;                           //!< Number images in list
-    uint8_t resv0[3];                      //!< Reserved
-    uint32_t flags;                        //!< Boot data flags
-    rom_bootlist_t img[HANDOVER_MAX_IMG];  //!< image list
-    uint32_t resv1[4];                     //!< was SCD address
+    uint32_t barker;                       /*!< Barker code */
+    uint16_t ver;                          /*!< Version */
+    uint16_t size;                         /*!< Size, 0x100 */
+    uint8_t num;                           /*!< Number images in list */
+    uint8_t resv0[3];                      /*!< Reserved */
+    uint32_t flags;                        /*!< Boot data flags */
+    rom_bootlist_t img[HANDOVER_MAX_IMG];  /*!< image list */
+    uint32_t resv1[4];                     /*!< was SCD address */
 } rom_handover_t;
 
 /*! This type is used to pass passover data from the ROM to the AP */
 typedef struct
 {
-    uint16_t tag;               //!< Tag
-    uint8_t size;               //!< Size, 0x80
-    uint8_t ver;                //!< Version
-    uint32_t bootMode;          //!< Boot mode
-    uint32_t cardAddrMode;      //!< SD card address mode
-    uint32_t badBlksOfImgSet1;  //!< NAND bad block count skipped 1
-    uint32_t resv0;             //!< Reserved
-    uint32_t badBlksOfImgSet2;  //!< NAND bad block count skipped 1
-    uint8_t bootStage;          //!< Boot stage
-    uint8_t imgSetSel;          //!< Image set booted from
-    uint8_t resv1[2];           //!< Reserved
-    uint32_t imgSetEnd;         //!< Offset of Image End
-    uint32_t romVersion;        //!< ROM version
-    uint8_t bootDevState;       //!< Boot device state
-    uint8_t bootDevInst;        //!< Boot device instance
-    uint8_t bootDevType;        //!< Boot device type
-    uint8_t rsv1;               //!< Reserved
-    uint32_t devPageSize;       //!< Boot device page size
-    uint32_t cntHeaderOfs;      //!< Container header offset
-    uint32_t imgOfs;            //!< Image offset
+    uint16_t tag;               /*!< Tag */
+    uint8_t size;               /*!< Size, 0x80 */
+    uint8_t ver;                /*!< Version */
+    uint32_t bootMode;          /*!< Boot mode */
+    uint32_t cardAddrMode;      /*!< SD card address mode */
+    uint32_t badBlksOfImgSet1;  /*!< NAND bad block count skipped 1 */
+    uint32_t resv0;             /*!< Reserved */
+    uint32_t badBlksOfImgSet2;  /*!< NAND bad block count skipped 1 */
+    uint8_t bootStage;          /*!< Boot stage */
+    uint8_t imgSetSel;          /*!< Image set booted from */
+    uint8_t resv1[2];           /*!< Reserved */
+    uint32_t imgSetEnd;         /*!< Offset of Image End */
+    uint32_t romVersion;        /*!< ROM version */
+    uint8_t bootDevState;       /*!< Boot device state */
+    uint8_t bootDevInst;        /*!< Boot device instance */
+    uint8_t bootDevType;        /*!< Boot device type */
+    uint8_t rsv1;               /*!< Reserved */
+    uint32_t devPageSize;       /*!< Boot device page size */
+    uint32_t cntHeaderOfs;      /*!< Container header offset */
+    uint32_t imgOfs;            /*!< Image offset */
 } rom_passover_t;
 
 /* Functions */
