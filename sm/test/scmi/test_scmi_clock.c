@@ -479,7 +479,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
     }
 #endif
 
-    /* Test for parentget and parentset*/
+    /* Test for parentget and parentset */
     if (pass)
     {
         uint32_t parentId = 0U;
@@ -506,6 +506,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
         /* Branch Coverage */
         CHECK(SCMI_ClockGetPermissions(channel, clockId, NULL));
 
+#ifdef SIMU
         /* Test coverage for set extended clock configuration */
         {
             uint32_t attr = 0U;
@@ -532,6 +533,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             CHECK(SCMI_ClockConfigGet(channel, clockId, extFlags, &attr,
                 &config, &extendedConfigVal));
         }
+#endif
     }
     else
     {
