@@ -15,7 +15,6 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-107](https://jira.sw.nxp.com/projects/SM/issues/SM-107) | Support dynamic rate adjust of audio and  video PLLs |   | Y | Y |
 | [SM-123](https://jira.sw.nxp.com/projects/SM/issues/SM-123) | Add minimal support for the PCA2131 RTC [[detail]](@ref RN_DETAIL_SM_123) |   | Y | Y |
 | [SM-130](https://jira.sw.nxp.com/projects/SM/issues/SM-130) | Support BBM button/alarm booting LMs [[detail]](@ref RN_DETAIL_SM_130) |   | Y | Y |
 
@@ -31,10 +30,11 @@ Improvement {#RN_CL_IMP}
 | [SM-117](https://jira.sw.nxp.com/projects/SM/issues/SM-117) | Update subvendor to "IMX" to be generic, move board name [[detail]](@ref RN_DETAIL_SM_117) |   | Y | Y |
 | [SM-118](https://jira.sw.nxp.com/projects/SM/issues/SM-118) | Enhance LM start/stop script options [[detail]](@ref RN_DETAIL_SM_118) |   | Y | Y |
 | [SM-121](https://jira.sw.nxp.com/projects/SM/issues/SM-121) | Update eMcem component [[detail]](@ref RN_DETAIL_SM_121) |   | Y | Y |
-| [SM-122](https://jira.sw.nxp.com/projects/SM/issues/SM-122) | Support newer version of SRC/CCM |   | Y | Y |
+| [SM-122](https://jira.sw.nxp.com/projects/SM/issues/SM-122) | Support newer version of SRC/CCM [[detail]](@ref RN_DETAIL_SM_122) |   | Y | Y |
 | [SM-134](https://jira.sw.nxp.com/projects/SM/issues/SM-134) | Misc. updates to SM configurations |   | Y | Y |
 | [SM-136](https://jira.sw.nxp.com/projects/SM/issues/SM-136) | Misc. FuSa enhancements [[detail]](@ref RN_DETAIL_SM_136) |   | Y | Y |
-| [SM-137](https://jira.sw.nxp.com/projects/SM/issues/SM-137) | Support system sleep modes |   | Y | Y |
+| [SM-137](https://jira.sw.nxp.com/projects/SM/issues/SM-137) | Support system sleep modes [[detail]](@ref RN_DETAIL_SM_137) |   | Y | Y |
+| [SM-140](https://jira.sw.nxp.com/projects/SM/issues/SM-140) | Save/restore the DDRMIX block control during retention |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -44,8 +44,7 @@ Bug {#RN_CL_BUG}
 | [SM-124](https://jira.sw.nxp.com/projects/SM/issues/SM-124) | FRO not enabled after resume from system suspend [[detail]](@ref RN_DETAIL_SM_124) |   | Y | Y |
 | [SM-125](https://jira.sw.nxp.com/projects/SM/issues/SM-125) | PF53 are reset by a transition to system suspend |   | Y | Y |
 | [SM-126](https://jira.sw.nxp.com/projects/SM/issues/SM-126) | SM debug monitor exit does not return to idle [[detail]](@ref RN_DETAIL_SM_126) |   | Y | Y |
-| [SM-129](https://jira.sw.nxp.com/projects/SM/issues/SM-129) | Preconditions required when switching SRC between SW and HW control |   | Y | Y |
-| [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Shutdown of suspended LM may result in SM WDOG |   | Y | Y |
+| [SM-129](https://jira.sw.nxp.com/projects/SM/issues/SM-129) | Preconditions required when switching SRC between SW and HW control [[detail]](@ref RN_DETAIL_SM_129) |   | Y | Y |
 | [SM-132](https://jira.sw.nxp.com/projects/SM/issues/SM-132) | SM error handling can fail if LMM not initialized [[detail]](@ref RN_DETAIL_SM_132) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
@@ -56,7 +55,8 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-110](https://jira.sw.nxp.com/projects/SM/issues/SM-110) | SM may WDOG reset during non-cooperative reset of A55 |   | Y | Y |
-| [SM-127](https://jira.sw.nxp.com/projects/SM/issues/SM-127) | Manage GPC wake configuration when updating CPU run mode |   | Y | Y |
+| [SM-127](https://jira.sw.nxp.com/projects/SM/issues/SM-127) | Manage GPC wake configuration when updating CPU run mode [[detail]](@ref RN_DETAIL_SM_127) |   | Y | Y |
+| [SM-139](https://jira.sw.nxp.com/projects/SM/issues/SM-139) | Disable LFAST CREF_EN at boot |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -100,6 +100,11 @@ SM-121: Update eMcem component {#RN_DETAIL_SM_121}
 
 Integrated new release of the eMcem component. No functional changes.
 
+SM-122: Support newer version of SRC/CCM {#RN_DETAIL_SM_122}
+----------
+
+Support SRC/GPC as found in some other i.MX9 SoC. This includes API changes for LPCG.
+
 SM-123: Add minimal support for the PCA2131 RTC {#RN_DETAIL_SM_123}
 ----------
 
@@ -127,6 +132,16 @@ This makes two changes:
 
 As before, the debug monitor must be disabled with M=0 for production builds. The SM cannot be guaranteed to operate with the debug monitor enabled. M=0 is also required for MISRA compliance. 
 
+SM-127: Manage GPC wake configuration when updating CPU run mode {#RN_DETAIL_SM_127}
+----------
+
+During CPU shut down operations, wake sources must be masked at the GPC CMC level to ensure the respective CPU does not prevent the system from sleeping.  Conversely, these GPC CMC-level wake sources should be unmasked to match the GPC CMC hardware reset condition when starting the CPU.
+
+SM-129: Preconditions required when switching SRC between SW and HW control {#RN_DETAIL_SM_129}
+----------
+
+In some reset/recovery scenarios, SM violated SRC hardware preconditions when switching a MIX between SW-control and HW-control (AUTHEN_CTRL[LPM_MODE]).  The associated reset/recovery flows were updated to meet these preconditions.
+
 SM-130: Support BBM button/alarm booting LMs {#RN_DETAIL_SM_130}
 ----------
 
@@ -145,4 +160,9 @@ SM-136: Misc. FuSa enhancements {#RN_DETAIL_SM_136}
 Fixed issue with cached PF09/PF53 version info. Only one version cached but there can be multiple PMICs of the same type.
 
 Passed array length info for the PMIC driver IRQ functions.
+
+SM-137: Support system sleep modes {#RN_DETAIL_SM_137}
+----------
+
+During system sleep entry, SM will now inspect the vendor-defined flags passed to SCMI_SystemPowerStateSet to configure the system sleep mode.  These sleep modes allow the system to remain active at the specified performance level to support low-power data flows and use cases.
 
