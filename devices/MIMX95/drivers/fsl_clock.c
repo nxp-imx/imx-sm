@@ -30,6 +30,7 @@
 /* Includes */
 
 #include "fsl_fract_pll.h"
+#include "fsl_fro.h"
 #include "fsl_ccm.h"
 #include "fsl_clock.h"
 #include "fsl_power.h"
@@ -1214,7 +1215,8 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
         switch(sourceIdx)
         {
             case CLOCK_SRC_EXT:
-                /* Refrain from calling CLOCK_GprSelGetRate to avoid possible recursion */
+                /* Refrain from calling CLOCK_GprSelGetRate to avoid
+                   possible recursion */
                 rate = CCM_GprSelExtGetRate();
                 break;
 
@@ -1227,7 +1229,18 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
                 break;
 
             case CLOCK_SRC_FRO:
-                rate = CLOCK_FRO_HZ;
+                {
+                    uint32_t froRate;
+                    
+                    if (FRO_GetRate(&froRate))
+                    {
+                        rate = ((uint64_t) froRate) * CLOCK_M_HZ;
+                    }
+                    else
+                    {
+                        rate = CLOCK_FRO_HZ;
+                    }
+                }
                 break;
 
             case CLOCK_SRC_SYSPLL1_VCO:
@@ -1476,8 +1489,8 @@ bool CLOCK_SourceSetSsc(uint32_t sourceIdx, uint32_t spreadPercent,
     {
         case CLOCK_SRC_SYSPLL1_VCO:
             /* PLL SYS */
-            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_SYS1, spreadPercent,
-                modFreq, enable);
+            setSscConfig = FRACTPLL_SetSscConfig(CLOCK_PLL_SYS1,
+                spreadPercent, modFreq, enable);
             break;
 
         case CLOCK_SRC_AUDIOPLL1_VCO:
@@ -1536,8 +1549,8 @@ bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
     {
         case CLOCK_SRC_SYSPLL1_VCO:
             /* PLL SYS */
-            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_SYS1, spreadPercent,
-                modFreq, enable);
+            getSscConfig = FRACTPLL_GetSscConfig(CLOCK_PLL_SYS1,
+                spreadPercent, modFreq, enable);
             break;
 
         case CLOCK_SRC_AUDIOPLL1_VCO:

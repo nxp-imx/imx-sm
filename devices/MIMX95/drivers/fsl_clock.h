@@ -52,7 +52,7 @@
 
 #define CLOCK_OSC32K_HZ                     32768ULL
 #define CLOCK_OSC24M_HZ                     24000000ULL
-#define CLOCK_FRO_HZ                        300000000ULL
+#define CLOCK_FRO_HZ                        256000000ULL
 #define CLOCK_PLL_FREF_HZ                   CLOCK_OSC24M_HZ
 #define CLOCK_M_HZ                          1000000ULL
 #define CLOCK_K_HZ                          1000ULL

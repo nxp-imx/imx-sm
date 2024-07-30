@@ -141,7 +141,7 @@ bool FRO_GetTrim(uint32_t *trim);
 /*!
  * Set FRO output frequency rate
  *
- * @param[in]   rate     FRO output frequency rate
+ * @param[in]   rate     FRO output frequency rate (MHz)
  *
  * @return Returns true if FRO output frequency is configured successfully.
  */
@@ -150,7 +150,7 @@ bool FRO_SetRate(uint32_t rate);
 /*!
  * Get FRO output frequency rate
  *
- * @param[out]   rate     FRO output frequency rate
+ * @param[out]   rate     FRO output frequency rate (MHz)
  *
  * @return Returns true if FRO output frequency rate is retrieved successfully.
  */
