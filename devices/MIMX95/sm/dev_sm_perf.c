@@ -63,7 +63,7 @@
 
 #define VCO_MFD         ((uint32_t)(CLOCK_PLL_MFD & 0xFFFFFFFFU))
 
-#define DEV_SM_PERF_NUM_BUS_CLK     12U
+#define DEV_SM_PERF_NUM_BUS_CLK     11U
 
 /* Local types */
 
@@ -1374,6 +1374,16 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Initialize fixed SoC BUS clocks not configured by ROM */
     (void) DEV_SM_PerfBusFreqSet(false);
 
+    /* NETCMIX configured separately (does not support frequency scaling) */
+    (void) CCM_RootSetDiv(CLOCK_ROOT_ENET, 1U);
+    (void) CCM_RootSetParent(CLOCK_ROOT_ENET, CLOCK_SRC_SYSPLL1_PFD2);
+
+    /* Configure SYSPLL for software control (ROM sets hardware control) */
+    SYS_PLL1->CTRL.CLR = PLL_CTRL_HW_CTRL_SEL_MASK;
+    SYS_PLL1->NO_OF_DFS[0].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->NO_OF_DFS[1].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->NO_OF_DFS[2].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
+
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
@@ -2071,11 +2081,10 @@ static int32_t DEV_SM_PerfBusFreqSet(bool parkedLevel)
         [4] = CLOCK_ROOT_GPUAPB,
         [5] = CLOCK_ROOT_BUSM7,
         [6] = CLOCK_ROOT_BUSNETCMIX,
-        [7] = CLOCK_ROOT_ENET,
-        [8] = CLOCK_ROOT_NOCAPB,
-        [9] = CLOCK_ROOT_NPUAPB,
-        [10] = CLOCK_ROOT_VPUAPB,
-        [11] = CLOCK_ROOT_BUSWAKEUP
+        [7] = CLOCK_ROOT_NOCAPB,
+        [8] = CLOCK_ROOT_NPUAPB,
+        [9] = CLOCK_ROOT_VPUAPB,
+        [10] = CLOCK_ROOT_BUSWAKEUP
     };
 
     static const uint8_t s_busClkSrcSel[DEV_SM_PERF_NUM_BUS_CLK] =
@@ -2087,11 +2096,10 @@ static int32_t DEV_SM_PerfBusFreqSet(bool parkedLevel)
         [4] = 2U,
         [5] = 2U,
         [6] = 2U,
-        [7] = 3U,
+        [7] = 2U,
         [8] = 2U,
         [9] = 2U,
-        [10] = 2U,
-        [11] = 2U
+        [10] = 2U
     };
 
     static const uint8_t s_busClkDiv[DEV_SM_PERF_NUM_BUS_CLK] =
@@ -2103,11 +2111,10 @@ static int32_t DEV_SM_PerfBusFreqSet(bool parkedLevel)
         [4] = 2U,
         [5] = 2U,
         [6] = 2U,
-        [7] = 0U,
+        [7] = 2U,
         [8] = 2U,
         [9] = 2U,
-        [10] = 2U,
-        [11] = 2U
+        [10] = 2U
     };
 
     /* Parked level moves bus clock source to OSC24M / 1 */
