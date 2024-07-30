@@ -38,12 +38,13 @@
 #define TRIM_DELAY       100UL                            /* Micro Seconds */
 #define TEXPCNT_RANGE    5U                               /* FRO Freq Tolerance */
 #define REF_CLK_DIV      0U                               /* OSC Ref. Clock Divider */
-#define TRIM_TEMPERATURE 31U                              /* Trim Temperature */
-#define REF_CNT(x, y)    ((4000U * x) / y)                /* Ref. Count Calculation */
-#define TEXPCNT(x, y)    ((REF_CNT(x, y)) * y / x)        /* Expected Count Calculation */
+#define REF_CNT(x, y)    ((4000U * (x)) / (y))            /* Ref. Count Calculation */
+#define TEXPCNT(x, y)    ((REF_CNT(x, y)) * (y) / (x))    /* Expected Count Calculation */
 #define TEXPRANGE(x, y)  (uint32_t)((((FRO->CNFG1.RW) & \
     FRO_CNFG1_RFCLKCNT_MASK) >> \
-    FRO_CNFG1_RFCLKCNT_SHIFT) * y / x)
+    FRO_CNFG1_RFCLKCNT_SHIFT) * (y) / (x))
+#define FRO_TRIM_VFB(x)  (((x) >> 12U) & 0x3FU)           /* Extract VFB */
+#define FRO_TRIM_VREF(x) (((x) >> 0U) & 0xFFFU)           /* Extract VREF */
 
 /* Local Variables */
 
@@ -52,7 +53,7 @@ static FRO_config_info_t s_configInfo =
 {
     .outputFreq  = 256U,
     .mode        = OPEN_LOOP,
-    .trimVal     = 2035U
+    .trimVal     = 0x0001F7F3U
 };
 
 /*--------------------------------------------------------------------------*/
@@ -273,8 +274,9 @@ bool FRO_SetEnable(bool enable)
         if (s_configInfo.mode == OPEN_LOOP)
         {
             /* Configure the FRO trim value */
-            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(TRIM_TEMPERATURE) |
-                (s_configInfo.trimVal & FRO_AUTOTRIM_AUTOTRIM_MASK));
+            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(
+                FRO_TRIM_VFB(s_configInfo.trimVal)) |
+                FRO_TRIM_VREF(s_configInfo.trimVal));
 
             /* Enable the FRO */
             FRO->CSR.SET = FRO_CSR_FROEN_MASK;
@@ -291,8 +293,9 @@ bool FRO_SetEnable(bool enable)
 
             /* Configure the FRO trim value to correct the
                    start frequency */
-            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(TRIM_TEMPERATURE) |
-                (s_configInfo.trimVal & FRO_AUTOTRIM_AUTOTRIM_MASK));
+            FRO->FROTRIM.RW = (FRO_FROTRIM_TRIMTEMP(
+                FRO_TRIM_VFB(s_configInfo.trimVal)) |
+                FRO_TRIM_VREF(s_configInfo.trimVal));
 
             /* Configure the reference count value based on
                the reference clock value */

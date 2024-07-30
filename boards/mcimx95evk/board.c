@@ -245,9 +245,7 @@ void BOARD_ConfigMPU(void)
 /*--------------------------------------------------------------------------*/
 void BOARD_InitClocks(void)
 {
-    uint32_t fuseTrim = (uint32_t)((FSB->FUSE[FSB_FUSE_ANA_CFG4] &
-        FSB_FUSE_ANA_CFG4_FRO_TRIM_MASK) >>
-        FSB_FUSE_ANA_CFG4_FRO_TRIM_SHIFT);
+    uint32_t fuseTrim = FSB->FUSE[FSB_FUSE_ANA_CFG4];
 
     if (fuseTrim == 0U)
     {
