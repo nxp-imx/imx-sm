@@ -76,6 +76,60 @@ const pll_attr_t g_pllAttrs[CLOCK_NUM_PLL] =
     [CLOCK_PLL_LDB].numDFS = 0U,
 };
 
+static const uint8_t s_clockSourceNumInputs[CLOCK_NUM_SRC] =
+{
+    [CLOCK_SRC_SYSPLL1_PFD0_UNGATED] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD0] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD0_DIV2] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD1_UNGATED] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD1] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD1_DIV2] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD2_UNGATED] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD2] = 1U,
+    [CLOCK_SRC_SYSPLL1_PFD2_DIV2] = 1U,
+    [CLOCK_SRC_AUDIOPLL1] = 1U,
+    [CLOCK_SRC_AUDIOPLL2] = 1U,
+    [CLOCK_SRC_VIDEOPLL1] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD0_UNGATED] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD0] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD1_UNGATED] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD1] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD2_UNGATED] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD2] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD3_UNGATED] = 1U,
+    [CLOCK_SRC_ARMPLL_PFD3] = 1U,
+    [CLOCK_SRC_DRAMPLL] = 1U,
+    [CLOCK_SRC_HSIOPLL] = 1U,
+    [CLOCK_SRC_LDBPLL] = 1U
+};
+
+static const uint8_t s_clockSourceParent[CLOCK_NUM_SRC] =
+{
+    [CLOCK_SRC_SYSPLL1_PFD0_UNGATED] = CLOCK_SRC_SYSPLL1_VCO,
+    [CLOCK_SRC_SYSPLL1_PFD0] = CLOCK_SRC_SYSPLL1_PFD0_UNGATED,
+    [CLOCK_SRC_SYSPLL1_PFD0_DIV2] = CLOCK_SRC_SYSPLL1_PFD0_UNGATED,
+    [CLOCK_SRC_SYSPLL1_PFD1_UNGATED] = CLOCK_SRC_SYSPLL1_VCO,
+    [CLOCK_SRC_SYSPLL1_PFD1] = CLOCK_SRC_SYSPLL1_PFD1_UNGATED,
+    [CLOCK_SRC_SYSPLL1_PFD1_DIV2] = CLOCK_SRC_SYSPLL1_PFD1_UNGATED,
+    [CLOCK_SRC_SYSPLL1_PFD2_UNGATED] = CLOCK_SRC_SYSPLL1_VCO,
+    [CLOCK_SRC_SYSPLL1_PFD2] = CLOCK_SRC_SYSPLL1_PFD2_UNGATED,
+    [CLOCK_SRC_SYSPLL1_PFD2_DIV2] = CLOCK_SRC_SYSPLL1_PFD2_UNGATED,
+    [CLOCK_SRC_AUDIOPLL1] = CLOCK_SRC_AUDIOPLL1_VCO,
+    [CLOCK_SRC_AUDIOPLL2] = CLOCK_SRC_AUDIOPLL2_VCO,
+    [CLOCK_SRC_VIDEOPLL1] = CLOCK_SRC_VIDEOPLL1_VCO,
+    [CLOCK_SRC_ARMPLL_PFD0_UNGATED] = CLOCK_SRC_ARMPLL_VCO,
+    [CLOCK_SRC_ARMPLL_PFD0] = CLOCK_SRC_ARMPLL_PFD0_UNGATED,
+    [CLOCK_SRC_ARMPLL_PFD1_UNGATED] = CLOCK_SRC_ARMPLL_VCO,
+    [CLOCK_SRC_ARMPLL_PFD1] = CLOCK_SRC_ARMPLL_PFD1_UNGATED,
+    [CLOCK_SRC_ARMPLL_PFD2_UNGATED] = CLOCK_SRC_ARMPLL_VCO,
+    [CLOCK_SRC_ARMPLL_PFD2] = CLOCK_SRC_ARMPLL_PFD2_UNGATED,
+    [CLOCK_SRC_ARMPLL_PFD3_UNGATED] = CLOCK_SRC_ARMPLL_VCO,
+    [CLOCK_SRC_ARMPLL_PFD3] = CLOCK_SRC_ARMPLL_PFD3_UNGATED,
+    [CLOCK_SRC_DRAMPLL] = CLOCK_SRC_DRAMPLL_VCO,
+    [CLOCK_SRC_HSIOPLL] = CLOCK_SRC_HSIOPLL_VCO,
+    [CLOCK_SRC_LDBPLL] = CLOCK_SRC_LDBPLL_VCO
+};
+
 const uint8_t g_clockRootMux[CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
 {
     [CLOCK_ROOT_ADC][0] = CLOCK_SRC_OSC24M,
@@ -1475,6 +1529,44 @@ bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
     }
 
     return updateRate;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get parent for CCM clock source                                          */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_SourceGetParent(uint32_t sourceIdx, uint32_t *parentIdx)
+{
+    bool rc = false;
+
+    if (sourceIdx < CLOCK_NUM_SRC)
+    {
+        if (s_clockSourceNumInputs[sourceIdx] != 0U)
+        {
+            *parentIdx = s_clockSourceParent[sourceIdx];
+            rc = true;
+        }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set parent for CCM clock source                                          */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_SourceSetParent(uint32_t sourceIdx, uint32_t parentIdx)
+{
+    bool rc = false;
+
+    if (sourceIdx < CLOCK_NUM_SRC)
+    {
+        if (s_clockSourceNumInputs[sourceIdx] != 0U)
+        {
+            /* Requested parent must match clock source input */
+            rc = (parentIdx == s_clockSourceParent[sourceIdx]);
+        }
+    }
+
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/

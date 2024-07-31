@@ -277,6 +277,17 @@ typedef struct
 } pll_attr_t;
 
 /*!
+ * CCM clock source attribute structure
+ *
+ * Structure containing parameters to represent clock source attributes.
+ */
+typedef struct
+{
+    bool hasParent;     /*!< Clock source has a parent */
+    uint32_t parent;    /*!< Clock source parent */
+} clkrc_attr_t;
+
+/*!
  * Structure for CCM GPR-selected clock attributes
  *
  * Structure for CCM GPR-selected clocks, which can be clock sources or clock
@@ -353,6 +364,32 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx);
  * @return Returns true if the rate is set successfully, otherwise false.
  */
 bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate, uint32_t roundRule);
+
+/*!
+ * Get parent for CCM clock source
+ *
+ * @param[in]       sourceIdx   CCM clock source ID
+ * @param[out]      parentIdx   CCM clock source parent ID
+ *
+ * This function gets the parent ID (source input) of the given clock source.
+ *
+ * @return Returns true if a valid parent ID is found for the given
+ *         clock source.
+ */
+bool CLOCK_SourceGetParent(uint32_t sourceIdx, uint32_t *parentIdx);
+
+/*!
+ * Set parent for CCM clock source
+ *
+ * @param[in]       rootIdx     CCM clock source ID
+ * @param[in]       sourceIdx   Clock root parent to be set
+ *
+ * This function sets the parent ID (source input) of the given clock source.
+ *
+ * @return Returns true if valid parent ID is set for the given
+ *         clock source.
+ */
+bool CLOCK_SourceSetParent(uint32_t sourceIdx, uint32_t parentIdx);
 
 /*!
  * Set clock source spread spectrum configuration

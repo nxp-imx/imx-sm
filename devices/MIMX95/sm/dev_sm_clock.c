@@ -645,8 +645,23 @@ int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
 
     if (clockId < CLOCK_NUM_SRC)
     {
-        /* Clock sources have no mux options */
-        status = SM_ERR_NOT_SUPPORTED;
+        /* Query if clock source has a parent */
+        if (CLOCK_SourceGetParent(clockId, mux))
+        {
+            /* Clock sources have at most a single parent */
+            if (idx >= 1U)
+            {
+                status = SM_ERR_OUT_OF_RANGE;
+            }
+            else
+            {
+                *numMuxes = 1;
+            }
+        }
+        else
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
     }
     else
     {
@@ -934,7 +949,10 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
 
     if (clockId < CLOCK_NUM_SRC)
     {
-        status = SM_ERR_INVALID_PARAMETERS;
+        if (!CLOCK_SourceSetParent(clockId, parent))
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
     else
     {
@@ -978,7 +996,10 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 
     if (clockId < CLOCK_NUM_SRC)
     {
-        status = SM_ERR_INVALID_PARAMETERS;
+        if (!CLOCK_SourceGetParent(clockId, parent))
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
     else
     {
