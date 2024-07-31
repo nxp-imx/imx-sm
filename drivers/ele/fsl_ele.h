@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -147,17 +147,20 @@ typedef enum
  */
 typedef struct
 {
-    uint16_t socId;        /*!< SoC ID */
-    uint16_t socRev;       /*!< SoC revision */
-    uint16_t lifecycle;    /*!< LMDA lifecycle */
-    uint8_t sssmState;     /*!< Security subsystem state */
-    uint8_t attestApiVer;  /*!< Attesttion API version */
-    uint32_t uid[4];       /*!< Chip unique ID */
-    uint32_t shaPatch[8];  /*!< SHA256 ROM patch */
-    uint32_t shaFw[8];     /*!< FW SHA */
-    uint8_t trngState;     /*!< TRNG state */
-    uint8_t csalState;     /*!< CSAL state */
-    uint8_t imemState;     /*!< IMEM state */
+    uint16_t socId;          /*!< SoC ID */
+    uint16_t socRev;         /*!< SoC revision */
+    uint16_t lifecycle;      /*!< LMDA lifecycle */
+    uint8_t sssmState;       /*!< Security subsystem state */
+    uint8_t attestApiVer;    /*!< Attesttion API version */
+    uint32_t uid[4];         /*!< Chip unique ID */
+    uint32_t shaPatch[8];    /*!< SHA256 ROM patch */
+    uint32_t shaFw[8];       /*!< FW SHA */
+    uint8_t trngState;       /*!< TRNG state */
+    uint8_t csalState;       /*!< CSAL state */
+    uint8_t imemState;       /*!< IMEM state */
+    uint8_t unused;          /*!< Unused */
+    uint32_t oemPqcSrkh[16]; /*!< OEM PQC SRKH */
+    uint32_t reserved[8];    /*!< Reserved */
 } ele_info_t;
 
 /* Functions */
