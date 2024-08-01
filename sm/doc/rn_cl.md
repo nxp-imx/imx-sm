@@ -34,7 +34,7 @@ Improvement {#RN_CL_IMP}
 | [SM-134](https://jira.sw.nxp.com/projects/SM/issues/SM-134) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_134) |   | Y | Y |
 | [SM-136](https://jira.sw.nxp.com/projects/SM/issues/SM-136) | Misc. FuSa enhancements [[detail]](@ref RN_DETAIL_SM_136) |   | Y | Y |
 | [SM-140](https://jira.sw.nxp.com/projects/SM/issues/SM-140) | Save/restore the DDRMIX block control during retention [[detail]](@ref RN_DETAIL_SM_140) |   | Y | Y |
-| [SM-142](https://jira.sw.nxp.com/projects/SM/issues/SM-142) | Support clock parent relationship between PLL VCO and PLL clock outputs |   | Y | Y |
+| [SM-142](https://jira.sw.nxp.com/projects/SM/issues/SM-142) | Support parent relationship of PLL clock nodes [[detail]](@ref RN_DETAIL_SM_142) |   | Y | Y |
 | [SM-144](https://jira.sw.nxp.com/projects/SM/issues/SM-144) | Support a larger ELE info response |   | Y | Y |
 
 Bug {#RN_CL_BUG}
@@ -44,7 +44,6 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-115](https://jira.sw.nxp.com/projects/SM/issues/SM-115) | FRO frequency is not correct in case of open-loop [[detail]](@ref RN_DETAIL_SM_115) |   | Y | Y |
 | [SM-124](https://jira.sw.nxp.com/projects/SM/issues/SM-124) | FRO not enabled after resume from system suspend [[detail]](@ref RN_DETAIL_SM_124) |   | Y | Y |
-| [SM-125](https://jira.sw.nxp.com/projects/SM/issues/SM-125) | PF53 are reset by a transition to system suspend |   | Y | Y |
 | [SM-126](https://jira.sw.nxp.com/projects/SM/issues/SM-126) | SM debug monitor exit does not return to idle [[detail]](@ref RN_DETAIL_SM_126) |   | Y | Y |
 | [SM-129](https://jira.sw.nxp.com/projects/SM/issues/SM-129) | Preconditions required when switching SRC between SW and HW control [[detail]](@ref RN_DETAIL_SM_129) |   | Y | Y |
 | [SM-132](https://jira.sw.nxp.com/projects/SM/issues/SM-132) | SM error handling can fail if LMM not initialized [[detail]](@ref RN_DETAIL_SM_132) |   | Y | Y |
@@ -57,6 +56,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-110](https://jira.sw.nxp.com/projects/SM/issues/SM-110) | SM may WDOG reset during non-cooperative reset of A55 |   | Y | Y |
+| [SM-125](https://jira.sw.nxp.com/projects/SM/issues/SM-125) | PF53 are reset by a transition to system suspend [[detail]](@ref RN_DETAIL_SM_125) |   | Y | Y |
 | [SM-127](https://jira.sw.nxp.com/projects/SM/issues/SM-127) | Manage GPC wake configuration when updating CPU run mode [[detail]](@ref RN_DETAIL_SM_127) |   | Y | Y |
 | [SM-139](https://jira.sw.nxp.com/projects/SM/issues/SM-139) | Disable LFAST CREF_EN at boot |   | Y | Y |
 
@@ -145,6 +145,19 @@ SM-124: FRO not enabled after resume from system suspend {#RN_DETAIL_SM_124}
 
 SM was updated to ensure FRO is enabled after resume from system suspend.
 
+SM-125: PF53 are reset by a transition to system suspend {#RN_DETAIL_SM_125}
+----------
+
+The standby signal for the PF53s is not connected on the EVK boards. Instead, GPIOs from the PF09 are connected to the power signal of each PF53. These GPIO are configured in the PF09 OTP to de-assert when the PF09 enters standby. This results in them powering down when the system enters standby but when it exits standby the PF53s reset and reload their OTP settings (inc. voltage and output enabled).
+
+To solve the output enable problem of the PF53 driving VDD_ARM, when the SM wants to disable VDD_ARM it has been changed to de-assert the GPIO in RUN mode. This makes it power down and the state is retained across a standby.
+
+To solve the voltage reset of both PF53s, their voltage setting is cached and reloaded on a suspend exit. To minimize setting this, the SM needs to know the OTP voltage of the PMICs.  See the BOARD_VOLT_SOC and BOARD_VOLT_ARM defines in board.h.
+
+Note this fix requires the OTP value of the PF53 driving VDD_SOC be sufficiently high to guarantee the SM can run on standby exit. This usually means it **must be at the max the SoC will use**. 
+
+All these changes are only in board port code and customers may require similar changes depending on number of PF53 and how they are connected.
+
 SM-126: SM debug monitor exit does not return to idle {#RN_DETAIL_SM_126}
 ----------
 
@@ -203,4 +216,9 @@ SM-140: Save/restore the DDRMIX block control during retention {#RN_DETAIL_SM_14
 ----------
 
 Added code to save and restore the DDRMIX BLK_CTRL registers when the DDRMIX power state changes and the state is lost. This includes the state of the auto clock gating which was not retained and would result in higher power after a system suspend.
+
+SM-142: Support parent relationship of PLL clock nodes {#RN_DETAIL_SM_142}
+----------
+
+SCMI agents can use the clock management protocol for clock tree discovery.  The clock nodes of PLLs (VCO, CLKO, DFS/PFD) are exposed using individual clock domain IDs.  SM has been updated to add the parent-child relationships between these PLL clock nodes to allow discovery of such relationships.
 
