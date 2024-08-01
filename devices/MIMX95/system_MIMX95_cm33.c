@@ -16,7 +16,7 @@
 **         the oscillator (PLL) that is part of the microcontroller device.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2022 NXP
+**     Copyright 2016-2024 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -35,6 +35,11 @@
 #include "fsl_reset.h"
 #include "fsl_systick.h"
 #include "board.h"
+
+/* Local defines */
+
+#define HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR (0x4C0100C0)
+#define HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_CREF_EN_MASK (0x40U)
 
 /* ----------------------------------------------------------------------------
    -- Core clock
@@ -85,6 +90,11 @@ void SystemInit(void)
                       (1UL << RST_REASON_WDOG3) |
                       (1UL << RST_REASON_WDOG4) |
                       (1UL << RST_REASON_WDOG5);
+
+    /* Disable current reference for LFAST I/O */
+    uint32_t lfast = Read32(HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR);
+    lfast &= (~HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_CREF_EN_MASK);
+    Write32(HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR, lfast);
 
     // coverity[misra_c_2012_rule_2_2_violation:FALSE]
     SystemInitHook();
