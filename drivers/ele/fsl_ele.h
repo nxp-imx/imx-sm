@@ -147,6 +147,9 @@ typedef enum
  */
 typedef struct
 {
+    uint8_t cmd;             /*!< Command */
+    uint8_t version;         /* !< Version of ELE */
+    uint16_t len;            /* !< Data length */
     uint16_t socId;          /*!< SoC ID */
     uint16_t socRev;         /*!< SoC revision */
     uint16_t lifecycle;      /*!< LMDA lifecycle */
@@ -155,6 +158,7 @@ typedef struct
     uint32_t uid[4];         /*!< Chip unique ID */
     uint32_t shaPatch[8];    /*!< SHA256 ROM patch */
     uint32_t shaFw[8];       /*!< FW SHA */
+    uint32_t oemSrkh[16];    /*!< OEM SRKh */
     uint8_t trngState;       /*!< TRNG state */
     uint8_t csalState;       /*!< CSAL state */
     uint8_t imemState;       /*!< IMEM state */

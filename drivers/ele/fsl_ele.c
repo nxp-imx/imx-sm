@@ -372,7 +372,6 @@ void ELE_InfoGet(ele_info_t *info)
     /* Extract data */
     if (g_eleStatus == SM_ERR_SUCCESS)
     {
-
         info->socId = (uint16_t) (data[1] & 0x0000FFFFU);
         info->socRev = (uint16_t) ((data[1] >> 16U) & 0x0000FFFFU);
         info->lifecycle = (uint16_t) (data[2] & 0x0000FFFFU);
