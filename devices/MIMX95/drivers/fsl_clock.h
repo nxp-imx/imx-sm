@@ -381,8 +381,8 @@ bool CLOCK_SourceGetParent(uint32_t sourceIdx, uint32_t *parentIdx);
 /*!
  * Set parent for CCM clock source
  *
- * @param[in]       rootIdx     CCM clock source ID
- * @param[in]       sourceIdx   Clock root parent to be set
+ * @param[in]       sourceIdx   CCM clock source ID
+ * @param[in]       parentIdx   CCM clock source parent ID
  *
  * This function sets the parent ID (source input) of the given clock source.
  *

@@ -191,6 +191,11 @@ int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel);
  */
 int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel);
 
+/*!
+ * Restore voltage levels.
+ *
+ * This function writes the last set voltage levels back to the PMICs.
+ */
 void BRD_SM_VoltageRestore(void);
 
 #endif /* BRD_SM_VOLTAGE_H */

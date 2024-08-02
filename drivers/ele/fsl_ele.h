@@ -148,8 +148,8 @@ typedef enum
 typedef struct
 {
     uint8_t cmd;             /*!< Command */
-    uint8_t version;         /* !< Version of ELE */
-    uint16_t len;            /* !< Data length */
+    uint8_t version;         /*!< Version of ELE */
+    uint16_t len;            /*!< Data length */
     uint16_t socId;          /*!< SoC ID */
     uint16_t socRev;         /*!< SoC revision */
     uint16_t lifecycle;      /*!< LMDA lifecycle */
