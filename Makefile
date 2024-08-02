@@ -125,6 +125,13 @@ include $(ROOT_DIR)/sm/boot/Makefile
 # Include config utilities
 include $(ROOT_DIR)/sm/utilities/config/Makefile
 
+ifneq ($(SOC),simu)
+ifneq ($(GCOV),0)
+# Include gcov utilities
+include $(ROOT_DIR)/sm/utilities/gcov_dump/Makefile
+endif
+endif
+
 # Include monitor
 ifneq ($(M),0)
 	include $(ROOT_DIR)/sm/utilities/monitor/Makefile
@@ -167,6 +174,16 @@ DEPS := $(OBJS:.o=.d)
 
 cfg.exists:
 	@if [ ! -d "$(ROOT_DIR)/configs/$(CONFIG)" ]; then (echo "Incorrect/missing $(CONFIG) config"; exit 1); fi
+
+ifneq ($(SOC),simu)
+ifeq ($(GCOV),1)
+# GCOV=1 files
+$(OUT)/dev_%.o : dev_%.c $(OUT)/build_info.h
+	@echo "Compiling $<"
+	$(AT)mkdir -p $(dir $@)
+	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
+endif
+endif
 
 $(OUT)/%.o : %.c $(OUT)/build_info.h
 	@echo "Compiling $<"

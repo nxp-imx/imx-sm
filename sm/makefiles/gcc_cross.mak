@@ -70,6 +70,7 @@ else
     SREC_CAT = $(TOOLS)/srec/srec_cat
 endif
 FLAGS += -D__STARTUP_CLEAR_BSS -DCPU_$(SOCFULL)_c$(cpu) -D$(SOC) -Dlink_$(mem)
+GCOV ?= 0
 
 # Configure linker control file
 ifdef FLASH
@@ -86,7 +87,7 @@ WARNS = -Wall -Wextra -Wno-missing-braces -Wno-missing-field-initializers \
     -Wpointer-arith -Wredundant-decls -Wbad-function-cast -Wstrict-prototypes \
     -Wundef -Wcast-qual -Wshadow \
     -Wold-style-definition -Wno-unused-parameter -Werror \
-    -Wformat=0 -Wunreachable-code -Wstack-usage=1024
+    -Wformat=0 -Wunreachable-code -Wstack-usage=2048
 
 FLAGS += ${WARNS}
 
@@ -118,7 +119,13 @@ FLAGS += ${WARNS}
 # -pipe = use pipes instead of temporary files
 #
 ###################################
-CFLAGS = $(ARCHFLAGS) $(FLAGS) -MMD -O3 -ffunction-sections -fdata-sections -g -std=c99 -ffreestanding -fno-builtin -fshort-enums -mno-unaligned-access -pipe
+CFLAGS = $(ARCHFLAGS) $(FLAGS) -MMD -ffunction-sections -fdata-sections -g -std=c99 -ffreestanding -fno-builtin -fshort-enums -mno-unaligned-access -pipe
+ifneq ($(GCOV),0)
+CFLAGS += -DGCOV
+GCFLAGS = $(CFLAGS)
+GCFLAGS += -O0 -fprofile-arcs -ftest-coverage -fprofile-info-section
+endif
+CFLAGS += -O3
 
 #### SUMMARY OF LINKER FLAGS ####
 #
@@ -129,5 +136,8 @@ CFLAGS = $(ARCHFLAGS) $(FLAGS) -MMD -O3 -ffunction-sections -fdata-sections -g -
 # 
 #################################
 LFLAGS 	+= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(IMG).map -specs=nano.specs -lgcc $(LIB) -nodefaultlibs -Wl,--no-warn-rwx-segments -T$(SOC_DEVICE_DIR)/gcc/$(LCF).ld
+ifneq ($(GCOV),0)
+	LFLAGS += -lgcov --coverage
+endif
 ROM_LFLAGS 	= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(ROM_IMG).map -specs=nosys.specs -nostdlib -T$(SOC_DEVICE_DIR)/gcc/$(ROM_LCF).ld
 

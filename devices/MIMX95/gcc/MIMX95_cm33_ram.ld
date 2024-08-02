@@ -111,6 +111,13 @@ SECTIONS
     __CTOR_END__ = .;
   } > m_text
 
+ .gcov_info :
+  {
+    PROVIDE (__gcov_info_start = .);
+    KEEP (*(.gcov_info))
+    PROVIDE (__gcov_info_end = .);
+  } > m_text
+
   .dtors :
   {
     __DTOR_LIST__ = .;
