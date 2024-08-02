@@ -55,10 +55,10 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-110](https://jira.sw.nxp.com/projects/SM/issues/SM-110) | SM may WDOG reset during non-cooperative reset of A55 |   | Y | Y |
+| [SM-110](https://jira.sw.nxp.com/projects/SM/issues/SM-110) | SM may WDOG reset during non-cooperative reset of A55 [[detail]](@ref RN_DETAIL_SM_110) |   | Y | Y |
 | [SM-125](https://jira.sw.nxp.com/projects/SM/issues/SM-125) | PF53 are reset by a transition to system suspend [[detail]](@ref RN_DETAIL_SM_125) |   | Y | Y |
 | [SM-127](https://jira.sw.nxp.com/projects/SM/issues/SM-127) | Manage GPC wake configuration when updating CPU run mode [[detail]](@ref RN_DETAIL_SM_127) |   | Y | Y |
-| [SM-139](https://jira.sw.nxp.com/projects/SM/issues/SM-139) | Disable LFAST CREF_EN at boot |   | Y | Y |
+| [SM-139](https://jira.sw.nxp.com/projects/SM/issues/SM-139) | Disable LFAST CREF_EN at boot [[detail]](@ref RN_DETAIL_SM_139) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -89,6 +89,11 @@ Improved the statement coverage and branch coverage by:
 - Add a new test mode to allow forcing error conditions
 
 For the simulation build, coverage increased to 90+%.
+
+SM-110: SM may WDOG reset during non-cooperative reset of A55 {#RN_DETAIL_SM_110}
+----------
+
+During a non-cooperative reset of the A55, outstanding transactions between the Cortex-A55 domain and the system may not complete during SM attempts to reset the Cortex-A55.  The SM has been updated to implement a timeout mechanism that utilizes LPCG1 to abort the SSI Q-channel handshake between CORTEXMIX and NOCMIX in cases where outstanding transactions cannot be retired.
 
 SM-111: Enable QoS to be driven from CAMERAMIX block control {#RN_DETAIL_SM_111}
 ----------
@@ -211,6 +216,11 @@ SM-137: Support system sleep modes {#RN_DETAIL_SM_137}
 During system sleep entry, SM will now inspect the vendor-defined flags passed to SCMI_SystemPowerStateSet() to configure the system sleep mode.  These sleep modes allow the system to remain active at the specified performance level to support low-power data flows and use cases.
 
 This change not only changes what is passed for a sleep mode and flags in SCMI_SystemPowerStateSet(), but it also adds both parameters to the board system sleep functions (e.g. BOARD_SystemSleepPrepare()). **Customers must change these functions in their board port.**
+
+SM-139: Disable LFAST CREF_EN at boot {#RN_DETAIL_SM_139}
+----------
+
+Per ERR052319, the current reference for LFAST I/O is enabled out of reset.  This reference is only needed during PCIe operation and consumes power on the VDD_ANA_1V8 supply.  SM has been updated to disable the LFAST I/O current reference during the early stages of SM boot.  The agent owing PCIe is expected to manage this current reference after the initial SM boot.
 
 SM-140: Save/restore the DDRMIX block control during retention {#RN_DETAIL_SM_140}
 ----------
