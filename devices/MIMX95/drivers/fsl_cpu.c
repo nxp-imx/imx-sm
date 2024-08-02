@@ -1818,7 +1818,7 @@ bool CPU_LpmConfigDeInit(uint32_t cpuIdx, uint32_t lpmSetting)
         /* Remove CPU sleep status in evaluation of system suspend */
         if (lpmSetting == CPU_PD_LPM_ON_NEVER)
         {
-            rc = CPU_SleepForceSet(cpuIdx, true);
+            (void) CPU_SleepForceSet(cpuIdx, true);
         }
 
         uint32_t cpuIdxCur = cpuIdx;
