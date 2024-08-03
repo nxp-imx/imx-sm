@@ -51,6 +51,7 @@
 /* Local variables */
 
 static uint32_t numDevCtrl = 0U;
+static uint32_t numBrdCtrl = 0U;
 
 /* Local functions */
 
@@ -97,7 +98,6 @@ void TEST_ScmiMisc(void)
     /* Test protocol attributes */
     {
         uint32_t attributes = 0U;
-        uint32_t numBrdCtrl = 0U;
 
         printf("SCMI_MiscProtocolAttributes()\n");
         CHECK(SCMI_MiscProtocolAttributes(SM_TEST_DEFAULT_CHN,
