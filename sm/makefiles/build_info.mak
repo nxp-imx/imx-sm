@@ -65,7 +65,7 @@ else
 ifeq ($(origin BRANCH),undefined)
 	$(AT)-git rev-parse --abbrev-ref HEAD >> $@
 else
-	echo $(BRANCH) >> $@
+	$(AT)/bin/echo $(BRANCH) >> $@
 endif
 	$(AT)-perl -pi -e 'chomp if eof' $@
 	$(AT)/bin/echo '' >> $@
@@ -94,7 +94,11 @@ rn_info.sed :
 	$(AT)/bin/echo "sed -i 's/\#SM_DEVICES/$(SM_DEVICES)/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#SM_ELE_VER/$(SM_ELE_VER)/g' rn.md" >> $@
 	$(AT)/bin/echo -n "sed -i 's/\#SM_BRANCH/" >> $@
+ifeq ($(origin BRANCH),undefined)
 	$(AT)-git rev-parse --abbrev-ref HEAD >> $@
+else
+	$(AT)/bin/echo $(BRANCH) >> $@
+endif
 	$(AT)-perl -pi -e 'chomp if eof' $@
 	$(AT)/bin/echo "/g' rn.md" >> $@
 	$(AT)/bin/echo -n "sed -i 's/\#SM_BUILD/" >> $@
