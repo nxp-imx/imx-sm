@@ -64,6 +64,8 @@ Customers may require some of the following changes in their board port.
   and PF09_IntClear()
 - Fixed issue with UART config even for a production build
 - Added BBM/control support for the PCA2131 RTC found on the 15x15 EVK
+- Control VDD_ARM PF53 via PF09 GPIO rahter then I2C
+- Cache PF53 voltages and restore state after system sleep
 
 **The FRO trim change is mandatory.**
 

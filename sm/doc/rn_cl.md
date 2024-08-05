@@ -84,7 +84,7 @@ SM-87: Improve unit test coverage {#RN_DETAIL_SM_87}
 Improved the statement coverage and branch coverage by:
 
 - Adding new tests and test cases
-- Made simu configuration changes
+- Made simulation configuration changes
 - Increasing monitor test coverage
 - Add a new test mode to allow forcing error conditions
 
