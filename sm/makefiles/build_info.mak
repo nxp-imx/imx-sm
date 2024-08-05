@@ -62,10 +62,10 @@ ifeq (0,$(GIT_EXISTS))
 	$(AT)/bin/echo '#define SM_COMMIT 0x0UL' >> $@
 else
 	$(AT)/bin/echo -n '#define SM_BRANCH ' >> $@
-ifeq ($(origin SM_BRANCH),undefined)
+ifeq ($(origin BRANCH),undefined)
 	$(AT)-git rev-parse --abbrev-ref HEAD >> $@
 else
-	echo $(SM_BRANCH) >> $@
+	echo $(BRANCH) >> $@
 endif
 	$(AT)-perl -pi -e 'chomp if eof' $@
 	$(AT)/bin/echo '' >> $@
