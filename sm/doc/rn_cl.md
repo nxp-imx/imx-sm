@@ -220,7 +220,7 @@ This change not only changes what is passed for a sleep mode and flags in SCMI_S
 SM-139: Disable LFAST CREF_EN at boot {#RN_DETAIL_SM_139}
 ----------
 
-Per ERR052319, the current reference for LFAST I/O is enabled out of reset.  This reference is only needed during PCIe operation and consumes power on the VDD_ANA_1V8 supply.  SM has been updated to disable the LFAST I/O current reference during the early stages of SM boot.  The agent owing PCIe is expected to manage this current reference after the initial SM boot.
+Per ERR052319, the current reference for LFAST I/O is enabled out of reset.  This reference is only needed during PCIe operation and consumes power on the VDD_ANA_1V8 supply.  SM has been updated to disable the LFAST I/O current reference during the early stages of SM boot.  The agent owning PCIe is expected to manage this current reference after the initial SM boot.
 
 SM-140: Save/restore the DDRMIX block control during retention {#RN_DETAIL_SM_140}
 ----------

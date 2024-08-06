@@ -18,6 +18,7 @@ Improvement {#RN_KN_IMP}
 | Key     | Summary                        | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|---|---|
 | [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Support system run mode | Y | Y |
+| [SM-147](https://jira.sw.nxp.com/projects/SM/issues/SM-147) | Manage VDD_ARM supply during system sleep modes | Y | Y |
 
 Bug {#RN_KN_BUG}
 ============
