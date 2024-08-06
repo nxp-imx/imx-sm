@@ -123,7 +123,7 @@ bool PCA2131_Init(const PCA2131_Type *dev)
 bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
     uint8_t *val)
 {
-    bool rc = true;
+    bool rc;
 
     if (regAddr < PCA2131_NUM_REG)
     {
@@ -153,7 +153,7 @@ bool PCA2131_RtcWrite(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
 bool PCA2131_RtcRead(const PCA2131_Type *dev, uint8_t regAddr, uint8_t len,
     uint8_t *val)
 {
-    bool rc = true;
+    bool rc;
 
     if (regAddr < PCA2131_NUM_REG)
     {
