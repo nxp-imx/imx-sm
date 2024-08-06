@@ -194,7 +194,7 @@ bool PF53_PmicWrite(const PF53_Type *dev, uint8_t regAddr, uint8_t val,
 /*--------------------------------------------------------------------------*/
 bool PF53_PmicRead(const PF53_Type *dev, uint8_t regAddr, uint8_t *val)
 {
-    bool rc = true;
+    bool rc;
 
     if (regAddr < PF53_NUM_REG)
     {
@@ -319,7 +319,7 @@ bool PF53_SwModeSet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
                 modeVal, modeMask);
 
             /* Wait for write to latch and voltage to ramp */
-            SystemTimeDelay(100U);
+            SystemTimeDelay(540U);
         }
     }
 
@@ -384,7 +384,7 @@ bool PF53_VoltageSet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
                 voltCode, 0xFFU);
 
             /* Wait for write to latch and voltage to ramp */
-            SystemTimeDelay(100U);
+            SystemTimeDelay(180U);
         }
         else
         {
@@ -445,7 +445,7 @@ bool PF53_VoltageGet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
 /*--------------------------------------------------------------------------*/
 bool PF53_TempGet(const PF53_Type *dev, int32_t *temp)
 {
-    bool rc = true;
+    bool rc;
     uint8_t sns;
 
     rc = PF53_PmicRead(dev, PF53_REG_INT_SENSE2, &sns);
@@ -488,7 +488,7 @@ bool PF53_TempGet(const PF53_Type *dev, int32_t *temp)
 bool PF53_WdogEnable(const PF53_Type *dev, bool wdogEn)
 {
     uint8_t wdEn;
-    bool rc = true;
+    bool rc;
 
     if (wdogEn)
     {

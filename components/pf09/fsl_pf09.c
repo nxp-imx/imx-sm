@@ -305,7 +305,7 @@ bool PF09_PmicWrite(const PF09_Type *dev, uint8_t regAddr, uint8_t val,
 /*--------------------------------------------------------------------------*/
 bool PF09_PmicRead(const PF09_Type *dev, uint8_t regAddr, uint8_t *val)
 {
-    bool rc = true;
+    bool rc;
 
     if (regAddr < PF09_NUM_REG)
     {
@@ -405,7 +405,7 @@ bool PF09_IntEnable(const PF09_Type *dev, const uint8_t *mask,
 /*--------------------------------------------------------------------------*/
 bool PF09_IntStatus(const PF09_Type *dev, uint8_t *mask, uint32_t maskLen)
 {
-    bool rc = true;
+    bool rc;
     uint8_t stat;
 
     /* Check mask array size */
@@ -548,7 +548,7 @@ bool PF09_RegulatorInfoGet(uint8_t regulator, PF09_RegInfo *regInfo)
 bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     uint8_t mode)
 {
-    bool rc = true;
+    bool rc;
 
     if ((state > PF09_STATE_VSTBY) || (mode > PF09_SW_MODE_PWM))
     {
@@ -582,7 +582,7 @@ bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     uint8_t *mode)
 {
-    bool rc = true;
+    bool rc;
 
     if ((state > PF09_STATE_VSTBY) || (mode == NULL))
     {
@@ -618,7 +618,7 @@ bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 bool PF09_LdoEnable(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     bool ldoEn)
 {
-    bool rc = true;
+    bool rc;
 
     if (state > PF09_STATE_VSTBY)
     {
@@ -663,7 +663,7 @@ bool PF09_LdoEnable(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 bool PF09_LdoIsEnabled(const PF09_Type *dev, uint8_t regulator, uint8_t state,
     bool *ldoEn)
 {
-    bool rc = true;
+    bool rc;
 
     if ((state > PF09_STATE_VSTBY) || (ldoEn == NULL))
     {
@@ -705,7 +705,7 @@ bool PF09_LdoIsEnabled(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 bool PF09_GpioCtrlSet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
     bool ctrl)
 {
-    bool rc = true;
+    bool rc;
 
     if ((state > PF09_STATE_VSTBY) || (gpio > PF09_GPIO4))
     {
@@ -729,7 +729,7 @@ bool PF09_GpioCtrlSet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
 bool PF09_GpioCtrlGet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
     bool *ctrl)
 {
-    bool rc = true;
+    bool rc;
 
     if ((state > PF09_STATE_VSTBY) || (ctrl == NULL) || (gpio > PF09_GPIO4))
     {
@@ -876,7 +876,7 @@ bool PF09_VoltageGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
 /*--------------------------------------------------------------------------*/
 bool PF09_TempGet(const PF09_Type *dev, int32_t *temp)
 {
-    bool rc = true;
+    bool rc;
     uint8_t sns;
 
     rc = PF09_PmicRead(dev, PF09_REG_STATUS2_SNS, &sns);
@@ -918,7 +918,7 @@ bool PF09_TempGet(const PF09_Type *dev, int32_t *temp)
 /*--------------------------------------------------------------------------*/
 bool PF09_TempAlarmSet(const PF09_Type *dev, int32_t temp)
 {
-    bool rc = true;
+    bool rc;
 
     /* Disable all */
     rc = PF09_PmicWrite(dev, PF09_REG_STATUS2_MASK, 0x0FU, 0x0FU);
@@ -962,7 +962,7 @@ bool PF09_TempAlarmSet(const PF09_Type *dev, int32_t temp)
 bool PF09_WdogEnable(const PF09_Type *dev, bool wdogEn)
 {
     uint8_t wdEn;
-    bool rc = true;
+    bool rc;
 
     if (wdogEn)
     {

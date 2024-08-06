@@ -177,12 +177,16 @@ int32_t BRD_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode)
         case DEV_SM_VOLT_ARM:
             rc = PF09_GpioCtrlSet(&pf09Dev, PF09_GPIO4, PF53_STATE_VRUN,
                 enable);
-            if (enable && rc && (s_levelArm != BOARD_VOLT_ARM))
+            if (enable && rc)
             {
+                /* Wait for PF53 power up and ramp */
                 SystemTimeDelay(1000U);
 
-                /* Restore voltage as enable resets the PF53 */
-                status = BRD_SM_VoltageLevelSet(domainId, s_levelArm);
+                if (s_levelArm != BOARD_VOLT_ARM)
+                {
+                    /* Restore voltage as enable resets the PF53 */
+                    status = BRD_SM_VoltageLevelSet(domainId, s_levelArm);
+                }
             }
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
