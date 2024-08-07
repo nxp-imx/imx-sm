@@ -36,6 +36,7 @@ Improvement {#RN_CL_IMP}
 | [SM-140](https://jira.sw.nxp.com/projects/SM/issues/SM-140) | Save/restore the DDRMIX block control during retention [[detail]](@ref RN_DETAIL_SM_140) |   | Y | Y |
 | [SM-142](https://jira.sw.nxp.com/projects/SM/issues/SM-142) | Support parent relationship of PLL clock nodes [[detail]](@ref RN_DETAIL_SM_142) |   | Y | Y |
 | [SM-144](https://jira.sw.nxp.com/projects/SM/issues/SM-144) | Support a larger ELE info response |   | Y | Y |
+| [SM-148](https://jira.sw.nxp.com/projects/SM/issues/SM-148) | Resolve code analysis issues |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -59,6 +60,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-125](https://jira.sw.nxp.com/projects/SM/issues/SM-125) | PF53 are reset by a transition to system suspend [[detail]](@ref RN_DETAIL_SM_125) |   | Y | Y |
 | [SM-127](https://jira.sw.nxp.com/projects/SM/issues/SM-127) | Manage GPC wake configuration when updating CPU run mode [[detail]](@ref RN_DETAIL_SM_127) |   | Y | Y |
 | [SM-139](https://jira.sw.nxp.com/projects/SM/issues/SM-139) | Disable LFAST CREF_EN at boot [[detail]](@ref RN_DETAIL_SM_139) |   | Y | Y |
+| [SM-149](https://jira.sw.nxp.com/projects/SM/issues/SM-149) | Support ELE FW v1.2.0 [[detail]](@ref RN_DETAIL_SM_149) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -231,4 +233,9 @@ SM-142: Support parent relationship of PLL clock nodes {#RN_DETAIL_SM_142}
 ----------
 
 SCMI agents can use the clock management protocol for clock tree discovery.  The clock nodes of PLLs (VCO, CLKO, DFS/PFD) are exposed using individual clock domain IDs.  SM has been updated to add the parent-child relationships between these PLL clock nodes to allow discovery of such relationships.
+
+SM-149: Support ELE FW v1.2.0 {#RN_DETAIL_SM_149}
+----------
+
+SM was updated to add support for ELE FW v1.2.0.  In particular, this ELE FW provides support for the GPC-to-ELE handshake during system sleep mode.  SM enables this handshake using the GPC_ELE_HDSK_CTRL register.
 
