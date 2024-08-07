@@ -87,7 +87,7 @@ static bool Ddrc_Mrs(uint32_t csSel, uint32_t opcode, uint32_t mr)
 {
     uint32_t val;
     uint8_t caShift = 6U;
-    bool rc = true;
+    bool rc;
 
     /* LP4x or LP5 */
     if ((DDRC_CTRL->DDR_SDRAM_CFG &
@@ -115,7 +115,7 @@ static bool Ddrc_Mrs(uint32_t csSel, uint32_t opcode, uint32_t mr)
 static bool Mr_Write(uint32_t mr_Rank, uint32_t mr_Addr, uint32_t mr_Data)
 {
     uint32_t chip_Select;
-    bool rc = true;
+    bool rc;
 
     if (mr_Rank == 1U)
     {
@@ -141,7 +141,7 @@ static bool Mr_Write(uint32_t mr_Rank, uint32_t mr_Addr, uint32_t mr_Data)
 /*--------------------------------------------------------------------------*/
 bool DDR_EnterRetention(const struct ddr_info *ddrp)
 {
-    bool rc = true;
+    bool rc;
 
     if (ddrp != NULL)
     {
@@ -370,7 +370,7 @@ static bool Check_Dfi_Init_Complete(void)
 /*--------------------------------------------------------------------------*/
 static bool Ddrc_Init(const struct ddr_info *ddrp)
 {
-    bool rc = true;
+    bool rc;
 
     if (ddrp != NULL)
     {
@@ -442,7 +442,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
 /*--------------------------------------------------------------------------*/
 bool DDR_ExitRetention(const struct ddr_info *ddrp)
 {
-    bool rc = true;
+    bool rc;
 
     /* Reload the DDRPHY config */
     rc = Ddr_PhyInit(ddrp);

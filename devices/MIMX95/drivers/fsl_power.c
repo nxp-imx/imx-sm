@@ -636,7 +636,7 @@ void PWR_LpHandshakeAck(void)
     /* Restore clock root divider for LP_HANDSHAKE module */
     if (rc)
     {
-        rc = CCM_RootSetDiv(CLOCK_ROOT_M33, oldDiv);
+        (void) CCM_RootSetDiv(CLOCK_ROOT_M33, oldDiv);
     }
 #endif
 }

@@ -223,6 +223,7 @@ void RPC_SCMI_Dispatch(uint32_t scmiChannel);
  *   configured.
  * - ::SM_ERR_OUT_OF_RANGE: if the channel is incorrectly configured.
  * - ::SM_ERR_PROTOCOL_ERROR: if the message is too big.
+ * - ::SM_ERR_GENERIC_ERROR: if the configured buffer address is invalid.
  */
 int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
     uint32_t messageId, uint32_t len, uint32_t *header, bool notify);

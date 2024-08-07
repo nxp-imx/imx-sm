@@ -45,16 +45,19 @@
 
 /* Global constant data */
 
+// coverity[misra_c_2012_rule_9_2_violation:FALSE]
 const scmi_chn_config_t g_scmiChannelConfig[SM_SCMI_NUM_CHN] =
 {
     SM_SCMI_CHN_CONFIG_DATA
 };
 
+// coverity[misra_c_2012_rule_9_2_violation:FALSE]
 const scmi_agnt_config_t g_scmiAgentConfig[SM_SCMI_NUM_AGNT] =
 {
     SM_SCMI_AGNT_CONFIG_DATA
 };
 
+// coverity[misra_c_2012_rule_9_2_violation:FALSE]
 const scmi_config_t g_scmiConfig[SM_NUM_SCMI] =
 {
     SM_SCMI_CONFIG_DATA

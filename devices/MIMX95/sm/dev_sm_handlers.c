@@ -272,6 +272,7 @@ void NMI_Handler(const uint32_t *sp)
     DEV_SM_SystemShutdownRecSet(resetRec);
 
     /* Wait for delayed FCCU reaction (PMIC reset) */
+    // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */

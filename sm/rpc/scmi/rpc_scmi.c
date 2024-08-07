@@ -264,37 +264,45 @@ void RPC_SCMI_Dispatch(uint32_t scmiChannel)
 int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
     uint32_t messageId, uint32_t len, uint32_t *header, bool notify)
 {
-    int32_t status;
+    int32_t status = SM_ERR_SUCCESS;
     scmi_msg_status_t *msg;
 
     /* Get transport buffer address */
     msg = (scmi_msg_status_t*) RPC_SCMI_HdrAddrGet(scmiChannel);
 
-    /* Generate header */
-    *header = SCMI_HEADER_MSG(messageId)
-        | SCMI_HEADER_PROTOCOL(protocolId)
-        | SCMI_HEADER_TOKEN(s_token[scmiChannel]);
-    if (notify)
+    /* Check address */
+    if (msg != NULL)
     {
-        *header |= SCMI_HEADER_TYPE(3UL);
+        /* Generate header */
+        *header = SCMI_HEADER_MSG(messageId)
+            | SCMI_HEADER_PROTOCOL(protocolId)
+            | SCMI_HEADER_TOKEN(s_token[scmiChannel]);
+        if (notify)
+        {
+            *header |= SCMI_HEADER_TYPE(3UL);
+        }
+        msg->header = *header;
+
+        /* Increment token */
+        s_token[scmiChannel]++;
+        s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
+
+        /* Send message via transport */
+        switch (g_scmiChannelConfig[scmiChannel].xportType)
+        {
+            case SM_XPORT_SMT:
+                status = RPC_SMT_Tx(
+                    g_scmiChannelConfig[scmiChannel].xportChannel, len,
+                    false, notify);
+                break;
+            default:
+                status = SM_ERR_NOT_SUPPORTED;
+                break;
+        }
     }
-    msg->header = *header;
-
-    /* Increment token */
-    s_token[scmiChannel]++;
-    s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
-
-    /* Send message via transport */
-    switch (g_scmiChannelConfig[scmiChannel].xportType)
+    else
     {
-        case SM_XPORT_SMT:
-            status = RPC_SMT_Tx(
-                g_scmiChannelConfig[scmiChannel].xportChannel, len,
-                false, notify);
-            break;
-        default:
-            status = SM_ERR_NOT_SUPPORTED;
-            break;
+        status = SM_ERR_GENERIC_ERROR;
     }
 
     /* Return status */

@@ -254,6 +254,7 @@ void SM_TestModeSet(uint32_t mode)
 /*--------------------------------------------------------------------------*/
 // coverity[misra_c_2012_rule_21_2_violation:FALSE]
 // coverity[misra_c_2012_rule_21_8_violation:FALSE]
+// coverity[misra_c_2012_directive_4_6_violation:FALSE]
 void exit(int status)
 {
     if (s_lmmInited)
@@ -275,6 +276,7 @@ void exit(int status)
     }
 
     /* Hang */
+    // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
@@ -286,6 +288,7 @@ void exit(int status)
 /*--------------------------------------------------------------------------*/
 /* C array init for no clib                                                 */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_21_2_violation:FALSE]
 void __libc_init_array(void)
 {
 }

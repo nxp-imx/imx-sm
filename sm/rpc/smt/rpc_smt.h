@@ -170,6 +170,7 @@ int32_t RPC_SMT_IsAborted(uint32_t smtChannel);
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_PROTOCOL_ERROR if the len is greater than the buffer size
+ * - ::SM_ERR_GENERIC_ERROR if the configured buffer is NULL
  * - others returned by RPC_SMT_DoorbellRing()
  */
 int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
@@ -197,6 +198,7 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_CRC_ERROR if the CRC fails to match
+ * - ::SM_ERR_GENERIC_ERROR if the configured buffer is NULL
  */
 int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
     bool callee);

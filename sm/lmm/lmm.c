@@ -58,6 +58,7 @@ static uint64_t s_lmStartTime[SM_NUM_LM];
 /*--------------------------------------------------------------------------*/
 /* Init logical machine manager                                             */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_8_13_violation:FALSE]
 int32_t LMM_Init(uint32_t *mSel, uint32_t lmmInitFlags)
 {
     int32_t status;

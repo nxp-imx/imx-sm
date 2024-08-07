@@ -99,6 +99,12 @@ int32_t RPC_SMT_Init(uint32_t smtChannel, bool noIrq, uint32_t initCount)
         status = SM_ERR_OUT_OF_RANGE;
     }
 
+    /* Check buffer */
+    if ((status == SM_ERR_SUCCESS) && (buf == NULL))
+    {
+        status = SM_ERR_GENERIC_ERROR;
+    }
+
     /* Check for error? */
     if (status == SM_ERR_SUCCESS)
     {
@@ -202,8 +208,12 @@ void RPC_SMT_Dispatch(uint32_t smtChannel)
     {
         rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
 
-        /* Mark channel in error */
-        buf->channelFlags = SMT_ERROR;
+        /* Check buffer */
+        if (buf != NULL)
+        {
+            /* Mark channel in error */
+            buf->channelFlags = SMT_ERROR;
+        }
 
         /* Force completion */
         (void) RPC_SMT_Tx(smtChannel, 0U, true, false);
@@ -294,8 +304,15 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
     int32_t status = SM_ERR_SUCCESS;
     rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
 
+    /* Check buffer */
+    if (buf == NULL)
+    {
+        status = SM_ERR_GENERIC_ERROR;
+    }
+
     /* Check length */
-    if (len > (SMT_BUFFER_SIZE - SMT_BUFFER_HEADER))
+    if ((status == SM_ERR_SUCCESS)
+        && (len > (SMT_BUFFER_SIZE - SMT_BUFFER_HEADER)))
     {
         status = SM_ERR_PROTOCOL_ERROR;
     }
@@ -349,6 +366,7 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
             {
                 case SM_SMT_CRC_XOR:
                     // coverity[misra_c_2012_rule_18_1_violation:FALSE]
+                    // coverity[callee_ptr_arith:FALSE]
                     buf->impCrc = CRC_Xor((const uint32_t*) &buf->header,
                         len / 4U);
                     break;
@@ -409,6 +427,12 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
     const rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
     uint32_t impStatus = s_smtConfig[smtChannel].crc;
 
+    /* Check buffer */
+    if (buf == NULL)
+    {
+        status = SM_ERR_GENERIC_ERROR;
+    }
+
     /* Callee? */
     if (callee)
     {
@@ -417,7 +441,7 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
     }
 
     /* Check length */
-    if (buf->length > *len)
+    if ((status == SM_ERR_SUCCESS) && (buf->length > *len))
     {
         status = SM_ERR_PROTOCOL_ERROR;
     }

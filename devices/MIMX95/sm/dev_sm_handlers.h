@@ -49,8 +49,6 @@
 
 /* Includes */
 
-#include "board.h"
-
 /* Types */
 
 /*! Dynamic IRQ priority structure */
@@ -363,7 +361,6 @@ int32_t DEV_SM_IrqPrioCntrGet(IRQn_Type irq, uint32_t *irqCntr);
  * - ::SM_ERR_NOT_FOUND: if IRQ is not valid.
  */
 int32_t DEV_SM_IrqPrioUpdate(void);
-
 
 #endif /* DEV_SM_HANDLERS_H */
 

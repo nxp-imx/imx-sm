@@ -212,6 +212,7 @@ void BRD_SM_Exit(int32_t status, uint32_t pc)
 #endif
 
     /* Hang */
+    // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
@@ -450,6 +451,7 @@ int32_t BRD_SM_SystemReset(void)
     int32_t status = SM_ERR_SUCCESS;
 
     printf("Reset - spinning...");
+    // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
@@ -469,6 +471,7 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 
     printf("  Reset to stage %u, container %u - spinning...\n", stage,
         container);
+    // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
@@ -487,6 +490,7 @@ int32_t BRD_SM_SystemShutdown(void)
     int32_t status = SM_ERR_SUCCESS;
 
     printf("Shutdown - spinning...\n");
+    // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
