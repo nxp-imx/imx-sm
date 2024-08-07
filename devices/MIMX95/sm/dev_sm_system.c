@@ -81,14 +81,8 @@ int32_t DEV_SM_SystemInit(void)
         s_shutdownRecord.valid = true;
     }
 
-#if 0
-    /* TODO:  Enable GPC-to-ELE handshake */
+    /* Enable GPC-to-ELE handshake */
     GPC_GLOBAL->GPC_SENTINEL_HDSK_CTRL = 1U;
-
-    /* TODO:  Use DEEPSLEEP output of M33 to reflect GPC sleep request */
-    BLK_CTRL_NS_AONMIX->GPC_CFG |=
-        BLK_CTRL_NS_AONMIX_GPC_CFG_M33_SLEEP_SEL_MASK;
-#endif
 
     /* Default to keep M7 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_CFG |=
