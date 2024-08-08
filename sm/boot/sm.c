@@ -47,7 +47,7 @@
 #ifdef MONITOR
 #include "monitor.h"
 #endif
-#if !defined(SIMU) && defined(GCOV)
+#if defined(GCOV) && !defined(SIMU)
 #include "gcov_dump.h"
 #endif
 
