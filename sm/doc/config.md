@@ -374,14 +374,15 @@ Board {#BOARD_CONFIG}
 - **File:** [config_board.h](@ref configs/mx95evk/config_board.h)
 
 Configures the board. The parameters are a **function of the board implementation**.
-For NXP reference board ports, the defines in this file are as follows:
+For NXP reference board ports, the defines (required) in this file are as follows:
 
 - **BOARD_DEBUG_UART_INSTANCE** - Debug monitor UART instance
 - **BOARD_DEBUG_UART_BAUDRATE** - Debug monitor UART baudrate (e.g. 115200)
 - **BOARD_I2C_INSTANCE** - PMIC I2C instance
 - **BOARD_I2C_BAUDRATE** - PMIC I2C baudrate (e.g. 400000)
 
-The instance numbers are the index into the SDK base array for that driver.
+The instance numbers are the index into the SDK base array for that driver. Other
+defines can be added specific to a board implementation.
 
 Device {#DEV_CONFIG}
 ----------------
@@ -687,13 +688,14 @@ Configtool Commands {#CONFIGTOOL_CMDS}
 
 The configtool supports the following commands and key=value pairs in the input file.
 
-| Command     | Key     | Value                                        |
+| Command     | Key      | Value                                        |
 |-------------|----------|----------------------------- ----------------|
 | MAKE        | soc      | Build includes ./devices/\<VAL\>/sm/Makefile |
 |             | board    | Build includes ./boards/\<VAL\>/sm/Makefile |
 |             | build    | Build includes ./sm/makefiles/\<VAL\>.mak |
 | DOX         | name     | Define doxygen group CONFIG_\<VAL\>, use group for all config files |
 |             | desc     | Group description, quoted |
+| BOARD       | \<DEF\>  | Define BOARD_\<DEF\> as \<VAL\> in config_board.h |
 | DOMn        | did      | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc.,  the DID is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
 | LMn         | name     | Starts an LM section *n*, *n* starts at 0 and should increment, LM name string, quoted, 15 characters max |
 |             | rpc      | Linked RPC is SM_RPC_\<VAL\>, e.g. ::SM_RPC_SCMI |
