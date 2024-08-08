@@ -53,6 +53,9 @@
 #ifdef DEVICE_HAS_ELE
 #include "fsl_ele.h"
 #endif
+#if defined(GCOV) && !defined(SIMU)
+#include "gcov_dump.h"
+#endif
 
 /* Defines */
 
@@ -209,7 +212,8 @@ int32_t MONITOR_Dispatch(char *line)
         "grp",
         "ssm",
         "custom",
-        "test"
+        "test",
+        "gcov"
     };
 
     /* Parse Line */
@@ -398,6 +402,11 @@ int32_t MONITOR_Dispatch(char *line)
             case 55:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
+#if defined(GCOV) && !defined(SIMU)
+            case 56:  /* gcov */
+                GCOV_InfoDump();
+                break;
+#endif
             default:
                 status = SM_ERR_NOT_FOUND;
                 break;

@@ -47,9 +47,6 @@
 #ifdef MONITOR
 #include "monitor.h"
 #endif
-#if defined(GCOV) && !defined(SIMU)
-#include "gcov_dump.h"
-#endif
 
 /* Local defines */
 
@@ -158,11 +155,6 @@ int main(int argc, const char * const argv[])
 #endif
 
 #ifndef SIMU
-#ifdef GCOV
-    /* Dump GCOV info */
-    GCOV_InfoDump();
-#endif
-
 #if MONITOR_MODE == 2
     /* Idle loop */
     while (status == SM_ERR_SUCCESS)
