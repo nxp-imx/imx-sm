@@ -201,22 +201,16 @@ int32_t DEV_SM_PowerUpPost(uint32_t domainId)
             status = DEV_SM_A55pConfigLoad();
             break;
         case DEV_SM_PD_A55C0:
-            status = DEV_SM_A55c0ConfigLoad();
             break;
         case DEV_SM_PD_A55C1:
-            status = DEV_SM_A55c1ConfigLoad();
             break;
         case DEV_SM_PD_A55C2:
-            status = DEV_SM_A55c2ConfigLoad();
             break;
         case DEV_SM_PD_A55C3:
-            status = DEV_SM_A55c3ConfigLoad();
             break;
         case DEV_SM_PD_A55C4:
-            status = DEV_SM_A55c4ConfigLoad();
             break;
         case DEV_SM_PD_A55C5:
-            status = DEV_SM_A55c5ConfigLoad();
             break;
         case DEV_SM_PD_DDR:
             status = DEV_SM_DdrConfigLoad();

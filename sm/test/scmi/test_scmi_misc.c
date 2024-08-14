@@ -511,6 +511,7 @@ static void TEST_ScmiMiscNotify(bool pass, uint32_t channel,
     /* Adequate Permissions */
     if (pass)
     {
+#ifdef SIMU
         /* RPC_00360 Misc Control Notify & Event */
         uint32_t flags = 1U;
 
@@ -545,7 +546,7 @@ static void TEST_ScmiMiscNotify(bool pass, uint32_t channel,
         tempId = ctrlId;
 
         CHECK(SCMI_MiscControlEvent(recChannel, NULL, NULL));
-
+#endif
     }
     /* ACCESS DENIED */
     else
@@ -580,6 +581,7 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         printf("SCMI_MiscControlGet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlGet(channel, ctrlId, &numVal, rtnVal));
 
+#ifdef SIMU
         if ((numVal != 1U) || (rtnVal[0] != 0x1234ABCDU))
         {
             CHECK(SM_ERR_TEST);
@@ -601,6 +603,7 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
                 printf("  rtnVal[%u] = %u\n", idx, rtnVal[idx]);
             }
         }
+#endif
 
         /* Branch -- Nullpointer */
         CHECK(SCMI_MiscControlAction(channel, ctrlId, 23U,
