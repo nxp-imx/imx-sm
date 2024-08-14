@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -39,6 +39,9 @@ void TMPSNS_Init(TMPSNS_Type *base, const tmpsns_config_t *config)
     /* Configure CTRL1[RESOLUTION] as per required conversion time */
     base->CTRL1_CLR = TMPSNS_CTRL1_RESOLUTION(3U);
     base->CTRL1_SET = TMPSNS_CTRL1_RESOLUTION(config->resolution);
+
+    /* Configure PERIOD_CTRL[MEAS_FREQ] as per required interval */
+    base->PERIOD_CTRL = TMPSNS_PERIOD_CTRL_CLR_MEAS_FREQ(config->measFreq);
 
     /* Configure CTRL1[N_FILT_1] */
     base->CTRL1_CLR = TMPSNS_CTRL1_N_FILT_1(0xF);
@@ -126,7 +129,7 @@ uint32_t TMPSNS_GetStatusFlags(const TMPSNS_Type *base)
  */
 void TMPSNS_ClearStatusFlags(TMPSNS_Type *base, uint32_t flags)
 {
-    base->STAT0 = flags;
+    base->STAT0_CLR = flags;
 }
 
 /*
@@ -205,9 +208,9 @@ void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
         base->CTRL0_SET = TMPSNS_CTRL0_FILT2_CNT_CLR(1U);
 
         /* Update threshold */
-        base->THR_CTRL01_CLR =
+        base->THR_CTRL23_CLR =
             TMPSNS_THR_CTRL23_CLR_TEMPERATURE_THRESHOLD2(0xFFFFU);
-        base->THR_CTRL01_SET =
+        base->THR_CTRL23_SET =
             TMPSNS_THR_CTRL23_CLR_TEMPERATURE_THRESHOLD2(uval);
 
         /* Update mode */

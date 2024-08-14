@@ -149,7 +149,9 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
         TMPSNS_GetDefaultConfig(&config);
 
         /* Config for periodic one-shot */
-        config.measMode = 1U;
+        config.measMode = 2U;
+        config.measFreq = 100000U;
+        config.pud = 236U;
 
         /* Apply trim */
         if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
