@@ -59,6 +59,7 @@ ifeq ($(T), all)
 		$(OUT)/test_lmm_sys.o           \
 		$(OUT)/test_lmm_cpu.o           \
 		$(OUT)/test_lmm_fusa.o          \
+		$(OUT)/test_lmm_fault.o         \
 		$(OUT)/test_lmm_sensor.o        \
 		$(OUT)/test_lmm_misc.o          \
 		$(OUT)/test_lmm_voltage.o       \

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -81,24 +81,6 @@ int32_t DEV_SM_FaultInit(void);
  * - others returned by ::SM_FAULTCOMPLETE
  */
 int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec);
-
-/*!
- * Get the configured reaction to a fault.
- *
- * @param[in]     resetRec  Reset record to store
- * @param[out]    reaction  Pointer to return the reaction
- * @param[out]    lm        Pointer to return the LM (if applicable)
- *
- * Obtains the fault reaction. Useful to make decisions about a fault
- * at the device level.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- * - others returned by ::SM_FAULTREACTIONGET
- */
-int32_t DEV_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
-    uint32_t *reaction, uint32_t *lm);
 
 /*!
  * Get the state of a fault.

@@ -98,6 +98,7 @@ void TEST_All(void)
     TEST_LmmFuSa();
     TEST_LmmVoltage();
     TEST_LmmPower();
+    TEST_LmmFault();
 #endif
 
     /* Run SCMI tests */

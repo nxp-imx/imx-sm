@@ -590,11 +590,6 @@
 #define SM_FAULTSET             DEV_SM_FaultSet
 #endif
 
-#ifndef SM_FAULTREACTIONGET
-/*! Redirector (LMM/board) to get a fault reaction */
-#define SM_FAULTREACTIONGET     LMM_FaultReactionGet
-#endif
-
 #ifndef SM_ROMPASSOVERGET
 /*! Redirector (device/board) to get ROM passover */
 #define SM_ROMPASSOVERGET       DEV_SM_RomPassoverGet

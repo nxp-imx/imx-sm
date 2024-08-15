@@ -1390,6 +1390,36 @@ sub generate_lmm
 	        {
 	            $parm =~ s/\"//g;
 	            print $out '        .name = "' . $parm . '", \\' . "\n";
+
+				# Check SM info
+				if ($lm_handle eq 'LM0')
+				{
+					if ($parm ne 'SM')
+					{
+					    print STDERR 'error: invalid LM0 name (must be SM)' . "\n";
+					    exit;
+					}
+				}
+				if ($parm eq 'SM')
+				{
+					if ($lm_handle ne 'LM0')
+					{
+					    print STDERR 'error: invalid SM LM (must be LM0)' . "\n";
+					    exit;
+					}
+				}
+	        }
+	        if ((my $parm = &param($lm, 'did')) ne '!')
+	        {
+				# Check SM info
+				if ($lm_handle eq 'LM0')
+				{
+					if ($parm ne '2')
+					{
+					    print STDERR 'error: invalid SM/LM0 DID (must be 2)' . "\n";
+					    exit;
+					}
+				}
 	        }
 	        if ((my $parm = &param($lm, 'rpc')) ne '!')
 	        {
@@ -1397,6 +1427,16 @@ sub generate_lmm
 	            print $out '        .rpcType = SM_RPC_'
 	                . uc $parm . ', \\' . "\n";
 	            $rpcInst{$parm}++;
+
+				# Check SM info
+				if ($lm_handle eq 'LM0')
+				{
+					if ($parm ne 'none')
+					{
+					    print STDERR 'error: invalid SM/LM0 RPC type (must be none)' . "\n";
+					    exit;
+					}
+				}
 	        }
 			if ($rpcType ne 'none')
 			{
@@ -1408,6 +1448,16 @@ sub generate_lmm
 	        {
 	            print $out '        .boot[0] = ' . $parm . 'U, \\' . "\n";
 	            $rpcInst{$parm}++;
+
+				# Check SM info
+				if ($lm_handle eq 'LM0')
+				{
+					if ($parm ne '1')
+					{
+					    print STDERR 'error: invalid SM/LM0 boot order (must be 1)' . "\n";
+					    exit;
+					}
+				}
 	        }
 	        if ((my $parm = &param($lm, 'skip')) ne '!')
 	        {
@@ -1424,6 +1474,16 @@ sub generate_lmm
 	        {
 	            print $out '        .safeType = LMM_SAFE_TYPE_' . uc $parm
 	                . ', \\' . "\n";
+
+				# Check SM info
+				if ($lm_handle eq 'LM0')
+				{
+					if (uc $parm ne 'FEENV')
+					{
+					    print STDERR 'error: invalid SM/LM0 safe type (must be feenv)' . "\n";
+					    exit;
+					}
+				}
 	        }
 
             # Output group

@@ -93,15 +93,6 @@ int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get fault reaction info                                                  */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
-    uint32_t *reaction, uint32_t *lm)
-{
-    return SM_FAULTREACTIONGET(resetRec, reaction, lm);
-}
-
-/*--------------------------------------------------------------------------*/
 /* Get a fault state                                                        */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)

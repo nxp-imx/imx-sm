@@ -33,17 +33,17 @@
 */
 
 /*==========================================================================*/
-/* Unit test for the device SM fault API.                                   */
+/* Unit test for the LMM fault API.                                         */
 /*==========================================================================*/
 
-/* DEV_00010 */
+/* LM_00010 */
 
 /* Include Config */
 
 /* Includes */
 
 #include "test.h"
-#include "dev_sm.h"
+#include "lmm.h"
 
 /* Local defines */
 
@@ -54,77 +54,62 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test device SM fault                                                     */
+/* Test LMM fault                                                           */
 /*--------------------------------------------------------------------------*/
-void TEST_DevSmFault(void)
+void TEST_LmmFault(void)
 {
-    /* Device tests */
-    printf("**** Device SM Fault API Tests ***\n\n");
+    /* LMM tests */
+    printf("**** LMM Fault API Tests ***\n\n");
 
 #ifdef SIMU
+    /* FaultReactionGet */
     {
-        uint32_t lmId = 0;
-        uint32_t faultId  = DEV_SM_FAULT_1;
+        dev_sm_rst_rec_t resetRec = { 0 };
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_0;
+        uint32_t reaction = 0;
+        uint32_t lm = 0;
 
-        faultId  = DEV_SM_FAULT_2;
+        printf("LMM_FaultReactionGet()\n");
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_1;
 
-        faultId  = DEV_SM_FAULT_3;
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_2;
 
-        faultId  = DEV_SM_FAULT_4;
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_3;
 
-        faultId  = DEV_SM_FAULT_5;
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_4;
 
-        faultId  = DEV_SM_FAULT_6;
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, 1), SM_ERR_GENERIC_ERROR);
+        resetRec.errId = DEV_SM_FAULT_5;
 
-        faultId  = DEV_SM_FAULT_7;
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_6;
 
-        faultId  = DEV_SM_FAULT_8;
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        resetRec.errId = DEV_SM_FAULT_7;
 
-        faultId  = DEV_SM_FAULT_9;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
-
-        faultId  = DEV_SM_FAULT_10;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
+        printf("reaction: %u lm: %u\n", reaction, lm);
     }
 #endif
-
-    /* Test API bounds */
-
-    {
-        uint32_t lmId = 0;
-        uint32_t faultId = DEV_SM_NUM_FAULT;
-
-        printf("DEV_SM_FaultSet Invalid faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, 0), SM_ERR_OUT_OF_RANGE);
-    }
 
     printf("\n");
 }

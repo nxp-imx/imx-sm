@@ -298,6 +298,7 @@ void TEST_LmmCpu(void);
 void TEST_LmmSensor(void);
 void TEST_LmmMisc(void);
 void TEST_LmmFuSa(void);
+void TEST_LmmFault(void);
 void TEST_LmmVoltage(void);
 void TEST_Scmi(void);
 void TEST_ScmiBase(void);

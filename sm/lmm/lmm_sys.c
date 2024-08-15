@@ -433,11 +433,11 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
 /*--------------------------------------------------------------------------*/
 int32_t LMM_SystemLmCheck(uint32_t bootLm)
 {
-    int32_t status = SM_ERR_NOT_FOUND;
+    int32_t status = SM_ERR_SUCCESS;
     uint32_t idx = g_lmmConfig[bootLm].start - 1U;
 
     /* Loop over start list */
-    while ((status != SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
+    while (idx < SM_LM_NUM_START)
     {
         const lmm_startstop_t *ptr = &s_lmmStart[idx];
 
@@ -447,11 +447,18 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
             break;
         }
 
-        /* CPU command? */
-        if (ptr->ss == LMM_SS_CPU)
+        /* CPU command for this mSel? */
+        if ((ptr->mSel == s_modeSel) && (ptr->ss == LMM_SS_CPU))
         {
             /* Check vector */
             status = LMM_CpuBootCheck(ptr->lmId, ptr->rsrc);
+
+            /* Translate and exit */
+            if (status != SM_ERR_SUCCESS)
+            {
+                status = SM_ERR_NOT_FOUND;
+                break;
+            }
         }
 
         /* Next entry */
