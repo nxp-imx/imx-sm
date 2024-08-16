@@ -51,6 +51,10 @@
 #define Dwc_Ddrphy_Apb_Rd(addr) \
     *(uint32_t *)(DDR_PHY_BASE + Ddrphy_AddrRemap(addr))
 
+/* Local Variables */
+
+static bool s_srFastWakeEn = false;
+
 /* Local Functions */
 
 static uint32_t Ddrphy_AddrRemap(uint32_t paddr);
@@ -74,7 +78,10 @@ static uint32_t Ddrphy_AddrRemap(uint32_t paddr)
 /*--------------------------------------------------------------------------*/
 static bool Check_DdrcIdle(uint32_t flag)
 {
-    while ((DDRC_CTRL->DDRDSR_2 & flag) != flag) {};
+    while ((DDRC_CTRL->DDRDSR_2 & flag) != flag)
+    {
+        ; /* Intentional empty while */
+    }
 
     /* Return status */
     return true;
@@ -101,7 +108,10 @@ static bool Ddrc_Mrs(uint32_t csSel, uint32_t opcode, uint32_t mr)
     DDRC_CTRL->DDR_SDRAM_MD_CNTL |= DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK;
 
     while ((DDRC_CTRL->DDR_SDRAM_MD_CNTL & DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK)
-            == DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK) {};
+        == DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK)
+    {
+        ; /* Intentional empty while */
+    }
 
     rc = Check_DdrcIdle(DDRC_DDRDSR_2_IDLE_MASK);
 
@@ -161,7 +171,11 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
             DDRC_CTRL->TX_CFG_1 &= ~DDRC_TX_CFG_1_WWATER_MASK;
         }
 
-        /* update wait flag as per ECC enabled */
+        /* Save fast wake state */
+        s_srFastWakeEn = ((DDRC_CTRL->DDR_SDRAM_CFG_3 &
+            DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN_MASK) != 0U);
+
+        /* Update wait flag as per ECC enabled */
         if (eccEn == 1U)
         {
             waitFlag = (DDRC_DDRDSR_2_NML_MASK | DDRC_DDRDSR_2_IDLE_MASK);
@@ -179,7 +193,7 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
             /* MEM HALT */
             DDRC_CTRL->DDR_SDRAM_CFG |= (1U << DDRC_DDR_SDRAM_CFG_MEM_HALT_SHIFT);
 
-            /* check if LPDDR5 */
+            /* Check if LPDDR5 */
             if ((Read32(&DDRC_CTRL->DDR_SDRAM_CFG) &
                 (1UL << DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_SHIFT)) != 0U)
             {
@@ -195,7 +209,7 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 DDRC_CTRL->DDR_SDRAM_CFG_4 &=
                     ~(0x3FFU << DDRC_DDR_SDRAM_CFG_4_FRQCH_RET_SHIFT);
 
-                /* why DEBUG_26 ? */
+                /* Why DEBUG_26 ? */
                 Write32(DEBUG_26, Read32(DEBUG_26) | (0x1FUL << 12U));
 
                 /* Clear SR_FAST_WK_EN */
@@ -205,7 +219,7 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 /* Clear DDR_ZQ_CNTL register */
                 DDRC_CTRL->DDR_ZQ_CNTL = 0x0U;
 
-                /* we will want to set DDR_SDRAM_CFG_3[4] to force the */
+                /* We will want to set DDR_SDRAM_CFG_3[4] to force the */
                 /* PD entry by the DDRC for retention mode only. */
                 DDRC_CTRL->DDR_SDRAM_CFG_3 |= (1U << 4U);
 
@@ -213,14 +227,14 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 DDRC_CTRL->DDR_SDRAM_CFG_2 |=
                     (1UL << DDRC_DDR_SDRAM_CFG_2_FRC_SR_SHIFT);
 
-                /* clear PHY INIT complete: BIT2 PHY_INIT_CMPLT W1C */
+                /* Clear PHY INIT complete: BIT2 PHY_INIT_CMPLT W1C */
                 do
                 {
                     DDRC_CTRL->DDRDSR_2 |=
                         (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT);
                 }
                 while ((DDRC_CTRL->DDRDSR_2 &
-                (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT)) != 0U);
+                    (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT)) != 0U);
 
                 /* Clear DDR_INTERVAL(this disables refreshes */
                 DDRC_CTRL->DDR_SDRAM_INTERVAL = 0x0U;
@@ -241,7 +255,9 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 /* Wait PHY INIT complete */
                 while ((DDRC_CTRL->DDRDSR_2 &
                     (1U << DDRC_DDRDSR_2_PHY_INIT_CMPLT_SHIFT)) == 0U)
-                    {};
+                {
+                    ; /* Intentional empty while */
+                }
             }
         }
     }
@@ -322,7 +338,7 @@ static bool Ddr_PhyInit(const struct ddr_info *ddrp)
             Dwc_Ddrphy_Apb_Wr(0x20004U, dficycle);
         }
 
-        /* reset the calibrator to its idle state */
+        /* Reset the calibrator to its idle state */
         Dwc_Ddrphy_Apb_Wr(0x20310U, 0x0U);
         /* triggers the impedance calibration sequence */
         Dwc_Ddrphy_Apb_Wr(0x20311U, 0x1U);
@@ -379,7 +395,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
 
         for (i = 0; i < ddrp->ddrc_cfg_num; i++)
         {
-            /* with ECC, MTCR is used to clear DDR
+            /* With ECC, MTCR is used to clear DDR
              * skip it in retention exit */
             if (ddrc_cfg[i].reg == (uint32_t)(&DDRC_CTRL->DDR_MTCR))
             {
@@ -393,7 +409,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
                 continue;
             }
 
-            /* skip the dram init as we resume from retention */
+            /* Skip the dram init as we resume from retention */
             if (ddrc_cfg[i].reg == (uint32_t)(&DDRC_CTRL->DDR_SDRAM_CFG_2))
             {
                 Write32(ddrc_cfg[i].reg, ddrc_cfg[i].val & ~(1U << 4));
@@ -404,7 +420,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
             }
         }
 
-        /* check pstate */
+        /* Check pstate */
         if (ddrp->pstate != NULL)
         {
             ddrc_cfg = ddrp->pstate[0].cfg;
@@ -414,7 +430,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
             }
         }
 
-        /* check dfi init status */
+        /* Check dfi init status */
         rc = Check_Dfi_Init_Complete();
 
         if (rc != false)
@@ -432,6 +448,10 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
         rc = false;
     }
 
+    if (s_srFastWakeEn)
+    {
+        DDRC_CTRL->DDR_SDRAM_CFG_3 |= DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN(1U);
+    }
 
     /* Return status */
     return rc;
