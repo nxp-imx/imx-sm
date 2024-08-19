@@ -37,6 +37,7 @@ Improvement {#RN_CL_IMP}
 | [SM-142](https://jira.sw.nxp.com/projects/SM/issues/SM-142) | Support parent relationship of PLL clock nodes [[detail]](@ref RN_DETAIL_SM_142) |   | Y | Y |
 | [SM-144](https://jira.sw.nxp.com/projects/SM/issues/SM-144) | Support a larger ELE info response |   | Y | Y |
 | [SM-148](https://jira.sw.nxp.com/projects/SM/issues/SM-148) | Resolve code analysis issues |   | Y | Y |
+| [SM-153](https://jira.sw.nxp.com/projects/SM/issues/SM-153) | Preserve DRC fast wakeup in system suspend |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -48,6 +49,7 @@ Bug {#RN_CL_BUG}
 | [SM-126](https://jira.sw.nxp.com/projects/SM/issues/SM-126) | SM debug monitor exit does not return to idle [[detail]](@ref RN_DETAIL_SM_126) |   | Y | Y |
 | [SM-129](https://jira.sw.nxp.com/projects/SM/issues/SM-129) | Preconditions required when switching SRC between SW and HW control [[detail]](@ref RN_DETAIL_SM_129) |   | Y | Y |
 | [SM-132](https://jira.sw.nxp.com/projects/SM/issues/SM-132) | SM error handling can fail if LMM not initialized [[detail]](@ref RN_DETAIL_SM_132) |   | Y | Y |
+| [SM-150](https://jira.sw.nxp.com/projects/SM/issues/SM-150) | Temp sensor threshold interrupts hang [[detail]](@ref RN_DETAIL_SM_150) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -238,4 +240,9 @@ SM-149: Support ELE FW v1.2.0 {#RN_DETAIL_SM_149}
 ----------
 
 SM was updated to add support for ELE FW v1.2.0.  In particular, this ELE FW provides support for the GPC-to-ELE handshake during system sleep mode.  SM enables this handshake using the GPC_ELE_HDSK_CTRL register.
+
+SM-150: Temp sensor threshold interrupts hang {#RN_DETAIL_SM_150}
+----------
+
+Corrected issue where temp sensor threshold interrupts will hang. The interrupt doesn't clear and the interrupt will be taken repeatedly. Also switched the sensors from continuous mode to periodic one-shot mode as continuous mode has been deprecated in the IP.
 
