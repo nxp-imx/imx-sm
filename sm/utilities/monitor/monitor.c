@@ -326,6 +326,14 @@ bool MONITOR_CharPending(void)
     {
         uint32_t status = LPUART_GetStatusFlags(uartConfig->base);
 
+        /* Clear pending overflow */
+        if ((status & ((uint32_t) kLPUART_RxOverrunFlag)) != 0U)
+        {
+            LPUART_ClearStatusFlags(uartConfig->base,
+                ((uint32_t) kLPUART_RxOverrunFlag));
+        }
+
+        /* Check if RX FIFO is empty */
         if ((status & ((uint32_t) kLPUART_RxFifoEmptyFlag)) == 0U)
         {
             rtn = true;
