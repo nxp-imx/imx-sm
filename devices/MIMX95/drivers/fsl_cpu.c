@@ -46,11 +46,21 @@ typedef struct {
   uint32_t LPM1;
 } cpu_per_lpi_lpgc_t;
 
+typedef struct {
+    uint8_t flag0;
+    uint8_t flag1;
+    uint8_t flag2;
+    uint8_t flag3;
+    uint32_t turn;
+} cpu_semaphore_t;
+
 /* Local Functions */
 
 static bool CPU_SwMultiWakeup(uint32_t cpuIdx);
 static bool CPU_SleepModeMultiSet(uint32_t cpuIdx, uint32_t sleepMode);
 static bool CPU_WdogReset(uint32_t cpuIdx);
+static bool CPU_SemaphoreReset(uint32_t cpuIdx);
+static bool CPU_SemaphoreRequest(uint32_t cpuIdx, uint32_t timeoutUsec);
 static bool CPU_MiscCtrlSet(uint32_t cpuIdx, uint32_t mask, uint32_t val);
 static bool CPU_MiscCtrlGet(uint32_t cpuIdx, uint32_t mask, uint32_t *val);
 static bool CPU_IrqMaskSet(uint32_t cpuIdx, bool maskIrqs);
@@ -404,6 +414,7 @@ static cpu_per_lpi_info_t const s_cpuPerLpiInfo[CPU_NUM_PER_LPI_IDX] =
 };
 
 static cpu_per_lpi_lpgc_t s_cpuPerLpiLpcg[CPU_NUM_PER_LPI_IDX];
+static uint32_t s_cpuSemaAddr[CPU_NUM_IDX];
 
 /* Global Variables */
 
@@ -412,12 +423,18 @@ extern void GPC_SM_REQ_IRQHandler(void);
 /*--------------------------------------------------------------------------*/
 /* Initialize CMC/GPC interfaces for the CPU                                */
 /*--------------------------------------------------------------------------*/
-bool CPU_Init(uint32_t cpuIdx)
+bool CPU_Init(uint32_t cpuIdx, uint32_t cpuSemaAddr)
 {
     bool rc = false;
 
     if (cpuIdx < CPU_NUM_IDX)
     {
+        /* Save semaphore address */
+        s_cpuSemaAddr[cpuIdx] = cpuSemaAddr;
+
+        /* Reset semaphore */
+        (void) CPU_SemaphoreReset(cpuIdx);
+
         /* Configure system-level sleep control default */
         uint32_t sysSleepCtrl = s_cpuMgmtInfo[cpuIdx].cmcSysSleepCtrl;
         s_gpcCpuCtrlPtrs[cpuIdx]->CMC_SYS_SLEEP_CTRL = sysSleepCtrl;
@@ -616,6 +633,64 @@ static bool CPU_WdogReset(uint32_t cpuIdx)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Reset CPU semaphore                                                      */
+/*--------------------------------------------------------------------------*/
+static bool CPU_SemaphoreReset(uint32_t cpuIdx)
+{
+    bool rc = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        if (s_cpuSemaAddr[cpuIdx] != 0U)
+        {
+            cpu_semaphore_t *sema = (cpu_semaphore_t *) s_cpuSemaAddr[cpuIdx];
+
+            sema->flag0 = 0U;
+            sema->flag1 = 0U;
+            sema->turn = 0U;
+        }
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Request CPU semaphore with timeout                                       */
+/*--------------------------------------------------------------------------*/
+static bool CPU_SemaphoreRequest(uint32_t cpuIdx, uint32_t timeoutUsec)
+{
+    bool rc = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        if (s_cpuSemaAddr[cpuIdx] != 0U)
+        {
+            cpu_semaphore_t *sema = (cpu_semaphore_t *) s_cpuSemaAddr[cpuIdx];
+
+            sema->flag0 = 1U;
+            sema->turn = 1U;
+
+            uint32_t pollUsec = 0U;
+
+            bool busy = (sema->flag1 == 1U) && (sema->turn == 1U);
+
+            /* Poll until CPU semaphore released */
+            while (busy && (pollUsec < timeoutUsec))
+            {
+                SystemTimeDelay(1U);
+                ++pollUsec;
+                busy = (sema->flag1 == 1U) && (sema->turn == 1U);
+            }
+
+            rc = !busy;
+        }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Enable/disable CPU IRQs                                                  */
 /*--------------------------------------------------------------------------*/
 bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq)
@@ -758,6 +833,9 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
                 /* Prior to reset of A55, quiese the GIC interfaces */
                 if (resetType == RST_LINE_CTRL_ASSERT)
                 {
+                    /* Request CPU semaphore for atomic access to GIC */
+                    (void) CPU_SemaphoreRequest(CPU_IDX_A55P, 100U);
+
                     uint32_t gicdIdxLast = CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
                     for (uint32_t gicdIdx = 0U; gicdIdx <= gicdIdxLast; gicdIdx++)
                     {
@@ -1086,6 +1164,12 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         if (rc)
                         {
                             rc = CPU_PerLpiConfigInit(cpuIdx);
+                        }
+
+                        /* Reset CPU semaphore */
+                        if (rc)
+                        {
+                            rc = CPU_SemaphoreReset(cpuIdx);
                         }
 
                         /* Restore GPC LP handshake */

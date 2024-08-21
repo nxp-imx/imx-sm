@@ -50,10 +50,26 @@
 /* Includes */
 
 #include "sm.h"
+#include "dev_sm_cpu.h"
 
 /* Defines */
 
 /* Types */
+
+/*!
+ * Device config structure
+ *
+ * See @ref CONFIG_STRUCT for more info.
+ */
+typedef struct
+{
+    uint32_t cpuSemaAddr[DEV_SM_NUM_CPU];  /*!< CPU semaphore address */
+} dev_config_t;
+
+/* Global constant data */
+
+/*! Device config */
+extern const dev_config_t g_devConfig;
 
 /* Functions */
 

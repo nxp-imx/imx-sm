@@ -190,6 +190,7 @@ typedef struct
  * Initialize CMC/GPC interfaces for the CPU
  *
  * @param[in]   cpuIdx      CPU identifier
+ * @param[in]   cpuSemaAddr CPU semaphore address
  *
  * This function allows caller to initialize CMC/GPC interface for the given
  * CPU.
@@ -197,7 +198,7 @@ typedef struct
  * @return Returns true if CPU initiazation is performed successfully,
  *         otherwise false.
  */
-bool CPU_Init(uint32_t cpuIdx);
+bool CPU_Init(uint32_t cpuIdx, uint32_t cpuSemaAddr);
 
 /*!
  * Set CPU WAIT signal

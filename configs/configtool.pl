@@ -1668,6 +1668,7 @@ sub generate_dev
     my $fileName = 'config_dev.h';
 
     my @dat = grep(/^MIX\b/, @$cfgRef);
+    my @cpus = grep(/DEV_SM_CPU_/, @$cfgRef);
 
     # Skip if the file already exists
     if (-e $outDir . '/' . $fileName)
@@ -1689,7 +1690,25 @@ sub generate_dev
 
     print $out '/* Includes */' . "\n\n";
     print $out '#include "config.h"' . "\n\n";
-    print $out '/* Defines */' . "\n";
+    print $out '/* Defines */' . "\n\n";
+
+	print $out '/*! Config for device */' . "\n";
+	print $out '#define SM_DEV_CONFIG_DATA \\' . "\n";
+	print $out '    { \\' . "\n";
+    foreach my $cpu (@cpus)
+    {
+        if ((my $parm = &param($cpu, 'sema')) ne '!')
+        {
+            if ($cpu =~ /(DEV_SM_CPU_[A-Z0-9_]+)/)
+            {
+                my $devCpu = $1;
+
+            	print $out '        .cpuSemaAddr[' . $devCpu . '] = '
+            	    . $parm . 'U, \\' . "\n";
+            }
+        }
+    }
+	print $out '    }' . "\n";
 
 	# Output mix defines
     foreach my $mix (@dat)

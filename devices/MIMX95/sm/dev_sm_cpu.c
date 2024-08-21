@@ -59,7 +59,7 @@ int32_t DEV_SM_CpuInit(void)
     for (uint32_t cpuId = 0U; cpuId < DEV_SM_NUM_CPU; cpuId++)
     {
         /* Initialize CMC interfaces */
-        if (!CPU_Init(cpuId))
+        if (!CPU_Init(cpuId, g_devConfig.cpuSemaAddr[cpuId]))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }

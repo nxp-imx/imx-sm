@@ -59,6 +59,10 @@ static bool s_pllContextValidHsio = false;
 static bool s_pllContextValidLdb = false;
 static bool s_pllContextValidDdr = false;
 
+/* Global constant data */
+
+const dev_config_t g_devConfig = SM_DEV_CONFIG_DATA;
+
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
