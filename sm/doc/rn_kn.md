@@ -28,3 +28,12 @@ Bug {#RN_KN_BUG}
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes | Y | Y |
 | [SM-143](https://jira.sw.nxp.com/projects/SM/issues/SM-143) | Defining the SM LM with any DID other than 2 will fail | Y | Y |
 
+Silicon Workaround {#RN_KN_REQ}
+============
+
+These are a mix of silicon errata workarounds and recommended usage changes.
+
+| Key     | Summary                        | i.MX95<br> (A0) | i.MX95<br> (A1) |
+|------------|-------------------------------|---|---|
+| [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER | Y | Y |
+

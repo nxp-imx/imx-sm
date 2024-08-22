@@ -50,6 +50,7 @@ Bug {#RN_CL_BUG}
 | [SM-129](https://jira.sw.nxp.com/projects/SM/issues/SM-129) | Preconditions required when switching SRC between SW and HW control [[detail]](@ref RN_DETAIL_SM_129) |   | Y | Y |
 | [SM-132](https://jira.sw.nxp.com/projects/SM/issues/SM-132) | SM error handling can fail if LMM not initialized [[detail]](@ref RN_DETAIL_SM_132) |   | Y | Y |
 | [SM-150](https://jira.sw.nxp.com/projects/SM/issues/SM-150) | Temp sensor threshold interrupts hang [[detail]](@ref RN_DETAIL_SM_150) |   | Y | Y |
+| [SM-154](https://jira.sw.nxp.com/projects/SM/issues/SM-154) | Debug UART RX can hang if it overflows [[detail]](@ref RN_DETAIL_SM_154) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -245,4 +246,9 @@ SM-150: Temp sensor threshold interrupts hang {#RN_DETAIL_SM_150}
 ----------
 
 Corrected issue where temp sensor threshold interrupts will hang. The interrupt doesn't clear and the interrupt will be taken repeatedly. Also switched the sensors from continuous mode to periodic one-shot mode as continuous mode has been deprecated in the IP.
+
+SM-154: Debug UART RX can hang if it overflows {#RN_DETAIL_SM_154}
+----------
+
+Added code to monitor LPUART status for overflow and clear the condition. This is done for the debug UART in the monitor code.
 
