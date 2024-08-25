@@ -34,3 +34,6 @@ cfg :
 	@echo "Generating ./configs/$(CONFIG)"
 	$(AT)$(ROOT_DIR)/configs/configtool.pl -i ./configs/$(CONFIG).cfg -o ./configs/$(CONFIG)
 
+info :
+	$(AT)$(ROOT_DIR)/configs/configinfo.pl -i ./configs/$(CONFIG).cfg
+

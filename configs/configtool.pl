@@ -3682,7 +3682,7 @@ sub get_define
 
 	if (@define)
 	{
-        my @words = split(/ /, $define[0]);
+        my @words = split('[,\s]+', $define[0]);
 
 		if ($words[1])
 		{
