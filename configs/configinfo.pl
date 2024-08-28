@@ -39,6 +39,7 @@ use File::Basename;
 use lib dirname (__FILE__);
 use Data::Dumper;
 use List::Util qw(first);
+use List::Util qw(max);
 
 # Subroutines
 sub load_config_files;
@@ -46,6 +47,7 @@ sub load_file;
 sub generate_rsrc;
 sub param;
 sub get_define;
+sub print_table;
 
 my %args;
 
@@ -106,17 +108,27 @@ sub load_config_files
     }
 
     # Cleanup
+    @cfg = grep(!/^NOTIFY:/, @cfg);
+    @cfg = grep(!/^GET:/, @cfg);
+    @cfg = grep(!/^SET:/, @cfg);
+    @cfg = grep(!/^PRIV:/, @cfg);
+    @cfg = grep(!/^ALL:/, @cfg);
+    @cfg = grep(!/^READONLY:/, @cfg);
+    @cfg = grep(!/^CONTROL:/, @cfg);
     @cfg = grep(!/^DATA:/, @cfg);
     @cfg = grep(!/^EXEC:/, @cfg);
-    @cfg = grep(!/^READONLY:/, @cfg);
     @cfg = grep(!/^OWNER:/, @cfg);
-    @cfg = grep(!/^CONTROL:/, @cfg);
     @cfg = grep(!/^DFMT0:/, @cfg);
     @cfg = grep(!/^DFMT1:/, @cfg);
     @cfg = grep(!/^TEST_MU:/, @cfg);
     @cfg = grep(!/^ACCESS:/, @cfg);
     @cfg = grep(!/^ALL_RO:/, @cfg);
     @cfg = grep(!/^PD_/, @cfg);
+    @cfg = grep(!/perm=0/, @cfg);
+
+	# Append
+    push @cfg, 'FUSA:';
+    push @cfg, 'SYS:';
 
     # Remove leading/trailing spaces
     s/^\s+|\s+$//g for @cfg;
@@ -211,14 +223,15 @@ sub generate_rsrc
     my ($cfgRef) = @_;
     my @rsrc = grep(/^[A-Z0-9_]+: /, @$cfgRef);
     my @list = grep(!/^[A-Z0-9_]+: /, @$cfgRef);
+    my @table;
 
 	# Filter
 	@rsrc = sort @rsrc;
     @rsrc = grep(!/nrgns/, @rsrc);
     @rsrc = grep(!/nblks/, @rsrc);
 
-	# Print header
-	print '| Resource | DOM |';
+	# Start heading
+	my $heading = 'Resource|DOM|';
 
     # Loop over LM
 	my @lm = grep(/^LM[0-9]+ /, @list);
@@ -226,52 +239,57 @@ sub generate_rsrc
 	{
         if ($l =~ /^(LM[0-9]+) /)
         {
-        	print ' ' . $1 . ' |';
+			$heading = $heading . $1 . '|';
         }
 	}
-	print "\n";
+    push @table, $heading;
 
     # Loop over resources
+    my $dom = '';
     foreach my $r (@rsrc)
     {
         if ($r =~ /^([A-Z0-9_]+): /)
         {
 			my $name = $1;
-			print '| ' . $name . ' |';
+			my $row = $name . '|';
 
-			my $cnt = 0;
-			my $dom = '';
+			my $p = '';
 			my @lmRsrc = grep(/^LM[0-9]+ /  || /^DOM[0-9]+ / || /^$name /,
 				@list);
+
 		    foreach my $l (@lmRsrc)
 			{
-		        if ($l =~ /^LM[0-9]+ /)
-		        {
-		        	print ' |';
-		        	$cnt++;
-		        }
-		        elsif ($l =~ /^DOM([0-9]+) /)
+		        if ($l =~ /^DOM([0-9]+) /)
 		        {
 		        	$dom = $1;
 		        }
-		        elsif ($cnt > 0)
+		        elsif ($l =~ /^LM[0-9]+ /)
 		        {
-        			my @words = split(/ /, $l);
-
-		        	print ' ' . $words[1];
+					$row = $row . $p . ' |';
+                    $p = '';
+                    $dom = '';
 		        }
 		        else
 		        {
-		        	print ' ' . $dom;
+        			my @words = split(/ /, $l);
+
+                    if ($dom ne '')
+                    {
+                        $p = $dom;
+                    }
+                    else
+                    {
+                        $p = $words[1];
+                    }
 		        }
 			}
-			print ' |' . "\n";
+			$row = $row . $p . ' |';
 
-#			print Dumper(@lmRsrc);
+    		push @table, $row;
         }
    	}
 
-#	print Dumper(@rsrc);
+	print_table(\@table);
 }
 
 ###############################################################################
@@ -309,5 +327,61 @@ sub get_define
 			return $words[1];
 		}
 	}
+}
+
+###############################################################################
+
+sub print_table
+{
+    my ($tblRef) = @_;
+	my @table = @$tblRef;
+
+	# Determine column sizes #/
+    my @headerWords = split(/\|/, $table[0]);
+	my @colSize;
+    foreach my $w (@headerWords)
+    {
+    	push @colSize, length $w;		
+	}
+    foreach my $r (@table)
+    {
+	    my @rowWords = split(/\|/, $r);
+
+		for my $i (0 .. $#rowWords)
+	    {
+			$colSize[$i] = max($colSize[$i], length $rowWords[$i]); 	
+		}
+	}
+
+	# Print header
+	print '|';
+	for my $i (0 .. $#headerWords)
+    {
+	    printf(" %*s |", -$colSize[$i], $headerWords[$i])
+	}
+	print "\n";
+
+	# Print divider
+	print '|';
+	for my $i (0 .. $#headerWords)
+    {
+	    printf("%s|", '-' x ($colSize[$i] + 2))
+	}
+	print "\n";
+
+	# Print rows
+	for my $r (1 .. $#table)
+    {
+	    my @rowWords = split(/\|/, $table[$r]);
+
+		print '|';
+		for my $i (0 .. $#rowWords)
+	    {
+		    printf(" %*s |", -$colSize[$i], $rowWords[$i])
+		}
+		print "\n";
+	}
+
+#	print Dumper(@table);
 }
 

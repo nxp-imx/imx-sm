@@ -85,7 +85,7 @@
         .faultPerms[DEV_SM_FAULT_SW0] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_SW1] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG5] = SM_SCMI_PERM_ALL, \
-        .fusaPerms = SM_SCMI_PERM_EXCLUSIVE, \
+        .fusaPerms = SM_SCMI_PERM_ALL, \
         .lmmPerms[2] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M7] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M7] = SM_SCMI_PERM_ALL, \
