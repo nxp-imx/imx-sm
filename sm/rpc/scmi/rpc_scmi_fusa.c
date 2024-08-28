@@ -1295,7 +1295,7 @@ static int32_t FusaScheckEvntrig(const scmi_caller_t *caller,
 /*                                                                          */
 /* Process the FUSA_SCHECK_TEST_EXEC message. Platform handler for          */
 /* SCMI_FusaScheckTestExec(). Requires access greater than or equal to      */
-/* EXCLUSIVE.                                                               */
+/* SET.                                                                     */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if fault handling disabled for the caller.             */
