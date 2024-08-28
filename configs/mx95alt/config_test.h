@@ -135,10 +135,29 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  0U
+#define SM_SCMI_NUM_TEST  19U
 
 /*! Config data array for tests */
-#define SM_SCMI_TEST_CONFIG_DATA
+#define SM_SCMI_TEST_CONFIG_DATA \
+    {.testId = TEST_BUTTON, .channel = 0U, .rsrc = DEV_SM_BUTTON_0}, \
+    {.testId = TEST_CLK, .channel = 0U, .rsrc = DEV_SM_CLK_DISPOCRAM}, \
+    {.testId = TEST_CLK, .channel = 0U, .rsrc = DEV_SM_CLK_MQS1}, \
+    {.testId = TEST_CLK, .channel = 0U, .rsrc = DEV_SM_CLK_SAI1}, \
+    {.testId = TEST_CTRL, .channel = 0U, .rsrc = DEV_SM_CTRL_MQS1_SETTINGS}, \
+    {.testId = TEST_CTRL, .channel = 0U, .rsrc = DEV_SM_CTRL_SAI1_MCLK}, \
+    {.testId = TEST_DAISY, .channel = 0U, .rsrc = DEV_SM_DAISY_SAI1_MCLK}, \
+    {.testId = TEST_GPR, .channel = 0U, .rsrc = DEV_SM_GPR_4}, \
+    {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_CAMERA}, \
+    {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_CAMERA}, \
+    {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_DISPLAY}, \
+    {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_GPU}, \
+    {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_NPU}, \
+    {.testId = TEST_PERF, .channel = 0U, .rsrc = DEV_SM_PERF_CAM}, \
+    {.testId = TEST_PERF, .channel = 0U, .rsrc = DEV_SM_PERF_DISP}, \
+    {.testId = TEST_PERF, .channel = 0U, .rsrc = DEV_SM_PERF_GPU}, \
+    {.testId = TEST_PERF, .channel = 0U, .rsrc = DEV_SM_PERF_NPU}, \
+    {.testId = TEST_PIN, .channel = 0U, .rsrc = DEV_SM_PIN_UART1_RXD}, \
+    {.testId = TEST_RTC, .channel = 0U, .rsrc = DEV_SM_RTC_BBNSM}
 
 /*! Default channel for non-agent specific tests */
 #define SM_TEST_DEFAULT_CHN  0U
