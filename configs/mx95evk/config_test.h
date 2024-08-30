@@ -139,7 +139,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  34U
+#define SM_SCMI_NUM_TEST  40U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
@@ -149,6 +149,10 @@
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_ENETREF}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_ENETTIMER1}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_LPUART8}, \
+    {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_MQS1}, \
+    {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_SAI1}, \
+    {.testId = TEST_CTRL, .channel = 5U, .rsrc = DEV_SM_CTRL_MQS1_SETTINGS}, \
+    {.testId = TEST_CTRL, .channel = 5U, .rsrc = DEV_SM_CTRL_SAI1_MCLK}, \
     {.testId = TEST_DAISY, .channel = 0U, .rsrc = DEV_SM_DAISY_LPUART3_CTS}, \
     {.testId = TEST_DAISY, .channel = 0U, .rsrc = DEV_SM_DAISY_LPUART3_RXD}, \
     {.testId = TEST_DAISY, .channel = 0U, .rsrc = DEV_SM_DAISY_LPUART3_TXD}, \
@@ -158,6 +162,7 @@
     {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_NETC_ETH1_RMII_RX_ER}, \
     {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_NETC_TMR_1588_TRIG1}, \
     {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_NETC_TMR_1588_TRIG2}, \
+    {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_SAI1_MCLK}, \
     {.testId = TEST_GPR, .channel = 5U, .rsrc = DEV_SM_GPR_4}, \
     {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_A55P}, \
     {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_M7}, \
@@ -176,7 +181,8 @@
     {.testId = TEST_PERLPI, .channel = 0U, .rsrc = DEV_SM_PERLPI_LPUART3}, \
     {.testId = TEST_PERLPI, .channel = 5U, .rsrc = DEV_SM_PERLPI_LPUART8}, \
     {.testId = TEST_PIN, .channel = 5U, .rsrc = DEV_SM_PIN_UART1_RXD}, \
-    {.testId = TEST_RTC, .channel = 5U, .rsrc = DEV_SM_RTC_BBNSM}
+    {.testId = TEST_RTC, .channel = 5U, .rsrc = DEV_SM_RTC_BBNSM}, \
+    {.testId = TEST_SENSOR, .channel = 0U, .rsrc = DEV_SM_SENSOR_TEMP_ANA}
 
 /*! Default channel for non-agent specific tests */
 #define SM_TEST_DEFAULT_CHN  0U
