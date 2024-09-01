@@ -456,7 +456,7 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
             /* Translate and exit */
             if (status != SM_ERR_SUCCESS)
             {
-                status = SM_ERR_NOT_FOUND;
+                status = SM_ERR_MISSING_PARAMETERS;
                 break;
             }
         }
@@ -509,7 +509,7 @@ int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm)
 int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
     const lmm_rst_rec_t *bootRec)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
     lmm_rpc_trigger_t trigger =
     {
         .event = LMM_TRIGGER_SYSTEM,
@@ -519,8 +519,18 @@ int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
         .parm[3] = lmId
     };
 
+    /* Check LM */
+    status = LMM_SystemLmCheck(bootLm);
+
     /* Boot LM */
-    status = LMM_DoBoot(&trigger, bootRec);
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_DoBoot(&trigger, bootRec);
+    }
+    else
+    {
+        s_lmError[bootLm] = status;
+    }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
@@ -756,9 +766,23 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
             if ((g_lmmConfig[lm].group == group)
                 && (g_lmmConfig[lm].boot[s_modeSel] == bootOrder))
             {
-                /* Boot LM and store status */
-                status = LMM_SystemLmBoot(lmId, agentId, lm,
-                    bootRec);
+                /* Check if possible to boot? */
+                int32_t bootStatus = LMM_SystemLmCheck(lm);
+
+                if (bootStatus == SM_ERR_SUCCESS)
+                {
+                    /* Boot LM and store status */
+                    status = LMM_SystemLmBoot(lmId, agentId, lm,
+                        bootRec);
+                }
+
+                /* Error if not skip */
+                if ((g_lmmConfig[lm].bootSkip[s_modeSel] == 0U)
+                    && (bootStatus != SM_ERR_SUCCESS))
+                {
+                    status = bootStatus;
+                    s_lmError[lm] = status;
+                }
             }
 
             /* Exit loop on error */

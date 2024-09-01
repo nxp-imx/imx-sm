@@ -365,9 +365,11 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
  *
  * @param[in]     bootLm     LM to check
  *
- * Returns ::SM_ERR_SUCCESS if a CPU can boot.
- *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS if a CPU can boot
+ * - ::SM_ERR_MISSING_PARAMETERS: if missing CPU start address
  */
 int32_t LMM_SystemLmCheck(uint32_t bootLm);
 
