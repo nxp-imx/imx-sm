@@ -215,12 +215,15 @@ void SM_Error(int32_t status)
 {
     if (s_lmmInited)
     {
-        uint32_t pc = 0U;
+        uint32_t pc;
 
-#if !defined(SIMU) && !defined(CPPCHECK)
+#if !defined(SIMU)
         /* Get the LR as PC */
+        // cppcheck-suppress uninitvar
         // coverity[misra_c_2012_rule_1_2_violation:FALSE]
         __ASM ("MOV %0, LR\n" : "=r" (pc));
+#else
+        pc = 0U;
 #endif
 
 #ifdef USES_FUSA
@@ -262,6 +265,7 @@ void exit(int status)
         uint32_t pc;
 
         /* Get the LR as PC */
+        // cppcheck-suppress uninitvar
         // coverity[misra_c_2012_rule_1_2_violation:FALSE]
         __ASM ("MOV %0, LR\n" : "=r" (pc));
 

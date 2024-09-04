@@ -64,6 +64,7 @@ static lmm_seenv_info_t s_seenvInfo[SM_LM_NUM_SEENV] = { 0U };
 /*--------------------------------------------------------------------------*/
 /* Init LMM FuSa management                                                 */
 /*--------------------------------------------------------------------------*/
+// cppcheck-suppress constParameter
 // coverity[misra_c_2012_rule_8_13_violation:FALSE]
 int32_t LMM_FusaInit(uint32_t *mSel)
 {

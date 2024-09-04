@@ -2394,6 +2394,7 @@ static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel)
         if (perfLevel > DEV_SM_PERF_LVL_PRK)
         {
             status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_ARM,
+                // cppcheck-suppress arrayIndexOutOfBoundsCond
                 &s_perfPllCfgA55[perfLevel]);
             if (status == SM_ERR_SUCCESS)
             {

@@ -421,6 +421,7 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
         *errStatus = s_lmError[stateLm];
     }
 
+    // cppcheck-suppress unknownMacro
     SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, *errStatus = SM_ERR_TEST)
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
