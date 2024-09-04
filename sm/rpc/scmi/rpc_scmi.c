@@ -684,9 +684,18 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
     {
         int32_t status;
         static scmi_msg_t s_msgCopy;
+        static bool s_copyInUse = false;
 
         /* Check if aborted */
         status = RPC_SCMI_IsAborted(scmiChannel);
+
+        /* Check if in use */
+        if ((status == SM_ERR_SUCCESS) && s_copyInUse)
+        {
+            /* RPC preempted */
+            SM_Error(SM_ERR_BUSY);
+        }
+        s_copyInUse = true;
 
         /* Copy receive data and do CRC */
         if (status == SM_ERR_SUCCESS)
@@ -752,6 +761,8 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
                 status = RPC_SCMI_A2pSubDispatch(&caller, protocolId,
                     messageId);
             }
+
+            s_copyInUse = false;
         }
 
         /* Send response */
