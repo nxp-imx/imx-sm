@@ -64,6 +64,9 @@
  * @{
  */
 
+/*!
+ * Dump GCOV data.
+ */
 void GCOV_InfoDump(void);
 
 /** @} */
