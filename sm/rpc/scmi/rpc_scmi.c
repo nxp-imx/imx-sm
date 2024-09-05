@@ -761,8 +761,6 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
                 status = RPC_SCMI_A2pSubDispatch(&caller, protocolId,
                     messageId);
             }
-
-            s_copyInUse = false;
         }
 
         /* Send response */
@@ -770,6 +768,8 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
         {
             (void) RPC_SCMI_A2pTx(&caller, caller.lenMsg, status);
         }
+
+        s_copyInUse = false;
     }
 }
 
