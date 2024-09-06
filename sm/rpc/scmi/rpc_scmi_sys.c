@@ -311,7 +311,7 @@ static bool s_sysNotify[SM_SCMI_NUM_AGNT];
 /* Local functions */
 
 static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
-    uint32_t systemState, bool *graceful);
+    uint32_t systemState, bool graceful, bool *noReturn);
 static int32_t SystemSleepMode(uint32_t lmId, uint32_t agentId,
     uint32_t powerMode);
 
@@ -577,12 +577,14 @@ static int32_t SystemPowerStateSet(const scmi_caller_t *caller,
         }
         else
         {
+            bool noReturn = !graceful;
+
             /* Request power transition */
             status = SystemPowerUpdate(caller, lmId, in->systemState,
-                &graceful);
+                graceful, &noReturn);
 
             /* May be nothing to return result to */
-            if ((status == SM_ERR_SUCCESS) && (!graceful))
+            if ((status == SM_ERR_SUCCESS) && noReturn)
             {
                 *len = 0U;
             }
@@ -772,7 +774,7 @@ static int32_t SysResetAgentConfig(uint32_t lmId, uint32_t agentId,
 /* - systemState: new system power state                                    */
 /*--------------------------------------------------------------------------*/
 static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
-    uint32_t systemState, bool *graceful)
+    uint32_t systemState, bool graceful, bool *noReturn)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -782,17 +784,17 @@ static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
         case SYS_STATE_SHUTDOWN:
             /* Shutdown */
             status = LMM_SystemLmShutdown(caller->lmId, caller->instAgentId,
-                lmId, *graceful, &g_swReason);
+                lmId, graceful, &g_swReason);
             break;
         case SYS_STATE_COLD_RESET:
             /* Cold Reset */
             status = LMM_SystemLmReset(caller->lmId, caller->instAgentId,
-                lmId, false, *graceful, &g_swReason);
+                lmId, false, graceful, &g_swReason);
             break;
         case SYS_STATE_WARM_RESET:
             /* Warm Reset */
             status = LMM_SystemLmReset(caller->lmId, caller->instAgentId,
-                lmId, true, *graceful, &g_swReason);
+                lmId, true, graceful, &g_swReason);
             break;
         case SYS_STATE_POWER_UP:
             /* Power up */
@@ -806,34 +808,36 @@ static int32_t SystemPowerUpdate(const scmi_caller_t *caller, uint32_t lmId,
         case SYS_STATE_FULL_SHUTDOWN:
             /* System shutdown */
             status = LMM_SystemShutdown(caller->lmId,
-                caller->instAgentId, *graceful, &g_swReason);
+                caller->instAgentId, graceful, &g_swReason);
             break;
         case SYS_STATE_FULL_RESET:
             /* System reset*/
             status = LMM_SystemReset(caller->lmId,
-                caller->instAgentId, *graceful, &g_swReason);
+                caller->instAgentId, graceful, &g_swReason);
             break;
         case SYS_STATE_FULL_SUSPEND:
             /* System suspend */
-            *graceful = true;
             status = LMM_SystemSuspend(caller->lmId,
                 caller->instAgentId);
+            *noReturn = false;
             break;
         case SYS_STATE_FULL_WAKE:
             /* System wake*/
-            *graceful = true;
             status = LMM_SystemWake(caller->lmId,
                 caller->instAgentId);
+            *noReturn = false;
             break;
         case SYS_STATE_GRP_SHUTDOWN:
             /* System shutdown */
             status = LMM_SystemGrpShutdown(caller->lmId,
-                caller->instAgentId, *graceful, &g_swReason, 0U);
+                caller->instAgentId, graceful, &g_swReason, 0U,
+                noReturn);
             break;
         case SYS_STATE_GRP_RESET:
             /* System reset*/
             status = LMM_SystemGrpReset(caller->lmId,
-                caller->instAgentId, *graceful, &g_swReason, 0U);
+                caller->instAgentId, graceful, &g_swReason, 0U,
+                noReturn);
             break;
         default:
             status = SM_ERR_INVALID_PARAMETERS;

@@ -72,6 +72,8 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
     /* Do reaction */
     if (status == SM_ERR_SUCCESS)
     {
+        bool noReturn = false;
+
         switch (reaction)
         {
             case LMM_REACT_SYS_RESET:
@@ -82,11 +84,11 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
                 break;
             case LMM_REACT_GRP_RESET:
                 status = LMM_SystemGrpReset(0U, 0U, false, &resetRec,
-                    (uint8_t) lm);
+                    (uint8_t) lm, &noReturn);
                 break;
             case LMM_REACT_GRP_SHUTDOWN:
                 status = LMM_SystemGrpShutdown(0U, 0U, false, &resetRec,
-                    (uint8_t) lm);
+                    (uint8_t) lm, &noReturn);
                 break;
             case LMM_REACT_LM_RESET:
                 status = LMM_SystemLmReset(0U, 0U, lm, false, false,

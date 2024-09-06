@@ -310,6 +310,7 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
  * @param[in]     graceful     Graceful request if true
  * @param[in]     shutdownRec  Shutdown record to store
  * @param[in]     group        Group to shutdown
+ * @param[in,out] noReturn     Flag indicating if caller is gone
  *
  * Function to shutdown an LM group. Will shutdown all LM belonging to
  * the group.
@@ -317,7 +318,8 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
-    bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group);
+    bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group,
+    bool *noReturn);
 
 /*!
  * Reset an LM group.
@@ -327,14 +329,16 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
  * @param[in]     graceful  Graceful request if true
  * @param[in]     resetRec  Reset record to store
  * @param[in]     group     Group to reset
+ * @param[in,out] noReturn  Flag indicating if caller is gone
  *
  * Function to reset an LM group. Will shutdown all LM belonging to
  * the group and then boot those configured to boot at system boot.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
-    const lmm_rst_rec_t *resetRec, uint8_t group);
+int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId,
+    bool graceful, const lmm_rst_rec_t *resetRec, uint8_t group,
+    bool *noReturn);
 
 /** @} */
 

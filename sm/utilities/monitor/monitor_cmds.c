@@ -3141,6 +3141,7 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
         else
         {
             bool graceful = false;
+            bool noReturn = false;
 
             int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
                 argv[arg]);
@@ -3159,11 +3160,11 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
                     break;
                 case 1:  /* shutdown */
                     status = LMM_SystemGrpShutdown(0U, 0U, graceful,
-                        &g_swReason, grp);
+                        &g_swReason, grp, &noReturn);
                     break;
                 case 2:  /* reset */
                     status = LMM_SystemGrpReset(0U, 0U, graceful,
-                        &g_swReason, grp);
+                        &g_swReason, grp, &noReturn);
                     break;
                 default:
                     status = SM_ERR_INVALID_PARAMETERS;

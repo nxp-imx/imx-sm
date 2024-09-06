@@ -811,9 +811,13 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
 /*--------------------------------------------------------------------------*/
 // coverity[misra_c_2012_rule_17_2_violation:FALSE]
 int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
-    bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group)
+    bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group,
+    bool *noReturn)
 {
     int32_t status = SM_ERR_SUCCESS;
+
+    /* Default to a return */
+    *noReturn = false;
 
     /* Loop over LMs */
     for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
@@ -826,7 +830,14 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
                 shutdownRec);
 
             /* Error? */
-            if (status != SM_ERR_SUCCESS)
+            if (status == SM_ERR_SUCCESS)
+            {
+                if ((lmId == lm) && !graceful)
+                {
+                    *noReturn = true;
+                }
+            }
+            else
             {
                 break;
             }
@@ -843,7 +854,7 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
 /* Group reset                                                              */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
-    const lmm_rst_rec_t *resetRec, uint8_t group)
+    const lmm_rst_rec_t *resetRec, uint8_t group, bool *noReturn)
 {
     int32_t status;
 
@@ -851,7 +862,7 @@ int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
     {
         /* Shutdown LMs */
         status = LMM_SystemGrpShutdown(lmId, agentId, graceful, resetRec,
-            group);
+            group, noReturn);
 
         /* Boot LMs */
         if (status == SM_ERR_SUCCESS)
