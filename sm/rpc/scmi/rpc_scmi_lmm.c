@@ -1076,18 +1076,34 @@ static int32_t LmmNotify(const scmi_caller_t *caller, const msg_rlmm9_t *in,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Check permissions */
     if (status == SM_ERR_SUCCESS)
     {
-        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-            < SM_SCMI_PERM_NOTIFY)
+        if (in->lmId != 0U)
         {
-            status = SM_ERR_DENIED;
+            /* Check permissions */
+            if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
+                < SM_SCMI_PERM_NOTIFY)
+            {
+                status = SM_ERR_DENIED;
+            }
+            else
+            {
+                s_lmmNotify[in->lmId][caller->agentId]
+                    = (uint8_t) in->flags;
+            }
         }
         else
         {
-            s_lmmNotify[in->lmId][caller->agentId]
-                = (uint8_t) in->flags;
+            /* Loop over LMs */
+            for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
+            {
+                if (g_scmiAgentConfig[caller->agentId].lmmPerms[lm]
+                    >= SM_SCMI_PERM_NOTIFY)
+                {
+                    s_lmmNotify[lm][caller->agentId]
+                        = (uint8_t) in->flags;
+                }
+            }
         }
     }
 
