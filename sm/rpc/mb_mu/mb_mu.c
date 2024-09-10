@@ -83,6 +83,7 @@ int32_t MB_MU_Init(uint8_t inst, uint8_t db, bool noIrq, uint32_t initCount)
         uint32_t priority = s_mbMuConfig[inst].priority;
 
         /* Init MU */
+        MU_ResetBothSides(base);
         MU_Init(base);
         NVIC_EnableIRQ(irq);
 
