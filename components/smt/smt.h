@@ -55,7 +55,7 @@
 /* Defines */
 
 /*! SMT max number of channels */
-#define SMT_MAX_CHN   24U
+#define SMT_MAX_CHN   36U
 
 /*! SMT buffer size */
 #define SMT_BUFFER_SIZE     128U
