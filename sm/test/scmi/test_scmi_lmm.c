@@ -353,7 +353,7 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
         CHECK(SCMI_LmmNotify(channel, lm, flags));
 
         /* Cause Event to Occur */
-        const uint32_t sequences[24] = { 0U };
+        const uint32_t sequences[36] = { 0U };
         flags = SCMI_LMM_FLAGS_GRACEFUL(0U);
         printf("SCMI_LmmShutdown(%u, %u)\n", channel, lm);
         CHECK(SCMI_LmmShutdown(channel, lm, flags));
