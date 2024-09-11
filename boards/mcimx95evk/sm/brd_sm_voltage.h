@@ -192,7 +192,16 @@ int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel);
 int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel);
 
 /*!
- * Restore voltage levels.
+ * Suspend voltage modes/levels.
+ *
+ * @param[in]     offArm        Turn off VDD_ARM if on
+ *
+ * This function saves and disabled the ARM voltage.
+ */
+void BRD_SM_VoltageSuspend(bool offArm);
+
+/*!
+ * Restore voltage modes/levels.
  *
  * This function writes the last set voltage levels back to the PMICs.
  */

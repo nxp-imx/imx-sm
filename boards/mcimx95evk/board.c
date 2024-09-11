@@ -493,6 +493,8 @@ void BOARD_InitSerialBus(void)
 /*--------------------------------------------------------------------------*/
 void BOARD_SystemSleepPrepare(uint32_t sleepMode, uint32_t sleepFlags)
 {
+    BRD_SM_VoltageSuspend(true);
+
     /* Configure SM LPUART for wakeup */
     if (s_uartConfig.base != NULL)
     {
@@ -530,10 +532,10 @@ void BOARD_SystemSleepEnter(uint32_t sleepMode, uint32_t sleepFlags)
         /* Disable WDOG */
         WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
 
-        /* Waits until for new configuration to take effect. */
+        /* Waits for new configuration to take effect. */
         while (0U == ((BOARD_WDOG_BASE_PTR->CS) & WDOG_CS_RCS_MASK))
         {
-            ;
+            ; /* Intentional empty while */
         }
     }
 }
