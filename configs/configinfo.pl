@@ -391,7 +391,7 @@ sub generate_mem
 	@mem = sort @newMem;
 
 	# Start heading
-	my $heading = 'Aadress|Mem|DOM|';
+	my $heading = 'Address|Mem|DOM|';
 
     # Loop over agents
     my $numAgents = 0;
