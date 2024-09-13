@@ -45,6 +45,7 @@ use List::Util qw(max);
 sub load_config_files;
 sub load_file;
 sub generate_rsrc;
+sub generate_mem;
 sub param;
 sub get_define;
 sub print_table;
@@ -85,8 +86,11 @@ if (defined $inputFile)
 # Load config files
 my @cfg = &load_config_files($inputFile); 
 
-# Generate DOX file
+# Generate resource list
 &generate_rsrc(\@cfg);
+
+# Generate memory list
+&generate_mem(\@cfg);
 
 ###############################################################################
 
@@ -233,13 +237,27 @@ sub generate_rsrc
 	# Start heading
 	my $heading = 'Resource|DOM|';
 
-    # Loop over LM
-	my @lm = grep(/^LM[0-9]+ /, @list);
-    foreach my $l (@lm)
+    # Loop over agents
+	my @clients = grep(/^[A-Z]+_AGENT[0-9]+ / || /^LM0 /, @list);
+    foreach my $l (@clients)
 	{
-        if ($l =~ /^(LM[0-9]+) /)
+        if ($l =~ /^LM0 /)
         {
-			$heading = $heading . $1 . '|';
+			$heading = $heading . 'SM' . '|';
+        }
+        if ($l =~ /^[A-Z]+_(AGENT[0-9]+) /)
+        {
+			my $aName = $1;
+
+		    if ((my $parm = &param($l, 'name')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$heading = $heading . $parm . '|';
+		    }
+		    else
+		    {
+				$heading = $heading . $aName . '|';
+		    }
         }
 	}
     push @table, $heading;
@@ -254,16 +272,22 @@ sub generate_rsrc
 			my $row = $name . '|';
 
 			my $p = '';
-			my @lmRsrc = grep(/^LM[0-9]+ /  || /^DOM[0-9]+ / || /^$name /,
-				@list);
+			my @clientRsrc = grep(/^LM0 / || /^[A-Z]+_AGENT[0-9]+ /
+				|| /^DOM[0-9]+ / || /^$name /, @list);
 
-		    foreach my $l (@lmRsrc)
+		    foreach my $l (@clientRsrc)
 			{
 		        if ($l =~ /^DOM([0-9]+) /)
 		        {
 		        	$dom = $1;
 		        }
-		        elsif ($l =~ /^LM[0-9]+ /)
+		        elsif ($l =~ /^LM0 /)
+		        {
+					$row = $row . $p . ' |';
+                    $p = '';
+                    $dom = '';
+		        }
+		        elsif ($l =~ /^[A-Z]+_AGENT[0-9]+ /)
 		        {
 					$row = $row . $p . ' |';
                     $p = '';
@@ -290,6 +314,166 @@ sub generate_rsrc
    	}
 
 	print_table(\@table);
+	print "\n";
+}
+
+###############################################################################
+
+sub generate_mem
+{
+    my ($cfgRef) = @_;
+    my @mem = grep(/^[A-Z0-9_]+ /, @$cfgRef);
+    my @list = grep(!/^[A-Z0-9_]+: /, @$cfgRef);
+    my @table;
+
+	# Filter
+    @mem = grep(/^LM0 / || /^[A-Z]+_AGENT[0-9]+ /  || /^DOM[0-9]+ /
+    	|| /begin=/, @mem);
+    @mem = grep(!/end=0x0 /, @mem);
+
+	# Process data
+	my @newMem;
+	my $owner = '';
+    foreach my $l (@mem)
+	{
+        if ($l =~ /^(DOM[0-9]+) /)
+        {
+			$owner = $1;
+        }
+        elsif ($l =~ /^LM0 /)
+        {
+			$owner = 'LM0';
+        }
+        elsif ($l =~ /^[A-Z]+_(AGENT[0-9]+) /)
+        {
+			$owner = $1;
+        }
+		elsif ((my $begin = &param($l, 'begin')) ne '!')
+	    {
+			$begin = hex($begin);
+			my $end;
+	        my @words = split(/ /, $l);
+
+		    if ((my $parm = &param($l, 'end')) ne '!')
+		    {
+				$end = hex($parm);
+		    }
+		    if ((my $parm = &param($l, 'size')) ne '!')
+		    {
+		        if ($parm =~ /(\d+)([KMG])/)
+		        {
+		            my $val = $1;
+		            my $post = $2;
+		            my $num;
+
+					if ($post eq 'K')
+					{
+			            $end = $begin + ($val * 1024) - 1;
+					}
+					elsif ($post eq 'M')
+					{
+			            $end = $begin + ($val * 1024 * 1024) - 1;
+					}
+					else
+					{
+			            $end = $begin + ($val * 1024 * 1024 * 1024) - 1;
+					}
+				}
+		    }
+
+			my $line = sprintf("0x%09X-0x%09X %s %s=%s", $begin,
+				$end, $words[0], $owner, $words[1]);	
+
+
+	   		push @newMem, $line . ' ';
+	    }
+	}
+	@mem = sort @newMem;
+
+	# Start heading
+	my $heading = 'Aadress|Mem|DOM|';
+
+    # Loop over agents
+    my $numAgents = 0;
+	my @clients = grep(/^[A-Z]+_AGENT[0-9]+ / || /^LM0 /, @list);
+    foreach my $l (@clients)
+	{
+        if ($l =~ /^LM0 /)
+        {
+			$heading = $heading . 'SM' . '|';
+        }
+        if ($l =~ /^[A-Z]+_(AGENT[0-9]+) /)
+        {
+			my $aName = $1;
+
+		    if ((my $parm = &param($l, 'name')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$heading = $heading . $parm . '|';
+		    }
+		    else
+		    {
+				$heading = $heading . $aName . '|';
+		    }
+
+		    $numAgents++;
+        }
+	}
+    push @table, $heading;
+
+#	print Dumper(@mem);
+
+    # Loop over memory regions
+    foreach my $m (@mem)
+	{
+        my @words = split(/ /, $m);
+        my $row = $words[0] . '|' . $words[1] . '|';
+
+		shift @words;
+		shift @words;
+
+		# Search for domains
+		my $dom = ' ';
+	    foreach my $w (@words)
+		{
+	        if ($w =~ /^DOM([0-9]+)=/)
+	        {
+				if ($dom eq ' ')
+				{
+					$dom = $1;
+				}
+				else
+				{
+					$dom = $dom . ',' . $1;
+				}
+	        }		
+		}
+		$row = $row . $dom . '|';
+
+		# Search for LM0
+	    if ((my $parm = &param($m, 'LM0')) ne '!')
+	    {
+			$row = $row . $parm;
+	    }
+		$row = $row . ' |';
+
+		for (my $i=0; $i < $numAgents; $i++)
+		{
+		    if ((my $parm = &param($m, 'AGENT' . $i)) ne '!')
+		    {
+				$row = $row . $parm . '|';
+		    }
+		    else
+		    {
+				$row = $row . ' |';
+			}
+		}
+
+		push @table, $row;
+	}
+
+	print_table(\@table);
+	print "\n";
 }
 
 ###############################################################################

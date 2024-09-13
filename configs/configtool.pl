@@ -2843,7 +2843,20 @@ sub get_trdc
             my $parm = $1;
             my $val = $2;
             my $post = $3;
-            my $num = $val * 1024;
+            my $num;
+
+			if ($post eq 'K')
+			{
+	            $num = $val * 1024;
+			}
+			elsif ($post eq 'M')
+			{
+	            $num = $val * 1024 * 1024;
+			}
+			else
+			{
+	            $num = $val * 1024 * 1024 * 1024;
+			}
 
             $m =~ s/$parm=$val$post/$parm=$num/g;      
         }
