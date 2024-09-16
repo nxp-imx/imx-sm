@@ -60,7 +60,7 @@ typedef struct
     bool valid;          /*! Channel configured and valid */
     uint8_t mbInst;      /*!< Mailbox instance */
     uint8_t mbDoorbell;  /*!< Mailbox doorbell */
-    uint32_t sma;        /*!< Shared memory address */
+    uintptr_t sma;       /*!< Shared memory address */
 } smt_chn_config_t;
 
 typedef struct
@@ -367,7 +367,7 @@ static smt_buf_t *SMT_SmaGet(uint32_t smtChannel)
         uint8_t db = s_smtConfig[smtChannel].mbDoorbell;
 
 #ifndef SMT_LOOPBACK
-        uint32_t sma = s_smtConfig[smtChannel].sma;
+        uintptr_t sma = s_smtConfig[smtChannel].sma;
 
         /* Allow use of internal MU SRAM */
         if (sma == 0U)
@@ -376,7 +376,7 @@ static smt_buf_t *SMT_SmaGet(uint32_t smtChannel)
         }
 
         /* Apply channel spacing */
-        sma += ((uint32_t) db) * SMT_BUFFER_SIZE;
+        sma += ((uintptr_t) db) * SMT_BUFFER_SIZE;
 
         /* Set return */
         rtn = (smt_buf_t*) sma;
