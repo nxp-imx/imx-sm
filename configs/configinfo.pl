@@ -44,7 +44,9 @@ use List::Util qw(max);
 # Subroutines
 sub load_config_files;
 sub load_file;
+sub generate_lm;
 sub generate_rsrc;
+sub generate_pin;
 sub generate_mem;
 sub param;
 sub get_define;
@@ -56,6 +58,7 @@ my %args;
 getopts('hi:', \%args);
 my $help = $args{h};
 my $inputFile = $args{i};
+my $cfgName = basename($inputFile, '.cfg');
 
 # Check for required arguments
 if ($help || (not defined $inputFile))
@@ -86,8 +89,18 @@ if (defined $inputFile)
 # Load config files
 my @cfg = &load_config_files($inputFile); 
 
+# Print banner
+print 'Configuration: ' . $cfgName . "\n";
+print '=' x (15 + length $cfgName) . "\n\n";
+
+# Generate LM list
+&generate_lm(\@cfg);
+
 # Generate resource list
 &generate_rsrc(\@cfg);
+
+# Generate pin list
+&generate_pin(\@cfg);
 
 # Generate memory list
 &generate_mem(\@cfg);
@@ -222,6 +235,119 @@ sub load_file
 
 ###############################################################################
 
+sub generate_lm
+{
+    my ($cfgRef) = @_;
+    my @list = grep(!/^[A-Z0-9_]+: /, @$cfgRef);
+    my @table;
+
+    # Loop over LM
+	my @clients = grep(/^LM[0-9]+ /, @list);
+	my $heading = 'Parameter|';
+	my $name = 'Name|';
+	my $did = 'Domain ID|';
+	my $boot = 'Boot Order|';
+	my $safe = 'Safety Type|';
+    foreach my $l (@clients)
+	{
+        if ($l =~ /^(LM[0-9]+) /)
+        {
+			$heading .= $1 . '|';
+
+		    if ((my $parm = &param($l, 'name')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$name .= $parm . '|';
+		    }
+		    else
+		    {
+				$name .= ' |';
+		    }
+
+		    if ((my $parm = &param($l, 'did')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$did .= $parm . '|';
+		    }
+		    else
+		    {
+				$did .= ' |';
+		    }
+
+		    if ((my $parm = &param($l, 'boot')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$boot .= $parm . '|';
+		    }
+		    else
+		    {
+				$boot .= ' |';
+		    }
+
+		    if ((my $parm = &param($l, 'safe')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$safe .= uc $parm . '|';
+		    }
+		    else
+		    {
+				$safe .= ' |';
+		    }
+        }
+	}
+
+	my $agents = 'Agents';
+	my $count = 0;
+	@clients = grep(/^[A-Z]+_AGENT[0-9]+ / || /^LM[0-9]+ /, @list);
+    foreach my $l (@clients)
+	{
+        if ($l =~ /^(LM[0-9]+) /)
+        {
+            $agents .= ' |';
+            $count = 0;
+        }
+
+        if ($l =~ /^[A-Z]+_(AGENT[0-9]+) /)
+        {
+			my $aName = $1;
+
+            if ($count > 0)
+            {
+				$agents .= ', ';
+            }
+			$count++;
+
+		    if ((my $parm = &param($l, 'name')) ne '!')
+		    {
+            	$parm =~ s/\"//g;
+				$agents .= $parm;
+		    }
+		    else
+		    {
+				$agents = $agents . $aName;
+		    }
+        }
+    }
+    $agents .= '|';
+
+    # Build table
+    push @table, $heading;
+    push @table, $name;
+    push @table, $did;
+    push @table, $boot;
+    push @table, $safe;
+    push @table, $agents;
+
+    # Print banner
+    print 'LM Info' . "\n";
+    print '-------' . "\n\n";
+
+	print_table(\@table);
+	print "\n";
+}
+
+###############################################################################
+
 sub generate_rsrc
 {
     my ($cfgRef) = @_;
@@ -313,8 +439,19 @@ sub generate_rsrc
         }
    	}
 
+    # Print banner
+    print 'Resources' . "\n";
+    print '---------' . "\n\n";
+
 	print_table(\@table);
 	print "\n";
+}
+
+###############################################################################
+
+sub generate_pin
+{
+    my ($cfgRef) = @_;
 }
 
 ###############################################################################
@@ -471,6 +608,10 @@ sub generate_mem
 
 		push @table, $row;
 	}
+
+    # Print banner
+    print 'Memory' . "\n";
+    print '------' . "\n\n";
 
 	print_table(\@table);
 	print "\n";
