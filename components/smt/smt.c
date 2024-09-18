@@ -372,7 +372,7 @@ static smt_buf_t *SMT_SmaGet(uint32_t smtChannel)
         /* Allow use of internal MU SRAM */
         if (sma == 0U)
         {
-            sma = ((uint32_t) s_muBases[inst]) + 0x1000U;
+            sma = ((uintptr_t) s_muBases[inst]) + 0x1000U;
         }
 
         /* Apply channel spacing */
