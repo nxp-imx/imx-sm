@@ -944,7 +944,7 @@
         SM_CFG_W1(0x0001a024U), 0x6600U, \
         SM_CFG_W1(0x0001a028U), 0x7777U, \
         SM_CFG_W1(0x0001a040U), 0x08000000U, \
-        SM_CFG_W1(0x0001a044U), 0xFFFFFC11U, \
+        SM_CFG_W1(0x0001a044U), 0x87FFFC11U, \
         SM_CFG_Z1(0x0001a04cU), \
         SM_CFG_Z1(0x0001a054U), \
         SM_CFG_Z1(0x0001a05cU), \
@@ -983,7 +983,7 @@
         SM_CFG_W1(0x0001a948U), 0x08000001U, \
         SM_CFG_W1(0x0001a94cU), 0x87FFFC01U, \
         SM_CFG_W1(0x0001a950U), 0x08000001U, \
-        SM_CFG_W1(0x0001a954U), 0xFFFFFC01U, \
+        SM_CFG_W1(0x0001a954U), 0x87FFFC01U, \
         SM_CFG_Z1(0x0001a95cU), \
         SM_CFG_Z1(0x0001aa44U), \
         SM_CFG_Z1(0x0001aa4cU), \
