@@ -172,7 +172,6 @@ implementations for each supported SoC.
 
 /*!
  * @defgroup DEV_SM_API SM Device API
- * @defgroup DEV_SM_MX95 DEVICE_MX95: SM i.MX95 Device Implementation
  * @defgroup DEV_SM_SIMU DEVICE_SIMU: SM Simulated Device Implementation
  */
 
