@@ -51,6 +51,7 @@ sub generate_mem;
 sub param;
 sub get_define;
 sub print_table;
+sub fix_regions;
 
 my %args;
 
@@ -531,11 +532,13 @@ sub generate_mem
 			my $line = sprintf("0x%09X-0x%09X %s %s=%s", $begin,
 				$end, $words[0], $owner, $words[1]);	
 
-
 	   		push @newMem, $line . ' ';
 	    }
 	}
 	@mem = sort @newMem;
+
+	# Split and join regions
+	@mem = &fix_regions(\@mem);
 
 	# Start heading
 	my $heading = 'Address|Mem|DOM|';
@@ -718,5 +721,75 @@ sub print_table
 	}
 
 #	print Dumper(@table);
+}
+
+###############################################################################
+
+sub fix_regions
+{
+    my ($tblRef) = @_;
+    my @list;
+    my @table;
+
+	# Covert table to start/end list
+    foreach my $r (@$tblRef)
+    {
+	    my ($addr, $region, $access) = split(/ /, $r);
+	    my ($start, $end) = split(/\-/, $addr);
+
+		my $line = sprintf("%s %s start %s", $region, $start, $access);
+		push @list, $line;
+
+		$line = sprintf("%s %s end %s", $region, $end, $access);
+		push @list, $line;
+	}
+	@list = sort @list;
+
+#	print Dumper(@list);
+
+	# Process list
+	my $rgRegion = '';
+	my $rgStart = '';
+	my $rgEnd = '';
+	my $rgAccess = '';
+    foreach my $r (@list)
+    {
+	    my ($region, $addr, $edge, $access) = split(/ /, $r);
+		my $numAddr = hex($addr);
+
+		if ($edge eq 'start')
+		{
+			if (($rgAccess ne '') && ($rgStart ne $addr))
+			{
+				my $end = sprintf("0x%09X", $numAddr - 1);
+				my $line = sprintf("%s-%s %s %s", $rgStart,
+					$end, $rgRegion, $rgAccess);	
+				push @table, $line;
+			}
+
+			# New region
+			$rgRegion = $region;
+			$rgStart = $addr;
+			$rgAccess = $rgAccess . $access . ' ';
+		}
+		else
+		{
+			if ($rgEnd ne $addr)
+			{
+				my $line = sprintf("%s-%s %s %s", $rgStart,
+					$addr, $rgRegion, $rgAccess);	
+				push @table, $line;
+			}
+
+			# Remove access
+			$rgStart = sprintf("0x%09X", $numAddr + 1);
+			$rgEnd = $addr;
+           	$rgAccess =~ s/$access //g;
+		}
+	}
+
+#	print Dumper(@table);
+
+	return sort @table;
 }
 
