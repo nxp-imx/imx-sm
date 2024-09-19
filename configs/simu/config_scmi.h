@@ -68,13 +68,13 @@
         .faultPerms[DEV_SM_FAULT_3] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_6] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_7] = SM_SCMI_PERM_ALL, \
-        .fusaPerms = SM_SCMI_PERM_EXCLUSIVE, \
+        .fusaPerms = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_0] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_1] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_4] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_RESV] = SM_SCMI_PERM_ALL, \
         .sensorPerms[DEV_SM_SENSOR_0] = SM_SCMI_PERM_ALL, \
-        .sysPerms = SM_SCMI_PERM_EXCLUSIVE, \
+        .sysPerms = SM_SCMI_PERM_ALL, \
     }
 
 /*! Config for SCMI channel 0 */

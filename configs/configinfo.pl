@@ -90,8 +90,8 @@ if (defined $inputFile)
 my @cfg = &load_config_files($inputFile); 
 
 # Print banner
-print 'Configuration: ' . $cfgName . "\n";
-print '=' x (15 + length $cfgName) . "\n\n";
+print $cfgName . "\n";
+print '=' x (length $cfgName) . "\n\n";
 
 # Generate LM list
 &generate_lm(\@cfg);
@@ -146,6 +146,9 @@ sub load_config_files
 	# Append
     push @cfg, 'FUSA:';
     push @cfg, 'SYS:';
+
+    # Remove test
+    s/test//g for @cfg;
 
     # Remove leading/trailing spaces
     s/^\s+|\s+$//g for @cfg;
@@ -429,7 +432,14 @@ sub generate_rsrc
                     }
                     else
                     {
-                        $p = $words[1];
+						if ($words[1])
+						{
+                        	$p = $words[1];
+                        }
+                        else
+                        {
+                        	$p = ' ';
+                        }	
                     }
 		        }
 			}
