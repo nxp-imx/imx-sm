@@ -42,6 +42,7 @@ use List::Util qw(first);
 use List::Util qw(max);
 
 # Subroutines
+sub help_message;
 sub load_config_files;
 sub load_file;
 sub generate_lm;
@@ -59,19 +60,11 @@ my %args;
 getopts('hi:', \%args);
 my $help = $args{h};
 my $inputFile = $args{i};
-my $cfgName = basename($inputFile, '.cfg');
 
 # Check for required arguments
 if ($help || (not defined $inputFile))
 {
-    my $cmd = fileparse($0);
-
-    print "Usage: $cmd [OPTIONS]...\n";
-    print "Dump info from SM configuration files.\n\n";
-    print "  -i  specify input file\n";
-    print "  -h  display this help and exit\n\n";
-    print "The input configuration file is loaded, processed, and\n";
-    print "information written to STDOUT\n";
+    &help_message();
     exit;
 }
 
@@ -91,6 +84,7 @@ if (defined $inputFile)
 my @cfg = &load_config_files($inputFile); 
 
 # Print banner
+my $cfgName = basename($inputFile, '.cfg');
 print $cfgName . "\n";
 print '=' x (length $cfgName) . "\n\n";
 
@@ -107,6 +101,18 @@ print '=' x (length $cfgName) . "\n\n";
 &generate_mem(\@cfg);
 
 ###############################################################################
+
+sub help_message
+{
+    my $cmd = fileparse($0);
+
+    print "Usage: $cmd [OPTIONS]...\n";
+    print "Dump info from SM configuration files.\n\n";
+    print "  -i  specify input file\n";
+    print "  -h  display this help and exit\n\n";
+    print "The input configuration file is loaded, processed, and\n";
+    print "information written to STDOUT\n";
+}
 
 sub load_config_files
 {
