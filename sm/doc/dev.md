@@ -82,6 +82,7 @@ TARGET is optional. Possible TARGET parameters are as follows:
 | img              | Compile an image for the specified configuration        |
 | all              | Do a clean and then compile an image                    |
 | cfg              | Generate config using the [configtool](@ref CONFIGTOOL) |
+| info             | Dump config using configinfo                            |
 | cppcheck         | Perform a cppcheck                                      |
 
 There are several options that can be specified on the make command line:
