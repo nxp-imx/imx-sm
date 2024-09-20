@@ -29,9 +29,10 @@
  * @name Board general parameters
  */
 /** @{ */
-#define BOARD_TICK_PERIOD_MSEC  10U               /*!< Tick period */
-#define BOARD_SWI_IRQn          Reserved110_IRQn  /*!< SWI IRQ  */
-#define BOARD_HAS_WDOG                            /*!< Has a watchdog */
+#define BOARD_TICK_PERIOD_MSEC  10U                       /*!< Tick period */
+#define BOARD_SWI_IRQn          Reserved110_IRQn          /*!< SWI IRQ  */
+#define BOARD_HAS_WDOG                                    /*!< Has a watchdog */
+#define BOARD_PMIC_RESUME_TICKS ((20U * 32768U) / 10000U) /*!< 2ms in 32K ticks */
 /** @} */
 
 /*!

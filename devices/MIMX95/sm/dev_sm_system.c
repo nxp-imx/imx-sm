@@ -66,6 +66,7 @@ int32_t DEV_SM_SystemInit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t srcResetReason = 0U;
+    uint32_t pmicAckCtrl;
 
     /* Get reset reason from SRC */
     srcResetReason = RST_SystemGetResetReason();
@@ -88,6 +89,13 @@ int32_t DEV_SM_SystemInit(void)
     BLK_CTRL_S_AONMIX->M7_CFG |=
         (BLK_CTRL_S_AONMIX_M7_CFG_CORECLK_FORCE_ON_MASK |
             BLK_CTRL_S_AONMIX_M7_CFG_HCLK_FORCE_ON_MASK);
+
+    /* Configure PMIC standby timings */
+    pmicAckCtrl = GPC_GLOBAL->GPC_PMIC_STBY_ACK_CTRL;
+    pmicAckCtrl &= ~GPC_GLOBAL_GPC_PMIC_STBY_ACK_CTRL_STBY_OFF_CNT_CFG_MASK;
+    pmicAckCtrl |= GPC_GLOBAL_GPC_PMIC_STBY_ACK_CTRL_STBY_OFF_CNT_CFG(
+        BOARD_PMIC_RESUME_TICKS);
+    GPC_GLOBAL->GPC_PMIC_STBY_ACK_CTRL = pmicAckCtrl;
 
     /* Return status */
     return status;
