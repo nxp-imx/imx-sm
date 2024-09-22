@@ -108,6 +108,7 @@ int main(int argc, const char * const argv[])
     /* Init LMM */
     if (status == SM_ERR_SUCCESS)
     {
+        /* mSel from BRD_SM_Init(), LMM_INIT_FLAGS from Makefile */
         status = LMM_Init(&mSel, LMM_INIT_FLAGS);
     }
 
@@ -117,7 +118,6 @@ int main(int argc, const char * const argv[])
         s_lmmInited = true;
 
         /* Boot LMs */
-        /* mSel from BRD_SM_Init(), LMM_INIT_FLAGS from Makefile */
         status = LMM_Boot();
     }
 
