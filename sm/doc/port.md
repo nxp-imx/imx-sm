@@ -159,6 +159,40 @@ function, else they handle the board resources. The implemented functions are th
 
 This same concept can be used to add voltages, controls, resets, clocks, perf domains, RTCs, etc.
 
+Board Design  {#PORT_BOARD}
+============
+
+The board must be designed to support the concept of LM isolation. This specifically affects GPIO and
+I2C modules (and possibly SPI). The access control for these is at the **module level**, not individual
+GPIO signals or I2C devices.
+
+<br>
+@image html gpio.jpg "I/O Isolation" width=75%
+@image rtf gpio.jpg "I/O Isolation"
+@image latex gpio.jpg "I/O Isolation"
+<br>
+
+In the above diagram, GPIO1 has many signals that can be routed to it via pad mux registers. As the
+access control is for the **entire GPIO module**, the CPU with access to that module can interact with
+all the pads muxed to it. The diagram also shows that the CPU with access to an I2C2 module can access
+all devices on that bus (e.g. DEV1 and DEV2).
+
+For this reason, each GPIO and I2C module should be assigned to a CPU (actually an LM containing a CPU)
+first and then connect devices on the board via pads that can be routed to the modules assigned to the
+CPU that will use them. For example, if GPIO1 is assigned to the CM33, then pad1 could be used as GPIO
+I/O by the CM33, but the CM7 cannot use pad2 as GPIO because it cannot be given access to the GPIO1 module
+as it is used by the CM33. The CM7 could use pad2 for I2C as that will go to the I2C2 module that would
+then be assigned to the CM7. Note however then that the CM7 could use both devices on the I2C2 bus and
+other CPUs cannot use either device.
+
+It is also important to note which MIX and power domain specific IP modules are in. For example, GPIO1
+is the only GPIO module in the AON MIX (all others are in the WAKEUPMIX) and therefore the only GPIO
+module that can be used to wake from power modes where the WAKEUPMIX is turned off.
+
+In summary, it is important in the board design that IP modules be assigned to cores first and then
+pads be connected based on which LM (and associated CPU) has each module. The power domain of such
+modules will also determine which can wakeup from various power modes.
+
 NXP Reference Board Ports  {#PORT_NXP}
 =========================
 
@@ -177,19 +211,27 @@ NXP i.MX95 EVK  {#PORT_MX95_EVK}
 --------------
 
 This port supports i.MX95 on both the LPDDR4X and LPDDR5 EVKs. This board consists of a base board and CPU
-daughter card. The board design allocates LPI2C1, GPIO1, and LPUART2 as interfaces to be managed exclusively
+daughter card. The board design allocates LPI2C1, GPIO1, and LPUART2 as modules to be managed exclusively
 by the SM running on the CM33. Connected to LPI2C1 is a PF09 PMIC, 2x PF53 PMICs, and a PCAL6408A I2C bus
-expander. The interrupts from these goes to the bus exapnder (along with other wakeup signals) and the
-interrupt from the bus expander goes to GPIO1.10. LPUART2 is connected to an FTDI chip to convert to USB
-serial.
+expander. On the 15x15 EVK there is also a PCA2131 RTC. The interrupts from these go to the bus exapnder
+(along with other wakeup signals) and the interrupt from the bus expander goes to GPIO1-10. This means the
+CM33 must be the exclsive owner of LPI2C1 and GPIO1. Because it owns GPIO1, no other pads can be routed to
+GPIO1 and directly used by any of the other CPUs. Other CPUs must use I/O that can be routed to GPIO2-5.
+LPUART2 is connected to an FTDI chip to convert to USB serial.
+
+<br>
+@image html mx95evk.jpg "EVK SM I/O" width=75%
+@image rtf mx95evk.jpg "EVK SM I/O"
+@image latex mx95evk.jpg "EVK SM I/O"
+<br>
 
 The port makes use of the following additional drivers: [RGPIO](@ref rgpio), [PF09](@ref pf09),
-[PF53](@ref pf53), and [PCAL6408A](@ref pcal6408a). In addition it adds voltage domains, a sensor, and
-controls. These are implemented in corresponding [brd_sm_voltage.h/c](@ref mcimx95evk/sm/brd_sm_voltage.h),
-[brd_sm_sensor.h/c](@ref mcimx95evk/sm/brd_sm_sensor.h), and
-[brd_sm_control.h/c](@ref mcimx95evk/sm/brd_sm_control.h) files. These define redirection macros to route
-the LMM function calls for these type of resources to these files. They then append the following resources
-to the existing device resources:
+[PF53](@ref pf53), [PCAL6408A](@ref pcal6408a) and [PCA2131](@ref pca2131) (15x15 EVK only). In
+addition it adds voltage domains, a sensor, and controls. These are implemented in corresponding
+[brd_sm_voltage.h/c](@ref mcimx95evk/sm/brd_sm_voltage.h), [brd_sm_sensor.h/c](@ref mcimx95evk/sm/brd_sm_sensor.h),
+and [brd_sm_control.h/c](@ref mcimx95evk/sm/brd_sm_control.h) files. These define redirection
+macros to route the LMM function calls for these type of resources to these files. They then
+append the following resources to the existing device resources:
 
 | Resource                  | Protocol | Description                      |
 |---------------------------|----------|----------------------------------|
@@ -202,6 +244,7 @@ to the existing device resources:
 | BRD_SM_VOLT_VDD2_DDR      | Voltage  | i.MX95 VDD2_DDR via PF09 SW5     |
 | BRD_SM_VOLT_SD_CARD       | Voltage  | i.MX95 SD_CARD via PF09 LDO1     |
 | BRD_SM_VOLT_NVCC_SD2      | Voltage  | i.MX95 NVCC_SD2 via PF09 LDO2    |
+| BRD_SM_RTC_PCA2131        | Bbm      | Optional PCA2131 RTC             |
 | BRD_SM_SENSOR_TEMP_PF09   | Sensor   | PF09 temp sensor                 |
 | BRD_SM_SENSOR_TEMP_PF5301 | Sensor   | PF5301 temp sensor               |
 | BRD_SM_SENSOR_TEMP_PF5302 | Sensor   | PF5302 temp sensor               |
@@ -209,7 +252,7 @@ to the existing device resources:
 | BRD_SM_CTRL_PCIE1_WAKE    | Misc     | PCIE1 wakeup via PCAL6408A.4     |
 | BRD_SM_CTRL_BT_WAKE       | Misc     | BT wakeup via PCAL6408A.5        |
 | BRD_SM_CTRL_PCIE2_WAKE    | Misc     | PCIE2 wakeup via PCAL6408A.6     |
-| BRD_SM_CTRL_BUTTON        | Misc     | SW2 button via PCAL6408A.7       |
+| BRD_SM_CTRL_PCA2131       | Misc     | Optional PCA2131 RTC I2C         |
 
 Voltages can be enabled/disabled and their level can be read and written. The sensor can be read (limited
 discrete temps 110C, 125C, 140C, 155C. Temps below 110F are reported as 105C. A trip point can be used
