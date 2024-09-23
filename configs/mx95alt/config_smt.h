@@ -69,7 +69,6 @@
         .mbType = SM_MB_MU, \
         .mbInst = 0U, \
         .mbDoorbell = 0U, \
-        .crc = SM_SMT_CRC_CRC32, \
     }
 
 /*! Config for SMT channel 1 */
@@ -80,7 +79,6 @@
         .mbType = SM_MB_MU, \
         .mbInst = 0U, \
         .mbDoorbell = 1U, \
-        .crc = SM_SMT_CRC_CRC32, \
     }
 
 /*! Config for SMT channel 2 */
@@ -91,7 +89,6 @@
         .mbType = SM_MB_MU, \
         .mbInst = 0U, \
         .mbDoorbell = 2U, \
-        .crc = SM_SMT_CRC_CRC32, \
     }
 
 /*! Config for SMT channel 3 */
@@ -154,8 +151,6 @@
 /* Mailbox and CRC types to support */
 /*! Config for MB_MU USE */
 #define USES_MB_MU
-/*! Config for CRC32 CRC USE */
-#define USES_CRC_CRC32
 
 #endif /* CONFIG_SMT_H */
 
