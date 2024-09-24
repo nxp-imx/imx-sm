@@ -394,6 +394,16 @@ void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
         }
     }
 #endif
+
+    /* PMIC reset? */
+    if ((g_pmicFaultFlags & ~PF09_XRESET_FLG) != 0U)
+    {
+        shutdownRec->valid = true;
+        shutdownRec->reset = true;
+        shutdownRec->reason = DEV_SM_REASON_PMIC;
+        shutdownRec->extLen = 1U;
+        shutdownRec->extInfo[0] = g_pmicFaultFlags;
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -482,22 +492,22 @@ int32_t BRD_SM_PmicInfoGet(uint32_t idx, uint8_t *devAddr, uint8_t **info,
     switch (idx)
     {
         case 0U:
-            *devAddr = pf09Dev.devAddr;
-            if (!PF09_PmicInfoGet(&pf09Dev, info, len))
+            *devAddr = g_pf09Dev.devAddr;
+            if (!PF09_PmicInfoGet(&g_pf09Dev, info, len))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
             break;
         case 1U:
-            *devAddr = pf5301Dev.devAddr;
-            if (!PF53_PmicInfoGet(&pf5301Dev, info, len))
+            *devAddr = g_pf5301Dev.devAddr;
+            if (!PF53_PmicInfoGet(&g_pf5301Dev, info, len))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
             break;
         case 2U:
-            *devAddr = pf5302Dev.devAddr;
-            if (!PF53_PmicInfoGet(&pf5302Dev, info, len))
+            *devAddr = g_pf5302Dev.devAddr;
+            if (!PF53_PmicInfoGet(&g_pf5302Dev, info, len))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
@@ -520,25 +530,25 @@ int32_t BRD_SM_PmicWrite(uint8_t devAddr, uint8_t regAddr, uint8_t val,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Call PF09 driver write data */
-    if (devAddr == pf09Dev.devAddr)
+    if (devAddr == g_pf09Dev.devAddr)
     {
-        if (!PF09_PmicWrite(&pf09Dev, regAddr, val, mask))
+        if (!PF09_PmicWrite(&g_pf09Dev, regAddr, val, mask))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
     }
     /* Call PF5301 driver write data */
-    else if (devAddr == pf5301Dev.devAddr)
+    else if (devAddr == g_pf5301Dev.devAddr)
     {
-        if (!PF53_PmicWrite(&pf5301Dev, regAddr, val, mask))
+        if (!PF53_PmicWrite(&g_pf5301Dev, regAddr, val, mask))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
     }
     /* Call PF5302 driver write data */
-    else if (devAddr == pf5302Dev.devAddr)
+    else if (devAddr == g_pf5302Dev.devAddr)
     {
-        if (!PF53_PmicWrite(&pf5302Dev, regAddr, val, mask))
+        if (!PF53_PmicWrite(&g_pf5302Dev, regAddr, val, mask))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
@@ -561,25 +571,25 @@ int32_t BRD_SM_PmicRead(uint8_t devAddr, uint8_t regAddr, uint8_t *val)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Call PF09 driver read data */
-    if (devAddr == pf09Dev.devAddr)
+    if (devAddr == g_pf09Dev.devAddr)
     {
-        if (!PF09_PmicRead(&pf09Dev, regAddr, val))
+        if (!PF09_PmicRead(&g_pf09Dev, regAddr, val))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
     }
     /* Call PF5301 driver read data */
-    else if (devAddr == pf5301Dev.devAddr)
+    else if (devAddr == g_pf5301Dev.devAddr)
     {
-        if (!PF53_PmicRead(&pf5301Dev, regAddr, val))
+        if (!PF53_PmicRead(&g_pf5301Dev, regAddr, val))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
     }
     /* Call PF5302 driver read data */
-    else if (devAddr == pf5302Dev.devAddr)
+    else if (devAddr == g_pf5302Dev.devAddr)
     {
-        if (!PF53_PmicRead(&pf5302Dev, regAddr, val))
+        if (!PF53_PmicRead(&g_pf5302Dev, regAddr, val))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }

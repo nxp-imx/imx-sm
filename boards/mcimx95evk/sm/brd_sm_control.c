@@ -120,7 +120,7 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
             uint8_t data;
 
             /* Read expander data input */
-            if (PCAL6408A_InputGet(&pcal6408aDev, &data))
+            if (PCAL6408A_InputGet(&g_pcal6408aDev, &data))
             {
                 uint32_t shift = ctrlId - DEV_SM_NUM_CTRL;
 
@@ -301,7 +301,7 @@ void BRD_SM_ControlHandler(uint8_t status, uint8_t val)
 
     /* Handle PCIe2 wake */
     if (((status & BIT8(PCAL6408A_INPUT_PCIE2_WAKE)) != 0U)
-        && !pca2131Used)
+        && !g_pca2131Used)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_PCIE2_WAKE,
             ((data >> PCAL6408A_INPUT_PCIE2_WAKE) & 0x1U) + 1U);

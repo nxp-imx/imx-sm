@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -165,13 +165,13 @@ int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
                 switch (sensorId)
                 {
                     case BRD_SM_SENSOR_TEMP_PF09:
-                        rc = PF09_TempGet(&pf09Dev, &temp);
+                        rc = PF09_TempGet(&g_pf09Dev, &temp);
                         break;
                     case BRD_SM_SENSOR_TEMP_PF5301:
-                        rc = PF53_TempGet(&pf5301Dev, &temp);
+                        rc = PF53_TempGet(&g_pf5301Dev, &temp);
                         break;
                     default:
-                        rc = PF53_TempGet(&pf5302Dev, &temp);
+                        rc = PF53_TempGet(&g_pf5302Dev, &temp);
                         break;
                 }
 
@@ -230,7 +230,7 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
                 {
                     if (eventControl == DEV_SM_SENSOR_TP_NONE)
                     {
-                        if (!PF09_TempAlarmSet(&pf09Dev, 500))
+                        if (!PF09_TempAlarmSet(&g_pf09Dev, 500))
                         {
                             status = SM_ERR_HARDWARE_ERROR;
                         }
@@ -239,7 +239,7 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
                     {
                         int32_t temp = (int32_t) value;
 
-                        if (!PF09_TempAlarmSet(&pf09Dev, temp))
+                        if (!PF09_TempAlarmSet(&g_pf09Dev, temp))
                         {
                             status = SM_ERR_HARDWARE_ERROR;
                         }
@@ -304,7 +304,7 @@ int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
                 if ((sensorId == BRD_SM_SENSOR_TEMP_PF09)
                     && !sensorEnb[brdSensorId])
                 {
-                    if (!PF09_TempAlarmSet(&pf09Dev, 500))
+                    if (!PF09_TempAlarmSet(&g_pf09Dev, 500))
                     {
                         status = SM_ERR_HARDWARE_ERROR;
                     }

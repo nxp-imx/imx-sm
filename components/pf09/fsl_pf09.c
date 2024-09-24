@@ -1107,6 +1107,49 @@ bool PF09_XrstStbyEnable(const PF09_Type *dev, bool xrstEn)
     return rc;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Save and clear fault flags                                               */
+/*--------------------------------------------------------------------------*/
+bool PF09_FaultFlags(const PF09_Type *dev, uint32_t *flags, bool clear)
+{
+    bool rc;
+    uint8_t fl;
+
+    /* Get fault flags */
+    rc = PF09_PmicRead(dev, PF09_REG_FAULT_FLAGS, &fl);
+
+    if (rc)
+    {
+        *flags = fl;
+
+        if (clear)
+        {
+            /* Clear fault flags */
+            rc = PF09_PmicWrite(dev, PF09_REG_FAULT_FLAGS, fl, 0xFFU);
+        }
+    }
+
+    if (rc && ((fl & PF09_HFAULT_FLG) != 0U))
+    {
+        /* Get hard fault flags */
+        rc = PF09_PmicRead(dev, PF09_REG_HFAULT_FLAGS, &fl);
+
+        if (rc)
+        {
+            *flags |= (((uint32_t) fl) << 8U);
+
+            if (clear)
+            {
+                /* Clear hard fault flags */
+                rc = PF09_PmicWrite(dev, PF09_REG_HFAULT_FLAGS, fl, 0xFFU);
+            }
+        }
+    }
+
+    /* Return status */
+    return rc;
+}
+
 /*==========================================================================*/
 
 /*--------------------------------------------------------------------------*/

@@ -875,9 +875,9 @@ static irq_prio_info_t *IrqPrioMap(IRQn_Type irq)
     /* Loop over board-defined IRQ table entries */
     while ((pInfo == NULL) && (idx < BOARD_NUM_IRQ_PRIO_IDX))
     {
-        if (s_brdIrqPrioInfo[idx].irqId == irq)
+        if (g_brdIrqPrioInfo[idx].irqId == irq)
         {
-            pInfo = &s_brdIrqPrioInfo[idx];
+            pInfo = &g_brdIrqPrioInfo[idx];
         }
 
         idx++;
@@ -940,7 +940,7 @@ static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
         while (idx < BOARD_NUM_IRQ_PRIO_IDX)
         {
             /* Get table entry */
-            irq_prio_info_t const *pInfoRel = &s_brdIrqPrioInfo[idx];
+            irq_prio_info_t const *pInfoRel = &g_brdIrqPrioInfo[idx];
 
             /* Check if table entry is active IRQ */
             if (pInfo != pInfoRel)

@@ -116,6 +116,33 @@ typedef struct
 #define PF09_VMON2     2U  /*!< VMON2 monitor */
 /** @} */
 
+/*!
+ * @name PF09 faults
+ */
+/** @{ */
+#define PF09_HFAULT_FLG  0x01U  /*!< Hard fault */
+#define PF09_SFAULT_FLG  0x02U  /*!< OV/UV/ILIM) */
+#define PF09_XRESET_FLG  0x04U  /*!< XRESET or FCCU */
+#define PF09_WD_FLG      0x08U  /*!< Watchdog */
+#define PF09_XFAIL_FLG   0x10U  /*!< XFAILB pin */
+#define PF09_VIN_OV_FLG  0x20U  /*!< VIN_OV condition */
+#define PF09_DFS_FLG     0x40U  /*!< DFS state */
+#define PF09_DCRC_FLG    0x80U  /*!< Dynamic CRC */
+/** @} */
+
+/*!
+ * @name PF09 hard faults
+ */
+/** @{ */
+#define PF09_TSD_FAIL     0x01U  /*!< Thermal shutdown */
+#define PF09_REG_FAIL     0x02U  /*!< Regulator */
+#define PF09_FLTCNT_FAIL  0x04U  /*!< Fault counter */
+#define PF09_RESET_FAIL   0x08U  /*!< Reset counter */
+#define PF09_PU_FAIL      0x10U  /*!< Power-up failure */
+#define PF09_RSTB_FAIL    0x20U  /*!< RSTB pin */
+#define PF09_UVDET_FAIL   0x40U  /*!< UVDET threshold */
+/** @} */
+
 /*******************************************************************************
  * API
  ******************************************************************************/
@@ -393,6 +420,17 @@ bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn);
  * @return True if successful.
  */
 bool PF09_XrstStbyEnable(const PF09_Type *dev, bool xrstEn);
+
+/*!
+ * Save and clear fault flags
+ *
+ * @param[in]     dev      Device info.
+ * @param[out]    flags    Pointer to retufn fault flags.
+ * @param[in]     clear    true = clear fault flags.
+ *
+ * @return True if successful.
+ */
+bool PF09_FaultFlags(const PF09_Type *dev, uint32_t *flags, bool clear);
 
 #if defined(__cplusplus)
 }

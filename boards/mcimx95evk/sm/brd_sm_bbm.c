@@ -83,7 +83,7 @@ int32_t BRD_SM_BbmRtcWrite(uint32_t addr, uint32_t numVal,
         }
 
         /* Write data */
-        if (!PCA2131_RtcWrite(&pca2131Dev, (uint8_t) addr,
+        if (!PCA2131_RtcWrite(&g_pca2131Dev, (uint8_t) addr,
             (uint8_t) numVal, buf))
         {
             status = SM_ERR_HARDWARE_ERROR;
@@ -111,7 +111,7 @@ int32_t BRD_SM_BbmRtcRead(uint32_t addr, uint32_t numVal, uint32_t *val)
         uint8_t buf[24] = { 0 };
 
         /* Read data */
-        if (PCA2131_RtcRead(&pca2131Dev, (uint8_t) addr,
+        if (PCA2131_RtcRead(&g_pca2131Dev, (uint8_t) addr,
             (uint8_t) numVal, buf))
         {
             /* Copy buffer (convert to 32-bit) */
@@ -236,7 +236,7 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
         year %= 100U;
 
         /* Write RTC */
-        if (!PCA2131_RtcSet(&pca2131Dev, year, month, day, hour, min, sec,
+        if (!PCA2131_RtcSet(&g_pca2131Dev, year, month, day, hour, min, sec,
             hun, weekday))
         {
             status = SM_ERR_HARDWARE_ERROR;
@@ -246,7 +246,7 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
     if (status == SM_ERR_SUCCESS)
     {
         /* Enable battery */
-        (void) PCA2131_PowerModeSet(&pca2131Dev, 0U);
+        (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
     }
 
     /* Return status */
@@ -269,7 +269,7 @@ int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
         uint32_t year, month, day, hour, min, sec, hun, weekday;
 
         /* Read RTC */
-        if (PCA2131_RtcGet(&pca2131Dev, &year, &month, &day, &hour, &min,
+        if (PCA2131_RtcGet(&g_pca2131Dev, &year, &month, &day, &hour, &min,
             &sec, &hun, &weekday))
         {
             uint32_t days, secs;
@@ -330,10 +330,10 @@ int32_t BRD_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
         *state = 0U;
 
         /* Enable battery */
-        (void) PCA2131_PowerModeSet(&pca2131Dev, 0U);
+        (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
 
         /* Get battery state */
-        if (PCA2131_TimeStatusGet(&pca2131Dev, &st))
+        if (PCA2131_TimeStatusGet(&g_pca2131Dev, &st))
         {
             if (st)
             {
@@ -346,7 +346,7 @@ int32_t BRD_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
         }
 
         /* Get battery state */
-        if (PCA2131_BattStatusGet(&pca2131Dev, &st))
+        if (PCA2131_BattStatusGet(&g_pca2131Dev, &st))
         {
             if (st)
             {
@@ -402,11 +402,11 @@ int32_t BRD_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
             year %= 100U;
 
             /* Write to RTC */
-            if (PCA2131_AlarmSet(&pca2131Dev, day, hour, min, sec,
+            if (PCA2131_AlarmSet(&g_pca2131Dev, day, hour, min, sec,
                 weekday))
             {
                 /* Enable interrupt */
-                if (PCA2131_IntEnable(&pca2131Dev, true))
+                if (PCA2131_IntEnable(&g_pca2131Dev, true))
                 {
                     /* Enable bus expander interrupt */
                     status = BRD_SM_BusExpMaskSet(0U, BIT8(6));
@@ -424,13 +424,13 @@ int32_t BRD_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
             /* Track if enabled for PCA2131 use */
             if (status == SM_ERR_SUCCESS)
             {
-                pca2131Used = true;
+                g_pca2131Used = true;
             }
         }
         else
         {
             /* Disable interrupt */
-            if (PCA2131_IntEnable(&pca2131Dev, false))
+            if (PCA2131_IntEnable(&g_pca2131Dev, false))
             {
                 /* Disable bus expander interrupt */
                 status = BRD_SM_BusExpMaskSet(BIT8(6), BIT8(6));
@@ -455,7 +455,7 @@ void BRD_SM_BbmHandler(void)
     LMM_BbmRtcAlarmEvent(BRD_SM_RTC_PCA2131);
 
     /* Clear status flags */
-    (void) PCA2131_IntClear(&pca2131Dev);
+    (void) PCA2131_IntClear(&g_pca2131Dev);
 }
 
 /*==========================================================================*/

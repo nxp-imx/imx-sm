@@ -73,25 +73,28 @@
 /* External variables */
 
 /*! Handle to acces PCAL6408A */
-extern PCAL6408A_Type pcal6408aDev;
+extern PCAL6408A_Type g_pcal6408aDev;
 
 /*! Handle to acces PF09 */
-extern PF09_Type pf09Dev;
+extern PF09_Type g_pf09Dev;
 
 /*! Handle to acces PF5301 */
-extern PF53_Type pf5301Dev;
+extern PF53_Type g_pf5301Dev;
 
 /*! Handle to acces PF5302 */
-extern PF53_Type pf5302Dev;
+extern PF53_Type g_pf5302Dev;
 
 /*! Handle to acces PCA2131 */
-extern PCA2131_Type pca2131Dev;
+extern PCA2131_Type g_pca2131Dev;
 
 /*! Array of dynamic priority info for board IRQs */
-extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
+extern irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
 
 /*! Indicator if bus expander bit[6] is used for the PF2131 RTC */
-extern bool pca2131Used;
+extern bool g_pca2131Used;
+
+/*! Fault flags from the PMICs */
+extern uint32_t g_pmicFaultFlags;
 
 /* Functions */
 
