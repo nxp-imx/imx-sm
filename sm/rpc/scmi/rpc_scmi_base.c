@@ -441,7 +441,7 @@ static int32_t BaseProtocolAttributes(const scmi_caller_t *caller,
         /* Return attributes */
         out->attributes
             = BASE_PROTO_ATTR_NUM_AGENTS(((uint32_t) g_scmiConfig[
-                caller->scmiInst].numAgents))
+            caller->scmiInst].numAgents))
             | BASE_PROTO_ATTR_NUM_PROTOCOLS(RPC_SCMI_NumProtocolsGet()
                 - 1U);
     }
@@ -817,7 +817,7 @@ static int32_t BaseSetDevicePermissions(const scmi_caller_t *caller,
             {
                 /* Check permissions */
                 if (g_scmiAgentConfig[caller->agentId].basePerms[
-                        in->deviceId + SM_NUM_AGENT] < SM_SCMI_PERM_PRIV)
+                    in->deviceId + SM_NUM_AGENT] < SM_SCMI_PERM_PRIV)
                 {
                     status = SM_ERR_DENIED;
                 }

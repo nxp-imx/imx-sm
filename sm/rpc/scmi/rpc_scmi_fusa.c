@@ -847,7 +847,7 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
                     (uint32_t) g_scmiAgentConfig[agent].seenvId)
                 {
                     target.lmId = g_scmiConfig[g_scmiAgentConfig[
-                                agent].scmiInst].lmId;
+                        agent].scmiInst].lmId;
                     break;
                 }
             }

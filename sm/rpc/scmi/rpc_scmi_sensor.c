@@ -922,7 +922,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
         uint8_t eventControl
             = (uint8_t) SENSOR_TP_EV_CTRL(in->tripPointEvCtrl);
         uint64_t tp = ((((uint64_t) in->tripPointValHigh)
-            << 32U) | (uint64_t) in->tripPointValLow);
+                << 32U) | (uint64_t) in->tripPointValLow);
         int64_t tpValue = (int64_t) tp;
 
         status = LMM_SensorTripPointSet(caller->lmId, in->sensorId,
