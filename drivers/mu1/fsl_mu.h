@@ -19,33 +19,33 @@
  *****************************************************************************/
 
 /*! @name Driver version */
-/*@{*/
+/*! @{ */
 /*! @brief MU driver version. */
 #define FSL_MU_DRIVER_VERSION (MAKE_VERSION(2, 2, 0))
-/*@}*/
+/*! @} */
 
-#define MU_CORE_INTR(intr) ((uint32_t)(intr) << 0U)
-#define MU_MISC_INTR(intr) ((uint32_t)(intr) << 8U)
-#define MU_TX_INTR(intr)   ((uint32_t)(intr) << 20U)
-#define MU_RX_INTR(intr)   ((uint32_t)(intr) << 24U)
-#define MU_GI_INTR(intr)   ((uint32_t)(intr) << 28U)
+#define MU_CORE_INTR(intr) ((uint32_t)(intr) << 0U) /*!< Core interrupts. */
+#define MU_MISC_INTR(intr) ((uint32_t)(intr) << 8U) /*!< Misc interrupts. */
+#define MU_TX_INTR(intr)   ((uint32_t)(intr) << 20U) /*!< TX interrupts. */
+#define MU_RX_INTR(intr)   ((uint32_t)(intr) << 24U) /*!< RX interrupts. */
+#define MU_GI_INTR(intr)   ((uint32_t)(intr) << 28U) /*!< GI interrupts. */
 
-#define MU_GET_CORE_INTR(intrs) (((uint32_t)(intrs) >> 0U) & 0xFFUL)
-#define MU_GET_TX_INTR(intrs)   (((uint32_t)(intrs) >> 20U) & 0xFUL)
-#define MU_GET_RX_INTR(intrs)   (((uint32_t)(intrs) >> 24U) & 0xFUL)
-#define MU_GET_GI_INTR(intrs)   (((uint32_t)(intrs) >> 28U) & 0xFUL)
+#define MU_GET_CORE_INTR(intrs) (((uint32_t)(intrs) >> 0U) & 0xFFUL) /*!< Core interrupts. */
+#define MU_GET_TX_INTR(intrs)   (((uint32_t)(intrs) >> 20U) & 0xFUL) /*!< TX interrupts. */
+#define MU_GET_RX_INTR(intrs)   (((uint32_t)(intrs) >> 24U) & 0xFUL) /*!< RX interrupts. */
+#define MU_GET_GI_INTR(intrs)   (((uint32_t)(intrs) >> 28U) & 0xFUL) /*!< GI interrupts. */
 
-#define MU_CORE_FLAG(flag) ((uint32_t)(flag) << 0U)
-#define MU_STAT_FLAG(flag) ((uint32_t)(flag) << 8U)
-#define MU_TX_FLAG(flag)   ((uint32_t)(flag) << 20U)
-#define MU_RX_FLAG(flag)   ((uint32_t)(flag) << 24U)
-#define MU_GI_FLAG(flag)   ((uint32_t)(flag) << 28U)
+#define MU_CORE_FLAG(flag) ((uint32_t)(flag) << 0U) /*!< Core flags. */
+#define MU_STAT_FLAG(flag) ((uint32_t)(flag) << 8U) /*!< Status flags. */
+#define MU_TX_FLAG(flag)   ((uint32_t)(flag) << 20U) /*!< TX flags. */
+#define MU_RX_FLAG(flag)   ((uint32_t)(flag) << 24U) /*!< RX flags. */
+#define MU_GI_FLAG(flag)   ((uint32_t)(flag) << 28U) /*!< GI flags. */
 
-#define MU_GET_CORE_FLAG(flags) (((uint32_t)(flags) >> 0U) & 0xFFUL)
-#define MU_GET_STAT_FLAG(flags) (((uint32_t)(flags) >> 8U) & 0xFFUL)
-#define MU_GET_TX_FLAG(flags)   (((uint32_t)(flags) >> 20U) & 0xFUL)
-#define MU_GET_RX_FLAG(flags)   (((uint32_t)(flags) >> 24U) & 0xFUL)
-#define MU_GET_GI_FLAG(flags)   (((uint32_t)(flags) >> 28U) & 0xFUL)
+#define MU_GET_CORE_FLAG(flags) (((uint32_t)(flags) >> 0U) & 0xFFUL) /*!< Core flags. */
+#define MU_GET_STAT_FLAG(flags) (((uint32_t)(flags) >> 8U) & 0xFFUL) /*!< Status flags. */
+#define MU_GET_TX_FLAG(flags)   (((uint32_t)(flags) >> 20U) & 0xFUL) /*!< TX flags. */
+#define MU_GET_RX_FLAG(flags)   (((uint32_t)(flags) >> 24U) & 0xFUL) /*!< RX flags. */
+#define MU_GET_GI_FLAG(flags)   (((uint32_t)(flags) >> 28U) & 0xFUL) /*!< GI flags. */
 
 /*!
  * @brief MU status flags.
@@ -212,7 +212,7 @@ void MU_Init(MU_Type *base);
  */
 void MU_Deinit(MU_Type *base);
 
-/* @} */
+/*! @} */
 
 /*!
  * @name MU Message
@@ -293,7 +293,7 @@ static inline uint32_t MU_ReceiveMsgNonBlocking(MU_Type *base, uint32_t regIndex
  */
 uint32_t MU_ReceiveMsg(MU_Type *base, uint32_t regIndex);
 
-/* @} */
+/*! @} */
 
 /*!
  * @name MU Flags
@@ -354,7 +354,7 @@ static inline uint32_t MU_GetFlags(MU_Type *base)
     return base->FSR;
 }
 
-/* @} */
+/*! @} */
 
 /*!
  * @name Status and Interrupt.
@@ -609,7 +609,7 @@ static inline void MU_ClearNmi(MU_Type *base)
 }
 #endif /* FSL_FEATURE_MU_NO_NMI */
 
-/* @} */
+/*! @} */
 
 /*!
  * @name MU misc functions
@@ -759,11 +759,11 @@ static inline void MU_MaskHardwareReset(MU_Type *base, bool mask)
 #endif
 }
 
-/* @} */
+/*! @} */
 
 #if defined(__cplusplus)
 }
 #endif /*_cplusplus*/
-/*@}*/
+/*! @} */
 
 #endif /* _FSL_MU_H_*/

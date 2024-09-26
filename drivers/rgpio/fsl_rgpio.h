@@ -21,10 +21,10 @@
  ******************************************************************************/
 
 /*! @name Driver version */
-/*@{*/
+/*! @{ */
 /*! @brief RGPIO driver version 2.1.0. */
 #define FSL_RGPIO_DRIVER_VERSION (MAKE_VERSION(2, 1, 0))
-/*@}*/
+/*! @} */
 
 /*! @brief RGPIO direction definition */
 typedef enum _rgpio_pin_direction
@@ -118,7 +118,7 @@ extern "C" {
  */
 
 /*! @name RGPIO Configuration */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Initializes a RGPIO pin used by the board.
@@ -155,10 +155,10 @@ void RGPIO_PinInit(RGPIO_Type *base, uint32_t pin, const rgpio_pin_config_t *con
  * @retval RGPIO instance
  */
 uint32_t RGPIO_GetInstance(RGPIO_Type *base);
-/*@}*/
+/*! @} */
 
 /*! @name RGPIO Output Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Sets the output level of the multiple RGPIO pins to the logic 1 or 0.
@@ -184,6 +184,12 @@ static inline void RGPIO_PinWrite(RGPIO_Type *base, uint32_t pin, uint8_t output
 /*!
  * @brief Sets the output level of the multiple RGPIO pins to the logic 1 or 0.
  * @deprecated Do not use this function.  It has been superceded by @ref RGPIO_PinWrite.
+ *
+ * @param base    RGPIO peripheral base pointer (RGPIOA, RGPIOB, RGPIOC, and so on.)
+ * @param pin     RGPIO pin number
+ * @param output  RGPIO pin output logic level.
+ *        - 0: corresponding pin output low-logic level.
+ *        - 1: corresponding pin output high-logic level.
  */
 static inline void RGPIO_WritePinOutput(RGPIO_Type *base, uint32_t pin, uint8_t output)
 {
@@ -204,6 +210,9 @@ static inline void RGPIO_PortSet(RGPIO_Type *base, uint32_t mask)
 /*!
  * @brief Sets the output level of the multiple RGPIO pins to the logic 1.
  * @deprecated Do not use this function.  It has been superceded by @ref RGPIO_PortSet.
+ *
+ * @param base RGPIO peripheral base pointer (RGPIOA, RGPIOB, RGPIOC, and so on.)
+ * @param mask RGPIO pin number macro
  */
 static inline void RGPIO_SetPinsOutput(RGPIO_Type *base, uint32_t mask)
 {
@@ -247,15 +256,18 @@ static inline void RGPIO_PortToggle(RGPIO_Type *base, uint32_t mask)
 /*!
  * @brief Reverses the current output logic of the multiple RGPIO pins.
  * @deprecated Do not use this function.  It has been superceded by @ref RGPIO_PortToggle.
+ *
+ * @param base RGPIO peripheral base pointer (RGPIOA, RGPIOB, RGPIOC, and so on.)
+ * @param mask RGPIO pin number macro
  */
 static inline void RGPIO_TogglePinsOutput(RGPIO_Type *base, uint32_t mask)
 {
     RGPIO_PortToggle(base, mask);
 }
-/*@}*/
+/*! @} */
 
 /*! @name RGPIO Input Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Reads the current input value of the RGPIO port.
@@ -274,6 +286,12 @@ static inline uint32_t RGPIO_PinRead(RGPIO_Type *base, uint32_t pin)
 /*!
  * @brief Reads the current input value of the RGPIO port.
  * @deprecated Do not use this function.  It has been superceded by @ref RGPIO_PinRead.
+ *
+ * @param base RGPIO peripheral base pointer (RGPIOA, RGPIOB, RGPIOC, and so on.)
+ * @param pin     RGPIO pin number
+ * @retval RGPIO port input value
+ *        - 0: corresponding pin input low-logic level.
+ *        - 1: corresponding pin input high-logic level.
  */
 static inline uint32_t RGPIO_ReadPinInput(RGPIO_Type *base, uint32_t pin)
 {
@@ -299,11 +317,11 @@ static inline void RGPIO_EnablePortInput(RGPIO_Type *base, uint32_t mask, bool e
 }
 #endif
 
-/*@}*/
+/*! @} */
 
 #if defined(FSL_FEATURE_SOC_PORT_COUNT) && FSL_FEATURE_SOC_PORT_COUNT
 /*! @name RGPIO Interrupt */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Reads the RGPIO port interrupt status flag.
@@ -323,6 +341,10 @@ uint32_t RGPIO_PortGetInterruptFlags(RGPIO_Type *base);
 /*!
  * @brief Reads the RGPIO port interrupt status flag.
  * @deprecated Do not use this function.  It has been superceded by @ref RGPIO_PortGetInterruptFlags.
+ *
+ * @param base RGPIO peripheral base pointer (RGPIOA, RGPIOB, RGPIOC, and so on.)
+ * @retval The current RGPIO port interrupt status flag, for example, 0x00010001 means the
+ *         pin 0 and 17 have the interrupt.
  */
 static inline uint32_t RGPIO_GetPinsInterruptFlags(RGPIO_Type *base)
 {
@@ -340,6 +362,9 @@ void RGPIO_PortClearInterruptFlags(RGPIO_Type *base, uint32_t mask);
 /*!
  * @brief Clears multiple RGPIO pin interrupt status flags.
  * @deprecated Do not use this function.  It has been superceded by @ref RGPIO_PortClearInterruptFlags.
+ *
+ * @param base RGPIO peripheral base pointer (RGPIOA, RGPIOB, RGPIOC, and so on.)
+ * @param mask RGPIO pin number macro
  */
 static inline void RGPIO_ClearPinsInterruptFlags(RGPIO_Type *base, uint32_t mask)
 {
@@ -436,7 +461,7 @@ static inline void RGPIO_ClearPinsInterruptFlags(RGPIO_Type *base, rgpio_interru
 }
 #endif
 
-/*@}*/
+/*! @} */
 /*! @} */
 
 /*!
@@ -455,7 +480,7 @@ static inline void RGPIO_ClearPinsInterruptFlags(RGPIO_Type *base, rgpio_interru
 #if defined(FSL_FEATURE_SOC_FGPIO_COUNT) && FSL_FEATURE_SOC_FGPIO_COUNT
 
 /*! @name FGPIO Configuration */
-/*@{*/
+/*! @{ */
 
 #if defined(FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL) && FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL
 /*!
@@ -511,10 +536,10 @@ void FGPIO_PinInit(FGPIO_Type *base, uint32_t pin, const rgpio_pin_config_t *con
  * @retval FGPIO instance
  */
 uint32_t FGPIO_GetInstance(FGPIO_Type *base);
-/*@}*/
+/*! @} */
 
 /*! @name FGPIO Output Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Sets the output level of the multiple FGPIO pins to the logic 1 or 0.
@@ -605,10 +630,10 @@ static inline void FGPIO_TogglePinsOutput(FGPIO_Type *base, uint32_t mask)
 {
     FGPIO_PortToggle(base, mask);
 }
-/*@}*/
+/*! @ */
 
 /*! @name FGPIO Input Operations */
-/*@{*/
+/*! @{ */
 
 /*!
  * @brief Reads the current input value of the FGPIO port.
@@ -632,7 +657,7 @@ static inline uint32_t FGPIO_ReadPinInput(FGPIO_Type *base, uint32_t pin)
 {
     return FGPIO_PinRead(base, pin);
 }
-/*@}*/
+/*! @} */
 
 #if defined(FSL_FEATURE_SOC_PORT_COUNT) && FSL_FEATURE_SOC_PORT_COUNT
 /*! @name FGPIO Interrupt */
@@ -693,7 +718,7 @@ static inline void FGPIO_ClearPinsInterruptFlags(FGPIO_Type *base, uint32_t mask
 void FGPIO_CheckAttributeBytes(FGPIO_Type *base, rgpio_checker_attribute_t attribute);
 #endif
 
-/*@}*/
+/*! @} */
 
 #endif /* FSL_FEATURE_SOC_FGPIO_COUNT */
 
@@ -701,8 +726,6 @@ void FGPIO_CheckAttributeBytes(FGPIO_Type *base, rgpio_checker_attribute_t attri
 }
 #endif
 
-/*!
- * @}
- */
+/*! @} */
 
 #endif /* _FSL_RGPIO_H_*/

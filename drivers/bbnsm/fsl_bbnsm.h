@@ -153,6 +153,8 @@ status_t BBNSM_RTC_SetAlarm(BBNSM_Type *base, uint32_t alarmSeconds);
  * @brief Returns the BBNSM RTC alarm time.
  *
  * @param base     BBNSM peripheral base address
+ *
+ * @return The alarm time.
  */
 uint32_t BBNSM_RTC_GetAlarm(BBNSM_Type *base);
 
