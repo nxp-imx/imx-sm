@@ -257,6 +257,9 @@
         .daisyPerms[DEV_SM_DAISY_LPI2C7_SDA] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPI2C8_SCL] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPI2C8_SDA] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_0] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_1] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_2] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SCK] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SDI] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SDO] = SM_SCMI_PERM_ALL, \
@@ -743,6 +746,9 @@
         .daisyPerms[DEV_SM_DAISY_LPI2C7_SDA] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPI2C8_SCL] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPI2C8_SDA] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_0] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_1] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_2] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SCK] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SDI] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SDO] = SM_SCMI_PERM_ALL, \
@@ -1220,6 +1226,9 @@
         .daisyPerms[DEV_SM_DAISY_LPI2C7_SDA] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPI2C8_SCL] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPI2C8_SDA] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_0] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_1] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_LPSPI4_PCS_2] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SCK] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SDI] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPSPI4_SDO] = SM_SCMI_PERM_ALL, \
