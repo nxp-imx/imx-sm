@@ -125,7 +125,7 @@
 #define DEV_SM_CLK_MQS1                 (CLOCK_ROOT_MQS1 + CLOCK_NUM_SRC)            /*!< 56: MQS1 root */
 #define DEV_SM_CLK_PDM                  (CLOCK_ROOT_PDM + CLOCK_NUM_SRC)             /*!< 57: PDM root */
 #define DEV_SM_CLK_SAI1                 (CLOCK_ROOT_SAI1 + CLOCK_NUM_SRC)            /*!< 58: SAI1 root */
-#define DEV_SM_CLK_ELE                  (CLOCK_ROOT_SENTINEL + CLOCK_NUM_SRC)        /*!< 59: ELE root */
+#define DEV_SM_CLK_ELE                  (CLOCK_ROOT_ELE + CLOCK_NUM_SRC)             /*!< 59: ELE root */
 #define DEV_SM_CLK_TPM2                 (CLOCK_ROOT_TPM2 + CLOCK_NUM_SRC)            /*!< 60: TPM2 root */
 #define DEV_SM_CLK_TSTMR1               (CLOCK_ROOT_TSTMR1 + CLOCK_NUM_SRC)          /*!< 61: TSTMR1 root */
 #define DEV_SM_CLK_CAMAPB               (CLOCK_ROOT_CAMAPB + CLOCK_NUM_SRC)          /*!< 62: CAMAPB root */

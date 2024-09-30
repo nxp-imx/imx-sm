@@ -88,12 +88,12 @@ typedef enum IRQn
     LPTMR1_IRQn        = 18,  /**< Low Power Timer 1 */
     LPUART1_IRQn       = 19,  /**< Low Power UART 1 */
     LPUART2_IRQn       = 20,  /**< Low Power UART 2 */
-    Reserved37_IRQn    = 21,  /**< AONMIX Sentinel MU0 SideA interrupt */
-    Reserved38_IRQn    = 22,  /**< AONMIX Sentinel MU1 SideA interrupt */
-    Reserved39_IRQn    = 23,  /**< AONMIX Sentinel MU2 SideA interrupt */
-    Reserved40_IRQn    = 24,  /**< AONMIX Sentinel MU3 SideA interrupt */
-    Reserved41_IRQn    = 25,  /**< AONMIX Sentinel MU4 SideA interrupt */
-    Reserved42_IRQn    = 26,  /**< AONMIX Sentinel MU5 SideA interrupt */
+    Reserved37_IRQn    = 21,  /**< AONMIX ELE MU0 SideA interrupt */
+    Reserved38_IRQn    = 22,  /**< AONMIX ELE MU1 SideA interrupt */
+    Reserved39_IRQn    = 23,  /**< AONMIX ELE MU2 SideA interrupt */
+    Reserved40_IRQn    = 24,  /**< AONMIX ELE MU3 SideA interrupt */
+    Reserved41_IRQn    = 25,  /**< AONMIX ELE MU4 SideA interrupt */
+    Reserved42_IRQn    = 26,  /**< AONMIX ELE MU5 SideA interrupt */
     V2X_FH_APCH0_IRQn  = 27,  /**< V2X-FH MU APCH0 (APP0) interrupt */
     V2X_FH_APHSM1_IRQn = 28,  /**< V2X-FH MU APHSM1 (HSM1) interrupt */
     TPM1_IRQn          = 29,  /**< Timer PWM module 1 */
@@ -227,11 +227,11 @@ typedef enum IRQn
     DMA4_58_59_IRQn    = 157, /**< eDMA2 channel 58/59 interrupt */
     DMA4_60_61_IRQn    = 158, /**< eDMA2 channel 60/61 interrupt */
     DMA4_62_63_IRQn    = 159, /**< eDMA2 channel 62/63 interrupt */
-    ELE_Group1_IRQn    = 160, /**< Sentinel Group 1 reset source if no s500 reference clock is detected. Output
+    ELE_Group1_IRQn    = 160, /**< ELE Group 1 reset source if no s500 reference clock is detected. Output
                                  synchronized to 32khz clk. */
-    ELE_Group2_IRQn    = 161, /**< Sentinel Group 2 reset source s500 reference clock is not detected or too slow. Output
+    ELE_Group2_IRQn    = 161, /**< ELE Group 2 reset source s500 reference clock is not detected or too slow. Output
                                synchronized to ref1_clk. */
-    ELE_Group3_IRQn    = 162, /**< Sentinel Group 2 reset source s500 reference clock is not detected or too slow. Output
+    ELE_Group3_IRQn    = 162, /**< ELE Group 2 reset source s500 reference clock is not detected or too slow. Output
                                synchronized to ref1_clk. */
     Reserved179_IRQn     = 163, /**< JTAGSW DAP MDM-AP SRC reset source */
     Reserved180_IRQn     = 164, /**< JTAGC SRC reset source */

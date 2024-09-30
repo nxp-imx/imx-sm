@@ -69,7 +69,7 @@
 #define DEV_SM_REASON_CM7_SWREQ    RST_REASON_CM7_SWREQ    /*!< 3: CM7 SW request */
 #define DEV_SM_REASON_FCCU         RST_REASON_FCCU         /*!< 4: FCCU */
 #define DEV_SM_REASON_JTAG_SW      RST_REASON_JTAG_SW      /*!< 5: JTAG SW */
-#define DEV_SM_REASON_ELE          RST_REASON_SENTINEL     /*!< 6: ELE */
+#define DEV_SM_REASON_ELE          RST_REASON_ELE          /*!< 6: ELE */
 #define DEV_SM_REASON_TEMPSENSE    RST_REASON_TEMPSENSE    /*!< 7: Sensor panic */
 #define DEV_SM_REASON_WDOG1        RST_REASON_WDOG1        /*!< 8: WDOG 1 */
 #define DEV_SM_REASON_WDOG2        RST_REASON_WDOG2        /*!< 9: WDOG 2 */

@@ -522,7 +522,7 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
 
         if (gpcReqMaskRst != 0U)
         {
-            uint32_t hs = BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL;
+            uint32_t hs = BLK_CTRL_S_AONMIX->LP_HANDSHAKE_ELE;
 
             if (enableHandshake)
             {
@@ -533,13 +533,13 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
                 hs &= (~gpcReqMaskRst);
             }
             
-            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL = hs;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_ELE = hs;
         }
 
         uint32_t gpcReqMaskPwr = g_pwrMixMgmtInfo[srcMixIdx].gpcReqMaskPwr;
         if (gpcReqMaskPwr != 0U)
         {
-            uint32_t hs = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL;
+            uint32_t hs = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE;
         
             if (enableHandshake)
             {
@@ -550,7 +550,7 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
                 hs &= (~gpcReqMaskPwr);
             }
             
-            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL = hs;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = hs;
         }
     }
 }

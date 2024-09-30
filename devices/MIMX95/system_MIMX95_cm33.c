@@ -86,7 +86,7 @@ void SystemInit(void)
     /* Mask reset sources handled by SM */
     SRC_GEN->SRMASK = (1UL << RST_REASON_CM7_LOCKUP) | 
                       (1UL << RST_REASON_CM7_SWREQ) |
-                      (1UL << RST_REASON_SENTINEL) |
+                      (1UL << RST_REASON_ELE) |
                       (1UL << RST_REASON_WDOG3) |
                       (1UL << RST_REASON_WDOG4) |
                       (1UL << RST_REASON_WDOG5);

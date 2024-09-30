@@ -274,7 +274,7 @@
 #define ES_MIN_HZ_MQS1              ES_MIN_HZ_ROOT
 #define ES_MIN_HZ_PDM               ES_MIN_HZ_ROOT
 #define ES_MIN_HZ_SAI1              ES_MIN_HZ_ROOT
-#define ES_MIN_HZ_SENTINEL          ES_MIN_HZ_ROOT
+#define ES_MIN_HZ_ELE               ES_MIN_HZ_ROOT
 #define ES_MIN_HZ_TPM2              ES_MIN_HZ_ROOT
 #define ES_MIN_HZ_TSTMR1            ES_MIN_HZ_ROOT
 #define ES_MIN_HZ_CAMAPB            ES_MIN_HZ_ROOT
@@ -398,7 +398,7 @@
 #define ES_MAX_HZ_MQS1              ES_67MHZ
 #define ES_MAX_HZ_PDM               ES_200MHZ
 #define ES_MAX_HZ_SAI1              ES_67MHZ
-#define ES_MAX_HZ_SENTINEL          ES_250MHZ
+#define ES_MAX_HZ_ELE               ES_250MHZ
 #define ES_MAX_HZ_TPM2              ES_83MHZ
 #define ES_MAX_HZ_TSTMR1            ES_24MHZ
 #define ES_MAX_HZ_CAMAPB            ES_133MHZ

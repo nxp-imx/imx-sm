@@ -58,7 +58,7 @@
 #define RST_REASON_CM7_SWREQ            3U
 #define RST_REASON_FCCU                 4U
 #define RST_REASON_JTAG_SW              5U
-#define RST_REASON_SENTINEL             6U
+#define RST_REASON_ELE                  6U
 #define RST_REASON_TEMPSENSE            7U
 #define RST_REASON_WDOG1                8U
 #define RST_REASON_WDOG2                9U
@@ -127,7 +127,7 @@
 #define RST_LINE_ANAMIX                 29U
 #define RST_LINE_AONMIX_TOP             30U
 #define RST_LINE_AONMIX_M33             31U
-#define RST_LINE_AONMIX_SENTINEL        32U
+#define RST_LINE_AONMIX_ELE             32U
 #define RST_LINE_BBSMMIX                33U
 #define RST_LINE_CAMERAMIX              34U
 #define RST_LINE_CCMSRCGPCMIX           35U

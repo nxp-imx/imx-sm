@@ -349,9 +349,9 @@ typedef struct {
 
 #define SRC_GEN_SRTMR_RST_EVT_6_MODE_MASK (0x40U)
 #define SRC_GEN_SRTMR_RST_EVT_6_MODE_SHIFT (6U)
-/*! RST_EVT_6_MODE - mode configuration bit for reset event SENTINEL_RST_EVT
- *  0b0..level mode : affected region enters and stays in reset as long as SENTINEL_RST_EVT is active
- *  0b1..edge mode : affected region enters reset when SENTINEL_RST_EVT becomes active and will leave reset even if event is active
+/*! RST_EVT_6_MODE - mode configuration bit for reset event ELE_RST_EVT
+ *  0b0..level mode : affected region enters and stays in reset as long as ELE_RST_EVT is active
+ *  0b1..edge mode : affected region enters reset when ELE_RST_EVT becomes active and will leave reset even if event is active
  */
 #define SRC_GEN_SRTMR_RST_EVT_6_MODE(x)  (((uint32_t)(((uint32_t)(x)) << SRC_GEN_SRTMR_RST_EVT_6_MODE_SHIFT)) & SRC_GEN_SRTMR_RST_EVT_6_MODE_MASK)
 
@@ -465,9 +465,9 @@ typedef struct {
 
 #define SRC_GEN_SRMASK_RST_EVT_6_MASK_MASK (0x40U)
 #define SRC_GEN_SRMASK_RST_EVT_6_MASK_SHIFT (6U)
-/*! RST_EVT_6_MASK - mask bit for reset event SENTINEL_RST_EVT
- *  0b0..reset event SENTINEL_RST_EVT is not masked
- *  0b1..reset event SENTINEL_RST_EVT is masked
+/*! RST_EVT_6_MASK - mask bit for reset event ELE_RST_EVT
+ *  0b0..reset event ELE_RST_EVT is not masked
+ *  0b1..reset event ELE_RST_EVT is masked
  */
 #define SRC_GEN_SRMASK_RST_EVT_6_MASK(x) (((uint32_t)(((uint32_t)(x)) << SRC_GEN_SRMASK_RST_EVT_6_MASK_SHIFT)) & SRC_GEN_SRMASK_RST_EVT_6_MASK_MASK)
 
@@ -641,7 +641,7 @@ typedef struct {
 
 #define SRC_GEN_SRESR_RST_EVT_6_FLAG_MASK (0x80U)
 #define SRC_GEN_SRESR_RST_EVT_6_FLAG_SHIFT (7U)
-/*! RST_EVT_6_FLAG - indicates if reset event SENTINEL_RST_EVT has been occurecd
+/*! RST_EVT_6_FLAG - indicates if reset event ELE_RST_EVT has been occurecd
  *  0b0..did not occure
  *  0b1..reset event occurec
  */
@@ -1027,8 +1027,8 @@ typedef struct {
 
 #define SRC_GEN_SRMR_RSTR_3_MASK         (0x8U)
 #define SRC_GEN_SRMR_RSTR_3_SHIFT        (3U)
-/*! RSTR_3 - configuration bit for independent reset of reset region AONMIX_SENTINEL by event <a>
- *  0b0..independent reset of reset region AONMIX_SENTINEL by event <a> is disabled
+/*! RSTR_3 - configuration bit for independent reset of reset region AONMIX_ELE by event <a>
+ *  0b0..independent reset of reset region AONMIX_ELE by event <a> is disabled
  */
 #define SRC_GEN_SRMR_RSTR_3(x)           (((uint32_t)(((uint32_t)(x)) << SRC_GEN_SRMR_RSTR_3_SHIFT)) & SRC_GEN_SRMR_RSTR_3_MASK)
 

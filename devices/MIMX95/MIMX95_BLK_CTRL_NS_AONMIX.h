@@ -80,7 +80,7 @@ typedef struct {
   __IO uint32_t SSI;                               /**< SSI master low power mode control, offset: 0x80 */
   __I  uint32_t FASTBOOT_ENABLE;                   /**< fastboot enable, offset: 0x84 */
   __IO uint32_t MQS_SETTINGS;                      /**< MQS settings, offset: 0x88 */
-  __I  uint32_t SENTINEL_FW_PRESENT;               /**< Read only bit for fuse SENTINEL_FW_PRESENT, offset: 0x8C */
+  __I  uint32_t ELE_FW_PRESENT;                    /**< Read only bit for fuse ELE_FW_PRESENT, offset: 0x8C */
   __I  uint32_t AOMIX_SPARE_FUSE;                  /**< Spare fuse register, offset: 0x90 */
   __IO uint32_t IPG_STOP_CTL;                      /**< IPG_STOP Control Register, offset: 0x94 */
   __I  uint32_t IPG_STOP_ACK_STATUS;               /**< IPG_STOP_ACK Status Register, offset: 0x98 */
@@ -124,10 +124,10 @@ typedef struct {
 /*! @name UPPER_ADDR - UPPER ADDR BITS[35:32] */
 /*! @{ */
 
-#define BLK_CTRL_NS_AONMIX_UPPER_ADDR_SENTINEL_MASK (0xFU)
-#define BLK_CTRL_NS_AONMIX_UPPER_ADDR_SENTINEL_SHIFT (0U)
-/*! sentinel - address bit [35:32] for sentinel */
-#define BLK_CTRL_NS_AONMIX_UPPER_ADDR_SENTINEL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_NS_AONMIX_UPPER_ADDR_SENTINEL_SHIFT)) & BLK_CTRL_NS_AONMIX_UPPER_ADDR_SENTINEL_MASK)
+#define BLK_CTRL_NS_AONMIX_UPPER_ADDR_ELE_MASK (0xFU)
+#define BLK_CTRL_NS_AONMIX_UPPER_ADDR_ELE_SHIFT (0U)
+/*! ele - address bit [35:32] for ele */
+#define BLK_CTRL_NS_AONMIX_UPPER_ADDR_ELE(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_NS_AONMIX_UPPER_ADDR_ELE_SHIFT)) & BLK_CTRL_NS_AONMIX_UPPER_ADDR_ELE_MASK)
 
 #define BLK_CTRL_NS_AONMIX_UPPER_ADDR_EDMA1_MASK (0xF0U)
 #define BLK_CTRL_NS_AONMIX_UPPER_ADDR_EDMA1_SHIFT (4U)
@@ -1464,13 +1464,13 @@ typedef struct {
 #define BLK_CTRL_NS_AONMIX_MQS_SETTINGS_CLK_DIVIDE(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_NS_AONMIX_MQS_SETTINGS_CLK_DIVIDE_SHIFT)) & BLK_CTRL_NS_AONMIX_MQS_SETTINGS_CLK_DIVIDE_MASK)
 /*! @} */
 
-/*! @name SENTINEL_FW_PRESENT - Read only bit for fuse SENTINEL_FW_PRESENT */
+/*! @name ELE_FW_PRESENT - Read only bit for fuse ELE_FW_PRESENT */
 /*! @{ */
 
-#define BLK_CTRL_NS_AONMIX_SENTINEL_FW_PRESENT_SENTINEL_FW_PRESENT_MASK (0x1U)
-#define BLK_CTRL_NS_AONMIX_SENTINEL_FW_PRESENT_SENTINEL_FW_PRESENT_SHIFT (0U)
-/*! sentinel_fw_present - Read-only bit for Sentinel FW present */
-#define BLK_CTRL_NS_AONMIX_SENTINEL_FW_PRESENT_SENTINEL_FW_PRESENT(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_NS_AONMIX_SENTINEL_FW_PRESENT_SENTINEL_FW_PRESENT_SHIFT)) & BLK_CTRL_NS_AONMIX_SENTINEL_FW_PRESENT_SENTINEL_FW_PRESENT_MASK)
+#define BLK_CTRL_NS_AONMIX_ELE_FW_PRESENT_ELE_FW_PRESENT_MASK (0x1U)
+#define BLK_CTRL_NS_AONMIX_ELE_FW_PRESENT_ELE_FW_PRESENT_SHIFT (0U)
+/*! ele_fw_present - Read-only bit for ELE FW present */
+#define BLK_CTRL_NS_AONMIX_ELE_FW_PRESENT_ELE_FW_PRESENT(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_NS_AONMIX_ELE_FW_PRESENT_ELE_FW_PRESENT_SHIFT)) & BLK_CTRL_NS_AONMIX_ELE_FW_PRESENT_ELE_FW_PRESENT_MASK)
 /*! @} */
 
 /*! @name AOMIX_SPARE_FUSE - Spare fuse register */

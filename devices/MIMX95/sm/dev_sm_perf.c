@@ -1225,7 +1225,7 @@ static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
 {
     [DEV_SM_PERF_ELE] =
     {
-        .rootClk = CLOCK_ROOT_SENTINEL,
+        .rootClk = CLOCK_ROOT_ELE,
         .srcMixIdx = PWR_MIX_SLICE_IDX_AON,
         .psCfg = &s_psCfgSoc,
         .desc = s_perfDescEle,

@@ -61,12 +61,12 @@ __isr_vector:
     .long   LPTMR1_IRQHandler                               /* Low Power Timer 1*/
     .long   LPUART1_IRQHandler                              /* Low Power UART 1*/
     .long   LPUART2_IRQHandler                              /* Low Power UART 2*/
-    .long   Reserved37_IRQHandler                           /* AONMIX Sentinel MU0 SideA interrupt*/
-    .long   Reserved38_IRQHandler                           /* AONMIX Sentinel MU1 SideA interrupt*/
-    .long   Reserved39_IRQHandler                           /* AONMIX Sentinel MU2 SideA interrupt*/
-    .long   Reserved40_IRQHandler                           /* AONMIX Sentinel MU3 SideA interrupt*/
-    .long   Reserved41_IRQHandler                           /* AONMIX Sentinel MU4 SideA interrupt*/
-    .long   Reserved42_IRQHandler                           /* AONMIX Sentinel MU5 SideA interrupt*/
+    .long   Reserved37_IRQHandler                           /* AONMIX ELE MU0 SideA interrupt*/
+    .long   Reserved38_IRQHandler                           /* AONMIX ELE MU1 SideA interrupt*/
+    .long   Reserved39_IRQHandler                           /* AONMIX ELE MU2 SideA interrupt*/
+    .long   Reserved40_IRQHandler                           /* AONMIX ELE MU3 SideA interrupt*/
+    .long   Reserved41_IRQHandler                           /* AONMIX ELE MU4 SideA interrupt*/
+    .long   Reserved42_IRQHandler                           /* AONMIX ELE MU5 SideA interrupt*/
     .long   V2X_FH_APCH0_IRQHandler                         /* V2X-FH MU APCH0 (APP0) interrupt*/
     .long   V2X_FH_APHSM1_IRQHandler                        /* V2X-FH MU APHSM1 (HSM1) interrupt*/
     .long   TPM1_IRQHandler                                 /* Timer PWM module 1*/
@@ -200,9 +200,9 @@ __isr_vector:
     .long   DMA4_58_59_IRQHandler                           /* eDMA2 channel 58/59 interrupt*/
     .long   DMA4_60_61_IRQHandler                           /* eDMA2 channel 60/61 interrupt*/
     .long   DMA4_62_63_IRQHandler                           /* eDMA2 channel 62/63 interrupt*/
-    .long   ELE_Group1_IRQHandler_Shim                      /* Sentinel Group 1 reset source if no s500 reference clock is detected. Output synchronized to 32khz clk.*/
-    .long   ELE_Group2_IRQHandler_Shim                      /* Sentinel Group 2 reset source s500 reference clock is not detected or too slow. Output synchronized to ref1_clk.*/
-    .long   ELE_Group3_IRQHandler_Shim                      /* Sentinel Group 2 reset source s500 reference clock is not detected or too slow. Output synchronized to ref1_clk.*/
+    .long   ELE_Group1_IRQHandler_Shim                      /* ELE Group 1 reset source if no s500 reference clock is detected. Output synchronized to 32khz clk.*/
+    .long   ELE_Group2_IRQHandler_Shim                      /* ELE Group 2 reset source s500 reference clock is not detected or too slow. Output synchronized to ref1_clk.*/
+    .long   ELE_Group3_IRQHandler_Shim                      /* ELE Group 2 reset source s500 reference clock is not detected or too slow. Output synchronized to ref1_clk.*/
     .long   Reserved179_IRQHandler                          /* JTAGSW DAP MDM-AP SRC reset source*/
     .long   Reserved180_IRQHandler                          /* JTAGC SRC reset source*/
     .long   Reserved181_IRQHandler                          /* CM33 SYSREQRST SRC reset source*/

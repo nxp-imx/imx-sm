@@ -82,7 +82,7 @@ int32_t DEV_SM_SystemInit(void)
     }
 
     /* Enable GPC-to-ELE handshake */
-    GPC_GLOBAL->GPC_SENTINEL_HDSK_CTRL = 1U;
+    GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 1U;
 
     /* Default to keep M7 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_CFG |=
@@ -307,7 +307,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 {
     static const uint32_t s_clkRootSleepList[DEV_SM_NUM_SLEEP_ROOTS] =
     {
-        [0] = CLOCK_ROOT_SENTINEL,
+        [0] = CLOCK_ROOT_ELE,
         [1] = CLOCK_ROOT_BUSAON,
         [2] = CLOCK_ROOT_M33
     };
@@ -506,10 +506,10 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM = 0U;
             uint32_t lpHs2Sm = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM;
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM = 0U;
-            uint32_t lpHsEle = BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL;
-            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL = 0U;
-            uint32_t lpHs2Ele = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL;
-            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL = 0U;
+            uint32_t lpHsEle = BLK_CTRL_S_AONMIX->LP_HANDSHAKE_ELE;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_ELE = 0U;
+            uint32_t lpHs2Ele = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = 0U;
 
             /* Configure SM GPC_CTRL and NVIC for system-level wake events */
             for (uint32_t wakeIdx = 0;
@@ -726,8 +726,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Restore GPC LP handshakes */
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM = lpHsSm;
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM = lpHs2Sm;
-            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SENTINEL = lpHsEle;
-            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SENTINEL = lpHs2Ele;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE_ELE = lpHsEle;
+            BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = lpHs2Ele;
 
             /* If WAKEUPMIX powered down during SUSPEND, force power up */
             if (lpmSettingWakeup <= sleepMode)

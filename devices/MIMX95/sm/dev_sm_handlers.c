@@ -447,8 +447,8 @@ void ELE_Group1_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
     ExceptionHandler(ELE_Group1_IRQn, sp,
-        BLK_CTRL_S_AONMIX->SENTINEL_RST_REQ_STAT,
-        BLK_CTRL_S_AONMIX->SENTINEL_IRQ_REQ_STAT);
+        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -458,8 +458,8 @@ void ELE_Group2_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
     ExceptionHandler(ELE_Group2_IRQn, sp,
-        BLK_CTRL_S_AONMIX->SENTINEL_RST_REQ_STAT,
-        BLK_CTRL_S_AONMIX->SENTINEL_IRQ_REQ_STAT);
+        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -469,8 +469,8 @@ void ELE_Group3_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
     ExceptionHandler(ELE_Group3_IRQn, sp,
-        BLK_CTRL_S_AONMIX->SENTINEL_RST_REQ_STAT,
-        BLK_CTRL_S_AONMIX->SENTINEL_IRQ_REQ_STAT);
+        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/

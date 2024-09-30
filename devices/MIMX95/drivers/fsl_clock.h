@@ -136,7 +136,7 @@
 #define CLOCK_ROOT_MQS1                     15U
 #define CLOCK_ROOT_PDM                      16U
 #define CLOCK_ROOT_SAI1                     17U
-#define CLOCK_ROOT_SENTINEL                 18U
+#define CLOCK_ROOT_ELE                      18U
 #define CLOCK_ROOT_TPM2                     19U
 #define CLOCK_ROOT_TSTMR1                   20U
 #define CLOCK_ROOT_CAMAPB                   21U

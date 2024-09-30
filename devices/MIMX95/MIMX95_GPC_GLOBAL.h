@@ -59,7 +59,7 @@ typedef struct {
   __IO uint32_t GPC_ROSC_CTRL;                     /**< RCOSC control, offset: 0x200 */
        uint8_t RESERVED_7[4];
   __IO uint32_t GPC_EFUSE_CTRL;                    /**< eFUSE control, offset: 0x208 */
-  __IO uint32_t GPC_SENTINEL_HDSK_CTRL;            /**< Sentinel Handshake control, offset: 0x20C */
+  __IO uint32_t GPC_ELE_HDSK_CTRL;                 /**< ELE Handshake control, offset: 0x20C */
 } GPC_GLOBAL_Type;
 
 /* ----------------------------------------------------------------------------
@@ -239,16 +239,16 @@ typedef struct {
 #define GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_SHIFT)) & GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK)
 /*! @} */
 
-/*! @name GPC_SENTINEL_HDSK_CTRL - Sentinel Handshake control */
+/*! @name GPC_ELE_HDSK_CTRL - ELE Handshake control */
 /*! @{ */
 
-#define GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_MASK (0x1U)
-#define GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_SHIFT (0U)
-/*! SENTINEL_HDSK_EN - GPC-to-Sentinel handshake enable
- *  0b0..Disable GPC-to-Sentinel handshake during system sleep sequence
- *  0b1..Enable GPC-to-Sentinel handshake during system sleep sequence
+#define GPC_GLOBAL_GPC_ELE_HDSK_CTRL_ELE_HDSK_EN_MASK (0x1U)
+#define GPC_GLOBAL_GPC_ELE_HDSK_CTRL_ELE_HDSK_EN_SHIFT (0U)
+/*! ELE_HDSK_EN - GPC-to-ELE handshake enable
+ *  0b0..Disable GPC-to-ELE handshake during system sleep sequence
+ *  0b1..Enable GPC-to-ELE handshake during system sleep sequence
  */
-#define GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_SHIFT)) & GPC_GLOBAL_GPC_SENTINEL_HDSK_CTRL_SENTINEL_HDSK_EN_MASK)
+#define GPC_GLOBAL_GPC_ELE_HDSK_CTRL_ELE_HDSK_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_ELE_HDSK_CTRL_ELE_HDSK_EN_SHIFT)) & GPC_GLOBAL_GPC_ELE_HDSK_CTRL_ELE_HDSK_EN_MASK)
 /*! @} */
 
 
