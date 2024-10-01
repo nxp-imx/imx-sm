@@ -77,19 +77,18 @@
 #define PF09_REG_PWRON_INT      0x22U
 #define PF09_REG_PWRON_MASK     0x23U
 #define PF09_REG_IO_INT         0x24U
-
 #define PF09_REG_HFAULT_FLAGS   0x2EU
 #define PF09_REG_FAULT_FLAGS    0x2FU
 #define PF09_REG_FS0B_CFG       0x30U
 #define PF09_REG_FCCU_CFG       0x31U
 #define PF09_REG_RSTB_CFG1      0x32U
-
 #define PF09_REG_SECURE_WR1     0x35U
 #define PF09_REG_SECURE_WR2     0x36U
+#define PF09_REG_VMON_CFG1      0x37U
 #define PF09_REG_SYS_CFG1       0x38U
 #define PF09_REG_GPO_CFG        0x39U
 #define PF09_REG_GPO_CTRL       0x3AU
-
+#define PF09_REG_LDO3_PWRUP     0x4AU
 #define PF09_REG_WD_CTRL1       0x4EU
 #define PF09_REG_WD_CTRL2       0x4FU
 #define PF09_REG_WD_CFG1        0x50U
