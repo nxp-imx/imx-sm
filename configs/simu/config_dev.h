@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -40,7 +40,7 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the device abstraction.
+ * Header file containing configuration info for the device abstraction.
  */
 /*==========================================================================*/
 
@@ -49,78 +49,13 @@
 
 /* Includes */
 
-#include "config.h"
+#include "config_user.h"
 
 /* Defines */
 
-/*--------------------------------------------------------------------------*/
-/* PD0 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD0 mix */
-#define SM_PD0_CONFIG \
+/*! Config for device */
+#define SM_DEV_CONFIG_DATA \
     { \
-        SM_CFG_END \
-    }
-
-/*--------------------------------------------------------------------------*/
-/* PD1 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD1 mix */
-#define SM_PD1_CONFIG \
-    { \
-        SM_CFG_END \
-    }
-
-/*--------------------------------------------------------------------------*/
-/* PD2 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD2 mix */
-#define SM_PD2_CONFIG \
-    { \
-        SM_CFG_END \
-    }
-
-/*--------------------------------------------------------------------------*/
-/* PD3 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD3 mix */
-#define SM_PD3_CONFIG \
-    { \
-        SM_CFG_END \
-    }
-
-/*--------------------------------------------------------------------------*/
-/* PD4 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD4 mix */
-#define SM_PD4_CONFIG \
-    { \
-        SM_CFG_END \
-    }
-
-/*--------------------------------------------------------------------------*/
-/* PD5 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD5 mix */
-#define SM_PD5_CONFIG \
-    { \
-        SM_CFG_END \
-    }
-
-/*--------------------------------------------------------------------------*/
-/* PD6 Config                                                               */
-/*--------------------------------------------------------------------------*/
-
-/*! Data load config for the PD6 mix */
-#define SM_PD6_CONFIG \
-    { \
-        SM_CFG_END \
     }
 
 #endif /* CONFIG_DEV_H */

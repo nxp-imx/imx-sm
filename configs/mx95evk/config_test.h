@@ -40,12 +40,16 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the unit tests.
+ * Header file containing configuration info for the unit tests.
  */
 /*==========================================================================*/
 
 #ifndef CONFIG_TEST_H
 #define CONFIG_TEST_H
+
+/* Includes */
+
+#include "config_user.h"
 
 /* Defines */
 

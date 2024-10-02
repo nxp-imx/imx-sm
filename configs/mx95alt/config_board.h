@@ -40,7 +40,7 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the board abstraction.
+ * Header file containing configuration info for the board abstraction.
  */
 /*==========================================================================*/
 
@@ -49,7 +49,7 @@
 
 /* Includes */
 
-#include "config.h"
+#include "config_user.h"
 
 /* Defines */
 

@@ -40,7 +40,7 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the SMT.
+ * Header file containing configuration info for the SMT.
  */
 /*==========================================================================*/
 
@@ -49,6 +49,7 @@
 
 /* Includes */
 
+#include "config_user.h"
 #include "rpc_smt_config.h"
 
 /* Defines */

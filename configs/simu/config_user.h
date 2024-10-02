@@ -34,68 +34,97 @@
 
 /*==========================================================================*/
 /*!
- * @addtogroup CONFIG_MX95ALT
+ * @addtogroup CONFIG_SIMU
  * @{
  *
  * @file
  * @brief
  *
- * Header file containing configuration info for the device block controls.
+ * Header file containing configuration info for the manual user settings.
  */
 /*==========================================================================*/
 
-#ifndef CONFIG_BCTRL_H
-#define CONFIG_BCTRL_H
+#ifndef CONFIG_USER_H
+#define CONFIG_USER_H
 
 /* Includes */
 
-#include "config_user.h"
+#include "config.h"
 
 /* Defines */
 
+
 /*--------------------------------------------------------------------------*/
-/* BCTRL A Config                                                           */
+/* PD0 Config                                                               */
 /*--------------------------------------------------------------------------*/
 
-/*! Config for BCTRL A */
-#define SM_BCTRL_A_CONFIG \
+/*! Data load config for the PD0 mix */
+#define SM_PD0_CONFIG \
     { \
-        SM_CFG_W1(0x00000008U), 0x00001804U, \
-        SM_CFG_W1(0x0000000CU), 0x0000E7FBU, \
-        SM_CFG_W1(0x00000010U), 0x0000E7FBU, \
-        SM_CFG_W1(0x00000014U), 0x0000E7FBU, \
-        SM_CFG_W1(0x00000018U), 0x0000E7FBU, \
-        SM_CFG_W1(0x0000001CU), 0x0000E7FBU, \
-        SM_CFG_W1(0x00000020U), 0x0000E7FBU, \
-        SM_CFG_W1(0x00000024U), 0x0000E7FBU, \
         SM_CFG_END \
     }
 
 /*--------------------------------------------------------------------------*/
-/* BCTRL W Config                                                           */
+/* PD1 Config                                                               */
 /*--------------------------------------------------------------------------*/
 
-/*! Config for BCTRL W */
-#define SM_BCTRL_W_CONFIG \
+/*! Data load config for the PD1 mix */
+#define SM_PD1_CONFIG \
     { \
-        SM_CFG_W1(0x00000030U), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x00000034U), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x00000038U), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x0000003CU), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x00000040U), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x00000044U), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x00000048U), 0xFFFFFFFFU, \
-        SM_CFG_W1(0x00000050U), 0x00000001U, \
-        SM_CFG_W1(0x00000054U), 0x00000001U, \
-        SM_CFG_W1(0x00000058U), 0x00000001U, \
-        SM_CFG_W1(0x0000005CU), 0x00000001U, \
-        SM_CFG_W1(0x00000060U), 0x00000001U, \
-        SM_CFG_W1(0x00000064U), 0x00000001U, \
-        SM_CFG_W1(0x00000068U), 0x00000001U, \
         SM_CFG_END \
     }
 
-#endif /* CONFIG_BCTRL_H */
+/*--------------------------------------------------------------------------*/
+/* PD2 Config                                                               */
+/*--------------------------------------------------------------------------*/
+
+/*! Data load config for the PD2 mix */
+#define SM_PD2_CONFIG \
+    { \
+        SM_CFG_END \
+    }
+
+/*--------------------------------------------------------------------------*/
+/* PD3 Config                                                               */
+/*--------------------------------------------------------------------------*/
+
+/*! Data load config for the PD3 mix */
+#define SM_PD3_CONFIG \
+    { \
+        SM_CFG_END \
+    }
+
+/*--------------------------------------------------------------------------*/
+/* PD4 Config                                                               */
+/*--------------------------------------------------------------------------*/
+
+/*! Data load config for the PD4 mix */
+#define SM_PD4_CONFIG \
+    { \
+        SM_CFG_END \
+    }
+
+/*--------------------------------------------------------------------------*/
+/* PD5 Config                                                               */
+/*--------------------------------------------------------------------------*/
+
+/*! Data load config for the PD5 mix */
+#define SM_PD5_CONFIG \
+    { \
+        SM_CFG_END \
+    }
+
+/*--------------------------------------------------------------------------*/
+/* PD6 Config                                                               */
+/*--------------------------------------------------------------------------*/
+
+/*! Data load config for the PD6 mix */
+#define SM_PD6_CONFIG \
+    { \
+        SM_CFG_END \
+    }
+
+#endif /* CONFIG_USER_H */
 
 /** @} */
 

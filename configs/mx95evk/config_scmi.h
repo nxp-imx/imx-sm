@@ -40,12 +40,16 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the SCMI RPC.
+ * Header file containing configuration info for the SCMI RPC.
  */
 /*==========================================================================*/
 
 #ifndef CONFIG_SCMI_H
 #define CONFIG_SCMI_H
+
+/* Includes */
+
+#include "config_user.h"
 
 /* Defines */
 

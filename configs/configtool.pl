@@ -50,6 +50,7 @@ sub generate_xport;
 sub generate_scmi;
 sub generate_lmm;
 sub generate_dev;
+sub generate_user;
 sub generate_bctrl;
 sub generate_board;
 sub generate_trdc;
@@ -160,6 +161,9 @@ my @cfg = &load_config_files($inputFile);
 
 # Generate DEV config
 &generate_dev($outDir, \@cfg);
+
+# Generate USER config
+&generate_user($outDir, \@cfg);
 
 # Generate BCTRL config
 &generate_bctrl($outDir, \@cfg);
@@ -575,6 +579,7 @@ sub generate_mb
             print $out &header('MB_' . $mbt, 'MB_' . $mbt);
 
             print $out '/* Includes */' . "\n\n";
+            print $out '#include "config_user.h"' . "\n";
             print $out '#include "mb_' . lc $mbt . '_config.h"' . "\n\n";
             print $out '/* Defines */' . "\n\n";
 
@@ -744,6 +749,7 @@ sub generate_xport
             print $out &header($xpt, $xpt);
 
             print $out '/* Includes */' . "\n\n";
+            print $out '#include "config_user.h"' . "\n";
             print $out '#include "rpc_' . $lcXpt . '_config.h"' . "\n\n";
             print $out '/* Defines */' . "\n\n";
 
@@ -914,6 +920,9 @@ sub generate_scmi
 
     # Output header
     print $out &header('SCMI', 'SCMI RPC');
+
+    print $out '/* Includes */' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
 
     print $out '/* Defines */' . "\n\n";
 
@@ -1217,6 +1226,9 @@ sub generate_lmm
 
     # Output header
     print $out &header('LMM', 'logical machine manager');
+
+    print $out '/* Includes */' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
 
     print $out '/* Defines */' . "\n\n";
 
@@ -1670,12 +1682,6 @@ sub generate_dev
     my @dat = grep(/^MIX\b/, @$cfgRef);
     my @cpus = grep(/DEV_SM_CPU_/, @$cfgRef);
 
-    # Skip if the file already exists
-    if (-e $outDir . '/' . $fileName)
-    {
-        return;
-    }
-
     # Open file
     open my $out, '>', $outDir . '/' . $fileName
         or die "error: failure to open: $outDir/$fileName, $!";
@@ -1689,7 +1695,7 @@ sub generate_dev
     print $out &header('DEV', 'device abstraction');
 
     print $out '/* Includes */' . "\n\n";
-    print $out '#include "config.h"' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
     print $out '/* Defines */' . "\n\n";
 
 	print $out '/*! Config for device */' . "\n";
@@ -1710,6 +1716,45 @@ sub generate_dev
     }
 	print $out '    }' . "\n";
 
+    # Output footer
+    print $out &footer('DEV');
+
+    # Close file
+    close($out);
+}
+
+###############################################################################
+
+sub generate_user
+{
+    my ($outDir, $cfgRef) = @_;
+    my $fileName = 'config_user.h';
+
+    my @dat = grep(/^MIX\b/, @$cfgRef);
+    my @cpus = grep(/DEV_SM_CPU_/, @$cfgRef);
+
+    # Skip if the file already exists
+    if (-e $outDir . '/' . $fileName)
+    {
+        return;
+    }
+
+    # Open file
+    open my $out, '>', $outDir . '/' . $fileName
+        or die "error: failure to open: $outDir/$fileName, $!";
+    if ($verbose)
+    {
+        my $fn = fileparse($fileName);
+        printf("Generating $fn ...\n");
+    }
+
+    # Output header
+    print $out &header('USER', 'manual user settings');
+
+    print $out '/* Includes */' . "\n\n";
+    print $out '#include "config.h"' . "\n\n";
+    print $out '/* Defines */' . "\n\n";
+
 	# Output mix defines
     foreach my $mix (@dat)
     {
@@ -1727,7 +1772,7 @@ sub generate_dev
 	}
 
     # Output footer
-    print $out &footer('DEV');
+    print $out &footer('USER');
 
     # Close file
     close($out);
@@ -1761,7 +1806,7 @@ sub generate_bctrl
     print $out &header('BCTRL', 'device block controls');
 
     print $out '/* Includes */' . "\n\n";
-    print $out '#include "config.h"' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
     print $out '/* Defines */' . "\n";
 
     # Loop over the block control list
@@ -1820,7 +1865,7 @@ sub generate_board
     print $out &header('BOARD', 'board abstraction');
 
     print $out '/* Includes */' . "\n\n";
-    print $out '#include "config.h"' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
     print $out '/* Defines */' . "\n\n";
 
 	# Output board defines
@@ -1912,7 +1957,7 @@ sub generate_trdc
     print $out &header('TRDC', 'TRDC SM abstraction');
 
     print $out '/* Includes */' . "\n\n";
-    print $out '#include "config.h"' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
     print $out '/* Defines */' . "\n";
 
     # Loop over the TRDC list
@@ -1970,6 +2015,9 @@ sub generate_test
 
     # Output header
     print $out &header('TEST', 'unit tests');
+
+    print $out '/* Includes */' . "\n\n";
+    print $out '#include "config_user.h"' . "\n\n";
 
     print $out '/* Defines */' . "\n\n";
 
@@ -3533,7 +3581,7 @@ sub header
     $rtn .= ' * @file' . "\n";
     $rtn .= ' * @brief' . "\n";
     $rtn .= ' *' . "\n";
-    $rtn .= ' * Header file containing coniguration info for the '
+    $rtn .= ' * Header file containing configuration info for the '
         . $comment . '.' . "\n";
     $rtn .= ' */' . "\n";
     $rtn .= '/*========================================='

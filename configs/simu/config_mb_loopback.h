@@ -40,7 +40,7 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the MB_LOOPBACK.
+ * Header file containing configuration info for the MB_LOOPBACK.
  */
 /*==========================================================================*/
 
@@ -49,6 +49,7 @@
 
 /* Includes */
 
+#include "config_user.h"
 #include "mb_loopback_config.h"
 
 /* Defines */

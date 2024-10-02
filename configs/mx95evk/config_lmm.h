@@ -40,12 +40,16 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the logical machine manager.
+ * Header file containing configuration info for the logical machine manager.
  */
 /*==========================================================================*/
 
 #ifndef CONFIG_LMM_H
 #define CONFIG_LMM_H
+
+/* Includes */
+
+#include "config_user.h"
 
 /* Defines */
 

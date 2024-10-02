@@ -40,7 +40,7 @@
  * @file
  * @brief
  *
- * Header file containing coniguration info for the TRDC SM abstraction.
+ * Header file containing configuration info for the TRDC SM abstraction.
  */
 /*==========================================================================*/
 
@@ -49,7 +49,7 @@
 
 /* Includes */
 
-#include "config.h"
+#include "config_user.h"
 
 /* Defines */
 
