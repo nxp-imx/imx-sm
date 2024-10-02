@@ -33,6 +33,7 @@
 #include "fsl_ele.h"
 #include "fsl_mu.h"
 #include "crc.h"
+#include "board.h"
 
 /* Local Defines */
 
@@ -428,18 +429,22 @@ void ELE_DebugDump(void)
         /* Check if data to dump */
         if (g_eleStatus == SM_ERR_SUCCESS)
         {
-            cnt = s_msgMax.hdr.size - 1U;
+            cnt = s_msgMax.hdr.size - 2U;
         }
-        else
+
+        /* Remove CRC */
+        if (cnt > 4U)
         {
-            cnt = 0U;
+            cnt--;
         }
 
         /* Display data */
-        for (idx = 0U; idx < (cnt / 2U); idx++)
+        for (idx = 0U; idx < cnt; idx += 2U)
         {
-            printf("ELE: %u 0x%08X\n", s_msgMax.word[(idx * 2U) + 2U],
-                s_msgMax.word[(idx * 2U) + 1U]);
+            BOARD_WdogRefresh();
+
+            printf("ELE: 0x%08X 0x%08X\n", s_msgMax.word[idx + 2U],
+                s_msgMax.word[idx + 3U]);
         }
     }
     while (cnt >= 20U);
