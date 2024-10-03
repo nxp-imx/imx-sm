@@ -2276,6 +2276,13 @@ sub get_perms
         if (@$cfgRef[$i] =~ /^SCMI_AGENT$nextAgent\b/)
         {
             $end = $i;
+            last;
+        }
+
+        if ((@$cfgRef[$i] =~ /^LM\d*\b/) && ($start != 0))
+        {
+            $end = $i;
+            last;
         }
 
         if (@$cfgRef[$i] =~ /^EOF/)
@@ -2283,6 +2290,7 @@ sub get_perms
             if ($end == 0)
             {
                 $end = $i;
+                last;
             }
         }
     }
