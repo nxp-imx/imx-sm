@@ -25,14 +25,16 @@ Improvement {#RN_CL_IMP}
 |------------|-------------------------------|-------|---|---|
 | [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Support system run mode |   | Y | Y |
 | [SM-145](https://jira.sw.nxp.com/projects/SM/issues/SM-145) | Improve unit test coverage |   | Y | Y |
-| [SM-146](https://jira.sw.nxp.com/projects/SM/issues/SM-146) | Add CPU state to monitor cpu.r output |   | Y | Y |
 | [SM-147](https://jira.sw.nxp.com/projects/SM/issues/SM-147) | Manage VDD_ARM supply during system sleep modes [[detail]](@ref RN_DETAIL_SM_147) |   | Y | Y |
 | [SM-152](https://jira.sw.nxp.com/projects/SM/issues/SM-152) | Misc. FuSa improvements |   | Y | Y |
 | [SM-159](https://jira.sw.nxp.com/projects/SM/issues/SM-159) | Relocate where MUs are reset [[detail]](@ref RN_DETAIL_SM_159) |   | Y | Y |
 | [SM-161](https://jira.sw.nxp.com/projects/SM/issues/SM-161) | Misc. updates to SM configurations |   | Y | Y |
 | [SM-165](https://jira.sw.nxp.com/projects/SM/issues/SM-165) | Support requesting LMM notifications for all LM [[detail]](@ref RN_DETAIL_SM_165) |   | Y | Y |
-| [SM-169](https://jira.sw.nxp.com/projects/SM/issues/SM-169) | Optimize system suspend/resume times |   | Y | Y |
+| [SM-169](https://jira.sw.nxp.com/projects/SM/issues/SM-169) | Optimize system suspend/resume times [[detail]](@ref RN_DETAIL_SM_169) |   | Y | Y |
 | [SM-170](https://jira.sw.nxp.com/projects/SM/issues/SM-170) | Updates to allow the SCMI client to be used on 64-bit agents [[detail]](@ref RN_DETAIL_SM_170) |   | Y | Y |
+| [SM-173](https://jira.sw.nxp.com/projects/SM/issues/SM-173) | Return PMIC faults as reset reason [[detail]](@ref RN_DETAIL_SM_173) |   | Y | Y |
+| [SM-174](https://jira.sw.nxp.com/projects/SM/issues/SM-174) | Misc. coding standard fixes |   | Y | Y |
+| [SM-177](https://jira.sw.nxp.com/projects/SM/issues/SM-177) | Update ELE dump format [[detail]](@ref RN_DETAIL_SM_177) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -42,6 +44,8 @@ Bug {#RN_CL_BUG}
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
 | [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | CCM ROOT configuration limitation |   | Y | Y |
+| [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
+| [SM-179](https://jira.sw.nxp.com/projects/SM/issues/SM-179) | Configtool incorrectly assigns non-agent resources to previous agent [[detail]](@ref RN_DETAIL_SM_179) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -51,6 +55,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER |   | Y | Y |
+| [SM-176](https://jira.sw.nxp.com/projects/SM/issues/SM-176) | Implement workarounds for PF09 ER011/12 errata  [[detail]](@ref RN_DETAIL_SM_176) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -101,8 +106,42 @@ SM-165: Support requesting LMM notifications for all LM {#RN_DETAIL_SM_165}
 
 Passing an lmId of 0 to SCMI_LmmNotify() will apply the setting to all LM the caller has NOTIFY permissions for. This is useful for Cortex-M test code to enable notifications for all LM it can manage.
 
+SM-169: Optimize system suspend/resume times {#RN_DETAIL_SM_169}
+----------
+
+Added support for the board port to specify how long the PMIC resume should take. A new BOARD_PMIC_RESUME_TICKS parameter is used in board.h. This should be set based on how long it takes the PMIC(s) to exit standby and resume the voltages.
+
 SM-170: Updates to allow the SCMI client to be used on 64-bit agents {#RN_DETAIL_SM_170}
 ----------
 
 Changed some integers used for storing pointer to uintptr_t instead of uint32_t.
+
+SM-173: Return PMIC faults as reset reason {#RN_DETAIL_SM_173}
+----------
+
+Added functions to the PF09 driver to read and clear the fault status registers. Modified the NXP EVK board ports to read and clear the fault status at boot and use the status to provide a PMIC reset reason.
+
+SM-175: Missing LPSPI4 daisy links in device config file {#RN_DETAIL_SM_175}
+----------
+
+The LPSPI4_PCS daisy references were missing for the LPSPI4 resource. Customers will need to rebuild their config.
+
+SM-176: Implement workarounds for PF09 ER011/12 errata  {#RN_DETAIL_SM_176}
+----------
+
+- Change the sequence of the LDO3 to the last slot in the pier up sequence (slot 29 in BA1)
+- Set the LDO3 OV bypass, UV bypass to 1 and the PG_EN = 0 to make sure the LDO3 does not have any impact in terms of fault counting and asserting the PGOOD pin.
+- Set the OV_DBNC = 01 (50us debounce) to prevent the false OV detection described in the errata from generating flags and asserting the PGOOD pin each time an LDO is enabled or when transitioning from STBY to RUN.
+
+Customers may require the same changes depending on OTP and board design.
+
+SM-177: Update ELE dump format {#RN_DETAIL_SM_177}
+----------
+
+Updated format to support ELE debug tools. Service WDOG during dump.
+
+SM-179: Configtool incorrectly assigns non-agent resources to previous agent {#RN_DETAIL_SM_179}
+----------
+
+The configtool did not correctly support resource assignments outside of the scope of an agent but within the scope of an LM. The resource API permissions would get assigned to the last agent of the previous LM. The hardware access rights did get correctly assigned. With this fix, the API permissions will go unassigned as expected.
 
