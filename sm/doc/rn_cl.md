@@ -16,19 +16,18 @@ New Feature {#RN_CL_NEW}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-107](https://jira.sw.nxp.com/projects/SM/issues/SM-107) | Support dynamic rate adjust of audio and  video PLLs |   | Y | Y |
-| [SM-141](https://jira.sw.nxp.com/projects/SM/issues/SM-141) | Create configtool mechanism to define BOARD defines [[detail]](@ref RN_DETAIL_SM_141) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Support system run mode |   | Y | Y |
+| [SM-141](https://jira.sw.nxp.com/projects/SM/issues/SM-141) | Create configtool mechanism to define BOARD defines [[detail]](@ref RN_DETAIL_SM_141) |   | Y | Y |
 | [SM-145](https://jira.sw.nxp.com/projects/SM/issues/SM-145) | Improve unit test coverage |   | Y | Y |
 | [SM-147](https://jira.sw.nxp.com/projects/SM/issues/SM-147) | Manage VDD_ARM supply during system sleep modes [[detail]](@ref RN_DETAIL_SM_147) |   | Y | Y |
-| [SM-152](https://jira.sw.nxp.com/projects/SM/issues/SM-152) | Misc. FuSa improvements |   | Y | Y |
+| [SM-152](https://jira.sw.nxp.com/projects/SM/issues/SM-152) | Misc. FuSa improvements [[detail]](@ref RN_DETAIL_SM_152) |   | Y | Y |
 | [SM-159](https://jira.sw.nxp.com/projects/SM/issues/SM-159) | Relocate where MUs are reset [[detail]](@ref RN_DETAIL_SM_159) |   | Y | Y |
-| [SM-161](https://jira.sw.nxp.com/projects/SM/issues/SM-161) | Misc. updates to SM configurations |   | Y | Y |
+| [SM-161](https://jira.sw.nxp.com/projects/SM/issues/SM-161) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_161) |   | Y | Y |
 | [SM-165](https://jira.sw.nxp.com/projects/SM/issues/SM-165) | Support requesting LMM notifications for all LM [[detail]](@ref RN_DETAIL_SM_165) |   | Y | Y |
 | [SM-169](https://jira.sw.nxp.com/projects/SM/issues/SM-169) | Optimize system suspend/resume times [[detail]](@ref RN_DETAIL_SM_169) |   | Y | Y |
 | [SM-170](https://jira.sw.nxp.com/projects/SM/issues/SM-170) | Updates to allow the SCMI client to be used on 64-bit agents [[detail]](@ref RN_DETAIL_SM_170) |   | Y | Y |
@@ -41,7 +40,7 @@ Bug {#RN_CL_BUG}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Round up/nearest not supported for FRACTPLL clock nodes |   | Y | Y |
+| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
 | [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | CCM ROOT configuration limitation |   | Y | Y |
 | [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
@@ -54,7 +53,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER |   | Y | Y |
+| [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER [[detail]](@ref RN_DETAIL_SM_155) |   | Y | Y |
 | [SM-176](https://jira.sw.nxp.com/projects/SM/issues/SM-176) | Implement workarounds for PF09 ER011/12 errata  [[detail]](@ref RN_DETAIL_SM_176) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
@@ -91,10 +90,50 @@ SM-147: Manage VDD_ARM supply during system sleep modes {#RN_DETAIL_SM_147}
 
 i.MX95 EVK board port changed to track and disable VDD_ARM when entering active system sleep modes. This change reduces power consumption but at the expense of suspend and resume times.
 
+SM-152: Misc. FuSa improvements {#RN_DETAIL_SM_152}
+----------
+
+Misc. FuSa changes:
+
+- Added configtool error checking to ensure LM0 is for SM and has DID=2
+- Added preemption check
+- Updated FuSa API permissions
+- Fixed test failure due to buffer free in wrong place
+- Removed unused fault functions, moved test, improved CPU check
+
+
+SM-155: Add system-level mutex to ensure atomic access of GIC WAKER {#RN_DETAIL_SM_155}
+----------
+
+During non-cooperative reset of A55, SM uses the GIC WAKER interface to quiesce the GIC.  There is no hardware method to hold off the A55 from taking the GIC out of quiescence during the reset sequence.  A system-level software mutex in shared MU memory has been added to ensure SM has atomic access to the GIC WAKER.  This atomic access relies on the A55 agent to block on the same system-level mutex implemented in shared MU memory.
+
 SM-159: Relocate where MUs are reset {#RN_DETAIL_SM_159}
 ----------
 
 Move the MU reset code from the CPU driver to the MU mailbox driver. This driver is called when logical machines are reset.
+
+SM-161: Misc. updates to SM configurations {#RN_DETAIL_SM_161}
+----------
+
+Many misc. updates to the cfg files and generated header files:
+
+- Lots of cleanup (sort items, full 36-bit memory addresses, move some resources/APIs to correct section)
+- Moved 256K of OCRAM to secure for ATF
+- Moved MSGINTR1 to the M7
+- Removed AP access to M7 TCM
+- Removed A55 ROM
+- Added missing clocks used by the SM (LM0)
+- Added new clock resources (CLOCK_EXT, CLOCK_DISP1PIX, etc.)
+- Gave AP rights to set PCA2131 alarm
+- Fixed incorrect reference to msel=2 (should be 1)
+- Reduced ELE DDR range
+- Added configinfo to dump a cfg file in an md table format
+- Added permission defines to cfg files to better support configinfo
+- Updated all API sections to use permission defines
+- Updated ELE section of cfg files to use memory defines
+- Updated V2X section to use owner defines
+- Disabled CRC for M7 SMT channels in the mx95alt.cfg file
+
 
 SM-163: Incorrect group reset/boot handling for skipped LM {#RN_DETAIL_SM_163}
 ----------

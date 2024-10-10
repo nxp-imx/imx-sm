@@ -32,9 +32,7 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Added system sleep mode support
-- Add PCA2131 RTC support
-- Support BBM button/alarm booting LMs
+- Added support for dynamic rate adjust of audio and video PLLs
 - Misc. improvements and bug fixes
 
 Note these are highlights of the original release. These do not cover changes

@@ -57,38 +57,6 @@
 /*! Number of device reset domains */
 #define DEV_SM_NUM_RESET  RST_NUM_LINE
 
-
-/*!< 0: A55C0 NCPUPORESET */
-/*!< 1: A55C0 NCORERESET */
-/*!< 2: A55C1 NCPUPORESET */
-/*!< 3: A55C1 NCORERESET */
-/*!< 4: A55C2 NCPUPORESET */
-/*!< 5: A55C2 NCORERESET */
-/*!< 6: A55C3 NCPUPORESET */
-/*!< 7: A55C3 NCORERESET */
-/*!< 8: A55C4 NCPUPORESET */
-/*!< 9: A55C4 NCORERESET */
-/*!< 10: A55C5 NCPUPORESET */
-/*!< 11: A55C5 NCORERESET */
-/*!< 12: A55P NPRESET */
-/*!< 13: A55P NSPORESET */
-/*!< 14: A55P NSRESET */
-/*!< 15: A55P NATRESET */
-/*!< 16: A55P NGICRESET */
-/*!< 17: A55P NPERIPHRESET */
-/*!< 18: DDRPHY PRESETN */
-/*!< 19: DDRPHY RESETN */
-/*!< 20: DISP0 RESETN */
-/*!< 21: DISP1 RESETN */
-/*!< 22: LVDS RESETN */
-/*!< 23: USB1PHY RESETN */
-/*!< 24: USB2PHY RESETN */
-/*!< 25: PCIE1PHY RESETN */
-/*!< 26: PCIE2PHY RESETN */
-/*!< 27: ENETPHY PCS RESETN */
-/*!< 28: V2X RESETB */
-
-
 /*!
  * @name Device reset domain indexes
  */
