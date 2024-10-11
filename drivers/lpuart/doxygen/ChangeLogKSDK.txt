@@ -80,7 +80,7 @@
     - Improvements
       - Added check for kLPUART_TransmissionCompleteFlag in LPUART_WriteBlocking, LPUART_TransferHandleIRQ,
         LPUART_TransferSendDMACallback and LPUART_SendEDMACallback to ensure all the data would be sent out to bus.
-      - Rounded up the calculated sbr value in LPUART_SetBaudRate and LPUART_Init to achieve more acurate baudrate
+      - Rounded up the calculated sbr value in LPUART_SetBaudRate and LPUART_Init to achieve more accurate baudrate
         setting. Changed osr from uint32_t to uint8_t since osr's bigest value is 31.
       - Modified LPUART_ReadBlocking so that if more than one receiver errors occur, all status flags will be cleared
         and the most severe error status will be returned.

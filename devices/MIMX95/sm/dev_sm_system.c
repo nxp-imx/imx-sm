@@ -82,8 +82,10 @@ int32_t DEV_SM_SystemInit(void)
         s_shutdownRecord.valid = true;
     }
 
+#ifdef DEVICE_HAS_ELE
     /* Enable GPC-to-ELE handshake */
     GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 1U;
+#endif
 
     /* Default to keep M7 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_CFG |=
@@ -381,7 +383,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         }
     }
 
-    /* Initalize wake masks */
+    /* Initialize wake masks */
     for (uint32_t wakeIdx = 0;
         wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
         wakeIdx++)

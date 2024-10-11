@@ -524,7 +524,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
              *     Bit [24]    - Enable/Disable
              *     Bit [31:25] - Reserved
              *
-             * 0x1753014 = for 2% spread specturm, 30000 Modulation Freq.
+             * 0x1753014 = for 2% spread spectrum, 30000 Modulation Freq.
              */
             extendedConfigVal = 0x1753014;
             CHECK(SCMI_ClockConfigSet(channel, clockId, attr,

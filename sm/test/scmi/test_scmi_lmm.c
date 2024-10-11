@@ -392,23 +392,6 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
             BCHECK(SCMI_LMM_EVENT_BOOT(flags) == 1U);
         }
 
-#if 0
-        /* Branch coverage */
-        {
-            flags = 0U;
-            uint32_t eventLm = 0U;
-            uint32_t recId = 0U;
-
-            CHECK(SCMI_LmmBoot(channel, lm));
-            CHECK(SCMI_LmmEvent(channel + 1U, NULL, &eventLm, &flags));
-
-            CHECK(SCMI_LmmBoot(channel, lm));
-            CHECK(SCMI_LmmEvent(channel + 1U, &recId, NULL, &flags));
-
-            CHECK(SCMI_LmmBoot(channel, lm));
-            CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, NULL));
-        }
-#endif
         /* No notification */
         flags = SCMI_LMM_NOTIFY_BOOT(0U) | SCMI_LMM_NOTIFY_SHUTDOWN(0U);
         printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, lm, flags);

@@ -600,7 +600,7 @@ int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
  * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
- * - ::SCMI_ERR_SUCCESS: if the syslog returned sucessfully.
+ * - ::SCMI_ERR_SUCCESS: if the syslog returned successfully.
  * - ::SCMI_ERR_NOT_SUPPORTED: if the syslog is not available.
  */
 int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,

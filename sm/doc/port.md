@@ -259,7 +259,7 @@ discrete temps 110C, 125C, 140C, 155C. Temps below 110F are reported as 105C. A 
 to generate a notification. The controls can be read and can generate notifications (also generate a wake up)
 on state change.
 
-Board interrupt support is implementd in [brd_sm_handlers.h/c](@ref mcimx95evk/sm/brd_sm_handlers.h). This
+Board interrupt support is implemented in [brd_sm_handlers.h/c](@ref mcimx95evk/sm/brd_sm_handlers.h). This
 makes used of GPIO1 signal 10 to get an interrupt from a PCAL6408A. This gets wakeup signals as well as an
 interrupt from the PF09.
 

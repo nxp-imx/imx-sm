@@ -160,7 +160,7 @@ typedef struct
 } eMcem_EoutCfgType;
 
 /*!
- * EMCEM FCCU Instace configuration type
+ * EMCEM FCCU Instance configuration type
  *
  * Type to configure the Eout.
  */

@@ -448,7 +448,7 @@ static void TEST_ScmiSensorSet(bool pass, uint32_t channel,
     }
 
     /* Should fail with an error after trying to use protocol
-       wihtout sensor enabled */
+       without sensor enabled */
     {
         uint32_t sensorConfig = SCMI_SENSOR_CONFIG_SET_ENABLE(0U);
         XCHECK(pass, SCMI_SensorConfigSet(channel, sensorId,

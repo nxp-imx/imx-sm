@@ -739,7 +739,7 @@ The configtool supports the following commands and key=value pairs in the input 
 |             | mu       | Index into SDK MU base pointer array, platform side |
 |             | test     | Index into SDK MU base pointer array, client side for testing |
 |             | sma      | Shared memory area address, undefined/0 = MU SRAM |
-|             | priority | MU interrupt prority is IRQ_PRIO_NOPREEMPT_\<VAL\>, e.g. IRQ_PRIO_NOPREEMPT_CRITICAL, deault is NORMAL |
+|             | priority | MU interrupt priority is IRQ_PRIO_NOPREEMPT_\<VAL\>, e.g. IRQ_PRIO_NOPREEMPT_CRITICAL, deault is NORMAL |
 | CHANNEL     | xport    | Define a channel of type SM_XPORT_<VAL\>, e.g. ::SM_XPORT_SMT, up to four per mailbox |
 |             | db       | Mailbox doorbell, 0-3 |
 |             | rpc      | RPC type of SM_RPC_<VAL\>, e.g. ::SM_RPC_SCMI |

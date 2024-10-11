@@ -229,7 +229,7 @@ The framework provides:
       divided into instances to allow different logical machines to each have their own isolated SCMI
       function
     - Note the above protocols manage SoC resources but can be extended in board code to manage board
-      resoruces (e.g. PMIC temp sensor, board RTC).
+      resources (e.g. PMIC temp sensor, board RTC).
   - @ref RPC_SMT
     - A transport implementation used to convey message data via shared memory; also conforms to the
       Arm SCMI Specification

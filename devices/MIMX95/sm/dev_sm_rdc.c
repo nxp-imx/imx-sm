@@ -101,6 +101,7 @@ int32_t DEV_SM_RdcInit(void)
             continue;
         }
 
+#ifdef DEVICE_HAS_ELE
         /* Request RDC from ELE */
         ELE_RdcRelease(s_trdcInfo[rdcId].apiId);
 
@@ -110,6 +111,7 @@ int32_t DEV_SM_RdcInit(void)
             status = g_eleStatus;
             break;
         }
+#endif
     }
 
     /* Return status */
@@ -167,7 +169,7 @@ int32_t DEV_SM_RdcInfoGet(uint32_t rdcId, string *rdcNameAddr,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_RdcLoad(uint32_t rdcId)
 {
-    int32_t status;
+    int32_t status = SM_ERR_NOT_FOUND;
 
     /* Check ID */
     if (rdcId < DEV_SM_NUM_RDC)
@@ -175,10 +177,6 @@ int32_t DEV_SM_RdcLoad(uint32_t rdcId)
         /* Load config */
         status = CONFIG_Load((uint32_t*)
             s_trdcInfo[rdcId].rdcBase, s_trdcInfo[rdcId].config);
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */

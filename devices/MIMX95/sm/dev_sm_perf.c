@@ -2559,7 +2559,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
 
     if (status == SM_ERR_SUCCESS)
     {
-        /* Get rate of clock assoicated with PERF domain*/
+        /* Get rate of clock associated with PERF domain*/
         uint64_t rate;
         status = DEV_SM_ClockRateGet(clockId, &rate);
 

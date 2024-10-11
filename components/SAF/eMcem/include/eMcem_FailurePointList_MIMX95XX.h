@@ -137,7 +137,7 @@ typedef enum
     EMCEM_FP_INJECT_FAULT_INT,
     EMCEM_FP_CHECK_FAULT_ID_INT, /*!< Check fault Id */
     EMCEM_FP_EIM_SETUP_INJECTION_CHANNEL, /*!< Check fault point state */
-    EMCEM_FP_VFCCU_INIT_CVFCCU, /*!< Initiliaze the C_VFCCU */
+    EMCEM_FP_VFCCU_INIT_CVFCCU, /*!< Initialize the C_VFCCU */
     EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_1, /*!< Access to C_VFCCU FHID 1 */
     EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_2, /*!< Access to C_VFCCU FHID 2 */
     EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_1, /*!< Access to C_VFCCU 1 */

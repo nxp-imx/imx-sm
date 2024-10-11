@@ -1732,7 +1732,7 @@ static void LPUART_TransferHandleReceiveDataFull(LPUART_Type *base, lpuart_handl
             }
         }
     }
-    /* If no receive requst pending, stop RX interrupt. */
+    /* If no receive request pending, stop RX interrupt. */
     else if (0U == handle->rxDataSize)
     {
         /* Disable and re-enable the global interrupt to protect the interrupt enable register during

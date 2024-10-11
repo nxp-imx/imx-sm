@@ -468,7 +468,7 @@ extern "C"{
 
 /**
 * @brief 8 bit clear bits and set with new value
-* @note In the current implementation, it is caller's (user's) responsability to make sure that
+* @note In the current implementation, it is caller's (user's) responsibility to make sure that
 *       value has only "mask" bits set - (value&~mask)==0
 * @violates @ref SafetyBase_StdRegMacros_h_REF_4_9 MISRA 2012 Advisory Rule 19.7, A function should be used in
 * preference to a function-like macro.
@@ -476,7 +476,7 @@ extern "C"{
 #define SAFETYBASE_REG_RMW8(address, mask, value)    (SAFETYBASE_REG_WRITE8((address), ((SAFETYBASE_REG_READ8(address)& ((uint8)~(mask)))| (value))))
 /**
 * @brief 16 bit clear bits and set with new value
-* @note In the current implementation, it is caller's (user's) responsability to make sure that
+* @note In the current implementation, it is caller's (user's) responsibility to make sure that
 *       value has only "mask" bits set - (value&~mask)==0
 * @violates @ref SafetyBase_StdRegMacros_h_REF_4_9 MISRA 2012 Advisory Rule 19.7, A function should be used in
 * preference to a function-like macro.
@@ -484,7 +484,7 @@ extern "C"{
 #define SAFETYBASE_REG_RMW16(address, mask, value)   (SAFETYBASE_REG_WRITE16((address), ((SAFETYBASE_REG_READ16(address)& ((uint16)~(mask)))| (value))))
 /**
 * @brief 32 bit clear bits and set with new value
-* @note In the current implementation, it is caller's (user's) responsability to make sure that
+* @note In the current implementation, it is caller's (user's) responsibility to make sure that
 *       value has only "mask" bits set - (value&~mask)==0
 * @violates @ref SafetyBase_StdRegMacros_h_REF_4_9 MISRA 2012 Advisory Rule 19.7, A function should be used in
 * preference to a function-like macro.

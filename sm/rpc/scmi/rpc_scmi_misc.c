@@ -1558,7 +1558,7 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
 /*   by this call                                                           */
 /*                                                                          */
 /* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the syslog returned sucessfully.                    */
+/* - SM_ERR_SUCCESS: if the syslog returned successfully.                    */
 /* - SM_ERR_NOT_SUPPORTED: if the syslog is not available.                  */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/
@@ -1582,7 +1582,7 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
         status = SM_SYSLOGGET(in->flags, (const dev_sm_syslog_t**) &syslog,
             &words);
 
-        /* Covert to words */
+        /* Convert to words */
         words /= 4U;
     }
 

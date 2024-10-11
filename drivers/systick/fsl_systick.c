@@ -134,7 +134,7 @@ void SYSTICK_TimeDelay(uint32_t usec)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Reutrn the systick counter value                                         */
+/* Return the systick counter value                                         */
 /*--------------------------------------------------------------------------*/
 uint32_t SYSTICK_GetCounter32(void)
 {

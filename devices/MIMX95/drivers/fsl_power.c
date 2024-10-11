@@ -512,10 +512,11 @@ void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Configure ELE LP handshake mask                                           */
+/* Configure ELE LP handshake mask                                          */
 /*--------------------------------------------------------------------------*/
 void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
 {
+#ifdef DEVICE_HAS_ELE
     if (srcMixIdx < PWR_NUM_MIX_SLICE)
     {
         uint32_t gpcReqMaskRst = g_pwrMixMgmtInfo[srcMixIdx].gpcReqMaskRst;
@@ -553,6 +554,7 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = hs;
         }
     }
+#endif
 }
 
 /*--------------------------------------------------------------------------*/
@@ -598,7 +600,7 @@ void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode)
         & BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_STAT_MASK) 
         >> BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_STAT_SHIFT;
 
-#if 0
+#ifdef DEBUG_LP_HS
     printf("SM_LP_HS:  PD = %u, REQ = %u, STAT = %u\n", 
         lpHsMode->srcMixIdx, lpHsMode->req, lpHsMode->stat);
 #endif

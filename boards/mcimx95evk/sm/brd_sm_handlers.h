@@ -72,19 +72,19 @@
 
 /* External variables */
 
-/*! Handle to acces PCAL6408A */
+/*! Handle to access PCAL6408A */
 extern PCAL6408A_Type g_pcal6408aDev;
 
-/*! Handle to acces PF09 */
+/*! Handle to access PF09 */
 extern PF09_Type g_pf09Dev;
 
-/*! Handle to acces PF5301 */
+/*! Handle to access PF5301 */
 extern PF53_Type g_pf5301Dev;
 
-/*! Handle to acces PF5302 */
+/*! Handle to access PF5302 */
 extern PF53_Type g_pf5302Dev;
 
-/*! Handle to acces PCA2131 */
+/*! Handle to access PCA2131 */
 extern PCA2131_Type g_pca2131Dev;
 
 /*! Array of dynamic priority info for board IRQs */

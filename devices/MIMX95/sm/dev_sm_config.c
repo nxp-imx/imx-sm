@@ -668,6 +668,7 @@ int32_t DEV_SM_DdrPowerDownPre(void)
         status = SM_ERR_HARDWARE_ERROR;
     }
 
+    /* Return status */
     return status;
 }
 
@@ -689,6 +690,7 @@ int32_t DEV_SM_DisplayPowerDownPre(void)
         status = SM_ERR_HARDWARE_ERROR;
     }
 
+    /* Return status */
     return status;
 }
 
@@ -710,6 +712,7 @@ int32_t DEV_SM_HsioTopPowerDownPre(void)
         status = SM_ERR_HARDWARE_ERROR;
     }
 
+    /* Return status */
     return status;
 }
 
@@ -727,6 +730,7 @@ int32_t DEV_SM_M7PowerDownPre(void)
         (void) CPU_PerLpiProcess(DEV_SM_CPU_M7P, sleepMode);
     }
 
+    /* Return status */
     return status;
 }
 

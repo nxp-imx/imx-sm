@@ -112,7 +112,7 @@ extern "C"{
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /*!
-* @brief    Macro marking the beginnning of CODE section. This is memory section for code.
+* @brief    Macro marking the beginning of CODE section. This is memory section for code.
  */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_Lib_Ext_h_REF_0410 */

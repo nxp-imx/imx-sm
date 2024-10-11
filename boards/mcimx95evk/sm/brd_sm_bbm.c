@@ -202,7 +202,7 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
         uint32_t year, month, day, hour, min, sec, hun, weekday;
         uint32_t days, hours, mins, secs;
 
-        /* Convert to hundreths of seconds */
+        /* Convert to hundredths of seconds */
         if (ticks)
         {
             uint64_t sec64, hun64;
@@ -232,7 +232,7 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
         /* Convert to date */
         days2date((uint32_t) days, &year, &month, &day, &weekday);
 
-        /* Covert year */
+        /* Convert year */
         year %= 100U;
 
         /* Write RTC */
@@ -274,7 +274,7 @@ int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
         {
             uint32_t days, secs;
 
-            /* Covert year */
+            /* Convert year */
             if (year >= 70U)
             {
                 year = year + 1900U;
@@ -398,7 +398,7 @@ int32_t BRD_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
             /* Convert to date */
             days2date((uint32_t) days, &year, &month, &day, &weekday);
 
-            /* Covert year */
+            /* Convert year */
             year %= 100U;
 
             /* Write to RTC */

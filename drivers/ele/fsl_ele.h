@@ -307,7 +307,7 @@ void ELE_FuseRead(uint32_t fuseId, uint32_t *fuseVal);
  * @param[in]     fuseVal        Value to program
  * @param[in]     lock           True to lock fuse word
  *
- * Allows writting some fuses. See the ELE API Reference Guide for more
+ * Allows writing some fuses. See the ELE API Reference Guide for more
  * info.
  */
 void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock);

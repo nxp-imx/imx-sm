@@ -151,7 +151,7 @@ extern "C"{
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0505 */
 /**
-* @brief    Macro marking the beginnning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
+* @brief    Macro marking the beginning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
 *           for variables, structures, arrays, when the SIZE (alignment) does not fit the criteria
 *           of 8, 16 or 32 bit. These variables are not initialized with values after every reset.
 */
@@ -179,7 +179,7 @@ extern eMcem_ExtDiagDataType eMcem_ExtDiagData;
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /**
-* @brief    Macro marking the beginnning of CODE section. This is memory section for code.
+* @brief    Macro marking the beginning of CODE section. This is memory section for code.
 */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_ExtDiagApi_h_REF_0410 */

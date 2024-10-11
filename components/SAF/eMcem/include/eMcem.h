@@ -36,7 +36,7 @@ extern "C"{
 * This is an API function.
 *
 * @section eMcem_h_REF_0409
-* Violates MISRA 2012 Advisory Rule 4.9, Usage of macros for faster retrieval of informations about faults.
+* Violates MISRA 2012 Advisory Rule 4.9, Usage of macros for faster retrieval of information about faults.
 *
 * @section eMcem_h_REF_0410
 * Violates MISRA 2012 Required Rule 4.10, Precautions shall be taken in order to prevent the
@@ -145,7 +145,7 @@ extern "C"{
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
 /**
-* @brief    Macro marking the beginnning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
+* @brief    Macro marking the beginning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
 *           for variables, structures, arrays, when the SIZE (alignment) does not fit the criteria
 *           of 8, 16 or 32 bit. These variables are not initialized with values after every reset.
 */
@@ -170,7 +170,7 @@ extern eMcem_StateType eMcem_DriverState;
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /**
-* @brief    Macro marking the beginnning of CODE section. This is memory section for code.
+* @brief    Macro marking the beginning of CODE section. This is memory section for code.
 */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_h_REF_0410 */

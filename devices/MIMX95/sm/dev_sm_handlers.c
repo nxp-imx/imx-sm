@@ -44,7 +44,9 @@
 #include "mb_mu.h"
 #include "config_mb_mu.h"
 #include "lmm.h"
+#ifdef DEVICE_HAS_FCCU
 #include "eMcem_Vfccu.h"
+#endif
 
 /* Local defines */
 
@@ -622,7 +624,9 @@ void MU6_B_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 void FCCU_INT0_IRQHandler(void)
 {
+#ifdef DEVICE_HAS_FCCU
     VFCCU_ALARM_ISR();
+#endif
 }
 
 /*--------------------------------------------------------------------------*/
@@ -909,7 +913,7 @@ static void IrqPrioBoost(irq_prio_info_t const *pInfo, uint32_t relPrio)
         /* Check if dynamic priority is enabled for this IRQ */
         if (pInfo->dynPrioEn)
         {
-            /* Get current priorty */
+            /* Get current priority */
             IRQn_Type irqId = pInfo->irqId;
             uint32_t irqPrio = NVIC_GetPriority(irqId);
 
@@ -982,7 +986,7 @@ static void IrqPrioUpdate(irq_prio_info_t *pInfo)
         /* Update IRQ counter */
         ++pInfo->irqCntr;
 
-        /* Get current priorty */
+        /* Get current priority */
         IRQn_Type irqId = pInfo->irqId;
         uint32_t irqPrio = NVIC_GetPriority(irqId);
 

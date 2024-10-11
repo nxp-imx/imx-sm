@@ -86,6 +86,7 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
         status = DEV_SM_PowerInit();
     }
 
+#ifdef DEVICE_HAS_ELE
     /* Release M7 */
     if ((status == SM_ERR_SUCCESS) && (SRC_MixIsPwrSwitchOn(DEV_SM_PD_M7)))
     {
@@ -93,6 +94,7 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
         ELE_EnableAuxRequest(0xBU);
         status = g_eleStatus;
     }
+#endif
 
     /* Init ROM data */
     // coverity[misra_c_2012_rule_2_2_violation:FALSE]
@@ -131,8 +133,10 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
             status = SM_ERR_SUCCESS;
         }
 
+#ifdef DEVICE_HAS_ELE
         /* No FW loaded, assume ELE is in an aborted state */
         ELE_Abort();
+#endif
     }
 
     /* Loop over powered domains and load state (BLK_CTRL, RDC, etc.) */

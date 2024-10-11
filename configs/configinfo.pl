@@ -737,7 +737,7 @@ sub fix_regions
     my @list;
     my @table;
 
-	# Covert table to start/end list
+	# Convert table to start/end list
     foreach my $r (@$tblRef)
     {
 	    my ($addr, $region, $access) = split(/ /, $r);

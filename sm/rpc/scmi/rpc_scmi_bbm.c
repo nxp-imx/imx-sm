@@ -970,7 +970,7 @@ static int32_t BbmRtcTimeGet(const scmi_caller_t *caller,
             ticks);
     }
 
-    /* Covert to return format */
+    /* Convert to return format */
     if (status == SM_ERR_SUCCESS)
     {
         out->val.lower = SM_UINT64_L(lmTime);
@@ -1083,7 +1083,7 @@ static int32_t BbmButtonGet(const scmi_caller_t *caller,
         status = LMM_BbmButtonGet(caller->lmId, &buttonAsserted);
     }
 
-    /* Covert to return format */
+    /* Convert to return format */
     if (status == SM_ERR_SUCCESS)
     {
         out->buttonState = buttonAsserted ? 1U : 0U;

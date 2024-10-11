@@ -1129,7 +1129,7 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         /* Reset WDOGs for this CPU
                          *
                          * NOTE:  WDOGs associated with this CPU will be
-                         *  reset to prevent NVIC of CPU being stoppped from 
+                         *  reset to prevent NVIC of CPU being stopped from 
                          *  latching a new occurrence of the WDOG IRQ after 
                          *  release of CPU reset.
                          */

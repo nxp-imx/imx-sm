@@ -75,6 +75,7 @@
  */
 /** @{ */
 #define DEVICE_HAS_ELE   /*!< Has ELE */
+#define DEVICE_HAS_FCCU  /*!< Has ELE */
 #define DEVICE_HAS_TRDC  /*!< Has TRDC */
 /** @} */
 

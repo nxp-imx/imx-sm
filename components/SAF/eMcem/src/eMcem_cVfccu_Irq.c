@@ -283,8 +283,8 @@ static Std_ReturnType eMcem_Vfccu_ProcessFhid( uint8 u8VfccuIdx )
 * @param[in]  u8VfccuIdx            VFCCU Index
 *
 * @return     Std_ReturnType
-* @retval     EMCEM_E_OK      Fault was successfully cleared and resolved/NMI triggered beacuse of fault
-* @retval     EMCEM_E_NOT_OK  Fault was not successfully cleared and resolved/NMI was not triggered beacuse of fault
+* @retval     EMCEM_E_OK      Fault was successfully cleared and resolved/NMI triggered because of fault
+* @retval     EMCEM_E_NOT_OK  Fault was not successfully cleared and resolved/NMI was not triggered because of fault
 *
 */
 static Std_ReturnType eMcem_Vfccu_ProcessFhidFault( eMcem_FaultType nFaultId, uint8 u8VfccuIdx )

@@ -8243,14 +8243,14 @@ struct AON_SYSPM_tag {
 typedef union AON_TCU_TCU_MAGIC_KW__MAGIC_KW0_union_tag { /* Magic KW0 */
   vuint32_t R;
   struct {
-    vuint32_t OUT:32;                  /* 32-Bit Magic KW0 used in conjuction with Magic KW1 to unlock the writes to test mode registers (Value is 0x12345678) */
+    vuint32_t OUT:32;                  /* 32-Bit Magic KW0 used in conjunction with Magic KW1 to unlock the writes to test mode registers (Value is 0x12345678) */
   } B;
 } AON_TCU_TCU_MAGIC_KW__MAGIC_KW0_tag;
 
 typedef union AON_TCU_TCU_MAGIC_KW__MAGIC_KW1_union_tag { /* Magic KW1 */
   vuint32_t R;
   struct {
-    vuint32_t OUT:32;                  /* 32-Bit Magic KW1 used in conjuction with Magic KW0 to unlock the writes to test mode registers (Value - 0x87654321) */
+    vuint32_t OUT:32;                  /* 32-Bit Magic KW1 used in conjunction with Magic KW0 to unlock the writes to test mode registers (Value - 0x87654321) */
   } B;
 } AON_TCU_TCU_MAGIC_KW__MAGIC_KW1_tag;
 
@@ -8267,7 +8267,7 @@ typedef union AON_TCU_TCU_MTR_MCT_ACCESS__union_tag { /* MCT Test Mode CTRL Reg 
   struct {
     vuint32_t MCT_TEST_MODE:1;         /* For using MCT test mode through the TCU, this bit has to be set first which enables all the muxes related to this test mode */
     vuint32_t MCT_LAUNCH_BIST_START:1; /* Signal in the MCT that is basically used to start all the BIST's selected through mct_launch_bistsel registers */
-    vuint32_t MCT_LAUNCH_CREP:1;       /* Signal in the MCT used to calculate repair while running the BIST incase of any failure */
+    vuint32_t MCT_LAUNCH_CREP:1;       /* Signal in the MCT used to calculate repair while running the BIST in case of any failure */
     vuint32_t _unused_0:29;
   } B;
 } AON_TCU_TCU_MTR_MCT_ACCESS__tag;

@@ -41,7 +41,9 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
+#ifdef DEVICE_HAS_FCCU
 #include "eMcem.h"
+#endif
 
 /* Local defines */
 
@@ -56,11 +58,13 @@ int32_t DEV_SM_FaultInit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
+#ifdef DEVICE_HAS_FCCU
     /* Init FCCU */
     if (eMcem_Init(&eMcem_Config) != (Std_ReturnType) E_OK)
     {
         status = SM_ERR_HARDWARE_ERROR;
     }
+#endif
 
     /* Return status */
     return status;
@@ -98,6 +102,7 @@ int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
 int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
 {
     int32_t status = SM_ERR_SUCCESS;
+#ifdef DEVICE_HAS_FCCU
     eMcem_FaultContainerType errorContainer = { 0 };
 
     /* Get fault errors */
@@ -111,6 +116,7 @@ int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
         *state = (eMcem_FaultPending(&errorContainer,
             (eMcem_FaultType) faultId) != 0U);
     }
+#endif
 
     /* Not asserted */
     *state = false;
@@ -139,12 +145,14 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
             if ((faultId < DEV_SM_FAULT_SW6)
                 || (faultId > DEV_SM_FAULT_SW11))
             {
+#ifdef DEVICE_HAS_FCCU
                 /* Assert fault */
                 if (eMcem_AssertSWFault((eMcem_FaultType) faultId)
                     != (Std_ReturnType) E_OK)
                 {
                     status = SM_ERR_INVALID_PARAMETERS;
                 }
+#endif
             }
             else
             {
@@ -157,16 +165,19 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
             if ((faultId >= DEV_SM_FAULT_SW0)
                 && (faultId <= DEV_SM_FAULT_SW5))
             {
+#ifdef DEVICE_HAS_FCCU
                 /* Negate fault */
                 if (eMcem_DeassertSWFault((eMcem_FaultType) faultId)
                     != (Std_ReturnType) E_OK)
                 {
                     status = SM_ERR_INVALID_PARAMETERS;
                 }
+#endif
             }
 
             if (status == SM_ERR_SUCCESS)
             {
+#ifdef DEVICE_HAS_FCCU
                 /* Clear latched fault condition */
                 if (eMcem_ClearFaults((eMcem_FaultType) faultId)
                     != (Std_ReturnType) E_OK)
@@ -178,6 +189,7 @@ int32_t DEV_SM_FaultSet(uint32_t lmId, uint32_t faultId, bool set)
                     /* Re-enable FCCU interrupts */
                     NVIC_EnableIRQ(FCCU_INT0_IRQn);
                 }
+#endif
             }
         }
     }

@@ -129,7 +129,7 @@ static void* GCOV_Allocate(unsigned len, void *arg)
     /* Check length */
     if (len > BUFFER_SIZE)
     {
-        printf("error: GCOV bufer overflow\n");
+        printf("error: GCOV buffer overflow\n");
     }
 
     return (void*) &buf;

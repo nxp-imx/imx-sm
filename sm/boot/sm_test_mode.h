@@ -63,16 +63,16 @@
 #define SM_TEST_MODE_OFF        0U    /*!< None */
 #define SM_TEST_MODE_DEV_LVL1   100U  /*!< Device first level error response */
 #define SM_TEST_MODE_DEV_LVL2   101U  /*!< Device second level error response */
-#define SM_TEST_MODE_DEV_ALT1   120U  /*!< Device alt reponse 1 */
+#define SM_TEST_MODE_DEV_ALT1   120U  /*!< Device alt response 1 */
 #define SM_TEST_MODE_BRD_LVL1   200U  /*!< Board first level error response */
 #define SM_TEST_MODE_BRD_LVL2   201U  /*!< Board second level error response */
-#define SM_TEST_MODE_BRD_ALT1   220U  /*!< Board alt reponse 1 */
+#define SM_TEST_MODE_BRD_ALT1   220U  /*!< Board alt response 1 */
 #define SM_TEST_MODE_LMM_LVL1   300U  /*!< LMM first level error response */
 #define SM_TEST_MODE_LMM_LVL2   301U  /*!< LMM second level error response */
-#define SM_TEST_MODE_LMM_ALT1   320U  /*!< LMM alt reponse 1 */
+#define SM_TEST_MODE_LMM_ALT1   320U  /*!< LMM alt response 1 */
 #define SM_TEST_MODE_RPC_LVL1   400U  /*!< RPC first level error response */
 #define SM_TEST_MODE_RPC_LVL2   401U  /*!< RPC second level error response */
-#define SM_TEST_MODE_RPC_ALT1   420U  /*!< RPC alt reponse 1 */
+#define SM_TEST_MODE_RPC_ALT1   420U  /*!< RPC alt response 1 */
 /** @} */
 
 /*! Set status on mode */
