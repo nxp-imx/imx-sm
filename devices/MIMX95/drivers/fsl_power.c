@@ -516,7 +516,6 @@ void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
 /*--------------------------------------------------------------------------*/
 void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
 {
-#ifdef DEVICE_HAS_ELE
     if (srcMixIdx < PWR_NUM_MIX_SLICE)
     {
         uint32_t gpcReqMaskRst = g_pwrMixMgmtInfo[srcMixIdx].gpcReqMaskRst;
@@ -554,7 +553,6 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = hs;
         }
     }
-#endif
 }
 
 /*--------------------------------------------------------------------------*/
