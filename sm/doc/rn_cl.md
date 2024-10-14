@@ -23,7 +23,7 @@ Improvement {#RN_CL_IMP}
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-141](https://jira.sw.nxp.com/projects/SM/issues/SM-141) | Create configtool mechanism to define BOARD defines [[detail]](@ref RN_DETAIL_SM_141) |   | Y | Y |
-| [SM-145](https://jira.sw.nxp.com/projects/SM/issues/SM-145) | Improve unit test coverage |   | Y | Y |
+| [SM-145](https://jira.sw.nxp.com/projects/SM/issues/SM-145) | Improve unit test coverage [[detail]](@ref RN_DETAIL_SM_145) |   | Y | Y |
 | [SM-147](https://jira.sw.nxp.com/projects/SM/issues/SM-147) | Manage VDD_ARM supply during system sleep modes [[detail]](@ref RN_DETAIL_SM_147) |   | Y | Y |
 | [SM-152](https://jira.sw.nxp.com/projects/SM/issues/SM-152) | Misc. FuSa improvements [[detail]](@ref RN_DETAIL_SM_152) |   | Y | Y |
 | [SM-159](https://jira.sw.nxp.com/projects/SM/issues/SM-159) | Relocate where MUs are reset [[detail]](@ref RN_DETAIL_SM_159) |   | Y | Y |
@@ -40,7 +40,7 @@ Bug {#RN_CL_BUG}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code |   | Y | Y |
+| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code [[detail]](@ref RN_DETAIL_SM_38) |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
 | [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | CCM ROOT configuration limitation |   | Y | Y |
 | [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
@@ -68,6 +68,13 @@ Details {#CL_DETAIL}
 
 This section provides details for select changes.
 
+SM-38: Unimplemented rounding rules for clock sources should return error code {#RN_DETAIL_SM_38}
+----------
+
+SM does not support overclocking of CCM clock sources (e.g. PLL clock nodes).  If an agent requests to set the rate of a CCM clock source with a round-auto rule, SM will treat this rule as round-down and will not return an error.  If an agent requests to set the rate of a CCM clock source with a round-up rule, SM will return an error if the calculated rate is not equal to the requested rate (i.e. the CCM clock node can be configured to the exact rate requested).
+
+SM was also updated to the nearest Hz for PLL output (ODIV) and PFD clock nodes.  This prevents the agent from needing to add 1 Hz in cases where the rate ends in a fractional 1/3 or 2/3 thus causing SM to round down during integer rate calculations.
+
 SM-141: Create configtool mechanism to define BOARD defines {#RN_DETAIL_SM_141}
 ----------
 
@@ -84,6 +91,11 @@ becomes:
 This allows customers to set other BOARD defines used by their board port. 
 
 Customers must make similar changes to their existing UART/I2C configuration commands.
+
+SM-145: Improve unit test coverage {#RN_DETAIL_SM_145}
+----------
+
+Changes made to increase test coverage and add support for automated test code coverage metrics.
 
 SM-147: Manage VDD_ARM supply during system sleep modes {#RN_DETAIL_SM_147}
 ----------
@@ -106,6 +118,8 @@ SM-155: Add system-level mutex to ensure atomic access of GIC WAKER {#RN_DETAIL_
 ----------
 
 During non-cooperative reset of A55, SM uses the GIC WAKER interface to quiesce the GIC.  There is no hardware method to hold off the A55 from taking the GIC out of quiescence during the reset sequence.  A system-level software mutex in shared MU memory has been added to ensure SM has atomic access to the GIC WAKER.  This atomic access relies on the A55 agent to block on the same system-level mutex implemented in shared MU memory.
+
+Location of the semaphore is defined in the cfg file using the sema option on the Cortex-A platform resource. Customer must make the same change.
 
 SM-159: Relocate where MUs are reset {#RN_DETAIL_SM_159}
 ----------
