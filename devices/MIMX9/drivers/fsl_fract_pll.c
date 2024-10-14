@@ -314,9 +314,12 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
         {
             uint32_t odiv = 0U;
 
+            /* Ensure integer divide rounds up to the nearest Hz */
+            uint64_t newRate = rate + 1ULL;
+
             /* Calculate integer divider needed to achieve specified rate */
-            uint64_t quotient = vcoRate / rate;
-            uint64_t remain = vcoRate % rate;
+            uint64_t quotient = vcoRate / newRate;
+            uint64_t remain = vcoRate % newRate;
 
             /* ODIV min is /2 */
             if (quotient < 2U)
@@ -530,13 +533,16 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
              *
              */
 
+            /* Ensure integer divide rounds up to the nearest Hz */
+            uint64_t newRate = rate + 1ULL;
+
             /* Calculate MFI */
-            uint32_t mfi = (uint32_t) ((uint64_t) (vcoRate / rate));
+            uint32_t mfi = (uint32_t) ((uint64_t) (vcoRate / newRate));
 
             /* Calculate MFN */
-            uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * rate * 5UL);
-            uint64_t quotient = num / rate;
-            uint64_t remain = num % rate;
+            uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate * 5UL);
+            uint64_t quotient = num / newRate;
+            uint64_t remain = num % newRate;
 
             uint32_t mfn = ((uint32_t) quotient);
 

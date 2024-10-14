@@ -1436,6 +1436,7 @@ bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
 {
     bool updateRate = false;
 
+    /* Clock sources in MIXes not always-on require power dependency check. */
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
         switch(sourceIdx)
@@ -1535,6 +1536,22 @@ bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
             default:
                 ; /* Intentional empty default */
                 break;
+        }
+    }
+
+    if (updateRate)
+    {
+        /* Overclocking of clock sources is not supported.  Floor rounding
+         * rule can be met when hardare supports exact requested rate.  Closest
+         * rounding rule handled same as ceiling rounding rule.
+         */
+        if (roundRule == CLOCK_ROUND_RULE_FLOOR)
+        {
+            uint64_t actualRate = CLOCK_SourceGetRate(sourceIdx);
+            if (actualRate < rate)
+            {
+                updateRate = false;
+            }
         }
     }
 
