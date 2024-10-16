@@ -40,6 +40,7 @@
 /* Local Types */
 
 /* Local Functions */
+static bool FRACTPLL_DynamicSetRate(uint32_t pllIdx, uint64_t vcoRate);
 static bool FRACTPLL_EnableSsc(uint32_t pllIdx, uint32_t mfi, uint32_t mfn);
 
 /* Local Variables */
@@ -272,6 +273,47 @@ bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Dynamically set PLL clock rate                                           */
+/*--------------------------------------------------------------------------*/
+static bool FRACTPLL_DynamicSetRate(uint32_t pllIdx, uint64_t vcoRate)
+{
+    bool rc = false;
+
+    if (pllIdx < CLOCK_NUM_PLL)
+    {
+        PLL_Type *pll = s_pllPtrs[pllIdx];
+
+        /* Dynamic set rate requires fractional PLL */
+        if (g_pllAttrs[pllIdx].isFrac)
+        {
+            uint32_t mfi = (pll->DIV.RW & PLL_DIV_MFI_MASK) >> PLL_DIV_MFI_SHIFT;
+
+            /* Calculate integer part of VCO rate based on current MFI */
+            uint64_t intRate = (mfi * CLOCK_PLL_FREF_HZ);
+
+            /* Integer part of current VCO rate must be no greater than
+             * new VCO rate to avoid relock
+             */
+            if (intRate <= vcoRate)
+            {
+                /* Calculate fractional part of new VCO rate */
+                uint64_t fracRate = vcoRate - intRate;
+
+                /* Fractional part must have MFN/MFD below 2 */
+                if (fracRate < (CLOCK_PLL_FREF_HZ * 2U))
+                {
+                    uint32_t mfn = (uint32_t) (fracRate / CLOCK_PLL_CALC_ACCURACY_HZ);
+                    pll->NUMERATOR.RW = PLL_NUMERATOR_MFN(mfn);
+                    rc = true;
+                }
+            }
+        }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set PLL clock rate                                                       */
 /*--------------------------------------------------------------------------*/
 bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
@@ -282,6 +324,7 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
     {
         bool relockPll = false;
         uint64_t vcoRate = 0U;
+        const PLL_Type *pll = s_pllPtrs[pllIdx];
 
         if (vcoOp)
         {
@@ -294,12 +337,35 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
                     vcoRate = rate;
                     relockPll = true;
                 }
-                /* For PLL without DFS outputs, defer PLL relock */
+                /* Else PLL has not DFS outputs */
                 else
                 {
-                    s_vcoRates[pllIdx] = rate;
-                    s_vcoRateIsLatched[pllIdx] = true;
-                    updateRate = true;
+                    /* Check if PLL is active */
+                    if ((pll->CTRL.RW & PLL_CTRL_POWERUP_MASK) != 0U)
+                    {
+                        /* Attempt to dyanmically relock VCO */
+                        if (FRACTPLL_DynamicSetRate(pllIdx, rate))
+                        {
+                            updateRate = true;
+                        }
+                        else
+                        {
+                            /* Relock VCO if dynamic update fails
+                             *
+                             * NOTE: No error returned, system subjected to
+                             *       VCO relock
+                             */
+                            vcoRate = rate;
+                            relockPll = true;
+                        }
+                    }
+                    /* Else PLL inactive, defer relock until ODIV known */
+                    else
+                    {
+                        s_vcoRates[pllIdx] = rate;
+                        s_vcoRateIsLatched[pllIdx] = true;
+                        updateRate = true;
+                    }
                 }
             }
         }
@@ -312,36 +378,44 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
 
         if (relockPll)
         {
-            uint32_t odiv = 0U;
+            uint32_t odiv;
 
-            /* Ensure integer divide rounds up to the nearest Hz */
-            uint64_t newRate = rate + 1ULL;
-
-            /* Calculate integer divider needed to achieve specified rate */
-            uint64_t quotient = vcoRate / newRate;
-            uint64_t remain = vcoRate % newRate;
-
-            /* ODIV min is /2 */
-            if (quotient < 2U)
+            /* For VCO-only relock, use current ODIV */
+            if (vcoOp)
             {
-                odiv = 2U;
-            }
-            /* ODIV max is /255 */
-            else if (quotient >= 255U)
-            {
-                odiv = 255U;
+                odiv = (pll->DIV.RW & PLL_DIV_ODIV_MASK) >> PLL_DIV_ODIV_SHIFT;
             }
             else
             {
-                /* Check for integer divide */
-                if (remain == 0U)
+                /* Ensure integer divide rounds up to the nearest Hz */
+                uint64_t newRate = rate + 1ULL;
+
+                /* Calculate integer divider needed to achieve specified rate */
+                uint64_t quotient = vcoRate / newRate;
+                uint64_t remain = vcoRate % newRate;
+
+                /* ODIV min is /2 */
+                if (quotient < 2U)
                 {
-                    odiv = (uint32_t) quotient;
+                    odiv = 2U;
                 }
-                /* Else round down */
+                /* ODIV max is /255 */
+                else if (quotient >= 255U)
+                {
+                    odiv = 255U;
+                }
                 else
                 {
-                    odiv = (uint32_t) (quotient + 1ULL);
+                    /* Check for integer divide */
+                    if (remain == 0U)
+                    {
+                        odiv = (uint32_t) quotient;
+                    }
+                    /* Else round down */
+                    else
+                    {
+                        odiv = (uint32_t) (quotient + 1ULL);
+                    }
                 }
             }
 
