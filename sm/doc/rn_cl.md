@@ -15,7 +15,7 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-107](https://jira.sw.nxp.com/projects/SM/issues/SM-107) | Support dynamic rate adjust of audio and  video PLLs |   | Y | Y |
+| [SM-107](https://jira.sw.nxp.com/projects/SM/issues/SM-107) | Support dynamic rate adjust of audio and  video PLLs [[detail]](@ref RN_DETAIL_SM_107) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -42,7 +42,6 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code [[detail]](@ref RN_DETAIL_SM_38) |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
-| [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | CCM ROOT configuration limitation |   | Y | Y |
 | [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
 | [SM-179](https://jira.sw.nxp.com/projects/SM/issues/SM-179) | Configtool incorrectly assigns non-agent resources to previous agent [[detail]](@ref RN_DETAIL_SM_179) |   | Y | Y |
 
@@ -74,6 +73,17 @@ SM-38: Unimplemented rounding rules for clock sources should return error code {
 SM does not support overclocking of CCM clock sources (e.g. PLL clock nodes).  If an agent requests to set the rate of a CCM clock source with a round-auto rule, SM will treat this rule as round-down and will not return an error.  If an agent requests to set the rate of a CCM clock source with a round-up rule, SM will return an error if the calculated rate is not equal to the requested rate (i.e. the CCM clock node can be configured to the exact rate requested).
 
 SM was also updated to the nearest Hz for PLL output (ODIV) and PFD clock nodes.  This prevents the agent from needing to add 1 Hz in cases where the rate ends in a fractional 1/3 or 2/3 thus causing SM to round down during integer rate calculations.
+
+SM-107: Support dynamic rate adjust of audio and  video PLLs {#RN_DETAIL_SM_107}
+----------
+
+Support for dynamic MFN update of fractional PLLs has been added.  An agent request to set the rate of a VCO clock node that is currently enabled will dynamically update the VCO rate if the rate change can be achieved with an MFN-only update.
+
+Note that SM "centers" the MFI and MFN VCO factors to allow for the greatest range of dynamic updates.  This centering occurs in the following cases:
+ * VCO rate set with the VCO disabled
+ * VCO rate set with VCO enabled and new rate cannot be met dynamically
+
+SM only restricts the dynamic MFN update based on the MFN/MFD ratio restrictions provided in the RM. 
 
 SM-141: Create configtool mechanism to define BOARD defines {#RN_DETAIL_SM_141}
 ----------
