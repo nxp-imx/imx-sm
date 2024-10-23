@@ -15,7 +15,7 @@
 *   Build Version        : IMX95_SAF_0_4_0_CD01_20231113
 *
 *   Copyright 2011-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2020,2023 NXP
+*   Copyright 2017-2020, 2023 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
