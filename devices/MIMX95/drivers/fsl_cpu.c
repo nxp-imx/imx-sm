@@ -787,19 +787,16 @@ bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake)
     {
         case CPU_IDX_M7P:
             PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_M7, enableHandshake);
-            PWR_EleLpHandshakeMaskSet(PWR_MIX_SLICE_IDX_M7, enableHandshake);
             rc = true;
             break;
 
         case CPU_IDX_A55P:
             {
                 PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_A55P, enableHandshake);
-                PWR_EleLpHandshakeMaskSet(PWR_MIX_SLICE_IDX_A55P, enableHandshake);
                 uint32_t srcMixIdx = PWR_MIX_SLICE_IDX_A55C0;
                 while (srcMixIdx <= PWR_MIX_SLICE_IDX_A55C_LAST)
                 {
                     PWR_LpHandshakeMaskSet(srcMixIdx, enableHandshake);
-                    PWR_EleLpHandshakeMaskSet(srcMixIdx, enableHandshake);
                     srcMixIdx++;
                 }
             }
