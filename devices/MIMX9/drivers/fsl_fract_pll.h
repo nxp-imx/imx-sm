@@ -132,6 +132,7 @@ uint64_t FRACTPLL_GetRate(uint32_t pllIdx, bool vcoOp);
  * @param[in]   mfi         Integer portion of loop divider
  * @param[in]   mfn         Numerator of fractional loop divider
  * @param[in]   odiv        Output frequency divider for clock output
+ * @param[in]   forceActive Set true to force PLL enabled with rate update
  *
  * This function allows caller to program mfi, mfn and odiv to update PLL
  * (integer or fractional) rate.
@@ -139,7 +140,7 @@ uint64_t FRACTPLL_GetRate(uint32_t pllIdx, bool vcoOp);
  * @return Return true if PLL rate is updated.
  */
 bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
-    uint32_t odiv);
+    uint32_t odiv, bool forceActive);
 
 /*!
  * Set PLL clock rate
@@ -206,6 +207,7 @@ uint64_t FRACTPLL_GetDfsRate(uint32_t pllIdx, uint8_t dfsIdx, bool div2);
  * @param[in]   dfsIdx      DFS identifier
  * @param[in]   mfi         Integer portion of loop divider
  * @param[in]   mfn         Numerator of fractional loop divider
+ * @param[in]   forceActive Set true to force DFS enabled with rate update
  *
  * This function allows caller to program mfi and mfn to update PLL's
  * (integer or fractional) DFS rate.
@@ -213,7 +215,7 @@ uint64_t FRACTPLL_GetDfsRate(uint32_t pllIdx, uint8_t dfsIdx, bool div2);
  * @return Returns true if PLL DFS rate is updated.
  */
 bool FRACTPLL_UpdateDfsRate(uint32_t pllIdx, uint8_t dfsIdx, uint32_t mfi,
-    uint32_t mfn);
+    uint32_t mfn, bool forceActive);
 
 /*!
  * Set PLL DFS rate

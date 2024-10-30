@@ -2036,7 +2036,8 @@ static int32_t DEV_SM_PerfPllFreqUpdate(uint32_t pllIdx,
     if (!FRACTPLL_UpdateRate(pllIdx,
         pllCfg->mfi,
         pllCfg->mfn,
-        pllCfg->odiv))
+        pllCfg->odiv,
+        true))
     {
         status = SM_ERR_HARDWARE_ERROR;
     }
@@ -2056,7 +2057,8 @@ static int32_t DEV_SM_PerfPfdFreqUpdate(uint32_t pllIdx, uint8_t pfdIdx,
     if (!FRACTPLL_UpdateDfsRate(pllIdx,
         pfdIdx,
         pfdUpdate->mfi,
-        pfdUpdate->mfn))
+        pfdUpdate->mfn,
+        true))
     {
         status = SM_ERR_HARDWARE_ERROR;
     }
