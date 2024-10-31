@@ -44,6 +44,9 @@ Bug {#RN_CL_BUG}
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
 | [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
 | [SM-179](https://jira.sw.nxp.com/projects/SM/issues/SM-179) | Configtool incorrectly assigns non-agent resources to previous agent [[detail]](@ref RN_DETAIL_SM_179) |   | Y | Y |
+| [SM-180](https://jira.sw.nxp.com/projects/SM/issues/SM-180) | mx95evksof configuration has bad include path for device.cfg |   | Y | Y |
+| [SM-181](https://jira.sw.nxp.com/projects/SM/issues/SM-181) | ELE requires CPU reset handshake enabled for CPU stop/start [[detail]](@ref RN_DETAIL_SM_181) |   | Y | Y |
+| [SM-185](https://jira.sw.nxp.com/projects/SM/issues/SM-185) | Avoid implicit activation of PLL nodes during rate set operations [[detail]](@ref RN_DETAIL_SM_185) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -207,4 +210,14 @@ SM-179: Configtool incorrectly assigns non-agent resources to previous agent {#R
 ----------
 
 The configtool did not correctly support resource assignments outside of the scope of an agent but within the scope of an LM. The resource API permissions would get assigned to the last agent of the previous LM. The hardware access rights did get correctly assigned. With this fix, the API permissions will go unassigned as expected.
+
+SM-181: ELE requires CPU reset handshake enabled for CPU stop/start {#RN_DETAIL_SM_181}
+----------
+
+The ELE requires CPU reset/power ELE handshakes to be enabled during a CPU stop operation to prevent a subsequent CPU start from failing (ELE will not release CPUWAIT).  The code supporting CPU stop/start operations has been updated to keep ELE handshakes for CPU reset/power events enabled during these operations.
+
+SM-185: Avoid implicit activation of PLL nodes during rate set operations {#RN_DETAIL_SM_185}
+----------
+
+The SM device layer for the clock management protocol was implicitly activating PLL clock nodes during CLOCK_RATE_SET commands.  Implicitly activating these PLL nodes can cause issues during the reboot/reset of agents.  The clock management device layer has been updated to remove implicit activation of PLL clock nodes during CLOCK_RATE_SET commands.
 
