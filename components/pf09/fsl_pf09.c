@@ -194,9 +194,15 @@ static const mask_reg_t maskInfo[PF09_MASK_LEN] =
 /*--------------------------------------------------------------------------*/
 bool PF09_Init(const PF09_Type *dev)
 {
-    uint8_t devId;
+    uint8_t revId;
 
-    bool rc = PF09_PmicRead(dev, PF09_REG_DEV_FAM_ID, &devId);
+    bool rc = PF09_PmicRead(dev, PF09_REG_REV_ID, &revId);
+
+    /* Disable XRESET monitor in STANDBY */
+    if (rc && (revId < 0x20U))
+    {
+        rc = PF09_XrstStbyEnable(dev, false);
+    }
 
     return rc;
 }

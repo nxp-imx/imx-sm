@@ -130,15 +130,6 @@ int32_t BRD_SM_SerialDevicesInit(void)
             status = SM_ERR_HARDWARE_ERROR;
         }
 
-        /* Disable XRESET monitor in STANDBY */
-        if (status == SM_ERR_SUCCESS)
-        {
-            if (!PF09_XrstStbyEnable(&g_pf09Dev, false))
-            {
-                status = SM_ERR_HARDWARE_ERROR;
-            }
-        }
-
         /* Disable voltage monitor 1 */
         if (status == SM_ERR_SUCCESS)
         {
