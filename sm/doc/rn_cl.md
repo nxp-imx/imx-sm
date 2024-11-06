@@ -57,6 +57,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 |------------|-------------------------------|-------|---|---|
 | [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER [[detail]](@ref RN_DETAIL_SM_155) |   | Y | Y |
 | [SM-176](https://jira.sw.nxp.com/projects/SM/issues/SM-176) | Implement workarounds for PF09 ER011/12 errata  [[detail]](@ref RN_DETAIL_SM_176) |   | Y | Y |
+| [SM-188](https://jira.sw.nxp.com/projects/SM/issues/SM-188) | Remove XRESET PMIC workaround on PF09 B0 [[detail]](@ref RN_DETAIL_SM_188) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -220,4 +221,9 @@ SM-185: Avoid implicit activation of PLL nodes during rate set operations {#RN_D
 ----------
 
 The SM device layer for the clock management protocol was implicitly activating PLL clock nodes during CLOCK_RATE_SET commands.  Implicitly activating these PLL nodes can cause issues during the reboot/reset of agents.  The clock management device layer has been updated to remove implicit activation of PLL clock nodes during CLOCK_RATE_SET commands.
+
+SM-188: Remove XRESET PMIC workaround on PF09 B0 {#RN_DETAIL_SM_188}
+----------
+
+PF09 A0 requires the XRESET input be disabled else it will always reset when entering standby. This was fixed in PF09 B0. This SM change makes disabling the XRESET conditional on the PMIC version. Note the reset will still not work when in standby on PF09 A0. This change requires customers remove the call to PF09_XrstStbyEnable() in their board port.
 
