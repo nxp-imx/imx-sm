@@ -908,9 +908,28 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
 
     if (clockId < CLOCK_NUM_SRC)
     {
-        if (!CLOCK_SourceSetEnable(clockId, enable))
+        /* Disable bypass when enabling clock source */
+        if (enable)
         {
-            status = SM_ERR_INVALID_PARAMETERS;
+            if (!CLOCK_SourceSetBypass(clockId, false))
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+        }
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (!CLOCK_SourceSetEnable(clockId, enable))
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+        }
+        /* Enable bypass when disabling clock source */
+        if ((status == SM_ERR_SUCCESS) && !enable)
+        {
+            if (!CLOCK_SourceSetBypass(clockId, true))
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
         }
     }
     else

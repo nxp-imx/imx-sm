@@ -114,6 +114,20 @@ bool FRACTPLL_GetEnable(uint32_t pllIdx, uint32_t enMask);
 bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable);
 
 /*!
+ * Set PLL bypass
+ *
+ * @param[in]   pllIdx     PLL identifier
+ * @param[in]   bypass     Bypass flag (1=bypass, 0=no bypass)
+ *
+ * This function allows the caller to configure the bypass operation of
+ * the PLL.
+ *
+ * @return Returns true if the PLL bypass was configured correctly,
+ *         otherwise false.
+ */
+bool FRACTPLL_SetBypass(uint32_t pllIdx, bool bypass);
+
+/*!
  * Get PLL clock rate
  *
  * @param[in]   pllIdx      PLL identifier

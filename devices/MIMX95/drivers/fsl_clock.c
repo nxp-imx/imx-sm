@@ -1268,6 +1268,38 @@ bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Set CCM clock source bypass                                              */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_SourceSetBypass(uint32_t sourceIdx, bool bypass)
+{
+    bool rc = true;
+
+    /* Bypass configuration is restricted to PLLs available as CCM clock
+     * root inputs.
+     */
+    switch(sourceIdx)
+    {
+        case CLOCK_SRC_AUDIOPLL1_VCO:
+            rc = FRACTPLL_SetBypass(CLOCK_PLL_AUDIO1, bypass);
+            break;
+
+        case CLOCK_SRC_AUDIOPLL2_VCO:
+            rc = FRACTPLL_SetBypass(CLOCK_PLL_AUDIO2, bypass);
+            break;
+
+        case CLOCK_SRC_VIDEOPLL1_VCO:
+            rc = FRACTPLL_SetBypass(CLOCK_PLL_VIDEO1, bypass);
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Get CCM clock source rate                                                */
 /*--------------------------------------------------------------------------*/
 uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)

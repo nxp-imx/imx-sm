@@ -354,6 +354,21 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx);
 bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable);
 
 /*!
+ * Set clock source bypass
+ *
+ * @param[in]       sourceIdx       Clock source identifier
+ * @param[in]       bypass          Bypass flag (1=bypass, 0=no bypass)
+ *
+ * This function allows the caller to configure the bypass operation of
+ * the CCM clock source.  The bypass configuration is restricted to PLLs
+ * available as CCM clock root inputs.
+ *
+ * @return Returns true if the clock source bypass was configured correctly,
+ *         otherwise false.
+ */
+bool CLOCK_SourceSetBypass(uint32_t sourceIdx, bool bypass);
+
+/*!
  * Get clock source rate
  *
  * @param[in]       sourceIdx       Clock source identifier

@@ -57,11 +57,13 @@ bool FRACTPLL_GetEnable(uint32_t pllIdx, uint32_t enMask)
 
     if (pllIdx < CLOCK_NUM_PLL)
     {
-        const PLL_Type *pll = s_pllPtrs[pllIdx];
+        uint32_t pllCtrl = s_pllPtrs[pllIdx]->CTRL.RW;
 
-        if ((pll->CTRL.RW & enMask) != 0U)
+        /* PLLs in bypass are reported as disabled */
+        if ((pllCtrl & PLL_CTRL_CLKMUX_BYPASS_MASK) == 0U)
         {
-            pllEnable = true;
+            /* Extract enable status */
+            pllEnable = (pllCtrl & enMask) != 0U;
         }
     }
 
@@ -126,11 +128,7 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
         }
         else
         {
-            /* If disabling PLL output, enable bypass */
-            if ((enMask & PLL_CTRL_CLKMUX_EN_MASK) != 0U)
-            {
-                pll->CTRL.SET = PLL_CTRL_CLKMUX_BYPASS_MASK;
-            }
+            /* Disable PLL */
             pll->CTRL.CLR = enMask;
             pll->SPREAD_SPECTRUM.CLR = PLL_SPREAD_SPECTRUM_ENABLE_MASK;
 
@@ -140,6 +138,37 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
     }
 
     return enableUpdate;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set PLL bypass                                                           */
+/*--------------------------------------------------------------------------*/
+bool FRACTPLL_SetBypass(uint32_t pllIdx, bool bypass)
+{
+    bool rc = false;
+
+    if (pllIdx < CLOCK_NUM_PLL)
+    {
+        PLL_Type *pll = s_pllPtrs[pllIdx];
+
+        if (bypass)
+        {
+            /* PLL bypass output requires POWERUP and CLKMUX enablement */
+            pll->CTRL.SET = PLL_CTRL_CLKMUX_BYPASS_MASK;
+            pll->CTRL.SET = PLL_CTRL_POWERUP_MASK;
+            pll->CTRL.SET = PLL_CTRL_CLKMUX_EN_MASK;
+        }
+        else
+        {
+            pll->CTRL.CLR = PLL_CTRL_CLKMUX_EN_MASK;
+            pll->CTRL.CLR = PLL_CTRL_POWERUP_MASK;
+            pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
+        }
+
+        rc = true;
+    }
+
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -213,17 +242,17 @@ bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
         if (!pllActive)
         {
             /* Query power status of PLL */
-            pllActive = (pll->CTRL.RW & PLL_CTRL_POWERUP_MASK) != 0U;
+            pllActive = FRACTPLL_GetEnable(pllIdx, PLL_CTRL_POWERUP_MASK);
         }
 
         /* Check if PLL should be disabled for rate update */
         if (pllActive)
         {
-            /* Bypass PLL */
-            pll->CTRL.SET = PLL_CTRL_CLKMUX_BYPASS_MASK;
+            /* Disable PLL output */
+            pll->CTRL.CLR = PLL_CTRL_CLKMUX_EN_MASK;
 
-            /* Disable output and PLL */
-            pll->CTRL.CLR = PLL_CTRL_CLKMUX_EN_MASK | PLL_CTRL_POWERUP_MASK;
+            /* Disable PLL */
+            pll->CTRL.CLR = PLL_CTRL_POWERUP_MASK;
         }
 
         /* Set rdiv, mfi, and odiv */
@@ -264,9 +293,8 @@ bool FRACTPLL_UpdateRate(uint32_t pllIdx, uint32_t mfi, uint32_t mfn,
 
                 if ((pll->PLL_STATUS & PLL_PLL_STATUS_PLL_LOCK_MASK) != 0U)
                 {
-                    /* Enable PLL and clean bypass*/
+                    /* Enable PLL output */
                     pll->CTRL.SET = PLL_CTRL_CLKMUX_EN_MASK;
-                    pll->CTRL.CLR = PLL_CTRL_CLKMUX_BYPASS_MASK;
 
                     updateRate = true;
                 }
@@ -294,7 +322,7 @@ static bool FRACTPLL_DynamicSetRate(uint32_t pllIdx, uint64_t vcoRate)
         PLL_Type *pll = s_pllPtrs[pllIdx];
 
         /* Query power status of PLL */
-        bool pllActive = (pll->CTRL.RW & PLL_CTRL_POWERUP_MASK) != 0U;
+        bool pllActive = FRACTPLL_GetEnable(pllIdx, PLL_CTRL_POWERUP_MASK);
 
         /* Dynamic set rate requires fractional PLL to be active */
         if (g_pllAttrs[pllIdx].isFrac && pllActive)
