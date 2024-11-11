@@ -42,6 +42,7 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code [[detail]](@ref RN_DETAIL_SM_38) |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
+| [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | Avoid clock root setting hazards resulting from inactive parents |   | Y | Y |
 | [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
 | [SM-179](https://jira.sw.nxp.com/projects/SM/issues/SM-179) | Configtool incorrectly assigns non-agent resources to previous agent [[detail]](@ref RN_DETAIL_SM_179) |   | Y | Y |
 | [SM-180](https://jira.sw.nxp.com/projects/SM/issues/SM-180) | mx95evksof configuration has bad include path for device.cfg |   | Y | Y |
