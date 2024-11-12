@@ -42,7 +42,7 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code [[detail]](@ref RN_DETAIL_SM_38) |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
-| [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | Avoid clock root setting hazards resulting from inactive parents |   | Y | Y |
+| [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | Avoid clock root setting hazards resulting from inactive parents [[detail]](@ref RN_DETAIL_SM_164) |   | Y | Y |
 | [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
 | [SM-179](https://jira.sw.nxp.com/projects/SM/issues/SM-179) | Configtool incorrectly assigns non-agent resources to previous agent [[detail]](@ref RN_DETAIL_SM_179) |   | Y | Y |
 | [SM-180](https://jira.sw.nxp.com/projects/SM/issues/SM-180) | mx95evksof configuration has bad include path for device.cfg |   | Y | Y |
@@ -168,6 +168,15 @@ SM-163: Incorrect group reset/boot handling for skipped LM {#RN_DETAIL_SM_163}
 ----------
 
 Do not return an error if a LM identified as skippable in the config is reset using the group reset function. Do not return an error if the caller is not one of the LM being reset.
+
+SM-164: Avoid clock root setting hazards resulting from inactive parents {#RN_DETAIL_SM_164}
+----------
+
+Some clock frameworks perform clock rate and reparenting operations with parent clocks inactive.  The CCM root design requires parent clocks to be active while updating the DIV field, regardless of the state of the CCM root enable.  The CCM root also requires parent clocks to be active while updating the MUX field when the CCM root is enabled.  Updating the DIV field of the CCM root with parent clocks inactive can interfere with subsequent attempts to update the MUX field, regardless of the state of the CCM root enable.
+
+To avoid hazards associated with CCM root operations with inactive parents, SM has been updated to keep PLLs which are clock inputs to CCM roots in bypass mode when disabled.  PLLs configured by SM to be in bypass will be reported as disabled.  The bypassed PLLs will be fully disabled during system sleep/suspend modes.
+
+ 
 
 SM-165: Support requesting LMM notifications for all LM {#RN_DETAIL_SM_165}
 ----------
