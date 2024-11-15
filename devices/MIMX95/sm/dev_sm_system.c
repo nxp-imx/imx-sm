@@ -62,7 +62,7 @@ static BLK_CTRL_DDRMIX_Type ddr_blk_ctrl;
 
 /* Local functions */
 
-static void CLOCK_SourceBypass(bool bypass);
+static void CLOCK_SourceBypass(bool bypass, bool preserve);
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -105,7 +105,7 @@ int32_t DEV_SM_SystemInit(void)
     GPC_GLOBAL->GPC_PMIC_STBY_ACK_CTRL = pmicAckCtrl;
 
     /* Enable bypass for clock sources */
-    CLOCK_SourceBypass(true);
+    CLOCK_SourceBypass(true, false);
 
     /* Return status */
     return status;
@@ -602,7 +602,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK;
 
             /* Disable bypass for clock sources */
-            CLOCK_SourceBypass(false);
+            CLOCK_SourceBypass(false, true);
 
             if (activeSleep)
             {
@@ -742,7 +742,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
 
             /* Enable bypass for clock sources */
-            CLOCK_SourceBypass(true);
+            CLOCK_SourceBypass(true, true);
 
             /* Power up eFUSE */
             GPC_GLOBAL->GPC_EFUSE_CTRL = 0U;
@@ -1072,11 +1072,34 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
 /*--------------------------------------------------------------------------*/
 /* Configure bypass for clock sources                                       */
 /*--------------------------------------------------------------------------*/
-static void CLOCK_SourceBypass(bool bypass)
+static void CLOCK_SourceBypass(bool bypass, bool preserve)
 {
-    /* Configure bypass for PLLs used as clock sources */
-    (void) FRACTPLL_SetBypass(CLOCK_PLL_AUDIO1, bypass);
-    (void) FRACTPLL_SetBypass(CLOCK_PLL_AUDIO2, bypass);
-    (void) FRACTPLL_SetBypass(CLOCK_PLL_VIDEO1, bypass);
+    if (preserve)
+    {
+        /* Update PLL bypass only if not currently in use */
+        if (!FRACTPLL_GetEnable(CLOCK_PLL_AUDIO1, PLL_CTRL_POWERUP_MASK))
+        {
+            (void) FRACTPLL_SetBypass(CLOCK_PLL_AUDIO1, bypass);
+        }
+
+        /* Update PLL bypass only if not currently in use */
+        if (!FRACTPLL_GetEnable(CLOCK_PLL_AUDIO2, PLL_CTRL_POWERUP_MASK))
+        {
+            (void) FRACTPLL_SetBypass(CLOCK_PLL_AUDIO2, bypass);
+        }
+
+        /* Update PLL bypass only if not currently in use */
+        if (!FRACTPLL_GetEnable(CLOCK_PLL_VIDEO1, PLL_CTRL_POWERUP_MASK))
+        {
+            (void) FRACTPLL_SetBypass(CLOCK_PLL_VIDEO1, bypass);
+        }
+    }
+    else
+    {
+        /* Configure bypass for PLLs used as clock sources */
+        (void) FRACTPLL_SetBypass(CLOCK_PLL_AUDIO1, bypass);
+        (void) FRACTPLL_SetBypass(CLOCK_PLL_AUDIO2, bypass);
+        (void) FRACTPLL_SetBypass(CLOCK_PLL_VIDEO1, bypass);
+    }
 }
 
