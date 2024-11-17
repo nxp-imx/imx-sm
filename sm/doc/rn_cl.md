@@ -13,14 +13,14 @@ Below is a list of changes between the previous release (imx_sm_2024q3) and this
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-107](https://jira.sw.nxp.com/projects/SM/issues/SM-107) | Support dynamic rate adjust of audio and  video PLLs [[detail]](@ref RN_DETAIL_SM_107) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-141](https://jira.sw.nxp.com/projects/SM/issues/SM-141) | Create configtool mechanism to define BOARD defines [[detail]](@ref RN_DETAIL_SM_141) |   | Y | Y |
 | [SM-145](https://jira.sw.nxp.com/projects/SM/issues/SM-145) | Improve unit test coverage [[detail]](@ref RN_DETAIL_SM_145) |   | Y | Y |
@@ -38,7 +38,7 @@ Improvement {#RN_CL_IMP}
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code [[detail]](@ref RN_DETAIL_SM_38) |   | Y | Y |
 | [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
@@ -54,7 +54,7 @@ Silicon Workaround {#RN_CL_REQ}
 
 These are a mix of silicon errata workarounds and recommended usage changes.
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER [[detail]](@ref RN_DETAIL_SM_155) |   | Y | Y |
 | [SM-176](https://jira.sw.nxp.com/projects/SM/issues/SM-176) | Implement workarounds for PF09 ER011/12 errata  [[detail]](@ref RN_DETAIL_SM_176) |   | Y | Y |
@@ -63,7 +63,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | i.MX95<br> (A0) | i.MX95<br> (A1) |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-160](https://jira.sw.nxp.com/projects/SM/issues/SM-160) | SM 2024Q4 documentation updates |   | Y | Y |
 
