@@ -1,0 +1,5 @@
+/sm/doc/*.md
+/**/build/
+dox_log.txt
+.cache
+compile_commands.json
