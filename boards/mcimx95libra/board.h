@@ -12,7 +12,7 @@
 #include "dev_sm.h"
 
 /*!
- * @addtogroup BRD_SM_MX95EVK
+ * @addtogroup BRD_SM_MX95LIBRA
  * @{
  *
  * @file

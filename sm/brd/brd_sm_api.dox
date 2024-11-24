@@ -74,6 +74,7 @@ supported board.
 /*!
  * @defgroup BRD_SM_API SM Board API
  * @defgroup BRD_SM_MX95EVK BOARD_MX95EVK: i.MX95 EVK SM Implementation
+ * @defgroup BRD_SM_MX95LIBRA BOARD_MX95LIBRA: i.MX95 Libra SM Implementation
  * @defgroup BRD_SM_MX95STUB BOARD_MX95STUB: i.MX95 Stub SM Implementation
  * @defgroup BRD_SM_SIMU BOARD_SIMU: Simulation Board SM Implementation
  */
