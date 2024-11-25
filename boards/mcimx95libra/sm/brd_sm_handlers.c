@@ -48,15 +48,8 @@
 
 /* I2C device addresses */
 #define BOARD_PF09_DEV_ADDR         0x08U
-#define BOARD_PCAL6408A_DEV_ADDR    0x20U
 #define BOARD_PF5301_DEV_ADDR       0x2AU
 #define BOARD_PF5302_DEV_ADDR       0x29U
-#define BOARD_PCA2131_DEV_ADDR      0x53U
-
-#define PCAL6408A_INPUT_PF53_ARM_PG  1U
-#define PCAL6408A_INPUT_PF53_SOC_PG  2U
-#define PCAL6408A_INPUT_PF09_INT     3U
-#define PCAL6408A_INPUT_PCA2131_INT  6U
 
 /* Local types */
 
@@ -64,11 +57,9 @@
 
 /* Global variables */
 
-PCAL6408A_Type pcal6408aDev;
 PF09_Type pf09Dev;
 PF53_Type pf5301Dev;
 PF53_Type pf5302Dev;
-PCA2131_Type pca2131Dev;
 
 irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
 {
@@ -81,8 +72,6 @@ irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
     }
 };
 
-bool pca2131Used = false;
-
 /* Local functions */
 
 static void BRD_SM_Pf09Handler(void);
@@ -94,29 +83,8 @@ int32_t BRD_SM_SerialDevicesInit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
     LPI2C_Type *const s_i2cBases[] = LPI2C_BASE_PTRS;
-    pcal6408a_config_t pcal6408Config;
 
-    /* Fill in PCAL6408A dev */
-    pcal6408aDev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
-    pcal6408aDev.devAddr = BOARD_PCAL6408A_DEV_ADDR;
-
-    /* Init the bus expander */
-    PCAL6408A_GetDefaultConfig(&pcal6408Config);
-    pcal6408Config.inputLatch = 0xFFU;
-    if (!PCAL6408A_Init(&pcal6408aDev, &pcal6408Config))
-    {
-        status = SM_ERR_HARDWARE_ERROR;
-    }
-    else
-    {
-        if (!PCAL6408A_IntMaskSet(&pcal6408aDev, PCAL6408A_INITIAL_MASK))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
+    if (status == SM_ERR_SUCCESS) {
         /* Fill in PF09 PMIC handle */
         pf09Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         pf09Dev.devAddr = BOARD_PF09_DEV_ADDR;
@@ -124,96 +92,60 @@ int32_t BRD_SM_SerialDevicesInit(void)
 
         /* Inialize PF09 PMIC */
         if (!PF09_Init(&pf09Dev))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
 
         /* Disable XRESET monitor in STANDBY */
-        if (status == SM_ERR_SUCCESS)
-        {
+        if (status == SM_ERR_SUCCESS) {
             if (!PF09_XrstStbyEnable(&pf09Dev, false))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
         }
 
         /* Disable voltage monitor 1 */
-        if (status == SM_ERR_SUCCESS)
-        {
+        if (status == SM_ERR_SUCCESS) {
             if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON1, false))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
         }
 
         /* Disable voltage monitor 2 */
-        if (status == SM_ERR_SUCCESS)
-        {
+        if (status == SM_ERR_SUCCESS) {
             if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON2, false))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
         }
 
         /* Disable the PWRUP interrupt */
-        if (status == SM_ERR_SUCCESS)
-        {
+        if (status == SM_ERR_SUCCESS) {
             const uint8_t mask[PF09_MASK_LEN] =
             {
                 [PF09_MASK_IDX_STATUS1] = 0x08U
             };
 
             if (!PF09_IntEnable(&pf09Dev, mask, PF09_MASK_LEN, false))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
         }
 
         /* Handle any already pending PF09 interrupts */
         if (status == SM_ERR_SUCCESS)
-        {
             BRD_SM_Pf09Handler();
-        }
     }
 
-    if (status == SM_ERR_SUCCESS)
-    {
+    if (status == SM_ERR_SUCCESS) {
         /* Fill in PF5301 PMIC handle */
         pf5301Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         pf5301Dev.devAddr = BOARD_PF5301_DEV_ADDR;
 
         /* Inialize PF0901 PMIC */
         if (!PF53_Init(&pf5301Dev))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-
     }
 
-    if (status == SM_ERR_SUCCESS)
-    {
+    if (status == SM_ERR_SUCCESS) {
         /* Fill in PF5302 PMIC handle */
         pf5302Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         pf5302Dev.devAddr = BOARD_PF5302_DEV_ADDR;
 
         /* Inialize PF0901 PMIC */
         if (!PF53_Init(&pf5302Dev))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Fill in PCA2131 RTC handle */
-        pca2131Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
-        pca2131Dev.devAddr = BOARD_PCA2131_DEV_ADDR;
-
-        /* Inialize PCA2131 RTC */
-        if (!PCA2131_Init(&pca2131Dev))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
     }
 
     if (status == SM_ERR_SUCCESS)
@@ -235,74 +167,17 @@ int32_t BRD_SM_SerialDevicesInit(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Set bus expander interrupt mask                                          */
-/*--------------------------------------------------------------------------*/
-int32_t BRD_SM_BusExpMaskSet(uint8_t val, uint8_t mask)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    static uint8_t cachedMask = PCAL6408A_INITIAL_MASK;
-    uint8_t newMask = (cachedMask & ~mask) | val;
-
-    /* Mask changed? */
-    if (cachedMask != newMask)
-    {
-        if (PCAL6408A_IntMaskSet(&pcal6408aDev, newMask))
-        {
-            cachedMask = newMask;
-        }
-        else
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* GPIO1 handler                                                            */
 /*--------------------------------------------------------------------------*/
 void GPIO1_0_IRQHandler(void)
 {
     uint32_t flags;
-    uint8_t status, val;
 
     /* Get GPIO status */
     flags = RGPIO_GetPinsInterruptFlags(GPIO1, kRGPIO_InterruptOutput0);
 
-    /* Get PCAL6408A status */
-    (void) PCAL6408A_IntStatusGet(&pcal6408aDev, &status);
-
-    /* Get value and Clear PCAL6408A interrupts */
-    (void) PCAL6408A_InputGet(&pcal6408aDev, &val);
-
     /* Clear GPIO interrupts */
     RGPIO_ClearPinsInterruptFlags(GPIO1, kRGPIO_InterruptOutput0, flags);
-
-    /* Handle PF09 interrupt */
-    if ((status & BIT8(PCAL6408A_INPUT_PF09_INT)) != 0U)
-    {
-        /* Asserts low */
-        if ((val & BIT8(PCAL6408A_INPUT_PF09_INT)) == 0U)
-        {
-            BRD_SM_Pf09Handler();
-        }
-    }
-
-    /* Handle PCA2131 interrupt */
-    if (pca2131Used && ((status & BIT8(PCAL6408A_INPUT_PCA2131_INT))
-        != 0U))
-    {
-        /* Asserts low */
-        if ((val & BIT8(PCAL6408A_INPUT_PCA2131_INT)) == 0U)
-        {
-            BRD_SM_BbmHandler();
-        }
-    }
-
-    /* Handle controls interrupts */
-    BRD_SM_ControlHandler(status, val);
 
     /* Adjust dynamic IRQ priority */
     (void) DEV_SM_IrqPrioUpdate();

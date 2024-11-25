@@ -54,14 +54,13 @@
 #include "brd_sm_control.h"
 #include "brd_sm_sensor.h"
 #include "brd_sm_voltage.h"
-#include "brd_sm_bbm.h"
 #include "board.h"
 #include "brd_sm_api.h"
 
 /* Defines */
 
 /*! Board name string */
-#define BRD_SM_NAME  "i.MX95 EVK"
+#define BRD_SM_NAME  "i.MX95 Libra"
 
 /*! Board attributes */
 #define BRD_SM_ATTR  0x0
