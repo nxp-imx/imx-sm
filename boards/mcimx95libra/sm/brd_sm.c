@@ -42,7 +42,6 @@
 #include "brd_sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
-#include "fsl_lpi2c.h"
 #include "fsl_bbnsm.h"
 #include "fsl_rgpio.h"
 #include "fsl_iomuxc.h"
@@ -128,7 +127,6 @@ static int32_t BRD_SM_InitComplete(uint32_t mSel);
 // coverity[misra_c_2012_directive_4_6_violation:FALSE]
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 {
-    int32_t status;
     uint64_t addr;
     uint32_t ms;
     uint32_t flags;
@@ -137,59 +135,26 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     BOARD_InitHardware();
 
     /* Get the boot mode select */
-    if (DEV_SM_RomBootCpuGet(DEV_SM_CPU_M33P, &addr, &ms, &flags)
-        == SM_ERR_SUCCESS)
-    {
+    if (DEV_SM_RomBootCpuGet(DEV_SM_CPU_M33P, &addr, &ms, &flags) == SM_ERR_SUCCESS)
         *mSel = ms;
-    }
 
     /* Initialize devices connected to serial buses (PMIC, IOExp, etc) */
-    status = BRD_SM_SerialDevicesInit();
+    int32_t status = BRD_SM_SerialDevicesInit();
 
     if (status == SM_ERR_SUCCESS)
-    {
         /* Init the device */
         status = DEV_SM_Init(BOARD_BOOT_LEVEL, BOARD_PERF_LEVEL);
-    }
 
     if (status == SM_ERR_SUCCESS)
-    {
         /* Complete board init after device init */
         status = BRD_SM_InitComplete(*mSel);
-    }
 
-    if (status == SM_ERR_SUCCESS)
-    {
+    if (status == SM_ERR_SUCCESS) {
         /* Disallow ANA TMPSNS to generate internal warm reset */
         SRC_GEN->SRMASK |= BIT32(RST_REASON_TEMPSENSE);
 
         /* Switch WDOG to FCCU mode */
         BOARD_WdogModeSet(BOARD_WDOG_MODE_FCCU);
-    }
-
-    /* TODO: Remove when A0 support dropped */
-    /* Configure ISO controls based on feature fuses */
-    uint32_t ipIsoMask = 0U;
-
-    /* Deassert PCIe ISO if corresponding module is enabled */
-    uint32_t fuseHwCfg2 = FSB->FUSE[FSB_FUSE_HW_CFG2];
-
-    /* PCIe1 is tied to HSIO ISO[0] */
-    if ((fuseHwCfg2 & FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK) == 0U)
-    {
-        ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK;
-    }
-
-    /* PCIe2 is tied to HSIO ISO[1] */
-    if ((fuseHwCfg2 & FSB_FUSE_HW_CFG2_PCIE2_DISABLE_MASK) == 0U)
-    {
-        ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK;
-    }
-
-    /* Apply ISO mask */
-    if (ipIsoMask != 0U)
-    {
-        SRC_XSPR_HSIOMIX_TOP->SLICE_SW_CTRL &= (~ipIsoMask);
     }
 
     /* Return status */
@@ -215,9 +180,7 @@ void BRD_SM_Exit(int32_t status, uint32_t pc)
     /* Hang */
     // coverity[infinite_loop:FALSE]
     while (true)
-    {
         ; /* Intentional empty while */
-    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -247,8 +210,7 @@ int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Print reaction */
-    switch (*reaction)
-    {
+    switch (*reaction) {
         case LMM_REACT_SYS_RESET:
         case LMM_REACT_SYS_SHUTDOWN:
             ; /* Intentional empty as will print elsewhere */
@@ -303,40 +265,27 @@ int32_t BRD_SM_CustomFault(dev_sm_rst_rec_t resetRec, uint32_t lm)
 /*--------------------------------------------------------------------------*/
 void BRD_SM_ResetRecordPrint(string name, dev_sm_rst_rec_t resetRec)
 {
-    if (resetRec.valid)
-    {
-        int32_t status;
+    if (resetRec.valid) {
         string reasonNameAddr;
 
         /* Get name */
-        status = LMM_SystemReasonNameGet(0U, resetRec.reason,
-            &reasonNameAddr, NULL);
+        int32_t status = LMM_SystemReasonNameGet(0U, resetRec.reason, &reasonNameAddr, NULL);
 
         /* Print reason */
         printf("%s reason=", name);
         if (status == SM_ERR_SUCCESS)
-        {
             printf("%s", reasonNameAddr);
-        }
         else
-        {
             printf("%u", resetRec.reason);
-        }
         if (resetRec.validErr)
-        {
             printf(", errId=%d", (int32_t) resetRec.errId);
-        }
         if (resetRec.validOrigin)
-        {
             printf(", srcLm=%u", resetRec.origin);
-        }
         printf("\n");
 
         /* Print extended info */
         for (uint32_t ex = 0U; ex < resetRec.extLen; ex++)
-        {
             printf("  0x%08X\n", resetRec.extInfo[ex]);
-        }
     }
 }
 
@@ -350,12 +299,11 @@ void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
     uint32_t *ePtr = &(shutdownRec->extInfo[0]);
 
     /* Read and clear header */
-    (void) BBNSM_GprGetValue(BBNSM, BRD_SM_RST_REC_FIRST, &hdr);
-    (void) BBNSM_GprSetValue(BBNSM, BRD_SM_RST_REC_FIRST, 0U);
+    BBNSM_GprGetValue(BBNSM, BRD_SM_RST_REC_FIRST, &hdr);
+    BBNSM_GprSetValue(BBNSM, BRD_SM_RST_REC_FIRST, 0U);
 
     /* Valid? */
-    if (((hdr & BRD_SM_REC_VLD_MASK ) >> BRD_SM_REC_VLD_SHIFT) != 0U)
-    {
+    if (((hdr & BRD_SM_REC_VLD_MASK ) >> BRD_SM_REC_VLD_SHIFT) != 0U) {
         shutdownRec->valid = true;
 
         /* Parse header */
@@ -372,24 +320,17 @@ void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
 
         /* Sign extend */
         if ((shutdownRec->errId & BRD_SM_REC_EID_SIGN) != 0U)
-        {
             shutdownRec->errId |= BRD_SM_REC_EID_EXT;
-        }
 
         shutdownRec->extLen = MIN(shutdownRec->extLen, DEV_SM_NUM_EXT_INFO);
     }
 
     /* Copy out extended info */
-    for (uint8_t idx = 1U; idx < BRD_SM_RST_REC_NUM; idx++)
-    {
-        if (idx <= shutdownRec->extLen)
-        {
-            (void) BBNSM_GprGetValue(BBNSM, idx + BRD_SM_RST_REC_FIRST,
-                ePtr);
+    for (uint8_t idx = 1U; idx < BRD_SM_RST_REC_NUM; idx++) {
+        if (idx <= shutdownRec->extLen) {
+            BBNSM_GprGetValue(BBNSM, idx + BRD_SM_RST_REC_FIRST, ePtr);
             ePtr++;
-        }
-        else
-        {
+        } else {
             break;
         }
     }
@@ -406,16 +347,11 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
     const uint32_t *ePtr = &(shutdownRec.extInfo[0]);
 
     /* Store extended info */
-    for (uint8_t idx = 1U; idx < BRD_SM_RST_REC_NUM; idx++)
-    {
-        if (idx <= shutdownRec.extLen)
-        {
-            (void) BBNSM_GprSetValue(BBNSM, idx + BRD_SM_RST_REC_FIRST,
-                *ePtr);
+    for (uint8_t idx = 1U; idx < BRD_SM_RST_REC_NUM; idx++) {
+        if (idx <= shutdownRec.extLen) {
+            BBNSM_GprSetValue(BBNSM, idx + BRD_SM_RST_REC_FIRST, *ePtr);
             ePtr++;
-        }
-        else
-        {
+        } else {
             break;
         }
     }
@@ -435,13 +371,9 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 
     /* Print shutdown record */
     if (shutdownRec.reset)
-    {
         BRD_SM_ResetRecordPrint("\nReset request:", shutdownRec);
-    }
     else
-    {
         BRD_SM_ResetRecordPrint("\nShutdown request:", shutdownRec);
-    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -450,8 +382,7 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 int32_t BRD_SM_SystemReset(void)
 {
     int32_t status = SM_ERR_SUCCESS;
-    rgpio_pin_config_t gpioConfig =
-    {
+    rgpio_pin_config_t gpioConfig = {
         kRGPIO_DigitalOutput,
         0U
     };
@@ -479,28 +410,21 @@ int32_t BRD_SM_PmicInfoGet(uint32_t idx, uint8_t *devAddr, uint8_t **info,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Call PMIC driver to get info */
-    switch (idx)
-    {
+    switch (idx) {
         case 0U:
             *devAddr = pf09Dev.devAddr;
             if (!PF09_PmicInfoGet(&pf09Dev, info, len))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
             break;
         case 1U:
             *devAddr = pf5301Dev.devAddr;
             if (!PF53_PmicInfoGet(&pf5301Dev, info, len))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
             break;
         case 2U:
             *devAddr = pf5302Dev.devAddr;
             if (!PF53_PmicInfoGet(&pf5302Dev, info, len))
-            {
                 status = SM_ERR_HARDWARE_ERROR;
-            }
             break;
         default:
             status = SM_ERR_NOT_FOUND;
@@ -520,32 +444,19 @@ int32_t BRD_SM_PmicWrite(uint8_t devAddr, uint8_t regAddr, uint8_t val,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Call PF09 driver write data */
-    if (devAddr == pf09Dev.devAddr)
-    {
+    if (devAddr == pf09Dev.devAddr) {
         if (!PF09_PmicWrite(&pf09Dev, regAddr, val, mask))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-    /* Call PF5301 driver write data */
-    else if (devAddr == pf5301Dev.devAddr)
-    {
+    } else if (devAddr == pf5301Dev.devAddr) {
+        /* Call PF5301 driver write data */
         if (!PF53_PmicWrite(&pf5301Dev, regAddr, val, mask))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
+    } else if (devAddr == pf5302Dev.devAddr) {
     /* Call PF5302 driver write data */
-    else if (devAddr == pf5302Dev.devAddr)
-    {
         if (!PF53_PmicWrite(&pf5302Dev, regAddr, val, mask))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
+    } else {
     /* Invalid device address */
-    else
-    {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -561,32 +472,19 @@ int32_t BRD_SM_PmicRead(uint8_t devAddr, uint8_t regAddr, uint8_t *val)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Call PF09 driver read data */
-    if (devAddr == pf09Dev.devAddr)
-    {
+    if (devAddr == pf09Dev.devAddr) {
         if (!PF09_PmicRead(&pf09Dev, regAddr, val))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-    /* Call PF5301 driver read data */
-    else if (devAddr == pf5301Dev.devAddr)
-    {
+    } else if (devAddr == pf5301Dev.devAddr) {
+        /* Call PF5301 driver read data */
         if (!PF53_PmicRead(&pf5301Dev, regAddr, val))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-    /* Call PF5302 driver read data */
-    else if (devAddr == pf5302Dev.devAddr)
-    {
+    } else if (devAddr == pf5302Dev.devAddr) {
+        /* Call PF5302 driver read data */
         if (!PF53_PmicRead(&pf5302Dev, regAddr, val))
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-    /* Invalid device address */
-    else
-    {
+    } else {
+        /* Invalid device address */
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -618,8 +516,7 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
 {
     /* Set voltage level */
-    return BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt)
-        + BOARD_PERF_VDROP);
+    return BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt) + BOARD_PERF_VDROP);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -644,4 +541,3 @@ static int32_t BRD_SM_InitComplete(uint32_t mSel)
 
     return SM_ERR_SUCCESS;
 }
-
