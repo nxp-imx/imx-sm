@@ -247,21 +247,16 @@ void BOARD_InitClocks(void)
 {
     uint32_t fuseTrim = FSB->FUSE[FSB_FUSE_ANA_CFG4];
 
-    if (fuseTrim == 0U)
-    {
+    if (fuseTrim == 0U) {
         /* Enable the FRO clock with default value */
         (void)FRO_SetEnable(true);
-    }
-    else
-    {
+    } else {
         /* Set the Trim value read from the fuses */
         bool status = FRO_SetTrim(fuseTrim);
 
         if (status)
-        {
             /* Enable the FRO clock with default value */
             (void) FRO_SetEnable(true);
-        }
     }
 
     /* Configure default EXT_CLK1 rate tied to XTAL_OUT/EXT_CLK pin */
@@ -269,8 +264,7 @@ void BOARD_InitClocks(void)
 
     /* Configure ADC clock */
     (void) CCM_RootSetParent(CLOCK_ROOT_ADC, CLOCK_SRC_SYSPLL1_PFD1_DIV2);
-    (void) CCM_RootSetRate(CLOCK_ROOT_ADC, BOARD_ADC_CLK_RATE,
-        CLOCK_ROUND_RULE_CEILING);
+    (void) CCM_RootSetRate(CLOCK_ROOT_ADC, BOARD_ADC_CLK_RATE, CLOCK_ROUND_RULE_CEILING);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -286,12 +280,11 @@ const board_uart_config_t *BOARD_GetDebugUart(void)
 /*--------------------------------------------------------------------------*/
 void BOARD_InitDebugConsole(void)
 {
-    if (s_uartConfig.base != NULL)
-    {
+    if (s_uartConfig.base != NULL) {
         uint64_t rate = CCM_RootGetRate(s_uartConfig.clockId);
 
         /* Configure debug UART */
-        lpuart_config_t lpuart_config;
+        lpuart_config_t lpuart_config = {};
         LPUART_GetDefaultConfig(&lpuart_config);
         lpuart_config.baudRate_Bps = s_uartConfig.baud;
         lpuart_config.rxFifoWatermark = ((uint8_t)
@@ -311,12 +304,9 @@ void BOARD_InitDebugConsole(void)
 void BOARD_InitHandlers(void)
 {
     /* Configure default priority of exceptions and IRQs */
-    for (int32_t irq = ((int32_t) SVCall_IRQn); irq < ((int32_t)
-        NUMBER_OF_INT_VECTORS); irq++)
-    {
+    for (int32_t irq = ((int32_t) SVCall_IRQn); irq < ((int32_t) NUMBER_OF_INT_VECTORS); irq++)
         // coverity[misra_c_2012_rule_10_5_violation:FALSE]
         NVIC_SetPriority((IRQn_Type) irq, IRQ_PRIO_NOPREEMPT_NORMAL);
-    }
 
     /* Configure SWI handler */
     NVIC_EnableIRQ(BOARD_SWI_IRQn);
@@ -327,11 +317,6 @@ void BOARD_InitHandlers(void)
     /* Enable GPC SM handler */
     NVIC_SetPriority(GPC_SM_REQ_IRQn, IRQ_PRIO_NOPREEMPT_VERY_HIGH);
     NVIC_EnableIRQ(GPC_SM_REQ_IRQn);
-
-    /* Enable ELE Group IRQ handlers */
-    NVIC_EnableIRQ(ELE_Group1_IRQn);
-    NVIC_EnableIRQ(ELE_Group2_IRQn);
-    NVIC_EnableIRQ(ELE_Group3_IRQn);
 
     /* Enable FCCU handler */
     NVIC_SetPriority(FCCU_INT0_IRQn, IRQ_PRIO_NOPREEMPT_CRITICAL);
@@ -378,10 +363,6 @@ void BOARD_InitTimers(void)
 
     /* Halt SM WDOG on M33 debug entry */
     BLK_CTRL_NS_AONMIX->IPG_DEBUG_CM33 = (BOARD_WDOG_IPG_DEBUG);
-
-    /* Halt CM7 WDOG on CM7 debug entry */
-    BLK_CTRL_WAKEUPMIX->IPG_DEBUG_CM7 =
-        BLK_CTRL_WAKEUPMIX_IPG_DEBUG_CM7_WDOG5_MASK;
 }
 
 /*--------------------------------------------------------------------------*/

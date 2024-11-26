@@ -34,7 +34,7 @@
 
 /*==========================================================================*/
 /*!
- * @addtogroup CONFIG_MX95EVK
+ * @addtogroup CONFIG_MX95LIBRA
  * @{
  *
  * @file
@@ -59,7 +59,7 @@
 #define BOARD_DEBUG_UART_BAUDRATE    115200U
 
 /*! Config for PMIC I2C instance */
-#define BOARD_I2C_INSTANCE           1U
+#define BOARD_I2C_INSTANCE           2U
 /*! Config for PMIC I2C baudrate */
 #define BOARD_I2C_BAUDRATE           400000U
 
