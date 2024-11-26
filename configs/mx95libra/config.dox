@@ -39,9 +39,9 @@
 
 /*!
 
-@defgroup CONFIG_MX95EVK CONFIG_MX95EVK: i.MX95 EVK Configuration Data
+@defgroup CONFIG_MX95LIBRA CONFIG_MX95LIBRA: i.MX95 Libra Configuration Data
 
-@brief Module for i.MX95 EVK Configuration Data.
+@brief Module for i.MX95 Libra Configuration Data.
 
 */
 
