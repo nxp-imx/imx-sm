@@ -53,14 +53,11 @@ static bool sensorEnb[BRD_SM_NUM_SENSOR];
 /*--------------------------------------------------------------------------*/
 /* Return sensor name                                                       */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
-    int32_t *len)
-{
+int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr, int32_t *len) {
     int32_t status = SM_ERR_SUCCESS;
     static int32_t s_maxLen = 0;
 
-    static string const s_name[BRD_SM_NUM_SENSOR] =
-    {
+    static string const s_name[BRD_SM_NUM_SENSOR] = {
         "temp_pf09",
         "temp_pf53_soc",
         "temp_pf53_arm"
@@ -70,23 +67,14 @@ int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, BRD_SM_NUM_SENSOR);
 
     /* Check to see if sensorId is within bounds */
-    if (sensorId < SM_NUM_SENSOR)
-    {
+    if (sensorId < SM_NUM_SENSOR) {
         /* Check if device or board */
         if (sensorId < DEV_SM_NUM_SENSOR)
-        {
             status = DEV_SM_SensorNameGet(sensorId, sensorNameAddr, len);
-        }
         else
-        {
-            uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
-
             /* Return pointer to name */
-            *sensorNameAddr = s_name[brdSensorId];
-        }
-    }
-    else
-    {
+            *sensorNameAddr = s_name[sensorId - DEV_SM_NUM_SENSOR];
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -97,36 +85,22 @@ int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
 /*--------------------------------------------------------------------------*/
 /* Return sensor description                                                */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SensorDescribe(uint32_t sensorId,
-    dev_sm_sensor_desc_t *desc)
-{
+int32_t BRD_SM_SensorDescribe(uint32_t sensorId, dev_sm_sensor_desc_t *desc) {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check to see if sensorId is within bounds */
-    if (sensorId < SM_NUM_SENSOR)
-    {
+    if (sensorId < SM_NUM_SENSOR) {
         /* Check if device or board */
-        if (sensorId < DEV_SM_NUM_SENSOR)
-        {
+        if (sensorId < DEV_SM_NUM_SENSOR) {
             status = DEV_SM_SensorDescribe(sensorId, desc);
-        }
-        else
-        {
-            desc->sensorType = 2U;
-            desc->sensorExponent = 0;
-            desc->numTripPoints = 0U;
-            desc->timestampSupport = false;
-            desc->timestampExponent = 0;
+        } else {
+            *desc = (dev_sm_sensor_desc_t) { 2U, 0, 0U, false, 0};
 
             /* PF09? */
             if (sensorId == BRD_SM_SENSOR_TEMP_PF09)
-            {
                 desc->numTripPoints = 1U;
-            }
         }
-    }
-    else
-    {
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -138,32 +112,22 @@ int32_t BRD_SM_SensorDescribe(uint32_t sensorId,
 /* Get sensor reading                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
-    uint64_t *sensorTimestamp)
-{
+                                uint64_t *sensorTimestamp) {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check to see if sensorId is within bounds */
-    if (sensorId < SM_NUM_SENSOR)
-    {
+    if (sensorId < SM_NUM_SENSOR) {
         /* Check if device or board */
-        if (sensorId < DEV_SM_NUM_SENSOR)
-        {
-            status = DEV_SM_SensorReadingGet(sensorId, sensorValue,
-                sensorTimestamp);
-        }
-        else
-        {
-            uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
-
+        if (sensorId < DEV_SM_NUM_SENSOR) {
+            status = DEV_SM_SensorReadingGet(sensorId, sensorValue, sensorTimestamp);
+        } else {
             /* Check if enabled */
-            if (sensorEnb[brdSensorId])
-            {
-                int32_t temp;
+            if (sensorEnb[sensorId - DEV_SM_NUM_SENSOR]) {
+                int32_t temp = 0;
                 bool rc = false;
 
                 /* Read sensor */
-                switch (sensorId)
-                {
+                switch (sensorId) {
                     case BRD_SM_SENSOR_TEMP_PF09:
                         rc = PF09_TempGet(&g_pf09Dev, &temp);
                         break;
@@ -179,29 +143,24 @@ int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
                             rc = false;
                         }
                         break;
-                    default:
+                    case BRD_SM_SENSOR_TEMP_PF5302:
                         rc = PF53_TempGet(&g_pf5302Dev, &temp);
+                        break;
+                    default:
                         break;
                 }
 
-                if (rc)
-                {
+                if (rc) {
                     *sensorValue = (int64_t) temp;
                     *sensorTimestamp = 0ULL;
-                }
-                else
-                {
+                } else {
                     status = SM_ERR_HARDWARE_ERROR;
                 }
-            }
-            else
-            {
+            } else {
                 status = SM_ERR_NOT_SUPPORTED;
             }
         }
-    }
-    else
-    {
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -213,72 +172,41 @@ int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
 /* Set sensor trippoint                                                     */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
-    int64_t value, uint8_t eventControl)
-{
+                                  int64_t value, uint8_t eventControl) {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check to see if sensorId is within bounds */
-    if (sensorId < SM_NUM_SENSOR)
-    {
+    if (sensorId < SM_NUM_SENSOR) {
         /* Check if device or board */
-        if (sensorId < DEV_SM_NUM_SENSOR)
-        {
-            status = DEV_SM_SensorTripPointSet(sensorId, tripPoint,
-                value, eventControl);
-        }
-        else
-        {
-            uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
-
+        if (sensorId < DEV_SM_NUM_SENSOR) {
+            status = DEV_SM_SensorTripPointSet(sensorId, tripPoint, value, eventControl);
+        } else {
             /* Check if enabled */
-            if ((sensorId == BRD_SM_SENSOR_TEMP_PF09)
-                && sensorEnb[brdSensorId])
-            {
+            if ((sensorId == BRD_SM_SENSOR_TEMP_PF09) && sensorEnb[sensorId - DEV_SM_NUM_SENSOR]) {
                 /* Check trip point */
-                if (tripPoint == 0U)
-                {
-                    if (eventControl == DEV_SM_SENSOR_TP_NONE)
-                    {
+                if (!tripPoint) {
+                    if (eventControl == DEV_SM_SENSOR_TP_NONE) {
                         if (!PF09_TempAlarmSet(&g_pf09Dev, 500))
-                        {
                             status = SM_ERR_HARDWARE_ERROR;
-                        }
-                    }
-                    else if (eventControl == DEV_SM_SENSOR_TP_RISING)
-                    {
+                    } else if (eventControl == DEV_SM_SENSOR_TP_RISING) {
                         /* Check value is within int32_t range */
-                        if (CHECK_I64_FIT_I32(value))
-                        {
-                            int32_t temp = (int32_t) value;
-
-                            if (!PF09_TempAlarmSet(&g_pf09Dev, temp))
-                            {
+                        if (CHECK_I64_FIT_I32(value)) {
+                            if (!PF09_TempAlarmSet(&g_pf09Dev, value))
                                 status = SM_ERR_HARDWARE_ERROR;
-                            }
-                        }
-                        else
-                        {
+                        } else {
                             status = SM_ERR_INVALID_PARAMETERS;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         status = SM_ERR_INVALID_PARAMETERS;
                     }
-                }
-                else
-                {
+                } else {
                     status = SM_ERR_INVALID_PARAMETERS;
                 }
-            }
-            else
-            {
+            } else {
                 status = SM_ERR_NOT_SUPPORTED;
             }
         }
-    }
-    else
-    {
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -289,67 +217,43 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
 /*--------------------------------------------------------------------------*/
 /* Enable/disable sensor                                                    */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
-    bool timestampReporting)
-{
+int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable, bool timestampReporting) {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check to see if sensorId is within bounds */
-    if (sensorId < SM_NUM_SENSOR)
-    {
+    if (sensorId < SM_NUM_SENSOR) {
         /* Check if device or board */
-        if (sensorId < DEV_SM_NUM_SENSOR)
-        {
-            status = DEV_SM_SensorEnable(sensorId, enable,
-                timestampReporting);
-        }
-        else
-        {
+        if (sensorId < DEV_SM_NUM_SENSOR) {
+            status = DEV_SM_SensorEnable(sensorId, enable, timestampReporting);
+        } else {
             uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
 
             /* Timestamp not supported */
-            if (timestampReporting)
-            {
+            if (timestampReporting) {
                 status = SM_ERR_NOT_SUPPORTED;
-            }
-            else
-            {
-                if ((brdSensorId == (BRD_SM_SENSOR_TEMP_PF5301
-                    - DEV_SM_NUM_SENSOR)) && enable)
-                {
+            } else {
+                if ((brdSensorId == (BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR)) && enable) {
                     /* ARM volt mode enabled ? */
-                    if (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON)
-                    {
+                    if (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON) {
                         /* Record sensor enable */
-                        sensorEnb[BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR]
-                            = enable;
-                    }
-                    else
-                    {
+                        sensorEnb[BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR] = enable;
+                    } else {
                         /* Set the status if not enabled */
                         status = SM_ERR_POWER;
                     }
-                }
-                else
-                {
+                } else {
                     /* Record sensor enable */
                     sensorEnb[brdSensorId] = enable;
                 }
 
                 /* Disable alarm */
-                if ((sensorId == BRD_SM_SENSOR_TEMP_PF09)
-                    && !sensorEnb[brdSensorId])
-                {
+                if ((sensorId == BRD_SM_SENSOR_TEMP_PF09) && !sensorEnb[brdSensorId]) {
                     if (!PF09_TempAlarmSet(&g_pf09Dev, 500))
-                    {
                         status = SM_ERR_HARDWARE_ERROR;
-                    }
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -360,42 +264,28 @@ int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
 /*--------------------------------------------------------------------------*/
 /* Return sensor enable status                                              */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
-    bool *timestampReporting)
-{
+int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled, bool *timestampReporting) {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check to see if sensorId is within bounds */
-    if (sensorId < SM_NUM_SENSOR)
-    {
+    if (sensorId < SM_NUM_SENSOR) {
         /* Check if device or board */
-        if (sensorId < DEV_SM_NUM_SENSOR)
-        {
-            status = DEV_SM_SensorIsEnabled(sensorId, enabled,
-                timestampReporting);
-        }
-        else
-        {
+        if (sensorId < DEV_SM_NUM_SENSOR) {
+            status = DEV_SM_SensorIsEnabled(sensorId, enabled, timestampReporting);
+        } else {
             uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
 
             /* Return sensor enable */
-            if (brdSensorId == (BRD_SM_SENSOR_TEMP_PF5301
-                - DEV_SM_NUM_SENSOR))
-            {
+            if (brdSensorId == (BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR)) {
                 *enabled = (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON)
-                    && sensorEnb[BRD_SM_SENSOR_TEMP_PF5301
-                        - DEV_SM_NUM_SENSOR];
+                    && sensorEnb[BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR];
                 *timestampReporting = false;
-            }
-            else
-            {
+            } else {
                 *enabled = sensorEnb[brdSensorId];
                 *timestampReporting = false;
             }
         }
-    }
-    else
-    {
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -406,9 +296,7 @@ int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
 /*--------------------------------------------------------------------------*/
 /* PMIC sensor handler                                                      */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_SensorHandler(void)
-{
+void BRD_SM_SensorHandler(void) {
     /* Send sensor event */
     LMM_SensorEvent(BRD_SM_SENSOR_TEMP_PF09, 0U, 1U);
 }
-

@@ -1,5 +1,6 @@
 /*
  * Copyright 2023-2024 NXP
+ * Copyright 2025 PHYTEC Messtechnik GmbH
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -63,8 +64,7 @@
 /*!
  * Debug UART configuration info
  */
-typedef struct
-{
+typedef struct {
     LPUART_Type *const base;  /*!< LPUART base pointer */
     IRQn_Type irq;            /*!< Interrupt number */
     uint32_t clockId;         /*!< Clock ID */
@@ -81,13 +81,8 @@ extern "C" {
  * API
  ******************************************************************************/
 
-/*! Configure the M33 MPU */
 void BOARD_ConfigMPU(void);
-
-/*! Init hardware */
 void BOARD_InitHardware(void);
-
-/*! Init clocks */
 void BOARD_InitClocks(void);
 
 /*!
@@ -100,16 +95,9 @@ void BOARD_InitClocks(void);
  */
 const board_uart_config_t *BOARD_GetDebugUart(void);
 
-/*! Init the debug UART */
 void BOARD_InitDebugConsole(void);
-
-/*! Init interrupt handlers */
 void BOARD_InitHandlers(void);
-
-/*! Init timers */
 void BOARD_InitTimers(void);
-
-/*! Init serial buses */
 void BOARD_InitSerialBus(void);
 
 /*!
@@ -161,4 +149,3 @@ void BOARD_WdogRefresh(void);
 /** @} */
 
 #endif /* BOARD_H */
-

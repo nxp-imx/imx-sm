@@ -52,15 +52,10 @@
 
 #include "sm.h"
 #include "dev_sm.h"
-#include "fsl_pcal6408a.h"
 #include "fsl_pf09.h"
 #include "fsl_pf53.h"
-#include "fsl_pca2131.h"
 
 /* Defines */
-
-/*! Initial PCAL6408A interrupt mask */
-#define PCAL6408A_INITIAL_MASK  0xF7U
 
 /*! Number of board IRQs participating dynamic prioritization */
 #define BOARD_NUM_IRQ_PRIO_IDX                 1U
@@ -72,9 +67,6 @@
 
 /* External variables */
 
-/*! Handle to access PCAL6408A */
-extern PCAL6408A_Type g_pcal6408aDev;
-
 /*! Handle to access PF09 */
 extern PF09_Type g_pf09Dev;
 
@@ -84,14 +76,8 @@ extern PF53_Type g_pf5301Dev;
 /*! Handle to access PF5302 */
 extern PF53_Type g_pf5302Dev;
 
-/*! Handle to access PCA2131 */
-extern PCA2131_Type g_pca2131Dev;
-
 /*! Array of dynamic priority info for board IRQs */
 extern irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
-
-/*! Indicator if bus expander bit[6] is used for the PF2131 RTC */
-extern bool g_pca2131Used;
 
 /*! Fault flags from the PMICs */
 extern uint32_t g_pmicFaultFlags;
@@ -118,12 +104,6 @@ int32_t BRD_SM_SerialDevicesInit(void);
  */
 int32_t BRD_SM_BusExpMaskSet(uint8_t val, uint8_t mask);
 
-/*!
- * GPIO 1 interrupt 0 handler.
- */
-void GPIO1_0_IRQHandler(void);
-
 /** @} */
 
 #endif /* BRD_SM_HANDLERS_H */
-

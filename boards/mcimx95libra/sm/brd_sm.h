@@ -37,7 +37,7 @@
 
 /*==========================================================================*/
 /*!
- * @addtogroup BRD_SM_MX95EVK
+ * @addtogroup BRD_SM_MX95LIBRA
  * @{
  *
  * @file
@@ -51,17 +51,15 @@
 
 #include "sm.h"
 #include "brd_sm_handlers.h"
-#include "brd_sm_control.h"
 #include "brd_sm_sensor.h"
 #include "brd_sm_voltage.h"
-#include "brd_sm_bbm.h"
 #include "board.h"
 #include "brd_sm_api.h"
 
 /* Defines */
 
 /*! Board name string */
-#define BRD_SM_NAME  "i.MX95 EVK"
+#define BRD_SM_NAME  "Libra i.MX95"
 
 /*! Board attributes */
 #define BRD_SM_ATTR  0x0

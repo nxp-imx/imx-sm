@@ -104,8 +104,7 @@
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a sensorId is invalid.
  */
-int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
-    int32_t *len);
+int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr, int32_t *len);
 
 /*!
  * Get a board sensor description.
@@ -120,8 +119,7 @@ int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a sensorId is invalid.
  */
-int32_t BRD_SM_SensorDescribe(uint32_t sensorId,
-    dev_sm_sensor_desc_t *desc);
+int32_t BRD_SM_SensorDescribe(uint32_t sensorId, dev_sm_sensor_desc_t *desc);
 
 /*!
  * Read a board sensor.
@@ -137,8 +135,7 @@ int32_t BRD_SM_SensorDescribe(uint32_t sensorId,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a sensorId is invalid.
  */
-int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
-    uint64_t *sensorTimestamp);
+int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue, uint64_t *sensorTimestamp);
 
 /*!
  * Configure a trip point for a board sensor.
@@ -157,8 +154,8 @@ int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a sensorId is invalid.
  */
-int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
-    int64_t value, uint8_t eventControl);
+int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint, int64_t value,
+                                  uint8_t eventControl);
 
 /*!
  * Enable/disable a board sensor.
@@ -174,8 +171,7 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a sensorId is invalid.
  */
-int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
-    bool timestampReporting);
+int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable, bool timestampReporting);
 
 /*!
  * Get enable/disable state of a board sensor.
@@ -192,8 +188,7 @@ int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a sensorId is invalid.
  */
-int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
-    bool *timestampReporting);
+int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled, bool *timestampReporting);
 
 /*!
  * Sensor interrupt handler.
@@ -207,4 +202,3 @@ void BRD_SM_SensorHandler(void);
 #endif /* BRD_SM_SENSOR_H */
 
 /** @} */
-

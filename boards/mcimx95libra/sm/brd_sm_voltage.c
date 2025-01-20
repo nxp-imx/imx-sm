@@ -55,42 +55,32 @@ static uint32_t s_modeArmSave = DEV_SM_VOLT_MODE_ON;
 /*--------------------------------------------------------------------------*/
 /* Return voltage name                                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
-    int32_t *len)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    static int32_t s_maxLen = 0;
+int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr, int32_t *len) {
 
-    static string const s_name[BRD_SM_NUM_VOLT] =
-    {
-        "vdd_gpio_3p3",
-        "vdd_ana_0p8",
-        "vdd_gpio_1p8",
-        "vddq_ddr",
-        "vdd2_ddr",
-        "sd_card",
-        "nvcc_sd2"
+    static string const s_name[BRD_SM_NUM_VOLT] = {
+        "VDD_3V3",
+        "VDD_0V8",
+        "VDD_1V8",
+        "VDDQ_DDR",
+        "VDD2_DDR",
+        "VDDSW_SD2",
+        "NVCC_SD2"
     };
 
+    static int32_t s_maxLen = 0;
     /* Get max string width */
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, BRD_SM_NUM_VOLT);
 
+    int32_t status = SM_ERR_SUCCESS;
     /* Check to see if domain is within bounds*/
-    if (domainId < SM_NUM_VOLT)
-    {
+    if (domainId < SM_NUM_VOLT) {
         /* Check if device or board */
         if (domainId < DEV_SM_NUM_VOLT)
-        {
             status = DEV_SM_VoltageNameGet(domainId, voltNameAddr, len);
-        }
         else
-        {
             /* Return pointer to name */
             *voltNameAddr = s_name[domainId - DEV_SM_NUM_VOLT];
-        }
-    }
-    else
-    {
+    } else {
         status = SM_ERR_NOT_FOUND;
     }
 
@@ -101,16 +91,13 @@ int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
 /*--------------------------------------------------------------------------*/
 /* Return supported voltage range                                           */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_VoltageDescribe(uint32_t domainId,
-    dev_sm_voltage_range_t *range)
-{
+int32_t BRD_SM_VoltageDescribe(uint32_t domainId, dev_sm_voltage_range_t *range) {
     int32_t status = SM_ERR_HARDWARE_ERROR;
     bool rc = false;
-    PF09_RegInfo info;
+    PF09_RegInfo info = { };
 
     /* Get voltage range/info */
-    switch (domainId)
-    {
+    switch (domainId) {
         case DEV_SM_VOLT_SOC:
             status = DEV_SM_VoltageDescribe(domainId, range);
             break;
@@ -144,20 +131,13 @@ int32_t BRD_SM_VoltageDescribe(uint32_t domainId,
     }
 
     /* Return results */
-    if ((status != SM_ERR_SUCCESS) && rc)
-    {
+    if ((status != SM_ERR_SUCCESS) && rc) {
         /* Validate the parameters values are with in int32 range */
-        if (CHECK_U32_FIT_I32(info.maxV) &&
-            CHECK_U32_FIT_I32(info.minV) &&
-            CHECK_U32_FIT_I32(info.stepV))
-        {
-            range->highestVolt = (int32_t) info.maxV;
-            range->lowestVolt = (int32_t) info.minV;
-            range->stepSize = (int32_t) info.stepV;
+        if (CHECK_U32_FIT_I32(info.maxV) && CHECK_U32_FIT_I32(info.minV) &&
+            CHECK_U32_FIT_I32(info.stepV)) {
+            *range = (dev_sm_voltage_range_t) { info.minV, info.maxV, info.stepV };
             status = SM_ERR_SUCCESS;
-        }
-        else
-        {
+        } else {
             /* Set the status if parameters are out of range */
             status = SM_ERR_INVALID_PARAMETERS;
         }
@@ -170,69 +150,51 @@ int32_t BRD_SM_VoltageDescribe(uint32_t domainId,
 /*--------------------------------------------------------------------------*/
 /* Set voltage mode                                                         */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode)
-{
+int32_t BRD_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode) {
     int32_t status = SM_ERR_SUCCESS;
     bool enable = (voltMode == DEV_SM_VOLT_MODE_ON);
-    uint8_t mode = ((voltMode == DEV_SM_VOLT_MODE_OFF)
-        ? PF09_SW_MODE_OFF : PF09_SW_MODE_PWM);
-    bool rc;
+    uint8_t mode = ((voltMode == DEV_SM_VOLT_MODE_OFF) ? PF09_SW_MODE_OFF : PF09_SW_MODE_PWM);
+    bool rc = false;
 
     /* Set mode */
-    switch (domainId)
-    {
+    switch (domainId) {
         case DEV_SM_VOLT_SOC:
-            mode = ((voltMode == DEV_SM_VOLT_MODE_OFF)
-                ? PF53_SW_MODE_OFF : PF53_SW_MODE_PWM);
-            rc = PF53_SwModeSet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                mode);
+            mode = ((voltMode == DEV_SM_VOLT_MODE_OFF) ? PF53_SW_MODE_OFF : PF53_SW_MODE_PWM);
+            rc = PF53_SwModeSet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN, mode);
             break;
         case DEV_SM_VOLT_ARM:
-            rc = PF09_GpioCtrlSet(&g_pf09Dev, PF09_GPIO4, PF53_STATE_VRUN,
-                enable);
-            if (enable && rc)
-            {
+            rc = PF09_GpioCtrlSet(&g_pf09Dev, PF09_GPIO4, PF53_STATE_VRUN, enable);
+            if (enable && rc) {
                 /* Wait for PF53 power up and ramp */
                 SystemTimeDelay(1000U);
 
                 if (s_levelArm != BOARD_VOLT_ARM)
-                {
                     /* Restore voltage as enable resets the PF53 */
                     status = BRD_SM_VoltageLevelSet(domainId, s_levelArm);
-                }
             }
             if (rc)
-            {
                 s_modeArm = voltMode;
-            }
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
-            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
-                mode);
+            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN, mode);
             break;
         case BRD_SM_VOLT_VDD_ANA_0P8:
-            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN,
-                mode);
+            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN, mode);
             break;
         case BRD_SM_VOLT_VDD_GPIO_1P8:
-            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN,
-                mode);
+            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN, mode);
             break;
         case BRD_SM_VOLT_VDDQ_DDR:
-            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN,
-                mode);
+            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN, mode);
             break;
         case BRD_SM_VOLT_VDD2_DDR:
-            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN,
-                mode);
+            rc = PF09_SwModeSet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN, mode);
             break;
         case BRD_SM_VOLT_SD_CARD:
-            rc = PF09_LdoEnable(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN,
-                enable);
+            rc = PF09_LdoEnable(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN, enable);
             break;
         case BRD_SM_VOLT_NVCC_SD2:
-            rc = PF09_LdoEnable(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN,
-                enable);
+            rc = PF09_LdoEnable(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN, enable);
             break;
         default:
             status = SM_ERR_NOT_FOUND;
@@ -241,9 +203,7 @@ int32_t BRD_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode)
 
     /* Translate error */
     if ((status == SM_ERR_SUCCESS) && !rc)
-    {
         status = SM_ERR_HARDWARE_ERROR;
-    }
 
     /* Return status */
     return status;
@@ -252,57 +212,46 @@ int32_t BRD_SM_VoltageModeSet(uint32_t domainId, uint8_t voltMode)
 /*--------------------------------------------------------------------------*/
 /* Get voltage mode                                                         */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_VoltageModeGet(uint32_t domainId, uint8_t *voltMode)
-{
+int32_t BRD_SM_VoltageModeGet(uint32_t domainId, uint8_t *voltMode) {
+    bool enable = false;
+    bool rc = false;
     int32_t status = SM_ERR_SUCCESS;
-    bool enable;
-    uint8_t mode;
-    bool rc;
+    uint8_t mode = 0;
 
     /* Get mode */
-    switch (domainId)
-    {
+    switch (domainId) {
         case DEV_SM_VOLT_SOC:
-            rc = PF53_SwModeGet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                &mode);
+            rc = PF53_SwModeGet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN, &mode);
             enable = (mode != PF53_SW_MODE_OFF);
             break;
         case DEV_SM_VOLT_ARM:
-            rc = PF09_GpioCtrlGet(&g_pf09Dev, PF09_GPIO4, PF53_STATE_VRUN,
-                &enable);
+            rc = PF09_GpioCtrlGet(&g_pf09Dev, PF09_GPIO4, PF53_STATE_VRUN, &enable);
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
-            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
-                &mode);
+            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN, &mode);
             enable = (mode != PF09_SW_MODE_OFF);
             break;
         case BRD_SM_VOLT_VDD_ANA_0P8:
-            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN,
-                &mode);
+            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN, &mode);
             enable = (mode != PF09_SW_MODE_OFF);
             break;
         case BRD_SM_VOLT_VDD_GPIO_1P8:
-            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN,
-                &mode);
+            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN, &mode);
             enable = (mode != PF09_SW_MODE_OFF);
             break;
         case BRD_SM_VOLT_VDDQ_DDR:
-            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN,
-                &mode);
+            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN, &mode);
             enable = (mode != PF09_SW_MODE_OFF);
             break;
         case BRD_SM_VOLT_VDD2_DDR:
-            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN,
-                &mode);
+            rc = PF09_SwModeGet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN, &mode);
             enable = (mode != PF09_SW_MODE_OFF);
             break;
         case BRD_SM_VOLT_SD_CARD:
-            rc = PF09_LdoIsEnabled(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN,
-                &enable);
+            rc = PF09_LdoIsEnabled(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN, &enable);
             break;
         case BRD_SM_VOLT_NVCC_SD2:
-            rc = PF09_LdoIsEnabled(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN,
-                &enable);
+            rc = PF09_LdoIsEnabled(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN, &enable);
             break;
         default:
             status = SM_ERR_NOT_FOUND;
@@ -311,15 +260,11 @@ int32_t BRD_SM_VoltageModeGet(uint32_t domainId, uint8_t *voltMode)
 
     /* Return result */
     if ((status == SM_ERR_SUCCESS) && rc)
-    {
         *voltMode = enable ? DEV_SM_VOLT_MODE_ON : DEV_SM_VOLT_MODE_OFF;
-    }
 
     /* Translate error */
     if ((status == SM_ERR_SUCCESS) && !rc)
-    {
         status = SM_ERR_HARDWARE_ERROR;
-    }
 
     /* Return status */
     return status;
@@ -328,64 +273,50 @@ int32_t BRD_SM_VoltageModeGet(uint32_t domainId, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 /* Set voltage level                                                        */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
-{
+int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel) {
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check voltageLevel is positive */
-    if (CHECK_I32_POSITIVE(voltageLevel))
-    {
-        bool rc;
+    if (CHECK_I32_POSITIVE(voltageLevel)) {
+        bool rc = false;
         uint32_t level = (uint32_t) voltageLevel;
 
         /* Set level */
-        switch (domainId)
-        {
+        switch (domainId) {
             case DEV_SM_VOLT_SOC:
-                rc = PF53_VoltageSet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                    level);
+                rc = PF53_VoltageSet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN, level);
 
                 if (rc)
-                {
                     /* Save level to restore */
                     s_levelSoc = (int32_t) level;
-                }
                 break;
             case DEV_SM_VOLT_ARM:
-                (void) PF53_VoltageSet(&g_pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                    level);
+                (void) PF53_VoltageSet(&g_pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN, level);
 
                 /* Save level to restore */
                 s_levelArm = (int32_t) level;
                 rc = true;
                 break;
             case BRD_SM_VOLT_VDD_GPIO_3P3:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN, level);
                 break;
             case BRD_SM_VOLT_VDD_ANA_0P8:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN, level);
                 break;
             case BRD_SM_VOLT_VDD_GPIO_1P8:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN, level);
                 break;
             case BRD_SM_VOLT_VDDQ_DDR:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN, level);
                 break;
             case BRD_SM_VOLT_VDD2_DDR:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN, level);
                 break;
             case BRD_SM_VOLT_SD_CARD:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN, level);
                 break;
             case BRD_SM_VOLT_NVCC_SD2:
-                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN,
-                    level);
+                rc = PF09_VoltageSet(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN, level);
                 break;
             default:
                 status = SM_ERR_NOT_FOUND;
@@ -394,12 +325,8 @@ int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
 
         /* Translate error */
         if ((status == SM_ERR_SUCCESS) && !rc)
-        {
             status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-    else
-    {
+    } else {
         /* Set the status if voltageLevel is negative */
         status = SM_ERR_INVALID_PARAMETERS;
     }
@@ -411,47 +338,34 @@ int32_t BRD_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
 /*--------------------------------------------------------------------------*/
 /* Get voltage level                                                        */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
-{
+int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel) {
+    bool rc = false;
     int32_t status = SM_ERR_SUCCESS;
-    bool rc;
     uint32_t level = 0U;
 
     /* Get level */
-    switch (domainId)
-    {
+    switch (domainId) {
         case DEV_SM_VOLT_SOC:
-            rc = PF53_VoltageGet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                &level);
+            rc = PF53_VoltageGet(&g_pf5302Dev, PF53_REG_SW1, PF53_STATE_VRUN, &level);
             break;
         case DEV_SM_VOLT_ARM:
-            rc = PF53_VoltageGet(&g_pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN,
-                &level);
-            if (rc)
-            {
+            rc = PF53_VoltageGet(&g_pf5301Dev, PF53_REG_SW1, PF53_STATE_VRUN, &level);
+            if (rc) {
                 /* Check level is within int32_t range */
-                if (CHECK_U32_FIT_I32(level))
-                {
+                if (CHECK_U32_FIT_I32(level)) {
                     /* Save level to restore */
                     s_levelArm = (int32_t) level;
-                }
-                else
-                {
+		} else {
                     /* Set status if level is not within int32_t range */
                     status = SM_ERR_INVALID_PARAMETERS;
                 }
-            }
-            else
-            {
+            } else {
                 /* Check s_levelArm has positive value */
-                if (CHECK_I32_POSITIVE(s_levelArm))
-                {
+                if (CHECK_I32_POSITIVE(s_levelArm)) {
                     /* Return saved level */
                     level = (uint32_t) s_levelArm;
                     rc = true;
-                }
-                else
-                {
+                } else {
                     /* Set the status if s_levelArm is negative */
                     status = SM_ERR_INVALID_PARAMETERS;
                     rc = false;
@@ -459,32 +373,25 @@ int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
             }
             break;
         case BRD_SM_VOLT_VDD_GPIO_3P3:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW1, PF09_STATE_VRUN, &level);
             break;
         case BRD_SM_VOLT_VDD_ANA_0P8:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW2, PF09_STATE_VRUN, &level);
             break;
         case BRD_SM_VOLT_VDD_GPIO_1P8:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW3, PF09_STATE_VRUN, &level);
             break;
         case BRD_SM_VOLT_VDDQ_DDR:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW4, PF09_STATE_VRUN, &level);
             break;
         case BRD_SM_VOLT_VDD2_DDR:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_SW5, PF09_STATE_VRUN, &level);
             break;
         case BRD_SM_VOLT_SD_CARD:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_LDO1, PF09_STATE_VRUN, &level);
             break;
         case BRD_SM_VOLT_NVCC_SD2:
-            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN,
-                &level);
+            rc = PF09_VoltageGet(&g_pf09Dev, PF09_REG_LDO2, PF09_STATE_VRUN, &level);
             break;
         default:
             status = SM_ERR_NOT_FOUND;
@@ -492,24 +399,18 @@ int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
     }
 
     /* Return result */
-    if ((status == SM_ERR_SUCCESS) && rc)
-    {
+    if ((status == SM_ERR_SUCCESS) && rc) {
         /* Check level value within int32_t range */
-        if (CHECK_U32_FIT_I32(level))
-        {
+        if (CHECK_U32_FIT_I32(level)) {
             *voltageLevel = (int32_t) level;
-        }
-        else
-        {
+        } else {
             status = SM_ERR_INVALID_PARAMETERS;
         }
     }
 
     /* Translate error */
     if ((status == SM_ERR_SUCCESS) && !rc)
-    {
         status = SM_ERR_HARDWARE_ERROR;
-    }
 
     /* Return status */
     return status;
@@ -518,11 +419,9 @@ int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
 /*--------------------------------------------------------------------------*/
 /* Suspend SoC voltages                                                     */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_VoltageSuspend(bool offArm)
-{
+void BRD_SM_VoltageSuspend(bool offArm) {
     /* Turn off VDD_ARM */
-    if (offArm && (s_modeArm != DEV_SM_VOLT_MODE_OFF))
-    {
+    if (offArm && (s_modeArm != DEV_SM_VOLT_MODE_OFF)) {
         /* Save VDD_ARM mode */
         s_modeArmSave = s_modeArm;
 
@@ -533,21 +432,15 @@ void BRD_SM_VoltageSuspend(bool offArm)
 /*--------------------------------------------------------------------------*/
 /* Restore SoC voltages                                                     */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_VoltageRestore(void)
-{
+void BRD_SM_VoltageRestore(void) {
     /* Restore VDD_SOC level */
     if (s_levelSoc != BOARD_VOLT_SOC)
-    {
         /* Restore voltage as enable resets the PF53 */
         (void) BRD_SM_VoltageLevelSet(DEV_SM_VOLT_SOC, s_levelSoc);
-    }
 
     /* Restore VDD_ARM mode */
-    if (s_modeArm != s_modeArmSave)
-    {
-        if (PF09_GpioCtrlSet(&g_pf09Dev, PF09_GPIO4, PF53_STATE_VRUN,
-            true))
-        {
+    if (s_modeArm != s_modeArmSave) {
+        if (PF09_GpioCtrlSet(&g_pf09Dev, PF09_GPIO4, PF53_STATE_VRUN, true)) {
             /* Wait for PF53 power up and ramp */
             SystemTimeDelay(1000U);
 
@@ -557,10 +450,8 @@ void BRD_SM_VoltageRestore(void)
 
     /* Restore VDD_ARM level */
     if (s_levelArm != BOARD_VOLT_ARM)
-    {
         /* Restore voltage as enable resets the PF53 */
         (void) BRD_SM_VoltageLevelSet(DEV_SM_VOLT_ARM, s_levelArm);
-    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -571,4 +462,3 @@ uint32_t BRD_SM_ArmVoltModeGet(void)
     /* Return status */
     return s_modeArm;
 }
-

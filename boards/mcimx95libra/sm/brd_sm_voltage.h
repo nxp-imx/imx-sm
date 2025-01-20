@@ -103,8 +103,7 @@
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a domainId is invalid.
  */
-int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
-    int32_t *len);
+int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr, int32_t *len);
 
 /*!
  * Get a board voltage domain description.
@@ -121,8 +120,7 @@ int32_t BRD_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a domainId is invalid.
  */
-int32_t BRD_SM_VoltageDescribe(uint32_t domainId,
-    dev_sm_voltage_range_t *range);
+int32_t BRD_SM_VoltageDescribe(uint32_t domainId, dev_sm_voltage_range_t *range);
 
 /*!
  * Set a board voltage mode.
@@ -219,4 +217,3 @@ uint32_t BRD_SM_ArmVoltModeGet(void);
 #endif /* BRD_SM_VOLTAGE_H */
 
 /** @} */
-
