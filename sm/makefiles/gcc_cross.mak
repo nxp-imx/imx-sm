@@ -64,28 +64,18 @@ endif
 include $(ROOT_DIR)/sm/makefiles/common.mak
 
 # Configure toolchain
-SM_CROSS_COMPILE ?= $(TOOLS)/arm-gnu-toolchain-$(TC_VERSION)-x86_64-arm-none-eabi/bin/arm-none-eabi-
 ARCHFLAGS = -mcpu=cortex-$(cpu) -mthumb -mfloat-abi=softfp
 cc = gcc
 
-ifeq ($(shell ! test -e "$(SM_CROSS_COMPILE)$(cc)"; echo $$?),0)
-	SM_CROSS_COMPILE = $(TOOLS)/arm-gnu-toolchain-*-x86_64-arm-none-eabi/bin/arm-none-eabi-
-endif
-
 # Check Toolchain Version
-ifeq ($(shell `realpath $(SM_CROSS_COMPILE)$(cc) 2>/dev/null | grep $(TC_VERSION) > /dev/null`; echo $$?),1)
+ifeq ($(shell `realpath $(CROSS_COMPILE)$(cc) 2>/dev/null | grep $(TC_VERSION) > /dev/null`; echo $$?),1)
 	TC_VER_CHECK := "WARNING: Toolchain version $(TC_VERSION) not found."
 endif
 
-CC = $(SM_CROSS_COMPILE)$(cc)
-LD = $(SM_CROSS_COMPILE)$(cc)
-OBJCOPY = $(SM_CROSS_COMPILE)objcopy
-SIZE = $(SM_CROSS_COMPILE)size
-ifeq ($(wildcard $(TOOLS)/srec/srec_cat),)
-    SREC_CAT = srec_cat
-else
-    SREC_CAT = $(TOOLS)/srec/srec_cat
-endif
+CC = $(CROSS_COMPILE)$(cc)
+LD = $(CROSS_COMPILE)$(cc)
+OBJCOPY = $(CROSS_COMPILE)objcopy
+SIZE = $(CROSS_COMPILE)size
 FLAGS += -D__STARTUP_CLEAR_BSS -DCPU_$(SOCFULL)_c$(cpu) -D$(SOC) -Dlink_$(mem)
 GCOV ?= 0
 
@@ -113,7 +103,7 @@ FLAGS += ${WARNS}
 # DEPENDENCY GENERATION
 # -MMD = generate dependency files for non-system headers
 #
-# OPTIMIZATION 
+# OPTIMIZATION
 # -O3 = optimzation level
 # -ffunction-sections = place each function in its own section (allows removal during link phase using --gc-sections)
 # -fdata-sections = place each data item in its own section (allows removal during link phase using --gc-sections)
@@ -150,7 +140,7 @@ CFLAGS += -O3
 # -Wl,--gc-sections = linker garbage collection (allows function/data section removal during link phase)
 # -Wl,-Map = specifies map output file
 # -T = specifies linker script
-# 
+#
 #################################
 LFLAGS 	+= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(IMG).map -specs=nano.specs -lgcc $(LIB) -nodefaultlibs -Wl,--no-warn-rwx-segments -T$(SOC_DEVICE_DIR)/gcc/$(LCF).ld
 ROM_LFLAGS 	= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(ROM_IMG).map -specs=nosys.specs -nostdlib -T$(SOC_DEVICE_DIR)/gcc/$(ROM_LCF).ld

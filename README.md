@@ -58,12 +58,9 @@ website. For example, from the x86_64 Linux hosted cross toolchains AArch32 bare
 
     tar xvf *.xz
 
-Set the TOOLS shell variable to the directory the toolchain is installed in. For example:
+Set CROSS_COMPILE; example using compile cache:
 
-    export TOOLS=~/tools
-
-When the toolchain is in a directory like arm-gnu-toolchain-\*-x86_64-arm-none-eabi in this
-*tools* directory.
+    export CROSS_COMPILE="ccache arm-none-eabi-"
 
 Also ensure the Linux installation is up-to-date and then install:
 
