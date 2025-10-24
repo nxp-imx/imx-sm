@@ -393,7 +393,8 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec) {
 /* Reset board                                                              */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SystemReset(void) {
-    IOMUXC_SetPinMux(IOMUXC_PAD_WDOG_ANY__WDOG_ANY, 0U);
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_COLD);
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_TRIGGER);
 
     /* Wait for PMIC to react */
     SystemTimeDelay(1000U);
