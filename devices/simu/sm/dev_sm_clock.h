@@ -77,6 +77,9 @@
 #define DEV_SM_CLOCK_ROUND_AUTO        0x2U   /*!< Automatically select closest rate */
 /** @} */
 
+/*! Number of extended clock attributes */
+#define DEV_SM_NUM_CLOCK_EXT        1U
+
 /*!
  * @name Device extended clock parameters
  */

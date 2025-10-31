@@ -276,6 +276,9 @@
  * @{
  */
 
+/*! Number of extended clock attributes */
+#define DEV_SM_NUM_CLOCK_EXT        1U
+
 /*!
  * @name Device extended clock configuration type
  */

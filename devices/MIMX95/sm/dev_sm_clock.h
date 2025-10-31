@@ -270,11 +270,15 @@
  * @{
  */
 
+/*! Number of extended clock attributes */
+#define DEV_SM_NUM_CLOCK_EXT        2U
+
 /*!
  * @name Device extended clock configuration type
  */
 /** @{ */
-#define DEV_SM_CLOCK_EXT_SSC  0x80U   /*!< Spread spectrum extended clock type */
+#define DEV_SM_CLOCK_EXT_SSC        0x80U   /*!< Spread spectrum extended clock type */
+#define DEV_SM_CLOCK_EXT_SRCPRE     0x81U   /*!< Clock source prepare extended attribute */
 /** @} */
 
 /*!
