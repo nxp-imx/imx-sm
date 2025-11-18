@@ -3372,80 +3372,103 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
     /* Parse argument */
     if (argc >= 1)
     {
-        uint32_t word;
-        uint32_t addr;
-        uint32_t data;
+        uint32_t arg0 = 0U;
+        uint32_t arg1 = 1U;
 
         /* Parse parameters */
-        errno = 0;
-        word = strtoul(argv[0], NULL, 0);
-        if (errno == 0)
+        status = MONITOR_ConvU32(argv[0], &arg0);
+        if ((status == SM_ERR_SUCCESS) && (argc >= 2))
         {
+            status = MONITOR_ConvU32(argv[1], &arg1);
+        }
 
-            /* Get fuse word address */
-            status = DEV_SM_FuseInfoGet(word, &addr);
-
-            if (status == SM_ERR_SUCCESS)
+        if (status == SM_ERR_SUCCESS)
+        {
+            switch (rw)
             {
-                switch (rw)
-                {
-                    default:  /* read */
-                        {
-                            /* Read fuse word directly */
-                            if (SystemMemoryProbe((const void *) addr, &data,
-                                32U) != 0U)
-                            {
-#ifdef DEVICE_HAS_ELE
-                                /* Read fuse word via ELE */
-                                ELE_FuseRead(word, &data);
-                                status = g_eleStatus;
-#else
-                                status = SM_ERR_INVALID_PARAMETERS;
-#endif
-                            }
+                default:  /* read */
+                    {
+                        uint32_t start = arg0;
+                        uint32_t count = arg1;
+                        uint32_t end = start + count;
 
+                        for (uint32_t word = start; word < end; word++)
+                        {
+                            uint32_t addr = 0U;
+
+                            /* Get the fuse word address */
+                            status = DEV_SM_FuseInfoGet(word, &addr);
                             if (status == SM_ERR_SUCCESS)
                             {
-                                printf("Fuse[%u] = 0x%08x\n", word, data);
-                            }
-                        }
-                        break;
-                    case WRITE:  /* write */
-                        {
+                                uint32_t data = 0U;
+#ifndef SIMU
+                                /* Service wdog */
+                                BOARD_WdogRefresh();
+#endif
+                                /* Read fuse word directly */
+                                if (SystemMemoryProbe((const void *) addr,
+                                    &data, 32U) != 0U)
+                                {
 #ifdef DEVICE_HAS_ELE
-                            /* Check arguments */
-                            if (argc >= 2)
-                            {
-                                errno = 0;
-                                /* Parse data */
-                                data = strtoul(argv[1], NULL, 0);
-
-                                if (errno == 0)
-                                {
-                                    /* Write fuse */
-                                    ELE_FuseWrite(word, data, false);
+                                    /* Read fuse word via ELE */
+                                    ELE_FuseRead(word, &data);
                                     status = g_eleStatus;
-                                }
-                                else
-                                {
+#else
                                     status = SM_ERR_INVALID_PARAMETERS;
+#endif
+                                }
+
+                                if (status == SM_ERR_SUCCESS)
+                                {
+                                    printf("Fuse[%02u] = 0x%08x\n", word,
+                                        data);
+                                }
+
+                                /* Error handling based on count */
+                                if (count > 1U)
+                                {
+                                    /* Ignore error for multi-read */
+                                    status = SM_ERR_SUCCESS;
                                 }
                             }
                             else
                             {
-                                status = SM_ERR_MISSING_PARAMETERS;
+                                /* Invalid address */
+                                status = SM_ERR_INVALID_PARAMETERS;
+                                break;
                             }
-#else
-                            status = SM_ERR_NOT_SUPPORTED;
-#endif
                         }
-                        break;
-                }
+                    }
+                    break;
+                case WRITE:  /* write */
+                    {
+#ifdef DEVICE_HAS_ELE
+                        /* Check arguments */
+                        if (argc >= 2)
+                        {
+                            uint32_t word = arg0;
+                            uint32_t data = arg1;
+                            uint32_t addr = 0U;
+
+                            /* Get the fuse word address */
+                            status = DEV_SM_FuseInfoGet(word, &addr);
+                            if (status == SM_ERR_SUCCESS)
+                            {
+                                /* Write fuse */
+                                ELE_FuseWrite(word, data, false);
+                                status = g_eleStatus;
+                            }
+                        }
+                        else
+                        {
+                            status = SM_ERR_MISSING_PARAMETERS;
+                        }
+#else
+                        status = SM_ERR_NOT_SUPPORTED;
+#endif
+                    }
+                    break;
             }
-        }
-        else
-        {
-            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else

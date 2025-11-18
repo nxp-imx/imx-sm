@@ -166,7 +166,7 @@ Fuse Commands
 
 | Command                     | Description                                                  |
 |-----------------------------|--------------------------------------------------------------|
-| fuse.r *wordIdx*            | display fuse *wordIdx* (if possible)                         |
+| fuse.r *wordIdx* [*count*]  | display *count* number of fuse words starting at *wordIdx*   |
 | fuse.w *wordIdx* *value*    | write *value* to fuse *wordIdx* (if possible)                |
 
 Board Commands
