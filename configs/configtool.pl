@@ -390,6 +390,9 @@ sub load_file
 			}
 		}
 
+        # Remove comment
+        $_ =~ s/#.*//;    
+
         # Continue line?
         if (/\\$/)
         {
