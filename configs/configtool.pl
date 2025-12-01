@@ -374,8 +374,9 @@ sub load_file
     # Load into array
     while (<$in>)
     {
-        # Remove LF
-        chomp $_;
+        # Remove CR/LF
+        chomp $_;      
+        $_ =~ s/\r//;
 
 		# Get copyright
 		if (/Copyright\s+[0-9]/)
