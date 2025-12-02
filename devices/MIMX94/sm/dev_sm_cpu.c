@@ -238,7 +238,8 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
         {
             status = SM_ERR_NOT_FOUND;
         }
-        /* TODO: Reload TRDC_S as MBC_S0 lost */
+
+        /* Reload TRDC_S as MBC_S0 lost */
         if ((modCpuId == DEV_SM_CPU_M33S) && (status == SM_ERR_SUCCESS))
         {
             status = DEV_SM_RdcLoad(DEV_SM_TRDC_S);

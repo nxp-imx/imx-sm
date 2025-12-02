@@ -190,8 +190,15 @@ bool DDR_ExitRetention(const struct ddr_info *ddrp)
 {
     bool rc;
 
-    /* Reload the DDRPHY config */
-    rc = DDR_PhyInit(ddrp);
+    if (ddrp->ddrphy_trained_csr_num > 0U)
+    {
+        /* Reload the DDRPHY config */
+        rc = DDR_PhyInit(ddrp);
+    }
+    else
+    {
+        rc = true;
+    }
 
     if (rc != false)
     {
