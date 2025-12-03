@@ -401,8 +401,6 @@ void DEV_SM_BbmHandler(void)
         /* Handle rollover */
         if ((flags & ((uint32_t) kBBNSM_RTC_RolloverInterruptFlag)) != 0U)
         {
-            BBNSM_DisableInterrupts(BBNSM, ((uint32_t)
-                kBBNSM_RTC_RolloverInterrupt));
             LMM_BbmRtcRolloverEvent(DEV_SM_RTC_BBNSM);
         }
 
