@@ -77,7 +77,7 @@
  * @name BRD_SM bbm domain indexes
  */
 /** @{ */
-#define BRD_SM_RTC_PCA2131  (BRD_SM_NUM_RTC + 0U)   /*!< PCA2131 RTC */
+#define BRD_SM_RTC_PCA2131  (DEV_SM_NUM_RTC + 0U)   /*!< PCA2131 RTC */
 /** @} */
 
 /* Types */

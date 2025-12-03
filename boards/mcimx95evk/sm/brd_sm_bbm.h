@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -77,7 +77,7 @@
  * @name BRD_SM bbm domain indexes
  */
 /** @{ */
-#define BRD_SM_RTC_PCA2131  (BRD_SM_NUM_RTC + 0U)   /*!< PCA2131 RTC */
+#define BRD_SM_RTC_PCA2131  (DEV_SM_NUM_RTC + 0U)   /*!< PCA2131 RTC */
 /** @} */
 
 /* Types */
