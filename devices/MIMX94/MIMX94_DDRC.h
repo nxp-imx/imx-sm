@@ -97,7 +97,10 @@ typedef struct {
   __IO uint32_t DDR_SDRAM_CFG_3;                   /**< DDR SDRAM Control Configuration 3, offset: 0x260 */
   __IO uint32_t DDR_SDRAM_CFG_4;                   /**< DDR SDRAM Control Configuration 4, offset: 0x264 */
   __IO uint32_t DDR_SDRAM_CFG_5;                   /**< DDR SDRAM Control Configuration 5, offset: 0x268 */
-       uint8_t RESERVED_7[84];
+  __IO uint32_t DDR_SDRAM_CFG_6;                   /**< DDR SDRAM Control Configuration 6, offset: 0x26C */
+       uint8_t RESERVED_7[32];
+  __IO uint32_t DDR_SDRAM_MPR5;                   /**< DDR SDRAM Multi-purpose register 5, offset: 0x290 */
+       uint8_t RESERVED_7_1[44];
   __I  uint32_t DDR_SDRAM_REF_RATE;                /**< DDR Refresh Rate, offset: 0x2C0 */
        uint8_t RESERVED_8[60];
   __IO uint32_t TIMING_CFG_12;                     /**< DDR SDRAM Timing Configuration 12, offset: 0x300 */
@@ -1648,6 +1651,16 @@ typedef struct {
 #define DDRC_DDR_SDRAM_CFG_5_HIGH_PRIO_SHIFT (28U)
 /*! HIGH_PRIO - High Priority Level. */
 #define DDRC_DDR_SDRAM_CFG_5_HIGH_PRIO(x)    (((uint32_t)(((uint32_t)(x)) << DDRC_DDR_SDRAM_CFG_5_HIGH_PRIO_SHIFT)) & DDRC_DDR_SDRAM_CFG_5_HIGH_PRIO_MASK)
+/*! @} */
+
+/*! @name DDR_SDRAM_CFG_6 - DDR SDRAM Control Configuration 6 */
+/*! @{ */
+
+#define DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK (0xF00U)
+#define DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_SHIFT (8U)
+/*! ALT_TRN_INT - Force dfi_init_start low. */
+#define DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT(x)     (((uint32_t)(((uint32_t)(x)) << DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_SHIFT)) & DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK)
+
 /*! @} */
 
 /*! @name DDR_SDRAM_REF_RATE - DDR Refresh Rate */

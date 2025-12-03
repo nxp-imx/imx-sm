@@ -43,7 +43,9 @@
 
 /* Local Defines */
 
+#define DEBUG_2   (DDRC_BASE + 0xF04U)
 #define DEBUG_26  (DDRC_BASE + 0xF64U)
+#define REF_RATE_MULTIPLIER 0xFU
 
 /* Local Variables */
 
@@ -57,6 +59,7 @@ static bool DDR_MrWrite(uint32_t mrRank, uint32_t mrAddr, uint32_t mrData);
 static bool DDR_PhyInit(const struct ddr_info *ddrp);
 static bool DDR_CheckDfiInitComplete(void);
 static bool DDR_DdrcInit(const struct ddr_info *ddrp);
+static uint32_t DDR_GetRefreshDivider(void);
 
 /*--------------------------------------------------------------------------*/
 /* DDR Enter Retention                                                      */
@@ -78,7 +81,7 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
 
         /* Check if TX_CFG_1 WWATER enabled with ECC */
         if ((eccEn == 1U) && ((DDRC->TX_CFG_1 &
-                DDRC_TX_CFG_1_WWATER_MASK) != 0U))
+            DDRC_TX_CFG_1_WWATER_MASK) != 0U))
         {
             DDRC->TX_CFG_1 &= ~DDRC_TX_CFG_1_WWATER_MASK;
         }
@@ -100,8 +103,91 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
         /* Polling for DDRDSR_2[IDLE] & ECC complete to be set */
         rc  = DDR_CheckDdrcIdle(waitFlag);
 
-        if (rc != false)
+        if (rc)
         {
+            uint32_t altTrnInt = 0U;
+            uint32_t dynRefEn = 0U;
+            uint32_t val = 0U;
+            uint32_t refIntOriginal;
+
+            /* ERR052794:
+             * Step 1, Wait for IDLE, previously performed above.
+             * Step 2: Clear (disable) DDR_SDRAM_CFG_3[DYN_REF_RATE_EN] and
+             *         DDR_SDRAM_CFG_6[ALT_TRN_INT] (MRR snoop)
+             *
+             * Note: When DYN_REF is disabled, the auto refresh rate is
+             * reverted back to nominal (1x). However, if the DRAM requires
+             * a higher refresh rate at elevated temperatures, we need to
+             * adjust the DDR_SDRAM_INTERVAL[REFINT] to compensate for
+             * this while DYN_REF is disabled and then restore the
+             * original value when re-enabling DYN_REF.
+             * Get original refint to restore later in case DYN_REF enable
+             */
+            refIntOriginal = ((DDRC->DDR_SDRAM_INTERVAL &
+                DDRC_DDR_SDRAM_INTERVAL_REFINT_MASK) >>
+                DDRC_DDR_SDRAM_INTERVAL_REFINT_SHIFT);
+
+            /* Disable ALT_TRN_INT if enabled */
+            if ((DDRC_CTRL->DDR_SDRAM_CFG_6 &
+                 DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK) != 0U)
+            {
+                /* Save altTrnInt setting (MRR snoop interval) to
+                   restore later */
+                altTrnInt = ((DDRC_CTRL->DDR_SDRAM_CFG_6 &
+                    DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK) >>
+                    DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_SHIFT);
+
+                /* Disable MRR snoop, set altTrnInt = 0 */
+                DDRC_CTRL->DDR_SDRAM_CFG_6 &=
+                    (~DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK);
+
+                /* Delay to ensure all MRR Snoop (ALT_TRN_INT) operations are
+                   complete prior to any MRR/MRW
+                 */
+                SystemTimeDelay(100U);
+            }
+
+            /* Disable DYN_REF if enabled */
+            if ((DDRC->DDR_SDRAM_CFG_3 &
+                 DDRC_DDR_SDRAM_CFG_3_DYN_REF_RATE_EN_MASK) != 0U)
+            {
+                uint32_t refint, refRateDivider;
+
+                /* Save dyn_ref_Rate_en setting to restore later */
+                dynRefEn = ((DDRC->DDR_SDRAM_CFG_3 &
+                    DDRC_DDR_SDRAM_CFG_3_DYN_REF_RATE_EN_MASK) >>
+                    DDRC_DDR_SDRAM_CFG_3_DYN_REF_RATE_EN_SHIFT);
+
+                /* Get the maximum reported refresh rate divider to apply to
+                 * refresh rate interval: div-by-1, 2, 4, or 8 (LP5 only) */
+                refRateDivider = DDR_GetRefreshDivider();
+                /* Apply refresh rate divider */
+                refint = refIntOriginal/refRateDivider;
+
+                /* Before disabling DYN_REF_RATE_EN, check MPR5[MPR_VLD] for
+                 * latest MR4 to complete */
+                /* clear MPR_VLD so that the next MR4 read will set it */
+                DDRC_CTRL->DDR_SDRAM_MPR5 = 0x0U;
+
+                /* Wait till MPR_VLD is set (MR4 read done) then immediately
+                 * disable DYN_REF */
+                while ((DDRC_CTRL->DDR_SDRAM_MPR5 & 0x1U) == 0U)
+                {
+                    ; /* Intentional empty while */
+                }
+
+                /* Disable dyn_ref_rate_en */
+                DDRC->DDR_SDRAM_CFG_3 &=
+                    (~DDRC_DDR_SDRAM_CFG_3_DYN_REF_RATE_EN_MASK);
+
+                /* Update DDR_SDRAM_INTERVAL[REFINT] to compensate for
+                 * elevated temperature */
+                val = DDRC_CTRL->DDR_SDRAM_INTERVAL;
+                val &= (~DDRC_DDR_SDRAM_INTERVAL_REFINT_MASK);
+                val |= DDRC_DDR_SDRAM_INTERVAL_REFINT(refint);
+                DDRC_CTRL->DDR_SDRAM_INTERVAL = val;
+            }
+
             /* MEM HALT */
             DDRC->DDR_SDRAM_CFG
                 |= (1U << DDRC_DDR_SDRAM_CFG_MEM_HALT_SHIFT);
@@ -116,7 +202,7 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 SystemTimeDelay(1U);
             }
 
-            if (rc != false)
+            if (rc)
             {
                 /* PState set as 0x1F: Retention/Enter LP3 */
                 DDRC->DDR_SDRAM_CFG_4 &=
@@ -140,6 +226,16 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 DDRC->DDR_SDRAM_CFG_2 |=
                     (1UL << DDRC_DDR_SDRAM_CFG_2_FRC_SR_SHIFT);
 
+                /* ERR052794:
+                 * Step 3: Enter self refresh, previously performed above
+                 * Step 4: Wait DEBUG_2[3] (SR) to be set
+                 *         If SR=1: Memory controller is in self refresh
+                 */
+                while ((Read32(DEBUG_2) & 0x4U) != 0U)
+                {
+                    ; /* Intentional empty while */
+                }
+
                 /* Clear PHY INIT complete: BIT2 PHY_INIT_CMPLT W1C */
                 do
                 {
@@ -159,7 +255,26 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
 
                 /* T_STAB */
                 DDRC->TIMING_CFG_10 |=
-                (0x7FFFU << DDRC_TIMING_CFG_10_T_STAB_SHIFT);
+                    (0x7FFFU << DDRC_TIMING_CFG_10_T_STAB_SHIFT);
+
+                /* ERR052794:
+                 * Step 5: After self-refresh entry, restore:
+                 *         CFG_6[ALT_TRN_INT] and CFG_3[DYN_REF_RATE_EN]
+                 */
+                val = DDRC_CTRL->DDR_SDRAM_CFG_6;
+                val &= (~DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK);
+                val |=  DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT(altTrnInt);
+                DDRC_CTRL->DDR_SDRAM_CFG_6 = val;
+
+                /* Before enabling DYN_REF, restore REFINT */
+                val = DDRC->DDR_SDRAM_INTERVAL;
+                val &= (~DDRC_DDR_SDRAM_INTERVAL_REFINT_MASK);
+                val |= DDRC_DDR_SDRAM_INTERVAL_REFINT(refIntOriginal);
+                DDRC->DDR_SDRAM_INTERVAL = val;
+
+                /* Restore dyn_ref_rate_en */
+                DDRC->DDR_SDRAM_CFG_3 |=
+                        DDRC_DDR_SDRAM_CFG_3_DYN_REF_RATE_EN(dynRefEn);
 
                 /* Exit self refresh */
                 DDRC->DDR_SDRAM_CFG_2 &=
@@ -200,7 +315,7 @@ bool DDR_ExitRetention(const struct ddr_info *ddrp)
         rc = true;
     }
 
-    if (rc != false)
+    if (rc)
     {
         /* Reload the ddrc config */
         rc = DDR_DdrcInit(ddrp);
@@ -465,7 +580,7 @@ static bool DDR_DdrcInit(const struct ddr_info *ddrp)
         /* Check dfi init status */
         rc = DDR_CheckDfiInitComplete();
 
-        if (rc != false)
+        if (rc)
         {
             /* Enable the DDRC */
             Write32(&DDRC->DDR_SDRAM_CFG,
@@ -582,5 +697,113 @@ bool DDR_GetDRAMInfo(const struct ddr_info *ddrp, struct dram_info *info)
 
     /* Return status */
     return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the auto refresh rate divider based on the max refresh rate reported */
+/* from the DRAM for cases when DYN_REF_RATE_EN is manually disabled.       */
+/*--------------------------------------------------------------------------*/
+static uint32_t DDR_GetRefreshDivider(void)
+{
+    uint32_t maxRefRate;
+    uint32_t ref_rate_cs0, ref_rate_cs1, ref_rate_cs0_chb, ref_rate_cs1_chb;
+    bool lpddr5 = false;
+    uint32_t refRateDivider = 1U;
+
+    /* Check if LP5 */
+    if ((DDRC->DDR_SDRAM_CFG &
+        (1UL << DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_SHIFT)) != 0U)
+    {
+        lpddr5 = true;
+    }
+
+    /* First, obtain the maximum refresh rate reported from DRAM */
+    maxRefRate = DDRC_CTRL->DDR_SDRAM_REF_RATE;
+    ref_rate_cs1 = ((maxRefRate &
+                     DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS1_MASK) >>
+                     DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS1_SHIFT);
+    ref_rate_cs0 = ((maxRefRate &
+                     DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS0_MASK) >>
+                     DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS0_SHIFT);
+    ref_rate_cs1_chb = ((maxRefRate &
+                         DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS1_CHB_MASK) >>
+                         DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS1_CHB_SHIFT);
+    ref_rate_cs0_chb = ((maxRefRate &
+                         DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS0_CHB_MASK) >>
+                         DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS0_CHB_SHIFT);
+
+    /* Apply mask on reported refresh rate to obtain only the DRAM
+     * refresh rate nultiplier */
+    ref_rate_cs1 &= REF_RATE_MULTIPLIER;
+    ref_rate_cs0 &= REF_RATE_MULTIPLIER;
+    ref_rate_cs1_chb &= REF_RATE_MULTIPLIER;
+    ref_rate_cs0_chb &= REF_RATE_MULTIPLIER;
+
+    /* Check if CS1 refresh rate higher the CS0 */
+    if (ref_rate_cs1 > ref_rate_cs0)
+    {
+        maxRefRate = ref_rate_cs1;
+    }
+    else
+    {
+        maxRefRate = ref_rate_cs0;
+    }
+
+    /* Check if CS1 refresh rate higher the CS0 for Chn B*/
+    if (ref_rate_cs1_chb > maxRefRate)
+    {
+        maxRefRate = ref_rate_cs1_chb;
+    }
+
+    if (ref_rate_cs0_chb > maxRefRate)
+    {
+        maxRefRate = ref_rate_cs0_chb;
+    }
+
+    /* Determine if refresh rate divider reported by the DRAM MR4 is
+     * greater than nominal to adjust refresh rate acordingly
+     */
+    if (lpddr5 == true)
+    {
+        /* When refRate (MR4) is 0xA or 0xB, set to 0.5x refresh */
+        if ( (maxRefRate > 0x9U) && (maxRefRate < 0xCU))
+        {
+            refRateDivider = 2U;
+        }
+        /* When refRate (MR4) is 0xC or 0xD, set to 0.25x refresh */
+        else if ( (maxRefRate > 0xBU) && (maxRefRate < 0xEU))
+        {
+            refRateDivider = 4U;
+        }
+        /* When refRate (MR4) is > 0xD set to 0.125x refresh */
+        else if ( maxRefRate > 0xDU )
+        {
+            refRateDivider = 8U;
+        }
+        else
+        {
+            refRateDivider = 1U;
+        }
+    }
+    else  /* LPDDR4/4x */
+    {
+        /* When refRate (MR4) is 0x4, set to 0.5x refresh */
+        if (maxRefRate == 0x4U)
+        {
+            refRateDivider = 2U;
+        }
+        /* When refRate (MR4) > 0x4, set to 0.25x refresh */
+        else if (maxRefRate > 0x4U)
+        {
+            refRateDivider = 4U;
+        }
+        else
+        {
+            refRateDivider = 1U;
+        }
+    }
+
+    /* Return divider */
+    return refRateDivider;
 }
 
