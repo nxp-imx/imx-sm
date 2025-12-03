@@ -30,11 +30,11 @@
 ##
 ## ###################################################################
 
-SM_VERSION = imx_sm_2025q4
-SM_PREV_VER = imx_sm_2025q3
+SM_VERSION = imx_sm_2026q1
+SM_PREV_VER = imx_sm_2025q4
 SM_SNAP = 0
 
-SM_DEVICES = i.MX95 (B0), i.MX94 (A0)
+SM_DEVICES = i.MX95 (B0), i.MX94 (A0), i.MX952 (A0)
 SM_ELE_VER = 2.0.4
 
 MKIMAGE_BRANCH = lf-6.12.49_2.2.0
