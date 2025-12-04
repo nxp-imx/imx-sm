@@ -265,6 +265,15 @@ void TEST_ScmiClock(void)
                 cgc = true;
             }
         }
+        else if (status == SM_ERR_NOT_FOUND)
+        {
+            /* Clock may be unavailable as the  MIX is disabled in fuses */
+            printf("Skipping test for clock = %d, its not available on this part\n", clockId);
+            /* Get next test case */
+            status = TEST_ConfigNextGet(TEST_CLK, &agentId,
+                &channel, &clockId, &lmId);
+            continue;
+        }
         else
         {
             SM_Error(status);

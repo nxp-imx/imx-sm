@@ -1516,7 +1516,7 @@ int32_t DEV_SM_PerfNumLevelsGet(uint32_t domainId, uint32_t *numLevels)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1538,7 +1538,7 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1567,7 +1567,7 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1816,6 +1816,57 @@ int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep)
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PerfIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+    uint32_t pwrDomainId = DEV_SM_NUM_POWER;
+
+    switch (domainId)
+    {
+        case DEV_SM_PERF_M7:
+            pwrDomainId = DEV_SM_PD_M7;
+            break;
+
+        case DEV_SM_PERF_GPU:
+            pwrDomainId = DEV_SM_PD_GPU;
+            break;
+
+        case DEV_SM_PERF_VPU:
+            pwrDomainId = DEV_SM_PD_VPU;
+            break;
+
+        case DEV_SM_PERF_DISP:
+            pwrDomainId = DEV_SM_PD_DISPLAY;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        rc = true;
+    }
+    else
+    {
+        /* Check fuse state of power domain */
+        if (pwrDomainId < DEV_SM_NUM_POWER)
+        {
+            if (DEV_SM_FusePdDisabled(pwrDomainId))
+            {
+                rc = true;
+            }
+        }
+    }
+
+    /* Return status */
+    return rc;
+}
+
 /*==========================================================================*/
 
 /*--------------------------------------------------------------------------*/
@@ -1869,7 +1920,7 @@ static int32_t DEV_SM_PerfMaxScan(uint32_t domainId, uint32_t *maxPerfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -2862,8 +2913,7 @@ static void DEV_SM_PerfEleUpdate(uint32_t domainId, uint32_t perfLevel,
         }
     }
 
-    if ((domainId < DEV_SM_NUM_PERF) &&
-        (supplyPerfLevel < DEV_SM_NUM_PERF_LVL_SOC))
+    if (supplyPerfLevel < DEV_SM_NUM_PERF_LVL_SOC)
     {
         /* Check for security-relevant power supply update */
         if (s_perfCfg[domainId].psCfg->psIdx == PS_VDD_SOC)
@@ -2917,56 +2967,5 @@ static void DEV_SM_PerfEleDone(bool abortUpdate)
         ELE_StopDvfsChange();
         s_perfEleUpdating = false;
     }
-}
-
-/*--------------------------------------------------------------------------*/
-/* Check if PD/CPU is disabled in fuses                                     */
-/*--------------------------------------------------------------------------*/
-bool DEV_SM_PerfIsReserved(uint32_t domainId)
-{
-    bool rc = false;
-    uint32_t modDomainId = 0;
-
-    switch (domainId)
-    {
-        case DEV_SM_PERF_M7:
-            modDomainId = DEV_SM_PD_M7;
-            break;
-
-        case DEV_SM_PERF_GPU:
-            modDomainId = DEV_SM_PD_GPU;
-            break;
-
-        case DEV_SM_PERF_VPU:
-            modDomainId = DEV_SM_PD_VPU;
-            break;
-
-        case DEV_SM_PERF_DISP:
-            modDomainId = DEV_SM_PD_DISPLAY;
-            break;
-
-        default:
-            ; /* Intentional empty default */
-            break;
-    }
-
-    if (domainId >= DEV_SM_NUM_PERF)
-    {
-        rc = true;
-    }
-    else
-    {
-        if (modDomainId > 0U)
-        {
-            /* Check fuse state of power domain */
-            if (DEV_SM_FusePdDisabled(modDomainId))
-            {
-                rc = true;
-            }
-        }
-    }
-
-    /* Return status */
-    return rc;
 }
 

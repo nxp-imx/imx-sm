@@ -241,8 +241,6 @@
         .clkPerms[DEV_SM_CLK_CCMCKO3] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_CCMCKO4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP1PIX] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_DISP2PIX] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_DISP3PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETREF] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETTIMER1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_EXT1] = SM_SCMI_PERM_ALL, \

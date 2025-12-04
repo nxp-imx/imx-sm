@@ -147,8 +147,8 @@
 #define DEV_SM_CLK_DISPOCRAM            (CLOCK_ROOT_DISPOCRAM + CLOCK_NUM_SRC)       /*!< 78: DISPOCRAM root */
 #define DEV_SM_CLK_RESERVED79           (CLOCK_ROOT_RESERVED38 + CLOCK_NUM_SRC)      /*!< 79: RESERVED79 root */
 #define DEV_SM_CLK_DISP1PIX             (CLOCK_ROOT_DISP1PIX + CLOCK_NUM_SRC)        /*!< 80: DISP1PIX root */
-#define DEV_SM_CLK_DISP2PIX             (CLOCK_ROOT_DISP2PIX + CLOCK_NUM_SRC)        /*!< 81: DISP2PIX root */
-#define DEV_SM_CLK_DISP3PIX             (CLOCK_ROOT_DISP3PIX + CLOCK_NUM_SRC)        /*!< 82: DISP3PIX root */
+#define DEV_SM_CLK_RESERVED81           (CLOCK_ROOT_RESERVED40 + CLOCK_NUM_SRC)      /*!< 81: DISP2PIX root */
+#define DEV_SM_CLK_RESERVED82           (CLOCK_ROOT_RESERVED41 + CLOCK_NUM_SRC)      /*!< 82: DISP3PIX root */
 #define DEV_SM_CLK_GPUAPB               (CLOCK_ROOT_GPUAPB + CLOCK_NUM_SRC)          /*!< 83: GPUAPB root */
 #define DEV_SM_CLK_GPU                  (CLOCK_ROOT_GPU + CLOCK_NUM_SRC)             /*!< 84: GPU root */
 #define DEV_SM_CLK_HSIOACSCAN480M       (CLOCK_ROOT_HSIOACSCAN480M + CLOCK_NUM_SRC)  /*!< 85: HSIOACSCAN480M root */

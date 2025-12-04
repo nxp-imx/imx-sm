@@ -232,56 +232,59 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
 bool DEV_SM_ResetIsReserved(uint32_t domainId)
 {
     bool rc = false;
-    uint32_t modDomainId = 0;
+    uint32_t pwrDomainId = DEV_SM_NUM_POWER;
 
     switch (domainId)
     {
         case DEV_SM_RST_M7MIX:
-            modDomainId = DEV_SM_PD_M7;
+            pwrDomainId = DEV_SM_PD_M7;
             break;
 
         case DEV_SM_RST_NPUMIX:
-            modDomainId = DEV_SM_PD_NPU;
+            pwrDomainId = DEV_SM_PD_NPU;
             break;
 
         case DEV_SM_RST_GPUMIX:
-            modDomainId = DEV_SM_PD_GPU;
+            pwrDomainId = DEV_SM_PD_GPU;
             break;
 
         case DEV_SM_RST_VPUMIX:
-            modDomainId = DEV_SM_PD_VPU;
+            pwrDomainId = DEV_SM_PD_VPU;
             break;
 
+        case DEV_SM_RST_DISP0_RESETN:
+        case DEV_SM_RST_DISP1_RESETN:
+        case DEV_SM_RST_LVDS_RESETN:
         case DEV_SM_RST_DISPLAYMIX:
-            modDomainId = DEV_SM_PD_DISPLAY;
+            pwrDomainId = DEV_SM_PD_DISPLAY;
             break;
 
         case DEV_SM_RST_NETCMIX:
-            modDomainId = DEV_SM_PD_NETC;
+            pwrDomainId = DEV_SM_PD_NETC;
             break;
 
         case DEV_SM_RST_A55C2_NCPUPORESET:
         case DEV_SM_RST_A55C2_NCORERESET:
         case DEV_SM_RST_CORTEXAMIX_CORE2:
-            modDomainId = DEV_SM_PD_A55C2;
+            pwrDomainId = DEV_SM_PD_A55C2;
             break;
 
         case DEV_SM_RST_A55C3_NCPUPORESET:
         case DEV_SM_RST_A55C3_NCORERESET:
         case DEV_SM_RST_CORTEXAMIX_CORE3:
-            modDomainId = DEV_SM_PD_A55C3;
+            pwrDomainId = DEV_SM_PD_A55C3;
             break;
 
         case DEV_SM_RST_A55C4_NCPUPORESET:
         case DEV_SM_RST_A55C4_NCORERESET:
         case DEV_SM_RST_CORTEXAMIX_CORE4:
-            modDomainId = DEV_SM_PD_A55C4;
+            pwrDomainId = DEV_SM_PD_A55C4;
             break;
 
         case DEV_SM_RST_A55C5_NCPUPORESET:
         case DEV_SM_RST_A55C5_NCORERESET:
         case DEV_SM_RST_CORTEXAMIX_CORE5:
-            modDomainId = DEV_SM_PD_A55C5;
+            pwrDomainId = DEV_SM_PD_A55C5;
             break;
 
         default:
@@ -295,10 +298,10 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
     }
     else
     {
-        if (modDomainId > 0U)
+        if (pwrDomainId < DEV_SM_NUM_POWER)
         {
             /* Check fuse state of power domain */
-            if (DEV_SM_FusePdDisabled(modDomainId))
+            if (DEV_SM_FusePdDisabled(pwrDomainId))
             {
                 rc = true;
             }
@@ -308,3 +311,4 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
     /* Return status */
     return rc;
 }
+

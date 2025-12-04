@@ -134,8 +134,6 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
         [DEV_SM_CLK_DISPAXI] =              "dispaxi",
         [DEV_SM_CLK_DISPOCRAM] =            "dispocram",
         [DEV_SM_CLK_DISP1PIX] =             "disp1pix",
-        [DEV_SM_CLK_DISP2PIX] =             "disp2pix",
-        [DEV_SM_CLK_DISP3PIX] =             "disp3pix",
         [DEV_SM_CLK_GPUAPB] =               "gpuapb",
         [DEV_SM_CLK_GPU] =                  "gpu",
         [DEV_SM_CLK_HSIOACSCAN480M] =       "hsioacscan480m",
@@ -236,7 +234,7 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_CLOCK);
 
     /* Check clock */
-    if ((clockId < DEV_SM_NUM_CLOCK) && (!DEV_SM_ClockIsReserved(clockId)))
+    if (!DEV_SM_ClockIsReserved(clockId))
     {
         /* Return pointer to name */
         *clockNameAddr = s_name[clockId];
@@ -278,10 +276,6 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
         [DEV_SM_CLK_AUDIOPLL2] =            ES_MAX_HZ_AUDIOPLL,
         [DEV_SM_CLK_VIDEOPLL1_VCO] =        ES_MAX_HZ_PLLVCO,
         [DEV_SM_CLK_VIDEOPLL1] =            ES_MAX_HZ_VIDEOPLL,
-        [DEV_SM_CLK_RESERVED20] =           ES_MAX_HZ_GND,
-        [DEV_SM_CLK_RESERVED21] =           ES_MAX_HZ_GND,
-        [DEV_SM_CLK_RESERVED22] =           ES_MAX_HZ_GND,
-        [DEV_SM_CLK_RESERVED23] =           ES_MAX_HZ_GND,
         [DEV_SM_CLK_ARMPLL_VCO] =           ES_MAX_HZ_PLLVCO,
         [DEV_SM_CLK_ARMPLL_PFD0_UNGATED] =  ES_MAX_HZ_PFD,
         [DEV_SM_CLK_ARMPLL_PFD0] =          ES_MAX_HZ_PFD,
@@ -336,12 +330,8 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
         [DEV_SM_CLK_DRAMAPB] =              ES_MAX_HZ_DRAMAPB,
         [DEV_SM_CLK_DISPAPB] =              ES_MAX_HZ_DISPAPB,
         [DEV_SM_CLK_DISPAXI] =              ES_MAX_HZ_DISPAXI,
-        [DEV_SM_CLK_RESERVED77] =           ES_MAX_HZ_GND,
         [DEV_SM_CLK_DISPOCRAM] =            ES_MAX_HZ_DISPOCRAM,
-        [DEV_SM_CLK_RESERVED79] =           ES_MAX_HZ_GND,
         [DEV_SM_CLK_DISP1PIX] =             ES_MAX_HZ_DISP1PIX,
-        [DEV_SM_CLK_DISP2PIX] =             ES_MAX_HZ_DISP2PIX,
-        [DEV_SM_CLK_DISP3PIX] =             ES_MAX_HZ_DISP3PIX,
         [DEV_SM_CLK_GPUAPB] =               ES_MAX_HZ_GPUAPB,
         [DEV_SM_CLK_GPU] =                  ES_MAX_HZ_GPU,
         [DEV_SM_CLK_HSIOACSCAN480M] =       ES_MAX_HZ_HSIOACSCAN480M,
@@ -460,10 +450,6 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
         [DEV_SM_CLK_AUDIOPLL2] =            ES_MIN_HZ_AUDIOPLL,
         [DEV_SM_CLK_VIDEOPLL1_VCO] =        ES_MIN_HZ_PLLVCO,
         [DEV_SM_CLK_VIDEOPLL1] =            ES_MIN_HZ_VIDEOPLL,
-        [DEV_SM_CLK_RESERVED20] =           ES_MIN_HZ_GND,
-        [DEV_SM_CLK_RESERVED21] =           ES_MIN_HZ_GND,
-        [DEV_SM_CLK_RESERVED22] =           ES_MIN_HZ_GND,
-        [DEV_SM_CLK_RESERVED23] =           ES_MIN_HZ_GND,
         [DEV_SM_CLK_ARMPLL_VCO] =           ES_MIN_HZ_PLLVCO,
         [DEV_SM_CLK_ARMPLL_PFD0_UNGATED] =  ES_MIN_HZ_PFD,
         [DEV_SM_CLK_ARMPLL_PFD0] =          ES_MIN_HZ_PFD,
@@ -518,12 +504,8 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
         [DEV_SM_CLK_DRAMAPB] =              ES_MIN_HZ_DRAMAPB,
         [DEV_SM_CLK_DISPAPB] =              ES_MIN_HZ_DISPAPB,
         [DEV_SM_CLK_DISPAXI] =              ES_MIN_HZ_DISPAXI,
-        [DEV_SM_CLK_RESERVED77] =           ES_MIN_HZ_GND,
         [DEV_SM_CLK_DISPOCRAM] =            ES_MIN_HZ_DISPOCRAM,
-        [DEV_SM_CLK_RESERVED79] =           ES_MIN_HZ_GND,
         [DEV_SM_CLK_DISP1PIX] =             ES_MIN_HZ_DISP1PIX,
-        [DEV_SM_CLK_DISP2PIX] =             ES_MIN_HZ_DISP2PIX,
-        [DEV_SM_CLK_DISP3PIX] =             ES_MIN_HZ_DISP3PIX,
         [DEV_SM_CLK_GPUAPB] =               ES_MIN_HZ_GPUAPB,
         [DEV_SM_CLK_GPU] =                  ES_MIN_HZ_GPU,
         [DEV_SM_CLK_HSIOACSCAN480M] =       ES_MIN_HZ_HSIOACSCAN480M,
@@ -621,7 +603,7 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
     };
 
     /* Check clock */
-    if ((clockId < DEV_SM_NUM_CLOCK) && (!DEV_SM_ClockIsReserved(clockId)))
+    if (!DEV_SM_ClockIsReserved(clockId))
     {
         /* Return range */
         range->lowestRate = s_lowestRateHz[clockId];
@@ -1338,6 +1320,8 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
 bool DEV_SM_ClockIsReserved(uint32_t clockId)
 {
     bool rc = false;
+    uint32_t pwrDomainId = DEV_SM_NUM_POWER;
+
     static bool const s_clockIsReserved[DEV_SM_NUM_CLOCK] =
     {
         [DEV_SM_CLK_RESERVED20] = true,
@@ -1345,12 +1329,82 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
         [DEV_SM_CLK_RESERVED22] = true,
         [DEV_SM_CLK_RESERVED23] = true,
         [DEV_SM_CLK_RESERVED77] = true,
-        [DEV_SM_CLK_RESERVED79] = true
+        [DEV_SM_CLK_RESERVED79] = true,
+        [DEV_SM_CLK_RESERVED81] = true,
+        [DEV_SM_CLK_RESERVED82] = true
     };
 
-    if (clockId < DEV_SM_NUM_CLOCK)
+    switch (clockId)
     {
-        rc = s_clockIsReserved[clockId];
+        case DEV_SM_CLK_A55C2_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C2;
+            break;
+
+        case DEV_SM_CLK_A55C3_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C3;
+            break;
+
+        case DEV_SM_CLK_A55C4_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C4;
+            break;
+
+        case DEV_SM_CLK_A55C5_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C5;
+            break;
+
+        case DEV_SM_CLK_DISP1PIX:
+        case DEV_SM_CLK_DISPAPB:
+        case DEV_SM_CLK_DISPAXI:
+        case DEV_SM_CLK_DISPOCRAM:
+            pwrDomainId = DEV_SM_PD_DISPLAY;
+            break;
+
+        case DEV_SM_CLK_GPU:
+        case DEV_SM_CLK_GPUAPB:
+        case DEV_SM_CLK_GPU_CGC:
+            pwrDomainId = DEV_SM_PD_GPU;
+            break;
+
+        case DEV_SM_CLK_VPU:
+        case DEV_SM_CLK_VPUAPB:
+        case DEV_SM_CLK_VPUDSP:
+        case DEV_SM_CLK_VPUJPEG:
+            pwrDomainId = DEV_SM_PD_VPU;
+            break;
+
+        case DEV_SM_CLK_BUSNETCMIX:
+        case DEV_SM_CLK_ENETPHYTEST200M:
+        case DEV_SM_CLK_ENETPHYTEST500M:
+        case DEV_SM_CLK_ENETPHYTEST667M:
+        case DEV_SM_CLK_ENETREF:
+        case DEV_SM_CLK_ENETTIMER1:
+        case DEV_SM_CLK_MQS2:
+            pwrDomainId = DEV_SM_PD_NETC;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (clockId >= DEV_SM_NUM_CLOCK)
+    {
+        rc = true;
+    }
+    else
+    {
+        if (pwrDomainId < DEV_SM_NUM_POWER)
+        {
+            /* Check fuse state of power domain */
+            if (DEV_SM_FusePdDisabled(pwrDomainId))
+            {
+                rc = true;
+            }
+        }
+        else
+        {
+            rc = s_clockIsReserved[clockId];
+        }
     }
 
     /* Return status */

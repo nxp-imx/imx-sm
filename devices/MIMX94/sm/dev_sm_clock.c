@@ -243,7 +243,7 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_CLOCK);
 
     /* Check clock */
-    if ((clockId < DEV_SM_NUM_CLOCK) && (!DEV_SM_ClockIsReserved(clockId)))
+    if (!DEV_SM_ClockIsReserved(clockId))
     {
         /* Return pointer to name */
         *clockNameAddr = s_name[clockId];
@@ -629,7 +629,7 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
     };
 
     /* Check clock */
-    if ((clockId < DEV_SM_NUM_CLOCK) && (!DEV_SM_ClockIsReserved(clockId)))
+    if (!DEV_SM_ClockIsReserved(clockId))
     {
         /* Return range */
         range->lowestRate = s_lowestRateHz[clockId];
@@ -1354,6 +1354,8 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
 bool DEV_SM_ClockIsReserved(uint32_t clockId)
 {
     bool rc = false;
+    uint32_t pwrDomainId = DEV_SM_NUM_POWER;
+
     static bool const s_clockIsReserved[DEV_SM_NUM_CLOCK] =
     {
         [DEV_SM_CLK_RESERVED18] = true,
@@ -1364,10 +1366,55 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
         [DEV_SM_CLK_RESERVED23] = true
     };
 
-
-    if (clockId < DEV_SM_NUM_CLOCK)
+    switch (clockId)
     {
-        rc = s_clockIsReserved[clockId];
+        case DEV_SM_CLK_A55C1_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C1;
+            break;
+
+        case DEV_SM_CLK_A55C2_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C2;
+            break;
+
+        case DEV_SM_CLK_A55C3_GPR_SEL:
+            pwrDomainId = DEV_SM_PD_A55C3;
+            break;
+
+        case DEV_SM_CLK_M70:
+        case DEV_SM_CLK_BUSM70:
+        case DEV_SM_CLK_M70SYSTICK:
+            pwrDomainId = DEV_SM_PD_M70;
+            break;
+
+        case DEV_SM_CLK_M71:
+        case DEV_SM_CLK_BUSM71:
+        case DEV_SM_CLK_M71SYSTICK:
+            pwrDomainId = DEV_SM_PD_M71;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (clockId >= DEV_SM_NUM_CLOCK)
+    {
+        rc = true;
+    }
+    else
+    {
+        if (pwrDomainId < DEV_SM_NUM_POWER)
+        {
+            /* Check fuse state of power domain */
+            if (DEV_SM_FusePdDisabled(pwrDomainId))
+            {
+                rc = true;
+            }
+        }
+        else
+        {
+            rc = s_clockIsReserved[clockId];
+        }
     }
 
     /* Return status */

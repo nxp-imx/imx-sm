@@ -58,6 +58,15 @@
 /* Functions */
 
 /*!
+ * Initialize the Fuse array.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_FuseInit(void);
+
+/*!
  * Get fuse info.
  *
  * @param[in]     fuseWord  Index of word

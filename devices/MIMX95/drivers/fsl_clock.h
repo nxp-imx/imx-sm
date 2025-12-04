@@ -158,8 +158,8 @@
 #define CLOCK_ROOT_DISPOCRAM                37U
 #define CLOCK_ROOT_RESERVED38               38U
 #define CLOCK_ROOT_DISP1PIX                 39U
-#define CLOCK_ROOT_DISP2PIX                 40U
-#define CLOCK_ROOT_DISP3PIX                 41U
+#define CLOCK_ROOT_RESERVED40               40U
+#define CLOCK_ROOT_RESERVED41               41U
 #define CLOCK_ROOT_GPUAPB                   42U
 #define CLOCK_ROOT_GPU                      43U
 #define CLOCK_ROOT_HSIOACSCAN480M           44U

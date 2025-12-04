@@ -232,32 +232,38 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
 bool DEV_SM_ResetIsReserved(uint32_t domainId)
 {
     bool rc = false;
-    uint32_t modDomainId = 0;
+    uint32_t pwrDomainId = DEV_SM_NUM_POWER;
 
     switch (domainId)
     {
         case DEV_SM_RST_M70MIX:
-            modDomainId = DEV_SM_PD_M70;
+            pwrDomainId = DEV_SM_PD_M70;
             break;
 
         case DEV_SM_RST_M71MIX:
-            modDomainId = DEV_SM_PD_M71;
+            pwrDomainId = DEV_SM_PD_M71;
             break;
 
         case DEV_SM_RST_NPUMIX:
-            modDomainId = DEV_SM_PD_NPU;
+            pwrDomainId = DEV_SM_PD_NPU;
+            break;
+
+        case DEV_SM_RST_A55C1_NCPUPORESET:
+        case DEV_SM_RST_A55C1_NCORERESET:
+        case DEV_SM_RST_CORTEXAMIX_CORE1:
+            pwrDomainId = DEV_SM_PD_A55C1;
             break;
 
         case DEV_SM_RST_A55C2_NCPUPORESET:
         case DEV_SM_RST_A55C2_NCORERESET:
         case DEV_SM_RST_CORTEXAMIX_CORE2:
-            modDomainId = DEV_SM_PD_A55C2;
+            pwrDomainId = DEV_SM_PD_A55C2;
             break;
 
         case DEV_SM_RST_A55C3_NCPUPORESET:
         case DEV_SM_RST_A55C3_NCORERESET:
         case DEV_SM_RST_CORTEXAMIX_CORE3:
-            modDomainId = DEV_SM_PD_A55C3;
+            pwrDomainId = DEV_SM_PD_A55C3;
             break;
 
         default:
@@ -271,10 +277,10 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
     }
     else
     {
-        if (modDomainId > 0U)
+        if (pwrDomainId < DEV_SM_NUM_POWER)
         {
             /* Check fuse state of power domain */
-            if (DEV_SM_FusePdDisabled(modDomainId))
+            if (DEV_SM_FusePdDisabled(pwrDomainId))
             {
                 rc = true;
             }

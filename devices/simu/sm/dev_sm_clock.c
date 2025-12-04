@@ -74,7 +74,7 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_CLOCK);
 
     /* Check clock */
-    if ((clockId >= DEV_SM_NUM_CLOCK) || DEV_SM_ClockIsReserved(clockId))
+    if (DEV_SM_ClockIsReserved(clockId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -99,7 +99,7 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if ((clockId >= DEV_SM_NUM_CLOCK) || DEV_SM_ClockIsReserved(clockId))
+    if (DEV_SM_ClockIsReserved(clockId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -157,7 +157,7 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
             *numParents = 2U;
         }
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
+    else
     {
         /* Return mux input and max number */
         if (sel == 0U)
@@ -170,10 +170,6 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
             status = SM_ERR_OUT_OF_RANGE;
             *numParents = 1U;
         }
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
@@ -193,7 +189,7 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
     {
         status = SM_ERR_NOT_FOUND;
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
+    else
     {
         if (roundSel <= 2U)
         {
@@ -203,10 +199,6 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
@@ -225,13 +217,9 @@ int32_t DEV_SM_ClockRateGet(uint32_t clockId, uint64_t *rate)
     {
         status = SM_ERR_NOT_FOUND;
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
-    {
-        *rate = s_clockFreq[clockId];
-    }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        *rate = s_clockFreq[clockId];
     }
 
     /* Return status */
@@ -250,13 +238,9 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
     {
         status = SM_ERR_NOT_FOUND;
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
-    {
-        s_clockState[clockId] = enable;
-    }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        s_clockState[clockId] = enable;
     }
 
     /* Return status */
@@ -275,13 +259,9 @@ int32_t DEV_SM_ClockIsEnabled(uint32_t clockId, bool *enabled)
     {
         status = SM_ERR_NOT_FOUND;
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
-    {
-        *enabled = s_clockState[clockId];
-    }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        *enabled = s_clockState[clockId];
     }
 
     /* Return status */
@@ -304,13 +284,9 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
-    {
-        s_clockParent[clockId] = parent;
-    }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        s_clockParent[clockId] = parent;
     }
 
     /* Return status */
@@ -333,13 +309,9 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
-    else if (clockId < DEV_SM_NUM_CLOCK)
-    {
-        *parent = s_clockParent[clockId];
-    }
     else
     {
-        status = SM_ERR_NOT_FOUND;
+        *parent = s_clockParent[clockId];
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL2, SM_ERR_TEST)
@@ -388,15 +360,8 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
         switch (extId)
         {
             case DEV_SM_CLOCK_EXT_SSC:
-                if (clockId < DEV_SM_NUM_CLOCK)
-                {
-                    /* Latch SSC configuration */
-                    s_clockSscConfig[clockId] = extConfigValue;
-                }
-                else
-                {
-                    status = SM_ERR_INVALID_PARAMETERS;
-                }
+                /* Latch SSC configuration */
+                s_clockSscConfig[clockId] = extConfigValue;
                 break;
 
             default:
@@ -428,15 +393,8 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
         {
             /* Spread spectrum */
             case DEV_SM_CLOCK_EXT_SSC:
-                if (clockId < DEV_SM_NUM_CLOCK)
-                {
-                    /* Get latched SSC configuration */
-                    *extConfigValue = s_clockSscConfig[clockId];
-                }
-                else
-                {
-                    status = SM_ERR_INVALID_PARAMETERS;
-                }
+                /* Get latched SSC configuration */
+                *extConfigValue = s_clockSscConfig[clockId];
                 break;
 
             default:
@@ -460,12 +418,14 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
         [DEV_SM_CLK_4] = true
     };
 
-
-    if (clockId < DEV_SM_NUM_CLOCK)
+    if (clockId >= DEV_SM_NUM_CLOCK)
+    {
+        rc = true;
+    }
+    else
     {
         rc = s_clockIsReserved[clockId];
     }
-
     return rc;
 }
 

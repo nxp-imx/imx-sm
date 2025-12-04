@@ -91,7 +91,43 @@ static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
     [DEV_SM_FUSE_M33_ROM_PATCH_VER]  = {10496U, 32U}
 };
 
+static uint32_t s_fuseValue[DEV_SM_NUM_FUSE];
+
 /* Local functions */
+
+/*--------------------------------------------------------------------------*/
+/* Init fuses                                                               */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_FuseInit(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    for (uint32_t fuseId = 0U; fuseId < DEV_SM_NUM_FUSE; fuseId++)
+    {
+        uint32_t fuse;
+        uint32_t shift;
+        uint32_t mask = 0U;
+
+        /* Get fuse word */
+        fuse = FSB->FUSE[s_fuseMap[fuseId].bitIdx / 32U];
+
+        /* Calculate shift and mask */
+        shift = ((uint32_t) s_fuseMap[fuseId].bitIdx) % 32U;
+
+        /* Check the mask value not exceeding the max shift value */
+        if ((uint32_t) s_fuseMap[fuseId].bitWidth  <= 32U)
+        {
+            mask = (2UL << (((uint32_t) s_fuseMap[fuseId].bitWidth) - 1U))
+                - 1U;
+        }
+
+        /* Save result */
+        s_fuseValue[fuseId] = (fuse >> shift) & mask;
+    }
+
+    /* Return status */
+    return status;
+}
 
 /*--------------------------------------------------------------------------*/
 /* Get address of a fuse word                                               */
@@ -109,7 +145,7 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Return result */
+    /* Return status */
     return status;
 }
 
@@ -118,33 +154,8 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 /*--------------------------------------------------------------------------*/
 uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 {
-    uint32_t fuse;
-    uint32_t shift;
-    uint32_t mask;
-
-    /* Get fuse word */
-    fuse = FSB->FUSE[s_fuseMap[fuseId].bitIdx / 32U];
-
-    /* Calculate shift and mask */
-    shift = ((uint32_t) s_fuseMap[fuseId].bitIdx) % 32U;
-
-    /* Added to improve the test coverage */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-        s_fuseMap[fuseId].bitWidth = 33U);
-
-    /* Check the mask value not exceeding the max shift value */
-    if ((uint32_t) s_fuseMap[fuseId].bitWidth  <= 32U)
-    {
-        mask = (2UL << (((uint32_t) s_fuseMap[fuseId].bitWidth) - 1U)) - 1U;
-    }
-    else
-    {
-        /* If exceeded, wrap to max range */
-        mask = 0U;
-    }
-
-    /* Return result */
-    return (fuse >> shift) & mask;
+    /* Return saved fuse value */
+    return s_fuseValue[fuseId];
 }
 
 /*--------------------------------------------------------------------------*/

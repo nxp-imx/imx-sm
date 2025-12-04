@@ -140,7 +140,7 @@ int32_t DEV_SM_PerfNumLevelsGet(uint32_t domainId, uint32_t *numLevels)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -162,7 +162,7 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -191,7 +191,7 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -211,7 +211,7 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
