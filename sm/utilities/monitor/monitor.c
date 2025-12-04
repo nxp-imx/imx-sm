@@ -922,7 +922,7 @@ string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
 void MONITOR_EnterCS(void)
 {
 #ifndef SIMU
-    priMask = DisableGlobalIRQ();
+    __set_BASEPRI(IRQ_PRIO_NOPREEMPT_CRITICAL);
 #endif
 }
 
@@ -932,7 +932,7 @@ void MONITOR_EnterCS(void)
 void MONITOR_ExitCS(void)
 {
 #ifndef SIMU
-    EnableGlobalIRQ(priMask);
+    __set_BASEPRI(0U);
 #endif
 }
 

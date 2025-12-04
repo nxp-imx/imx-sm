@@ -249,6 +249,7 @@ static irq_prio_info_t s_irqPrioInfo[DEV_SM_NUM_IRQ_PRIO_IDX] =
 static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     uint32_t faultStatus, uint32_t faultAddr);
 static void FaultHandler(uint32_t faultId);
+static void ELEHandler(IRQn_Type excId, const uint32_t *sp);
 static irq_prio_info_t *IrqPrioMap(IRQn_Type irq);
 static void IrqPrioBoost(irq_prio_info_t const * pInfo, uint32_t relPrio);
 static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
@@ -489,9 +490,7 @@ void Reserved110_IRQHandler(void)
 void ELE_Group1_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
-    ExceptionHandler(ELE_Group1_IRQn, sp,
-        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
-        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
+    ELEHandler(ELE_Group1_IRQn, sp);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -500,9 +499,7 @@ void ELE_Group1_IRQHandler(const uint32_t *sp)
 void ELE_Group2_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
-    ExceptionHandler(ELE_Group2_IRQn, sp,
-        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
-        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
+    ELEHandler(ELE_Group2_IRQn, sp);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -511,9 +508,7 @@ void ELE_Group2_IRQHandler(const uint32_t *sp)
 void ELE_Group3_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
-    ExceptionHandler(ELE_Group3_IRQn, sp,
-        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
-        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
+    ELEHandler(ELE_Group3_IRQn, sp);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -934,6 +929,17 @@ static void FaultHandler(uint32_t faultId)
         /* Finalize system reset flow */
         (void) DEV_SM_SystemRstComp(&resetRec);
     }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Common ELE handler                                                       */
+/*--------------------------------------------------------------------------*/
+static void ELEHandler(IRQn_Type excId, const uint32_t *sp)
+{
+    /* Call common handler */
+    ExceptionHandler(excId, sp,
+        BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
+        BLK_CTRL_S_AONMIX->ELE_IRQ_REQ_STAT);
 }
 
 /*--------------------------------------------------------------------------*/

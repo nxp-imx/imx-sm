@@ -48,6 +48,8 @@
 #define ELE_MSG_MIN_SIZE        3U
 #define ELE_MSG_MAX_SIZE        23U
 
+#define TO_USEC                 100U
+
 /* Local Types */
 
 typedef enum
@@ -127,10 +129,10 @@ typedef union
 /* Local Functions */
 
 static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd,
-    uint8_t size);
-static void ELE_MuTx(ele_mu_msg_t *msg);
-static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
-    ele_cmd_type_t cmd);
+    uint8_t size, bool timeout);
+static bool ELE_MuTx(ele_mu_msg_t *msg, bool timeout);
+static bool ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
+    ele_cmd_type_t cmd, bool timeout);
 static void ELE_ErrXlate(int32_t *err, uint32_t resp);
 
 /* Local Variables */
@@ -159,7 +161,7 @@ void ELE_Init(MU_Type *base)
 void ELE_Ping(void)
 {
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_PING_REQ, 1U);
+    ELE_Call(&s_msgMax, ELE_PING_REQ, 1U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -179,7 +181,7 @@ void ELE_RdcRelease(uint8_t rdcId)
     s_msgMax.word[1] |= ((uint32_t) rdcId) << 8U;
 
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_RELEASE_RDC_REQ, 2U);
+    ELE_Call(&s_msgMax, ELE_RELEASE_RDC_REQ, 2U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -203,7 +205,7 @@ void ELE_FwStatusGet(uint32_t *status)
     if (s_statWord2Cache == 0xFFFFFFFFUL)
     {
         /* Call ELE */
-        ELE_Call(&s_msgMax, ELE_GET_FW_STATUS_REQ, 1U);
+        ELE_Call(&s_msgMax, ELE_GET_FW_STATUS_REQ, 1U, false);
 
         s_statWord2Cache = s_msgMax.word[2];
 
@@ -237,7 +239,7 @@ void ELE_RomIdGet(uint32_t *id, uint32_t *commit, bool *dirty)
     if (s_idWord2Cache == 0U)
     {
         /* Call ELE */
-        ELE_Call(&s_msgMax, ELE_GET_FW_VERSION_REQ, 1U);
+        ELE_Call(&s_msgMax, ELE_GET_FW_VERSION_REQ, 1U, false);
 
         s_idWord2Cache = s_msgMax.word[2];
         s_idWord3Cache = s_msgMax.word[3];
@@ -275,7 +277,7 @@ void ELE_FwVersionGet(uint32_t *version, uint32_t *commit, bool *dirty,
     if (s_verWord2Cache == 0U)
     {
         /* Call ELE */
-        ELE_Call(&s_msgMax, ELE_GET_FW_VERSION_REQ, 1U);
+        ELE_Call(&s_msgMax, ELE_GET_FW_VERSION_REQ, 1U, false);
 
         s_verWord2Cache = s_msgMax.word[2];
         s_verWord3Cache = s_msgMax.word[3];
@@ -314,7 +316,7 @@ uint32_t ELE_EventGet(uint8_t idx)
     if (idx == 0U)
     {
         /* Call ELE */
-        ELE_Call(&s_msgEnv, ELE_GET_EVENTS_REQ, 1U);
+        ELE_Call(&s_msgEnv, ELE_GET_EVENTS_REQ, 1U, false);
 
         /* Translate error */
         ELE_ErrXlate(&g_eleStatus, s_msgEnv.word[1]);
@@ -374,7 +376,7 @@ void ELE_InfoGet(ele_info_t *info)
     s_msgMax.word[3] = sizeof(data);
 
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_GET_INFO_REQ, 4U);
+    ELE_Call(&s_msgMax, ELE_GET_INFO_REQ, 4U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -405,12 +407,12 @@ void ELE_InfoGet(ele_info_t *info)
         {
             info->shaFw[idx] = data[idx + 15U];
         }
-    }
 
-    /* Append error if data not correct */
-    if ((data[0] & 0xFFUL) != ((uint32_t) ELE_GET_INFO_REQ))
-    {
-        g_eleStatus = SM_ERR_NOT_SUPPORTED;
+        /* Append error if data not correct */
+        if ((data[0] & 0xFFUL) != ((uint32_t) ELE_GET_INFO_REQ))
+        {
+            g_eleStatus = SM_ERR_NOT_SUPPORTED;
+        }
     }
 
 #ifdef DEBUG_ELE
@@ -424,7 +426,7 @@ void ELE_InfoGet(ele_info_t *info)
 void ELE_V2xInfoGet(uint32_t *info, uint32_t *v2x_error)
 {
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_V2X_GET_STATE_REQ, 1U);
+    ELE_Call(&s_msgMax, ELE_V2X_GET_STATE_REQ, 1U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -446,7 +448,7 @@ void ELE_V2xInfoGet(uint32_t *info, uint32_t *v2x_error)
 void ELE_V2xPing(void)
 {
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_V2X_PING_REQ, 1U);
+    ELE_Call(&s_msgMax, ELE_V2X_PING_REQ, 1U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -471,12 +473,16 @@ void ELE_DebugDump(void)
         uint8_t idx;
 
         /* Call ELE */
-        ELE_Call(&s_msgMax, ELE_DUMP_DEBUG_BUFFER_REQ, 1U);
+        ELE_Call(&s_msgMax, ELE_DUMP_DEBUG_BUFFER_REQ, 1U, true);
 
         /* Check if data to dump */
         if (g_eleStatus == SM_ERR_SUCCESS)
         {
             cnt = s_msgMax.hdr.size - 2U;
+        }
+        else
+        {
+            cnt = 0U;
         }
 
         /* Remove CRC */
@@ -506,7 +512,7 @@ void ELE_DebugDump(void)
 void ELE_EnableApcRequest(void)
 {
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_ENABLE_APC_REQ, 1U);
+    ELE_Call(&s_msgMax, ELE_ENABLE_APC_REQ, 1U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -525,7 +531,7 @@ void ELE_EnableAuxRequest(uint32_t core)
     s_msgMax.word[1] = core;
 
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_ENABLE_AUX_REQ, 2U);
+    ELE_Call(&s_msgMax, ELE_ENABLE_AUX_REQ, 2U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -557,7 +563,7 @@ void ELE_StartDvfsChange(uint32_t flags, uint32_t mode, uint32_t eleMhz,
         | (eleMhz & 0xFFFFU);
 
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_START_DVFS_CHANGE, 3U);
+    ELE_Call(&s_msgMax, ELE_START_DVFS_CHANGE, 3U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -573,7 +579,7 @@ void ELE_StartDvfsChange(uint32_t flags, uint32_t mode, uint32_t eleMhz,
 void ELE_StopDvfsChange(void)
 {
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_STOP_DVFS_CHANGE, 1U);
+    ELE_Call(&s_msgMax, ELE_STOP_DVFS_CHANGE, 1U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -592,7 +598,7 @@ void ELE_FuseRead(uint32_t fuseId, uint32_t *fuseVal)
     s_msgMax.word[1] = fuseId;
 
     /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_READ_FUSE_REQ, 2U);
+    ELE_Call(&s_msgMax, ELE_READ_FUSE_REQ, 2U, false);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -626,7 +632,7 @@ void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock)
         s_msgMax.word[2] = fuseVal;
 
         /* Call ELE */
-        ELE_Call(&s_msgMax, ELE_WRITE_FUSE_REQ, 3U);
+        ELE_Call(&s_msgMax, ELE_WRITE_FUSE_REQ, 3U, false);
 
         /* Translate error */
         ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
@@ -776,7 +782,8 @@ int32_t ELE_Ind2Err(ele_msg_ind_t ind)
 /* Call ELE function                                                        */
 /*--------------------------------------------------------------------------*/
 /* coverity[misra_c_2012_rule_19_2_violation] */
-static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
+static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size,
+    bool timeout)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -788,6 +795,8 @@ static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
 
     if (status == SM_ERR_SUCCESS)
     {
+        bool tdo;
+
         /* Setup message */
         msg->hdr.tag = ELE_MSG_TAG;
         msg->hdr.cmd = cmd;
@@ -795,14 +804,21 @@ static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
         msg->hdr.ver = ELE_MSG_VER;
 
         /* Send message */
-        ELE_MuTx(msg);
+        tdo = ELE_MuTx(msg, timeout);
 
         /* Receive response */
         msg->word[1] = 0U;
-        ELE_MuRx(msg, ELE_MSG_MAX_SIZE, cmd);
+        if (!tdo)
+        {
+            tdo = ELE_MuRx(msg, ELE_MSG_MAX_SIZE, cmd, timeout);
+        }
 
         /* Check response */
-        if (msg->hdr.tag != ELE_MSG_TAG_RESP)
+        if (tdo)
+        {
+            status = SM_ERR_TIMEOUT;
+        }
+        else if (msg->hdr.tag != ELE_MSG_TAG_RESP)
         {
             status = SM_ERR_PROTOCOL_ERROR;
         }
@@ -831,11 +847,12 @@ static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
 /* Send MU message to ELE                                                   */
 /*--------------------------------------------------------------------------*/
 /* coverity[misra_c_2012_rule_19_2_violation] */
-static void ELE_MuTx(ele_mu_msg_t *msg)
+static bool ELE_MuTx(ele_mu_msg_t *msg, bool timeout)
 {
     const uint32_t *buf = (const uint32_t*) msg;
     uint32_t size;
     uint32_t pos = 1U;
+    bool tdo = false;
 
     /* Calculate CRC */
     if (msg->hdr.size > 4U)
@@ -845,65 +862,103 @@ static void ELE_MuTx(ele_mu_msg_t *msg)
             ((uint32_t)msg->hdr.size) - 1UL);
     }
 
-    /* Send header and NMI */
-    MU_SendMsg(s_eleMuBase, 0, buf[0]);
-
-    /* Get message size */
-    size = (uint32_t) msg->hdr.size;
-
-    /* Send message body */
-    while (size > 1U)
+    /* Wait for tx buffer to be empty */
+    if (timeout)
     {
-        MU_SendMsg(s_eleMuBase, pos % 8UL, buf[pos]);
+        uint32_t cnt = TO_USEC;
 
-        /* Check for wrap */
-        if (pos <= (UINT32_MAX - 1U))
+        while (((MU_GetStatusFlags(s_eleMuBase)
+            & ((uint32_t) kMU_Tx0EmptyFlag)) == 0U) && (cnt > 0U))
         {
-            pos++;
+            SystemTimeDelay(1U);
+            cnt--;
         }
-
-        size--;
+        tdo = (cnt == 0U);
     }
+
+    if (!tdo)
+    {
+        /* Send header and NMI */
+        MU_SendMsg(s_eleMuBase, 0U, buf[0]);
+
+        /* Get message size */
+        size = (uint32_t) msg->hdr.size;
+
+        /* Send message body */
+        while (size > 1U)
+        {
+            MU_SendMsg(s_eleMuBase, pos % 8UL, buf[pos]);
+
+            /* Check for wrap */
+            if (pos <= (UINT32_MAX - 1U))
+            {
+                pos++;
+            }
+
+            size--;
+        }
+    }
+
+    /* Return timeout */
+    return tdo;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Receive MU message from ELE                                              */
 /*--------------------------------------------------------------------------*/
 /* coverity[misra_c_2012_rule_19_2_violation] */
-static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
-    ele_cmd_type_t cmd)
+static bool ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
+    ele_cmd_type_t cmd, bool timeout)
 {
     uint32_t *buf = (uint32_t*) msg;
+    bool tdo = false;
 
     /* Check if aborted */
     if ((!s_aborted)
         || (cmd == ELE_DUMP_DEBUG_BUFFER_REQ))
     {
-        /* Get message header */
-        buf[0] = MU_ReceiveMsg(s_eleMuBase, 0U);
-
-        /* Check response */
-        if ((msg->hdr.tag == ELE_MSG_TAG_RESP)
-            && (msg->hdr.ver == ELE_MSG_VER))
+        /* Wait for rx buffer to be full */
+        if (timeout)
         {
-            uint32_t size;
-            uint32_t pos = 1U;
+            uint32_t cnt = TO_USEC;
 
-            /* Get message size */
-            size = (uint32_t) MIN(msg->hdr.size, maxLen);
-
-            /* Get message body */
-            while (size > 1U)
+            while (((MU_GetStatusFlags(s_eleMuBase)
+                & ((uint32_t) kMU_Rx0FullFlag)) == 0U) && (cnt > 0U))
             {
-                buf[pos] = MU_ReceiveMsg(s_eleMuBase, pos % 8UL);
+                SystemTimeDelay(1U);
+                cnt--;
+            }
+            tdo = (cnt == 0U);
+        }
 
-                /* Check for wrap */
-                if (pos <= (UINT32_MAX - 1U))
+        if (!tdo)
+        {
+            /* Get message header */
+            buf[0] = MU_ReceiveMsg(s_eleMuBase, 0U);
+
+            /* Check response */
+            if ((msg->hdr.tag == ELE_MSG_TAG_RESP)
+                && (msg->hdr.ver == ELE_MSG_VER))
+            {
+                uint32_t size;
+                uint32_t pos = 1U;
+
+                /* Get message size */
+                size = (uint32_t) MIN(msg->hdr.size, maxLen);
+
+                /* Get message body */
+                while (size > 1U)
                 {
-                    pos++;
-                }
+                    buf[pos] = MU_ReceiveMsg(s_eleMuBase, pos % 8UL);
 
-                size--;
+                    /* Check for wrap */
+                    if (pos <= (UINT32_MAX - 1U))
+                    {
+                        pos++;
+                    }
+
+                    size--;
+                }
             }
         }
     }
@@ -912,6 +967,9 @@ static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
         /* Pretend was an MU abort response */
         msg->word[1] = 0U;
     }
+
+    /* Return timeout */
+    return tdo;
 }
 
 /*--------------------------------------------------------------------------*/

@@ -346,8 +346,11 @@ void BOARD_InitHandlers(void)
     NVIC_EnableIRQ(GPC_SM_REQ_IRQn);
 
     /* Enable ELE Group IRQ handlers */
+    NVIC_SetPriority(ELE_Group1_IRQn, IRQ_PRIO_PREEMPT_CRITICAL);
     NVIC_EnableIRQ(ELE_Group1_IRQn);
+    NVIC_SetPriority(ELE_Group2_IRQn, IRQ_PRIO_PREEMPT_CRITICAL);
     NVIC_EnableIRQ(ELE_Group2_IRQn);
+    NVIC_SetPriority(ELE_Group3_IRQn, IRQ_PRIO_PREEMPT_CRITICAL);
     NVIC_EnableIRQ(ELE_Group3_IRQn);
 
     /* Enable FCCU handler */

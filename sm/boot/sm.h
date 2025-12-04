@@ -94,7 +94,8 @@
 #define SM_ERR_TEST                (-132)  /*!< Test error. Generally lack of an expected error. */
 #define SM_ERR_SEQ_ERROR           (-133)  /*!< Sequence error. The message sent or recv. did not
                                                 include the required sequence number. */
-#define SM_ERR_LAST                (-134)  /*!< Temp error beyond all valid error codes. */
+#define SM_ERR_TIMEOUT             (-134)  /*!< Message send/recv or operation timed out. */
+#define SM_ERR_LAST                (-135)  /*!< Temp error beyond all valid error codes. */
 /** @} */
 
 /*!

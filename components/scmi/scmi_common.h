@@ -102,6 +102,7 @@
 #define SCMI_ERR_TEST                (-132)  /*!< Test error. Generally lack of an expected error. */
 #define SCMI_ERR_SEQ_ERROR           (-133)  /*!< Sequence error. The message sent or recv. did not
                                                   include the required sequence number. */
+#define SCMI_ERR_TIMEOUT             (-134)  /*!< Message send/recv or operation timed out. */
 
 /** @} */
 
