@@ -3585,6 +3585,10 @@ static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[])
     bool consoleResume = false;
     const board_uart_config_t *uartConfig = BOARD_GetDebugUart();
 
+    /* Need to allow interrupts for idle */
+    /* Note all functions used in this loop must be reentrant! */
+    MONITOR_ExitCS();
+
     /* Block waiting on console to resume */
     do
     {
@@ -3614,6 +3618,9 @@ static int32_t MONITOR_CmdIdle(int32_t argc, const char * const argv[])
             }
         }
     } while ((status == SM_ERR_SUCCESS) && !consoleResume);
+
+    /* Renter monitor CS */
+    MONITOR_EnterCS();
 
     /* Return status */
     return status;
