@@ -922,7 +922,7 @@ string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
 void MONITOR_EnterCS(void)
 {
 #ifndef SIMU
-    __set_BASEPRI(IRQ_PRIO_NOPREEMPT_CRITICAL);
+    __set_BASEPRI(IRQ_PRIO_NOPREEMPT_CRITICAL << (8U - __NVIC_PRIO_BITS));
 #endif
 }
 
