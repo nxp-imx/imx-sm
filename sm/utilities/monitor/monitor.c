@@ -305,8 +305,9 @@ bool MONITOR_CharPending(void)
 void MONITOR_Yield(void)
 {
 #if !defined(SIMU)
-    EnableGlobalIRQ(priMask);
-    priMask = DisableGlobalIRQ();
+    uint32_t localPriMask = __get_BASEPRI();
+    __set_BASEPRI(0U);
+    __set_BASEPRI(localPriMask);
 #endif
 }
 
@@ -922,6 +923,7 @@ string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
 void MONITOR_EnterCS(void)
 {
 #ifndef SIMU
+    priMask = __get_BASEPRI();
     __set_BASEPRI(IRQ_PRIO_NOPREEMPT_CRITICAL << (8U - __NVIC_PRIO_BITS));
 #endif
 }
@@ -932,7 +934,7 @@ void MONITOR_EnterCS(void)
 void MONITOR_ExitCS(void)
 {
 #ifndef SIMU
-    __set_BASEPRI(0U);
+    __set_BASEPRI(priMask);
 #endif
 }
 
