@@ -254,20 +254,38 @@ int32_t DEV_SM_BbmRtcDescribe(uint32_t rtcId, uint32_t *secWidth,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
 {
+    int32_t status = SM_ERR_SUCCESS;
+
     /* Check time format */
     if (ticks)
     {
-        /* Set ticks */
-        BBNSM_RTC_SetTicks(BBNSM, val);
+        /* Check ticks range */
+        if (BITS_FIT_IN_MASK(val, 0x7FFFFFFFFFFFULL) != 0U)
+        {
+            /* Set ticks */
+            BBNSM_RTC_SetTicks(BBNSM, val);
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
     else
     {
-        /* Set seconds */
-        BBNSM_RTC_SetSeconds(BBNSM, UINT64_L(val));
+        /* Check seconds range */
+        if (BITS_FIT_IN_MASK(val, 0xFFFFFFFFULL) != 0U)
+        {
+            /* Set seconds */
+            BBNSM_RTC_SetSeconds(BBNSM, UINT64_L(val));
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
 
     /* Return status */
-    return SM_ERR_SUCCESS;
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -322,11 +340,19 @@ int32_t DEV_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
     {
         status_t kstat;
 
-        /* Set alarm, enable, and enable interrupt */
-        kstat = BBNSM_RTC_SetAlarm(BBNSM, UINT64_L(val));
+        /* Check seconds range */
+        if (BITS_FIT_IN_MASK(val, 0xFFFFFFFFULL) != 0U)
+        {
+            /* Set alarm, enable, and enable interrupt */
+            kstat = BBNSM_RTC_SetAlarm(BBNSM, UINT64_L(val));
 
-        /* Check driver error */
-        if (kstat != kStatus_Success)
+            /* Check driver error */
+            if (kstat != kStatus_Success)
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+        }
+        else
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }

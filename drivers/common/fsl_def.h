@@ -96,6 +96,9 @@
 /*! Macro to check the long long int variable in int range */
 #define CHECK_I64_FIT_I32(X)   ((int64_t)(X) <= I64_2GB)
 
+/*! Macro to check if all bits in X are covered by mask Y */
+#define BITS_FIT_IN_MASK(X, Y) ((((X) &~(Y)) == 0U) ? 1U : 0U)
+
 /*! @} */
 
 #endif /* FSL_DEF_H */
