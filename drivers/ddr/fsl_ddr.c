@@ -128,17 +128,17 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 DDRC_DDR_SDRAM_INTERVAL_REFINT_SHIFT);
 
             /* Disable ALT_TRN_INT if enabled */
-            if ((DDRC_CTRL->DDR_SDRAM_CFG_6 &
+            if ((DDRC->DDR_SDRAM_CFG_6 &
                  DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK) != 0U)
             {
                 /* Save altTrnInt setting (MRR snoop interval) to
                    restore later */
-                altTrnInt = ((DDRC_CTRL->DDR_SDRAM_CFG_6 &
+                altTrnInt = ((DDRC->DDR_SDRAM_CFG_6 &
                     DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK) >>
                     DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_SHIFT);
 
                 /* Disable MRR snoop, set altTrnInt = 0 */
-                DDRC_CTRL->DDR_SDRAM_CFG_6 &=
+                DDRC->DDR_SDRAM_CFG_6 &=
                     (~DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK);
 
                 /* Delay to ensure all MRR Snoop (ALT_TRN_INT) operations are
@@ -167,11 +167,11 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                 /* Before disabling DYN_REF_RATE_EN, check MPR5[MPR_VLD] for
                  * latest MR4 to complete */
                 /* clear MPR_VLD so that the next MR4 read will set it */
-                DDRC_CTRL->DDR_SDRAM_MPR5 = 0x0U;
+                DDRC->DDR_SDRAM_MPR5 = 0x0U;
 
                 /* Wait till MPR_VLD is set (MR4 read done) then immediately
                  * disable DYN_REF */
-                while ((DDRC_CTRL->DDR_SDRAM_MPR5 & 0x1U) == 0U)
+                while ((DDRC->DDR_SDRAM_MPR5 & 0x1U) == 0U)
                 {
                     ; /* Intentional empty while */
                 }
@@ -182,10 +182,10 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
 
                 /* Update DDR_SDRAM_INTERVAL[REFINT] to compensate for
                  * elevated temperature */
-                val = DDRC_CTRL->DDR_SDRAM_INTERVAL;
+                val = DDRC->DDR_SDRAM_INTERVAL;
                 val &= (~DDRC_DDR_SDRAM_INTERVAL_REFINT_MASK);
                 val |= DDRC_DDR_SDRAM_INTERVAL_REFINT(refint);
-                DDRC_CTRL->DDR_SDRAM_INTERVAL = val;
+                DDRC->DDR_SDRAM_INTERVAL = val;
             }
 
             /* MEM HALT */
@@ -261,10 +261,10 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
                  * Step 5: After self-refresh entry, restore:
                  *         CFG_6[ALT_TRN_INT] and CFG_3[DYN_REF_RATE_EN]
                  */
-                val = DDRC_CTRL->DDR_SDRAM_CFG_6;
+                val = DDRC->DDR_SDRAM_CFG_6;
                 val &= (~DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT_MASK);
                 val |=  DDRC_DDR_SDRAM_CFG_6_ALT_TRN_INT(altTrnInt);
-                DDRC_CTRL->DDR_SDRAM_CFG_6 = val;
+                DDRC->DDR_SDRAM_CFG_6 = val;
 
                 /* Before enabling DYN_REF, restore REFINT */
                 val = DDRC->DDR_SDRAM_INTERVAL;
@@ -718,7 +718,7 @@ static uint32_t DDR_GetRefreshDivider(void)
     }
 
     /* First, obtain the maximum refresh rate reported from DRAM */
-    maxRefRate = DDRC_CTRL->DDR_SDRAM_REF_RATE;
+    maxRefRate = DDRC->DDR_SDRAM_REF_RATE;
     ref_rate_cs1 = ((maxRefRate &
                      DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS1_MASK) >>
                      DDRC_DDR_SDRAM_REF_RATE_REF_RATE_CS1_SHIFT);
