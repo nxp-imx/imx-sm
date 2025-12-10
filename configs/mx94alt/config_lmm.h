@@ -66,6 +66,8 @@
         .boot[1] = 1U, \
         .boot[2] = 1U, \
         .boot[3] = 1U, \
+        .boot[4] = 1U, \
+        .boot[5] = 1U, \
     }
 
 /*--------------------------------------------------------------------------*/
@@ -88,6 +90,10 @@
         .bootSkip[2] = 1U, \
         .boot[3] = 2U, \
         .bootSkip[3] = 1U, \
+        .boot[4] = 2U, \
+        .bootSkip[4] = 1U, \
+        .boot[5] = 2U, \
+        .bootSkip[5] = 1U, \
     }
 
 /*--------------------------------------------------------------------------*/
@@ -103,7 +109,7 @@
     SM_LM1_CONFIG
 
 /*! Number of  mSel */
-#define SM_LM_NUM_MSEL  4U
+#define SM_LM_NUM_MSEL  6U
 
 /*! Number of  S-EENV */
 #define SM_LM_NUM_SEENV  0U
@@ -119,7 +125,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of start */
-#define SM_LM_NUM_START  15U
+#define SM_LM_NUM_START  19U
 
 /*! LM start list */
 #define SM_LM_START_DATA \
@@ -127,12 +133,16 @@
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M33S}, \
     {.lmId = 1U, .mSel = 3U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_M33S}, \
+    {.lmId = 1U, .mSel = 4U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_M70}, \
+    {.lmId = 1U, .mSel = 5U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_M71}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M33S}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P0}, \
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
      .numArg = 1, .arg[0] = 3U, }, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P1}, \
     {.lmId = 1U, .mSel = 3U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M33S}, \
+    {.lmId = 1U, .mSel = 4U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P0}, \
+    {.lmId = 1U, .mSel = 5U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P1}, \
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0}, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P0}, \
@@ -142,16 +152,20 @@
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0},
 
 /*! Config for number of stop */
-#define SM_LM_NUM_STOP  32U
+#define SM_LM_NUM_STOP  36U
 
 /*! LM stop list */
 #define SM_LM_STOP_DATA \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P1}, \
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55P}, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55P}, \
+    {.lmId = 1U, .mSel = 4U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P0}, \
+    {.lmId = 1U, .mSel = 5U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_M71}, \
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C3}, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C3}, \
+    {.lmId = 1U, .mSel = 4U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_M70}, \
+    {.lmId = 1U, .mSel = 5U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_M71}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_M7P0}, \
     {.lmId = 1U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C2}, \
     {.lmId = 1U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55C2}, \
