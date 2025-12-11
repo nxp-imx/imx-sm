@@ -307,6 +307,8 @@ void MONITOR_Yield(void)
 #if !defined(SIMU)
     uint32_t localPriMask = __get_BASEPRI();
     __set_BASEPRI(0U);
+    /* ISB required to ensure lower priority IRQs become visible */
+    __ISB();
     __set_BASEPRI(localPriMask);
 #endif
 }
