@@ -104,6 +104,8 @@ extern "C"{
 #define EMCEM_SRAMC_CHANNELS_OFFSET                             ((80U) + (37U))
 #elif SAFETY_BASE_MIMX943X
 #define EMCEM_SRAMC_CHANNELS_OFFSET                             ((128U) + (61U))
+#elif SAFETY_BASE_MIMX952X
+#define EMCEM_SRAMC_CHANNELS_OFFSET                             ((100U) + (35U))
 #else
 #error "Wrong platform defined."
 #endif /* SAFETY_BASE_MIMX95XX */

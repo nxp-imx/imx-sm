@@ -46,6 +46,8 @@ extern "C"{
 #include "eMcem_Types_MIMX95XX.h"
 #elif SAFETY_BASE_MIMX943X
 #include "eMcem_Types_MIMX943X.h"
+#elif SAFETY_BASE_MIMX952X
+#include "eMcem_Types_MIMX952X.h"
 #endif /* SAFETY_BASE_MIMX9XXX */
 
 /*==================================================================================================

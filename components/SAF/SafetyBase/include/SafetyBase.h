@@ -53,6 +53,8 @@ extern "C"{
 #include "SafetyBase_MIMX95XX_SAF.h"
 #elif (SAFETY_BASE_MIMX943X)
 #include "SafetyBase_MIMX943X_SAF.h"
+#elif (SAFETY_BASE_MIMX952X)
+#include "SafetyBase_MIMX952X_SAF.h"
 #endif
 #include "SafetyBase_IrqInterface.h"
 #include "SafetyBase_ErrorInterface.h"

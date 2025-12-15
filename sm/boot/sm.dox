@@ -138,3 +138,8 @@
  * @ingroup drivers
  */
 
+/*!
+ * @defgroup mx952_drivers MX952: MX952 Drivers
+ * @ingroup drivers
+ */
+

@@ -229,7 +229,8 @@ extern const eMcem_ConfigType eMcem_Config;
 #include "eMcem_MemMap.h"
 
 /*!
- * @brief    Array for masking out of the VFCCU, EIM and SRAMC reserved faults.
+ * @brief    Array for masking out of the VFCCU(80 faults), EIM(37 error injection channels), SRAMC(1 error injection channel)
+ *           and DDRC(3 error injection channels) reserved faults and error injection channels.
  */
 /* @violates @ref eMcem_Cfg_h_REF_0809 */
 extern const uint32 eMcem_au32StaticFaultMasks[EMCEM_FAULT_MASK_ARRAY_SIZE];

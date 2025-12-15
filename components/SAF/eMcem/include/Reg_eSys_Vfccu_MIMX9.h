@@ -133,7 +133,7 @@ extern "C"{
 #define FCCU_REACTION_SETS_PER_REG         (4U)
 #define FCCU_SHIFT_REACTION_SET_IN_REG     (8U)
 
-#if SAFETY_BASE_MIMX95XX
+#if ( SAFETY_BASE_MIMX95XX || SAFETY_BASE_MIMX952X )
 #define FCCU_IRQ0_3_REACT_MASK             ((uint32)(0x0000001CUL))    /* FCCU Interrupt 0...3 Reaction Handler mask */
 #define FCCU_IRQ0_REACT_MASK               ((uint32)(0x00000004UL))    /* FCCU Interrupt 0 Reaction Handler mask */
 #define FCCU_RES_REACT_MASK                ((uint32)(0x00000100UL))    /* FCCU Reset Reaction Handler mask */
@@ -141,7 +141,7 @@ extern "C"{
 #define FCCU_IRQ0_3_REACT_MASK             ((uint32)(0x0000007CUL))    /* FCCU Interrupt 0...5 Reaction Handler mask */
 #define FCCU_IRQ0_REACT_MASK               ((uint32)(0x00000004UL))    /* FCCU Interrupt 0 Reaction Handler mask */
 #define FCCU_RES_REACT_MASK                ((uint32)(0x00001000UL))    /* FCCU Reset Reaction Handler mask */
-#endif /* SAFETY_BASE_MIMX95XX */
+#endif /* SAFETY_BASE_MIMX9XXX */
 
 
 /*==================================================================================================

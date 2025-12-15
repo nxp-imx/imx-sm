@@ -1,0 +1,169 @@
+/*
+** ###################################################################
+**
+** Copyright 2026 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+ * @addtogroup DEV_SM
+ * @{
+ */
+
+/*!
+
+@defgroup DEV_SM_MX952 DEVICE_MX952: SM i.MX952 Device Implementation
+
+@brief Module for the i.MX952 device for the SM.
+
+Device Module
+=============
+
+Lots of detail here.
+
+*/
+
+/*!
+ * @addtogroup DEV_SM_MX952
+ * @{
+ */
+
+/*!
+@defgroup DEV_SM_MX952_CONFIG DEVICE_MX952_CONFIG: SM i.MX952 Device (CONFIG)
+
+@brief Module for the i.MX952 device configuration functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_HANDLERS DEVICE_MX952_HANDLERS: SM i.MX952 Device (HANDLERS)
+
+@brief Module for the i.MX952 device IRQ handlers.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_ROM DEVICE_MX952_ROM: SM i.MX952 Device (ROM)
+
+@brief Module for the i.MX952 device ROM functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_FUSE DEVICE_MX952_FUSE: SM i.MX952 Device (FUSE)
+
+@brief Module for the i.MX952 device fuse functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_RDC DEVICE_MX952_RDC: SM i.MX952 Device (RDC)
+
+@brief Module for the i.MX952 device RDC functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_POWER DEVICE_MX952_POWER: SM i.MX952 Device (POWER)
+
+@brief Module for the i.MX952 device power functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_SYS DEVICE_MX952_SYS: SM i.MX952 Device (SYS)
+
+@brief Module for the i.MX952 device system functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_MEM DEVICE_MX952_MEM: SM i.MX952 Device (MEM)
+
+@brief Module for the i.MX952 device memory functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_PERF DEVICE_MX952_PERF: SM i.MX952 Device (PERF)
+
+@brief Module for the i.MX952 device performance functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_CLOCK DEVICE_MX952_CLOCK: SM i.MX952 Device (CLOCK)
+
+@brief Module for the i.MX952 device clock functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_SENSOR DEVICE_MX952_SENSOR: SM i.MX952 Device (SENSOR)
+
+@brief Module for the i.MX952 device sensor functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_RESET DEVICE_MX952_RESET: SM i.MX952 Device (RESET)
+
+@brief Module for the i.MX952 device reset functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_VOLTAGE DEVICE_MX952_VOLTAGE: SM i.MX952 Device (VOLTAGE)
+
+@brief Module for the i.MX952 device voltage functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_PIN DEVICE_MX952_PIN: SM i.MX952 Device (PIN)
+
+@brief Module for the i.MX952 device pin functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_BBM DEVICE_MX952_BBM: SM i.MX952 Device (BBM)
+
+@brief Module for the i.MX952 device BBM functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_CPU DEVICE_MX952_CPU: SM i.MX952 Device (CPU)
+
+@brief Module for the i.MX952 device CPU functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_CTRL DEVICE_MX952_CTRL: SM i.MX952 Device (CTRL)
+
+@brief Module for the i.MX952 device control functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX952_FAULT DEVICE_MX952_FAULT: SM i.MX952 Device (FAULT)
+
+@brief Module for the i.MX952 device fault functions.
+*/
+
+/** @} */
+
+/** @} */
+

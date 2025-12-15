@@ -91,12 +91,19 @@ extern "C"{
 #define SAFETY_BASE_MIMX9486                0
 #endif
 
+#ifndef SAFETY_BASE_MIMX9529
+#define SAFETY_BASE_MIMX9529                0
+#endif
+
 #define SAFETY_BASE_MIMX95XX               (SAFETY_BASE_MIMX9596 != 0)
 
 #define SAFETY_BASE_MIMX943X               (SAFETY_BASE_MIMX9486 != 0)
 
+#define SAFETY_BASE_MIMX952X               (SAFETY_BASE_MIMX9529 != 0)
+
 #define SAFETY_BASE_MIMX9                 ((SAFETY_BASE_MIMX9596 != 0) || \
-                                           (SAFETY_BASE_MIMX9486 != 0))
+                                           (SAFETY_BASE_MIMX9486 != 0) || \
+                                           (SAFETY_BASE_MIMX9529 != 0))
 
 /**
 * @brief Define to specify the ARM architecture

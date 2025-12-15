@@ -88,6 +88,8 @@ extern "C"{
 #include "eMcem_VfccuFaultList_MIMX95XX.h"
 #elif SAFETY_BASE_MIMX943X
 #include "eMcem_VfccuFaultList_MIMX943X.h"
+#elif SAFETY_BASE_MIMX952X
+#include "eMcem_VfccuFaultList_MIMX952X.h"
 #endif /* SAFETY_BASE_MIMX9XXX */
 #include "SafetyBase.h"
 

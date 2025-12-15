@@ -99,6 +99,8 @@ extern "C"{
 #define EMCEM_DDRC_CHANNELS_OFFSET                ((80U) + (37U) + (1U))
 #elif SAFETY_BASE_MIMX943X
 #define EMCEM_DDRC_CHANNELS_OFFSET                ((128U) + (61U) + (1U))
+#elif SAFETY_BASE_MIMX952X
+#define EMCEM_DDRC_CHANNELS_OFFSET                ((100U) + (35U) + (1U))
 #else
 #error "Wrong platform defined."
 #endif /* SAFETY_BASE_MIMX95XX */

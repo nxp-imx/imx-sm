@@ -357,7 +357,7 @@ Std_ReturnType eMcem_AssertSWFault_Int( eMcem_FaultType nFaultId )
     /* Check if faultId is in VFCCU SW faults range */
     if( EMCEM_FAULT_IN_SW_FAULT_RANGE( nFaultId ) )
     {
-#if SAFETY_BASE_MIMX95XX
+#if ( SAFETY_BASE_MIMX95XX || SAFETY_BASE_MIMX952X )
         eMcem_Vfccu_AssertSWFault( (uint8)nFaultId - EMCEM_FCCU_FLT_SWNCF00 );
 #elif SAFETY_BASE_MIMX943X
         if(nFaultId < EMCEM_FCCU_FLT_SWNCF12 )
@@ -370,7 +370,7 @@ Std_ReturnType eMcem_AssertSWFault_Int( eMcem_FaultType nFaultId )
         }
 #else
 #error "Wrong platform defined."
-#endif /* SAFETY_BASE_MIMX95XX */
+#endif /* SAFETY_BASE_MIMX9XXX */
 
         nReturnValue = EMCEM_E_OK;
     }
@@ -396,7 +396,7 @@ Std_ReturnType eMcem_DeassertSWFault_Int( eMcem_FaultType nFaultId )
     /* Check if faultId is in VFCCU SW faults range */
     if( EMCEM_FAULT_IN_SW_FAULT_RANGE( nFaultId ) )
     {
-#if SAFETY_BASE_MIMX95XX
+#if ( SAFETY_BASE_MIMX95XX || SAFETY_BASE_MIMX952X )
         eMcem_Vfccu_DeassertSWFault( (uint8)nFaultId - EMCEM_FCCU_FLT_SWNCF00 );
 #elif SAFETY_BASE_MIMX943X
         if(nFaultId < EMCEM_FCCU_FLT_SWNCF12 )
@@ -409,7 +409,7 @@ Std_ReturnType eMcem_DeassertSWFault_Int( eMcem_FaultType nFaultId )
         }
 #else
 #error "Wrong platform defined."
-#endif /* SAFETY_BASE_MIMX95XX */
+#endif /* SAFETY_BASE_MIMX9XXX */
 
         nReturnValue = EMCEM_E_OK;
     }
