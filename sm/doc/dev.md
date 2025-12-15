@@ -105,13 +105,15 @@ production.
 The CONFIG option specifies what configuration directory to use. See the
 @ref CONFIGURATION section for more info.
 
-| CONFIG             | Description                                           |
-|--------------------|-------------------------------------------------------|
-| mx95evk            | MX95 EVK, Linux and M7                                |
-| mx95alt            | MX95 EVK, AP or M7, for BSP testing and DDR test tool |
-| mx94evk            | MX94 EVK, Linux and M7                                |
-| mx94alt            | MX94 EVK, AP or M7, for BSP testing and DDR test tool |
-| simu               | Simulation build, uses a simulated device and board.  |
+| CONFIG             | Description                                            |
+|--------------------|--------------------------------------------------------|
+| mx95evk            | MX95 EVK, Linux and M7                                 |
+| mx95alt            | MX95 EVK, AP or M7, for BSP testing and DDR test tool  |
+| mx94evk            | MX94 EVK, Linux and M7                                 |
+| mx94alt            | MX94 EVK, AP or M7, for BSP testing and DDR test tool  |
+| mx952evk           | MX952 EVK, Linux and M7                                |
+| mx952alt           | MX952 EVK, AP or M7, for BSP testing and DDR test tool |
+| simu               | Simulation build, uses a simulated device and board.   |
 
 Look in the configs directory to see the complete list of options. If a new configuration
 is required, see the [configtool](@ref CONFIGTOOL) section.
