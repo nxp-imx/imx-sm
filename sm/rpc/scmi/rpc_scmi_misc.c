@@ -867,7 +867,11 @@ static int32_t MiscControlSet(const scmi_caller_t *caller,
     const msg_rmisc3_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
 
     /* Check the numVal */
     if (in->numVal <= MISC_MAX_VAL_T)
@@ -955,7 +959,11 @@ static int32_t MiscControlGet(const scmi_caller_t *caller,
     const msg_rmisc4_t *in, msg_tmisc4_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -1044,7 +1052,11 @@ static int32_t MiscControlAction(const scmi_caller_t *caller,
     const msg_rmisc5_t *in, msg_tmisc5_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
 
     /* Check numArg value */
     if (in->numArg <= MISC_MAX_ARG_T)
@@ -1264,7 +1276,11 @@ static int32_t MiscControlNotify(const scmi_caller_t *caller,
     const msg_rmisc8_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -1829,7 +1845,11 @@ static int32_t MiscControlExtSet(const scmi_caller_t *caller,
     const msg_rmisc32_t *in, const scmi_msg_status_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
 
     /* Check the numVal is within the range */
     if (in->numVal <= MISC_MAX_EXTVAL)
@@ -1925,7 +1945,11 @@ static int32_t MiscControlExtGet(const scmi_caller_t *caller,
     const msg_rmisc33_t *in, msg_tmisc33_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
