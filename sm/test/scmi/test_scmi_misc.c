@@ -159,14 +159,25 @@ void TEST_ScmiMisc(void)
 
         printf("SCMI_MiscDdrInfoGet(%u)\n",
             SM_TEST_DEFAULT_CHN);
-        CHECK(SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
+        status = SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
             &attributes, &mts, &startLow, &startHigh,
-            &endLow, &endHigh));
-
-        printf("  attributes=0x%08X\n",  attributes);
-        printf("  mts=%u\n",  mts);
-        printf("  start=0x%X%08X\n",  startHigh, startLow);
-        printf("  end=0x%X%08X\n",  endHigh, endLow);
+            &endLow, &endHigh);
+        if (status == SCMI_ERR_SUCCESS)
+        {
+            printf("  attributes=0x%08X\n",  attributes);
+            printf("  mts=%u\n",  mts);
+            printf("  start=0x%X%08X\n",  startHigh, startLow);
+            printf("  end=0x%X%08X\n",  endHigh, endLow);
+        }
+        else if (status == SCMI_ERR_POWER)
+        {
+            printf("  no ddr power\n");
+        }
+        else
+        {
+            printf("  error @ line %d: %d\n", __LINE__, status);
+            SM_Error(status);
+        }
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscDdrInfoGet(SM_SCMI_NUM_CHN, 0U,
@@ -174,8 +185,13 @@ void TEST_ScmiMisc(void)
             SCMI_ERR_INVALID_PARAMETERS);
 
         /* Branch -- Nullpointer */
-        CHECK(SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
-            NULL, NULL, NULL, NULL, NULL, NULL));
+        status = SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
+            NULL, NULL, NULL, NULL, NULL, NULL);
+        if ((status != SCMI_ERR_SUCCESS) && (status != SCMI_ERR_POWER))
+        {
+            printf("  error @ line %d: %d\n", __LINE__, status);
+            SM_Error(status);
+        }
     }
 
     /* MiscReasonAttributes */
