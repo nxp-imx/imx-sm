@@ -32,15 +32,12 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-Removed:
-
-- **Support for i.MX95 A0/1**
-
 Added:
 
-- Support for sending frequency/voltage change messages to ELE
-- Misc controls for motor control BLK_CTRL registers on i.MX94
-- Support for DDR ECC multi-bit errors to generate a system/LM reset
+- **Support for i.MX952 A0**
+- **Support for the i.MX952 EVK**
+- Support for the i.MX95 Freedom Pro board
+- Support for configuring the video PLL when setting the display pixel clock
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.

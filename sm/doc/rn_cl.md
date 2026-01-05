@@ -15,31 +15,43 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX952<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|
-| [SM-156](https://jira.sw.nxp.com/projects/SM/issues/SM-156) | Add support for i.MX952 |   | | | Y |
-| [SM-158](https://jira.sw.nxp.com/projects/SM/issues/SM-158) | Add support for the i.MX952 EVK |   | | | Y |
+| [SM-156](https://jira.sw.nxp.com/projects/SM/issues/SM-156) | Add support for i.MX952 [[detail]](@ref RN_DETAIL_SM_156) |   | | | Y |
+| [SM-158](https://jira.sw.nxp.com/projects/SM/issues/SM-158) | Add support for the i.MX952 EVK [[detail]](@ref RN_DETAIL_SM_158) |   | | | Y |
 | [SM-321](https://jira.sw.nxp.com/projects/SM/issues/SM-321) | Add config file for the FRDM-IMX95-PRO board [[detail]](@ref RN_DETAIL_SM_321) |   | Y | | |
-| [SM-328](https://jira.sw.nxp.com/projects/SM/issues/SM-328) | i.MX95 Support dynamic video mode switching |   | Y | | |
+| [SM-328](https://jira.sw.nxp.com/projects/SM/issues/SM-328) | Add MX95 device-level support to configure VIDEO_PLL1 during DISP1PIX rate set [[detail]](@ref RN_DETAIL_SM_328) |   | Y | | |
 
 Improvement {#RN_CL_IMP}
 ------------
 
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX952<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|
-| [SM-317](https://jira.sw.nxp.com/projects/SM/issues/SM-317) | Test and coding standards improvements |   | Y | Y | Y |
 | [SM-322](https://jira.sw.nxp.com/projects/SM/issues/SM-322) | Give AP NS LMM 1 API access in mx95evksof [[detail]](@ref RN_DETAIL_SM_322) |   | Y | | |
-| [SM-323](https://jira.sw.nxp.com/projects/SM/issues/SM-323) | Improve ELE reset logging |   | Y | Y | Y |
+| [SM-323](https://jira.sw.nxp.com/projects/SM/issues/SM-323) | Improve ELE reset logging [[detail]](@ref RN_DETAIL_SM_323) |   | Y | Y | Y |
 | [SM-324](https://jira.sw.nxp.com/projects/SM/issues/SM-324) | Support fuse.r reading multiple fuses [[detail]](@ref RN_DETAIL_SM_324) |   | Y | Y | Y |
-| [SM-332](https://jira.sw.nxp.com/projects/SM/issues/SM-332) | Sync misc. changes across SoC |   | Y | Y | Y |
-| [SM-334](https://jira.sw.nxp.com/projects/SM/issues/SM-334) | Implement SWA for ERR052794 (DDR Self refresh workaround) |   | Y | Y | Y |
+| [SM-332](https://jira.sw.nxp.com/projects/SM/issues/SM-332) | Sync misc. changes across SoC [[detail]](@ref RN_DETAIL_SM_332) |   | Y | Y | Y |
+| [SM-337](https://jira.sw.nxp.com/projects/SM/issues/SM-337) | Disallow RTC time and alarm configuration outside of range [[detail]](@ref RN_DETAIL_SM_337) |   | Y | Y | Y |
+| [SM-339](https://jira.sw.nxp.com/projects/SM/issues/SM-339) | Support V2X fast hash for uboot and kernel containers authentication |   | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX952<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|
-| [SM-327](https://jira.sw.nxp.com/projects/SM/issues/SM-327) | Resources associated with mixes disabled in fuses should not be accessible |   | Y | Y | Y |
+| [SM-327](https://jira.sw.nxp.com/projects/SM/issues/SM-327) | Resources associated with mixes disabled in fuses should not be accessible [[detail]](@ref RN_DETAIL_SM_327) |   | Y | Y | Y |
 | [SM-330](https://jira.sw.nxp.com/projects/SM/issues/SM-330) | Configtool does not support hash comments unless at the start of a line [[detail]](@ref RN_DETAIL_SM_330) |   | Y | Y | Y |
 | [SM-333](https://jira.sw.nxp.com/projects/SM/issues/SM-333) | Duplicate atomic resources used in MIMX94 XSPI_RESPONDR macro [[detail]](@ref RN_DETAIL_SM_333) |   | | Y | |
+| [SM-335](https://jira.sw.nxp.com/projects/SM/issues/SM-335) | Only first BBNSM RTC rollover generates a notification [[detail]](@ref RN_DETAIL_SM_335) |   | Y | Y | Y |
+| [SM-336](https://jira.sw.nxp.com/projects/SM/issues/SM-336) | Incorrect index assigned for board RTC instance [[detail]](@ref RN_DETAIL_SM_336) |   | Y | Y | Y |
+| [SM-341](https://jira.sw.nxp.com/projects/SM/issues/SM-341) | SCMI misc unit test fails if no OEI init of DDR [[detail]](@ref RN_DETAIL_SM_341) |   | Y | Y | Y |
+
+Silicon Workaround {#RN_CL_REQ}
+------------
+
+These are a mix of silicon errata workarounds and recommended usage changes.
+
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX952<br> (A0) |
+|------------|-------------------------------|-------|---|---|---|
+| [SM-334](https://jira.sw.nxp.com/projects/SM/issues/SM-334) | Implement SWA for ERR052794 (DDR Self refresh workaround) [[detail]](@ref RN_DETAIL_SM_334) |   | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -52,6 +64,42 @@ Details {#CL_DETAIL}
 =======
 
 This section provides details for select changes.
+
+SM-156: Add support for i.MX952 {#RN_DETAIL_SM_156}
+----------
+
+Added device support for [i.MX952 family devices](@ref DEV_SM_MX952) inc. i.MX9529. See the devices/MIMX952 directory.
+
+Cfg files targeted at this device should include the following:
+
+    MAKE soc=MIMX952, board=<board name>, build=gcc_cross
+
+    include ../devices/MIMX952/configtool/device.cfg
+
+Note the list of resources, memory areas, etc. are different from i.MX95. See the configs/mx952evk.cfg file for reference.
+
+SM-158: Add support for the i.MX952 EVK {#RN_DETAIL_SM_158}
+----------
+
+Added board support for the [i.MX952 EVK](@ref BRD_SM_MX952EVK). See the boards/mcimx952evk directory. Compile with the following:
+
+    make config=mx952evk
+
+Information about this port can be found in the [NXP i.MX952 EVK](@ref PORT_MX952_EVK) section of the RM.
+
+Cfg files targeted at this board should include the following:
+
+    MAKE soc=MIMX952, board=mcimx952evk, build=gcc_cross
+
+Also added board support for the [i.MX952 stub](@ref BRD_SM_MX952STUB) (minimal board access). See the boards/mcimx952stub directory.
+
+Information about this port can be found in the [NXP i.MX952 Stub](@ref PORT_MX952_SB) section of the RM.
+
+Cfg files targeted at this board should include the following:
+
+    MAKE soc=MIMX952, board=mcimx952stub, build=gcc_cross
+
+This port is used mostly for emulation, early bring-up, and the DDR stress test tool. It does not contain code that will access PMICs, I2C devices, or GPIO.
 
 SM-321: Add config file for the FRDM-IMX95-PRO board {#RN_DETAIL_SM_321}
 ----------
@@ -66,6 +114,11 @@ SM-322: Give AP NS LMM 1 API access in mx95evksof {#RN_DETAIL_SM_322}
 
 Modified the cfg file to give the AP core control over the M7 LM.
 
+SM-323: Improve ELE reset logging {#RN_DETAIL_SM_323}
+----------
+
+Made ELE group resets preemptive. Centralized the handling of these resets. Modified the ELE debug dump function to timeout. This allows customer modification of the ELE handler to perform an ELE debug dump.
+
 SM-324: Support fuse.r reading multiple fuses {#RN_DETAIL_SM_324}
 ----------
 
@@ -76,6 +129,19 @@ Enhanced the SM debug monitor to support the fuse.r command with an optional sec
  * Verified that reading from 0 to max does not trigger the watchdog; if it does, the loop will service the watchdog as needed.
  * Updated monitor.md documentation to reflect the new command behavior and usage.
 
+SM-327: Resources associated with mixes disabled in fuses should not be accessible {#RN_DETAIL_SM_327}
+----------
+
+Clock/perf/power/reset dumps from SM will only list resources that not disabled by fuses. 
+
+SM-328: Add MX95 device-level support to configure VIDEO_PLL1 during DISP1PIX rate set {#RN_DETAIL_SM_328}
+----------
+
+Problem: Some host operating systems do not support multiple VIDEOPLL1 and VIDEOPLL1_VCO frequencies, which limits supported video modes to those which have a pixel clock divisible from a single VIDEOPLL1 frequency.
+
+Fix: Add support for dynamically configuring VIDEOPLL1 and VIDEOPLL1_VCO frequencies. The code maps a known set of pixel clock rates to suitable VIDEOPLL1 and VIDEOPLL1_VCO frequencies. Currently supported MIPI DSI pixel clock rates (in MHz):
+  297, 296.703, 241.5, 148.5, 148.352, 108.108, 74.25, 74.176, 71, 65, 54.054, 54, 40, 27.027, 27, 25.2, 25.175
+
 SM-330: Configtool does not support hash comments unless at the start of a line {#RN_DETAIL_SM_330}
 ----------
 
@@ -83,8 +149,38 @@ Add code to the configtool to remove trailing comments from a line. Existing cod
 
 Also fixed issue when cfg files had CR/LF line endings.
 
+SM-332: Sync misc. changes across SoC {#RN_DETAIL_SM_332}
+----------
+
+Copied various header changes to align SoC.
+
 SM-333: Duplicate atomic resources used in MIMX94 XSPI_RESPONDR macro {#RN_DETAIL_SM_333}
 ----------
 
 Removed the duplicate DAISY entries. Results in no changes to the generated header files. This change is to satisfy error checking in the FuSa config tool.
+
+SM-334: Implement SWA for ERR052794 (DDR Self refresh workaround) {#RN_DETAIL_SM_334}
+----------
+
+Implemented errata workaround as mentioned for ERR052794.
+
+SM-335: Only first BBNSM RTC rollover generates a notification {#RN_DETAIL_SM_335}
+----------
+
+Prevent clearing of the BBNSM RTC rollover interrupt within its interrupt handler. This ensures the BBNSM RTC continues to generate interrupts for all subsequent rollovers.
+
+SM-336: Incorrect index assigned for board RTC instance {#RN_DETAIL_SM_336}
+----------
+
+Updated board RTC instances to start after device RTC instances.
+
+SM-337: Disallow RTC time and alarm configuration outside of range {#RN_DETAIL_SM_337}
+----------
+
+Added validation checks to prevent invalid RTC time and alarm configurations outside the permitted range.
+
+SM-341: SCMI misc unit test fails if no OEI init of DDR {#RN_DETAIL_SM_341}
+----------
+
+Fixed unit test issue when the DRC has not been initialized.
 
