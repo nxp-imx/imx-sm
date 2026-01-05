@@ -8,17 +8,17 @@
     ],
     "licenseListVersion": "3.20"
   },
-  "name": "imx-sm-LF_6.12.49_2.2.0",
+  "name": "imx-sm-LF_6.18.2_1.0.0",
   "dataLicense": "CC0-1.0",
   "documentNamespace": "https://nxp.com/spdx/bb025cf9-2f45-467c-9d9e-5e8d3db9f683",
   "packages": [
     {
       "SPDXID": "SPDXRef-package-bb025cf9-2f45-467c-9d9e-5e8d3db9f683",
       "name": "imx-sm",
-      "versionInfo": "LF_6.12.49_2.2.0",
+      "versionInfo": "LF_6.18.2_1.0.0",
       "licenseConcluded": "(BSD-3-Clause)",
       "licenseDeclared": "(BSD-3-Clause)",
-      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b rel_imx_sm_2025q4",
+      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b rel_imx_sm_2026q1",
       "originator": "Organization: NXP",
       "supplier": "NOASSERTION",
       "externalRefs": [],
