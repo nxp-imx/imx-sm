@@ -512,12 +512,12 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
             ddrRxcWa->rxclkoffset[idx] = (int16_t) offset;
         }
 
+        /* Re-enable PHY Master interface */
+        DWC_DDRPHY_APB_WR(0x20054U, 0x1U);
+
 #ifdef DEBUG_RELOCK_PHY_CSRS // Re-lock PHY CSRs if this is defined
         DWC_DDRPHY_APB_WR(0xd0000U, 0x1U);
 #endif
-
-        /* Re-enable PHY Master interface */
-        DWC_DDRPHY_APB_WR(0x20054U, 0x1U);
 
 #if defined(INC_LIBC) && defined(DEBUG_PRINT_WA_RUNTIME)
         printf("RX WA took = %u\n", (uint32_t) (SYSCTR_GetUsec64()
