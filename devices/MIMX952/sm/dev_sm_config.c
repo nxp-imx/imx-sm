@@ -651,8 +651,6 @@ int32_t DEV_SM_WkupConfigLoad(void)
     BLK_CTRL_WAKEUPMIX->ASRC_MCLKOUT_MUX = wkupAsrcMclkMux;
     BLK_CTRL_WAKEUPMIX->BYPASS_AUDMIX_IP_CTRL = wkupBypassAudIpCtrl;
 
-    printf("restore %x %x\n", BLK_CTRL_WAKEUPMIX->ASRC_MCLKOUT_MUX, BLK_CTRL_WAKEUPMIX->BYPASS_AUDMIX_IP_CTRL);
-
     /* Load device config */
     if (status == SM_ERR_SUCCESS)
     {
@@ -971,7 +969,6 @@ int32_t DEV_SM_WkupPowerDownPre(void)
 
     wkupAsrcMclkMux = BLK_CTRL_WAKEUPMIX->ASRC_MCLKOUT_MUX;
     wkupBypassAudIpCtrl = BLK_CTRL_WAKEUPMIX->BYPASS_AUDMIX_IP_CTRL;
-    printf("save %x %x\n", BLK_CTRL_WAKEUPMIX->ASRC_MCLKOUT_MUX, BLK_CTRL_WAKEUPMIX->BYPASS_AUDMIX_IP_CTRL);
 
     /* Return status */
     return SM_ERR_SUCCESS;
