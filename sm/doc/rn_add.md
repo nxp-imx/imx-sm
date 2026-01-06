@@ -24,7 +24,7 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-None
+- Added new SCMI_ERR_TIMEOUT vendor status code
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
@@ -32,18 +32,14 @@ Configuration Changes {#RN_ADD_CONFIG}
 The following are cfg file changes that customers **must** make to their cfg files
 and rebuild their config headers.
 
-- Added name attributes to all DOM sections. Without this warnings will be generated.
-- Removed assignment of PERF_DRAM to AP-S and AP-NS as DDR frequency changes are not
-  supported.
+- On i.MX95, removed references to CLOCK_DISP2PIX and CLOCK_DISP3PIX
 
 Optional:
 
-- For i.MX94, assign owners for the new motor controls.
-- Defined the reaction to DDR ECC MBE errors. The default is to reset the system.
-  Other options are to do nothing or to reset an LM (assuming all of DDR is used
-  by one LM). NXP cfg files added an explicit configuration to reset the system.
-
-      FAULT_DRAM          OWNER, reaction=sys_reset
+- For V2X fast hash:
+  - Gave V2X read-only access to all of DDR
+  - On i.MX95, gave ELE ownership of EDMA2_CH0_1 and access to EDMA2_MP
+  - On i.MX94, moved ownership of ATU_V2X to AP-NS
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
@@ -55,12 +51,11 @@ Board Implementation Changes {#RN_ADD_BOARD_IMP}
 
 Customers **must** make the following changes in their board port:
 
-- Changes to check the power state of the A55 PF53 before trying to enable the
-  sensor or read the temp. This change applies only to the i.MX95 EVK and
-  customer systems that copy the EVK PMIC structure.
+- Fixed issue with the PCA2131 RTC domain index
+- Increased ELE group interrupts to preempt critical
 
 Optional, but recommended:
 
-- Converted C++ style comments to C style.
-
+- Added range checking to support code for the PCA2131 RTC
+- On i.MX94, removed unused UART3 pin settings
 

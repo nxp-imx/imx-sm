@@ -28,9 +28,10 @@ Improvement {#RN_CL_IMP}
 | [SM-322](https://jira.sw.nxp.com/projects/SM/issues/SM-322) | Give AP NS LMM 1 API access in mx95evksof [[detail]](@ref RN_DETAIL_SM_322) |   | Y | | |
 | [SM-323](https://jira.sw.nxp.com/projects/SM/issues/SM-323) | Improve ELE reset logging [[detail]](@ref RN_DETAIL_SM_323) |   | Y | Y | Y |
 | [SM-324](https://jira.sw.nxp.com/projects/SM/issues/SM-324) | Support fuse.r reading multiple fuses [[detail]](@ref RN_DETAIL_SM_324) |   | Y | Y | Y |
+| [SM-329](https://jira.sw.nxp.com/projects/SM/issues/SM-329) |  Remove A55 access to the GPU CGC on i.MX952 |   | | | Y |
 | [SM-332](https://jira.sw.nxp.com/projects/SM/issues/SM-332) | Sync misc. changes across SoC [[detail]](@ref RN_DETAIL_SM_332) |   | Y | Y | Y |
 | [SM-337](https://jira.sw.nxp.com/projects/SM/issues/SM-337) | Disallow RTC time and alarm configuration outside of range [[detail]](@ref RN_DETAIL_SM_337) |   | Y | Y | Y |
-| [SM-339](https://jira.sw.nxp.com/projects/SM/issues/SM-339) | Support V2X fast hash for uboot and kernel containers authentication |   | Y | Y | Y |
+| [SM-339](https://jira.sw.nxp.com/projects/SM/issues/SM-339) | Support V2X fast hash for uboot and kernel containers authentication [[detail]](@ref RN_DETAIL_SM_339) |   | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -43,6 +44,7 @@ Bug {#RN_CL_BUG}
 | [SM-335](https://jira.sw.nxp.com/projects/SM/issues/SM-335) | Only first BBNSM RTC rollover generates a notification [[detail]](@ref RN_DETAIL_SM_335) |   | Y | Y | Y |
 | [SM-336](https://jira.sw.nxp.com/projects/SM/issues/SM-336) | Incorrect index assigned for board RTC instance [[detail]](@ref RN_DETAIL_SM_336) |   | Y | Y | Y |
 | [SM-341](https://jira.sw.nxp.com/projects/SM/issues/SM-341) | SCMI misc unit test fails if no OEI init of DDR [[detail]](@ref RN_DETAIL_SM_341) |   | Y | Y | Y |
+| [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | AP access to VPU ATUs with VPU CGC causes an SM WDOG reset |   | | | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -117,7 +119,9 @@ Modified the cfg file to give the AP core control over the M7 LM.
 SM-323: Improve ELE reset logging {#RN_DETAIL_SM_323}
 ----------
 
-Made ELE group resets preemptive. Centralized the handling of these resets. Modified the ELE debug dump function to timeout. This allows customer modification of the ELE handler to perform an ELE debug dump.
+Made ELE group resets preemptive. Centralized the handling of these resets. Modified the ELE debug dump function to timeout. This allows customer modification of the ELE handler to perform an ELE debug dump. Added a new SCMI status code (SCMI_ERR_TIMEOUT) that will be returned on hardware timeouts, including an ELE dump request.
+
+Note this requires changes to the board port to increase the ELE group resets to IRQ_PRIO_PREEMPT_CRITICAL. Customers should make the same change.
 
 SM-324: Support fuse.r reading multiple fuses {#RN_DETAIL_SM_324}
 ----------
@@ -132,7 +136,9 @@ Enhanced the SM debug monitor to support the fuse.r command with an optional sec
 SM-327: Resources associated with mixes disabled in fuses should not be accessible {#RN_DETAIL_SM_327}
 ----------
 
-Clock/perf/power/reset dumps from SM will only list resources that not disabled by fuses. 
+Clock/perf/power/reset dumps from SM will only list resources that are not disabled by fuses.
+
+On i.MX95, removed CLOCK_DISP2PIX and CLOCK_DISP3PIX as they don't exist in hardware.
 
 SM-328: Add MX95 device-level support to configure VIDEO_PLL1 during DISP1PIX rate set {#RN_DETAIL_SM_328}
 ----------
@@ -140,7 +146,7 @@ SM-328: Add MX95 device-level support to configure VIDEO_PLL1 during DISP1PIX ra
 Problem: Some host operating systems do not support multiple VIDEOPLL1 and VIDEOPLL1_VCO frequencies, which limits supported video modes to those which have a pixel clock divisible from a single VIDEOPLL1 frequency.
 
 Fix: Add support for dynamically configuring VIDEOPLL1 and VIDEOPLL1_VCO frequencies. The code maps a known set of pixel clock rates to suitable VIDEOPLL1 and VIDEOPLL1_VCO frequencies. Currently supported MIPI DSI pixel clock rates (in MHz):
-  297, 296.703, 241.5, 148.5, 148.352, 108.108, 74.25, 74.176, 71, 65, 54.054, 54, 40, 27.027, 27, 25.2, 25.175
+  297, 296.703, 241.5, 148.5, 148.352, 108.108, 74.25, 74.176, 71, 65, 54.054, 54, 40, 27.027, 27, 25.2, 25.175.
 
 SM-330: Configtool does not support hash comments unless at the start of a line {#RN_DETAIL_SM_330}
 ----------
@@ -172,12 +178,30 @@ Prevent clearing of the BBNSM RTC rollover interrupt within its interrupt handle
 SM-336: Incorrect index assigned for board RTC instance {#RN_DETAIL_SM_336}
 ----------
 
-Updated board RTC instances to start after device RTC instances.
+Updated board RTC instances to start after device RTC instances. Customers should make the same fix to their board port if they use the PCA2131 RTC.
 
 SM-337: Disallow RTC time and alarm configuration outside of range {#RN_DETAIL_SM_337}
 ----------
 
-Added validation checks to prevent invalid RTC time and alarm configurations outside the permitted range.
+Added validation checks to prevent invalid RTC time and alarm configurations outside the permitted range. Customers should make the same changes to their board port if they use the PCA2131 RTC.
+
+SM-339: Support V2X fast hash for uboot and kernel containers authentication {#RN_DETAIL_SM_339}
+----------
+
+Made cfg updates to support V2X fast hash. The changes required vary by SoC.
+
+On i.MX95:
+- Give ELE ownership of EDMA2 channels 0 and 1
+- Remove AP-NS access to the above DMA channels
+- Give ELE access to the EDMA2 MP (shared with AP-NS)
+- Give V2X read-only access to all of DDR excluding the DDR region for the V2X FW (R/W)
+
+On i.MX94:
+- Move ownership of the ATU_V2X to AP-NS (from the SM)
+- Give V2X read-only access to all of DDR excluding the DDR region for the V2X FW (R/W)
+
+If customers want to support V2X fast hash then they will need similar changes in their cfg file.
+ 
 
 SM-341: SCMI misc unit test fails if no OEI init of DDR {#RN_DETAIL_SM_341}
 ----------
