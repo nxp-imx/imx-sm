@@ -45,6 +45,7 @@ Bug {#RN_CL_BUG}
 | [SM-336](https://jira.sw.nxp.com/projects/SM/issues/SM-336) | Incorrect index assigned for board RTC instance [[detail]](@ref RN_DETAIL_SM_336) |   | Y | Y | Y |
 | [SM-341](https://jira.sw.nxp.com/projects/SM/issues/SM-341) | SCMI misc unit test fails if no OEI init of DDR [[detail]](@ref RN_DETAIL_SM_341) |   | Y | Y | Y |
 | [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | AP access to VPU ATUs with VPU CGC causes an SM WDOG reset |   | | | Y |
+| [SM-346](https://jira.sw.nxp.com/projects/SM/issues/SM-346) | Fix DDR RX Replica sequence: re-enable PHY master before locking PHY CSRs [[detail]](@ref RN_DETAIL_SM_346) |   | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -207,4 +208,9 @@ SM-341: SCMI misc unit test fails if no OEI init of DDR {#RN_DETAIL_SM_341}
 ----------
 
 Fixed unit test issue when the DRC has not been initialized.
+
+SM-346: Fix DDR RX Replica sequence: re-enable PHY master before locking PHY CSRs {#RN_DETAIL_SM_346}
+----------
+
+Fix code sequence issue, where re-enabling of PHY master interface should be performed before re-locking of the PHY CSRs
 
