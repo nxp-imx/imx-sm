@@ -227,6 +227,24 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
     }
     else
     {
+        /* Manage CGCs that could interfere with CPU stoppage */
+
+        /* Save CGCs enable status */
+        bool cgcEnabledVpuEnc =
+            CCM_LpcgDirectCtrlGetEnable(CLOCK_LPCG_VPUENC);
+        bool cgcEnabledVpuJpegEnc =
+            CCM_LpcgDirectCtrlGetEnable(CLOCK_LPCG_VPUJPEGENC);
+        bool cgcEnabledVpuJpegDec =
+            CCM_LpcgDirectCtrlGetEnable(CLOCK_LPCG_VPUJPEGDEC);
+
+        /* Force CGCs active */
+        (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUENC,
+            true);
+        (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUJPEGENC,
+            true);
+        (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUJPEGDEC,
+            true);
+
         /* Added to improve the test coverage */
         SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
@@ -235,6 +253,14 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
         {
             status = SM_ERR_NOT_FOUND;
         }
+
+        /* Restore CGCs enable status */
+        (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUENC,
+            cgcEnabledVpuEnc);
+        (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUJPEGENC,
+            cgcEnabledVpuJpegEnc);
+        (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUJPEGDEC,
+            cgcEnabledVpuJpegDec);
     }
 
     /* Return status */

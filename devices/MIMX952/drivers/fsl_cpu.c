@@ -760,7 +760,7 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
                     (void) CPU_SemaphoreRequest(CPU_IDX_A55P, 100U);
 
                     /* Force GIC clock active */
-                    (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_NOCGIC, true);
+                    (void) CLOCK_CgcSetEnable(CLOCK_CGC_NOCGIC, true);
 
                     uint32_t gicdIdxLast = CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
                     for (uint32_t gicdIdx = 0U; gicdIdx <= gicdIdxLast; gicdIdx++)
