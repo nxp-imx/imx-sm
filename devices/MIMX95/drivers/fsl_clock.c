@@ -885,6 +885,8 @@ static bool CLOCK_SourcePdIsOn(uint32_t sourceIdx)
 /*--------------------------------------------------------------------------*/
 /* Get CCM clock source enable status                                       */
 /*--------------------------------------------------------------------------*/
+/* Just one switch */
+/* coverity[ccm] */
 bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
 {
     bool clkEnable = false;
@@ -1080,6 +1082,8 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
 /*--------------------------------------------------------------------------*/
 /* Set CCM clock source enable                                              */
 /*--------------------------------------------------------------------------*/
+/* Just one switch */
+/* coverity[ccm] */
 bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable)
 {
     bool updateEnable = false;
@@ -1295,6 +1299,8 @@ bool CLOCK_SourceSetBypass(uint32_t sourceIdx, bool bypass)
 /*--------------------------------------------------------------------------*/
 /* Get CCM clock source rate                                                */
 /*--------------------------------------------------------------------------*/
+/* Just one switch */
+/* coverity[ccm] */
 uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
 {
     uint64_t rate = 0UL;
@@ -1456,6 +1462,8 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
 /*--------------------------------------------------------------------------*/
 /* Set CCM clock source rate                                                */
 /*--------------------------------------------------------------------------*/
+/* Just one switch */
+/* coverity[ccm] */
 bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
     uint32_t roundRule)
 {

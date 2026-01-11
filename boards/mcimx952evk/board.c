@@ -6,7 +6,6 @@
 
 #include "sm.h"
 #include "board.h"
-#include "brd_sm_voltage.h"
 #include "fsl_lpuart.h"
 #include "fsl_lpi2c.h"
 #include "fsl_ccm.h"
