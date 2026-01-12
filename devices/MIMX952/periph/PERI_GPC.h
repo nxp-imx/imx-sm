@@ -37,11 +37,11 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
-**         CMSIS Peripheral Access Layer for GPC_CPU_CTRL
+**         CMSIS Peripheral Access Layer for GPC
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
 **     Copyright 2016-2026 NXP
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file GPC_CPU_CTRL.h
- * @version 1.0
- * @date 2026-01-10
- * @brief CMSIS Peripheral Access Layer for GPC_CPU_CTRL
+ * @file PERI_GPC.h
+ * @version 2.0
+ * @date 2024-10-29
+ * @brief CMSIS Peripheral Access Layer for GPC
  *
- * CMSIS Peripheral Access Layer for GPC_CPU_CTRL
+ * CMSIS Peripheral Access Layer for GPC
  */
 
-#if !defined(GPC_CPU_CTRL_H_)
-#define GPC_CPU_CTRL_H_                                   /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_GPC_H_)
+#define PERI_GPC_H_                              /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -221,7 +224,7 @@ typedef struct {
 
 #define GPC_CPU_CTRL_CMC_AUTHEN_CTRL_LOCK_LIST_MASK       (0x8000U)
 #define GPC_CPU_CTRL_CMC_AUTHEN_CTRL_LOCK_LIST_SHIFT      (15U)
-/*! LOCK_LIST - White list lock
+/*! LOCK_LIST - Allow list lock
  *  0b0..WHITE_LIST is not locked
  *  0b1..WHITE_LIST is locked
  */
@@ -229,7 +232,7 @@ typedef struct {
 
 #define GPC_CPU_CTRL_CMC_AUTHEN_CTRL_WHITE_LIST_MASK      (0xFFFF0000U)
 #define GPC_CPU_CTRL_CMC_AUTHEN_CTRL_WHITE_LIST_SHIFT     (16U)
-/*! WHITE_LIST - Domain ID white list */
+/*! WHITE_LIST - Domain ID accept list */
 #define GPC_CPU_CTRL_CMC_AUTHEN_CTRL_WHITE_LIST(x)        (((uint32_t)(((uint32_t)(x)) << GPC_CPU_CTRL_CMC_AUTHEN_CTRL_WHITE_LIST_SHIFT)) & GPC_CPU_CTRL_CMC_AUTHEN_CTRL_WHITE_LIST_MASK)
 /*! @} */
 
@@ -686,6 +689,21 @@ typedef struct {
 /*! @name CMC_WAKEUP_PLL_CTRL - CMC wakeup PLL control */
 /*! @{ */
 
+#define GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_STEP_CNT_MASK    (0xFFFFFFU)
+#define GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_STEP_CNT_SHIFT   (0U)
+/*! STEP_CNT - Step count, usage depends on CNT_MODE */
+#define GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_STEP_CNT(x)      (((uint32_t)(((uint32_t)(x)) << GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_STEP_CNT_SHIFT)) & GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_STEP_CNT_MASK)
+
+#define GPC_CMC_WAKEUP_PLL_CTRL_CNT_MODE_MASK    (0x30000000U)
+#define GPC_CMC_WAKEUP_PLL_CTRL_CNT_MODE_SHIFT   (28U)
+/*! CNT_MODE - Count mode
+ *  0b00..Counter disable mode: not use step counter, step completes once receiving step_done
+ *  0b01..Counter delay mode: delay after receiving step_done, delay cycle number is STEP_CNT
+ *  0b10..Ignore step_done response, the counter starts to count once step begins, when counter reaches STEP_CNT value, the step completes
+ *  0b11..Time out mode, the counter starts to count once step begins, the step completes when either step_done received or counting to STEP_CNT value
+ */
+#define GPC_CMC_WAKEUP_PLL_CTRL_CNT_MODE(x)      (((uint32_t)(((uint32_t)(x)) << GPC_CMC_WAKEUP_PLL_CTRL_CNT_MODE_SHIFT)) & GPC_CMC_WAKEUP_PLL_CTRL_CNT_MODE_MASK)
+
 #define GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_DISABLE_MASK     (0x80000000U)
 #define GPC_CPU_CTRL_CMC_WAKEUP_PLL_CTRL_DISABLE_SHIFT    (31U)
 /*! DISABLE - Disable this step
@@ -869,5 +887,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* GPC_CPU_CTRL_H_ */
+#endif  /* PERI_GPC_H_ */
 

@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241128
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for MU
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file MU.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_MU.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for MU
  *
  * CMSIS Peripheral Access Layer for MU
  */
 
-#if !defined(MU_H_)
-#define MU_H_                                    /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_MU_H_)
+#define PERI_MU_H_                               /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -107,16 +110,6 @@
 #else
   #error Not supported compiler type
 #endif
-/*!
- * @brief Core boot mode.
- */
-typedef enum _mu_core_boot_mode
-{
-    kMU_CoreBootFromAddr0 = 0x00U, /*!< Boot from 0x00.      */
-    kMU_CoreBootFromFlash = 0x01U, /*!< Boot from Flash base. */
-    kMU_CoreBootFromItcm  = 0x02U, /*!< Boot from ITCM base. */
-} mu_core_boot_mode_t;
-
 
 /* ----------------------------------------------------------------------------
    -- MU Peripheral Access Layer
@@ -244,10 +237,10 @@ typedef struct {
 #define MU_SR_MURIP_MASK                         (0x2U)
 #define MU_SR_MURIP_SHIFT                        (1U)
 /*! MURIP - MU Reset Interrupt Pending Flag
- *  0b0..Reset not issued
  *  0b0..No effect
- *  0b1..Reset issued
+ *  0b0..Reset not issued
  *  0b1..Clear the flag
+ *  0b1..Reset issued
  */
 #define MU_SR_MURIP(x)                           (((uint32_t)(((uint32_t)(x)) << MU_SR_MURIP_SHIFT)) & MU_SR_MURIP_MASK)
 
@@ -278,8 +271,8 @@ typedef struct {
 #define MU_SR_TEP_MASK                           (0x20U)
 #define MU_SR_TEP_SHIFT                          (5U)
 /*! TEP - MUB Transmit Empty Pending
- *  0b0..Not pending; MUA is reading no Receive (RRn) register
- *  0b1..Pending; MUA is reading a Receive (RRn) register
+ *  0b0..No MUA transmit empty event pending
+ *  0b1..Pending; any TCR[TIEn] field is 1 and TSR[TEn] flag is set
  */
 #define MU_SR_TEP(x)                             (((uint32_t)(((uint32_t)(x)) << MU_SR_TEP_SHIFT)) & MU_SR_TEP_MASK)
 
@@ -668,40 +661,40 @@ typedef struct {
 #define MU_GSR_GIP0_MASK                         (0x1U)
 #define MU_GSR_GIP0_SHIFT                        (0U)
 /*! GIP0 - MUB General-Purpose Interrupt Request Pending
- *  0b0..Not pending
  *  0b0..No effect
- *  0b1..Pending
+ *  0b0..Not pending
  *  0b1..Clear the flag
+ *  0b1..Pending
  */
 #define MU_GSR_GIP0(x)                           (((uint32_t)(((uint32_t)(x)) << MU_GSR_GIP0_SHIFT)) & MU_GSR_GIP0_MASK)
 
 #define MU_GSR_GIP1_MASK                         (0x2U)
 #define MU_GSR_GIP1_SHIFT                        (1U)
 /*! GIP1 - MUB General-Purpose Interrupt Request Pending
- *  0b0..Not pending
  *  0b0..No effect
- *  0b1..Pending
+ *  0b0..Not pending
  *  0b1..Clear the flag
+ *  0b1..Pending
  */
 #define MU_GSR_GIP1(x)                           (((uint32_t)(((uint32_t)(x)) << MU_GSR_GIP1_SHIFT)) & MU_GSR_GIP1_MASK)
 
 #define MU_GSR_GIP2_MASK                         (0x4U)
 #define MU_GSR_GIP2_SHIFT                        (2U)
 /*! GIP2 - MUB General-Purpose Interrupt Request Pending
- *  0b0..Not pending
  *  0b0..No effect
- *  0b1..Pending
+ *  0b0..Not pending
  *  0b1..Clear the flag
+ *  0b1..Pending
  */
 #define MU_GSR_GIP2(x)                           (((uint32_t)(((uint32_t)(x)) << MU_GSR_GIP2_SHIFT)) & MU_GSR_GIP2_MASK)
 
 #define MU_GSR_GIP3_MASK                         (0x8U)
 #define MU_GSR_GIP3_SHIFT                        (3U)
 /*! GIP3 - MUB General-Purpose Interrupt Request Pending
- *  0b0..Not pending
  *  0b0..No effect
- *  0b1..Pending
+ *  0b0..Not pending
  *  0b1..Clear the flag
+ *  0b1..Pending
  */
 #define MU_GSR_GIP3(x)                           (((uint32_t)(((uint32_t)(x)) << MU_GSR_GIP3_SHIFT)) & MU_GSR_GIP3_MASK)
 /*! @} */
@@ -902,5 +895,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* MU_H_ */
+#endif  /* PERI_MU_H_ */
 

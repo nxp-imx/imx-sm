@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for TMPSNS
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file TMPSNS.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_TMPSNS.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for TMPSNS
  *
  * CMSIS Peripheral Access Layer for TMPSNS
  */
 
-#if !defined(TMPSNS_H_)
-#define TMPSNS_H_                                /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_TMPSNS_H_)
+#define PERI_TMPSNS_H_                           /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -468,8 +471,8 @@ typedef struct {
 /*! THR0_IF - Threshold0 Status Flag
  *  0b0..Event did not occur
  *  0b0..No effect
+ *  0b1..Clear the flag when writing the corresponding bit at STAT0_CLR register address
  *  0b1..Event occurred
- *  0b1..Clear the flag
  */
 #define TMPSNS_STAT0_THR0_IF(x)                  (((uint32_t)(((uint32_t)(x)) << TMPSNS_STAT0_THR0_IF_SHIFT)) & TMPSNS_STAT0_THR0_IF_MASK)
 
@@ -478,8 +481,8 @@ typedef struct {
 /*! THR1_IF - Threshold1 Status Flag
  *  0b0..Event did not occur
  *  0b0..No effect
+ *  0b1..Clear the flag when writing the corresponding bit at STAT0_CLR register address
  *  0b1..Event occurred
- *  0b1..Clear the flag
  */
 #define TMPSNS_STAT0_THR1_IF(x)                  (((uint32_t)(((uint32_t)(x)) << TMPSNS_STAT0_THR1_IF_SHIFT)) & TMPSNS_STAT0_THR1_IF_MASK)
 
@@ -488,8 +491,8 @@ typedef struct {
 /*! THR2_IF - Threshold2 Status Flag
  *  0b0..Event did not occur
  *  0b0..No effect
+ *  0b1..Clear the flag when writing the corresponding bit at STAT0_CLR register address
  *  0b1..Event occurred
- *  0b1..Clear the flag
  */
 #define TMPSNS_STAT0_THR2_IF(x)                  (((uint32_t)(((uint32_t)(x)) << TMPSNS_STAT0_THR2_IF_SHIFT)) & TMPSNS_STAT0_THR2_IF_MASK)
 
@@ -1113,8 +1116,8 @@ typedef struct {
 /*! THR4_IF - Threshold4 Status Flag
  *  0b0..Event did not occur
  *  0b0..No effect
+ *  0b1..Clear the flag when writing the corresponding bit at STAT1_CLR register address
  *  0b1..Event occurred
- *  0b1..Clear the flag
  */
 #define TMPSNS_STAT1_THR4_IF(x)                  (((uint32_t)(((uint32_t)(x)) << TMPSNS_STAT1_THR4_IF_SHIFT)) & TMPSNS_STAT1_THR4_IF_MASK)
 
@@ -1123,8 +1126,8 @@ typedef struct {
 /*! THR5_IF - Threshold5 Status Flag
  *  0b0..Event did not occur
  *  0b0..No effect
+ *  0b1..Clear the flag when writing the corresponding bit at STAT1_CLR register address
  *  0b1..Event occurred
- *  0b1..Clear the flag
  */
 #define TMPSNS_STAT1_THR5_IF(x)                  (((uint32_t)(((uint32_t)(x)) << TMPSNS_STAT1_THR5_IF_SHIFT)) & TMPSNS_STAT1_THR5_IF_MASK)
 
@@ -1590,5 +1593,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* TMPSNS_H_ */
+#endif  /* PERI_TMPSNS_H_ */
 

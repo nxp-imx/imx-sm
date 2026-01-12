@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for GPU_BLK_CTRL_GPUMIX
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file GPU_BLK_CTRL_GPUMIX.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_GPU_BLK_CTRL_GPUMIX.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for GPU_BLK_CTRL_GPUMIX
  *
  * CMSIS Peripheral Access Layer for GPU_BLK_CTRL_GPUMIX
  */
 
-#if !defined(GPU_BLK_CTRL_GPUMIX_H_)
-#define GPU_BLK_CTRL_GPUMIX_H_                   /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_GPU_BLK_CTRL_GPUMIX_H_)
+#define PERI_GPU_BLK_CTRL_GPUMIX_H_              /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -124,6 +127,8 @@ typedef struct {
   __IO uint32_t GPURESET;                          /**< GPU Reset Release, offset: 0x8 */
   __IO uint32_t DBGCTRL;                           /**< Debug Control, offset: 0xC */
   __IO uint32_t AWAKEUPS_BYPASS;                   /**< AWAKEUPS Bypass GPU Input, offset: 0x10 */
+  __I  uint32_t GPU_QACTIVE;                       /**< GPU QACTIVE Pin Value, offset: 0x14 */
+  __IO uint32_t GPU_QDENY;                         /**< GPU QDENY response status, offset: 0x18 */
 } GPU_BLK_CTRL_GPUMIX_Type;
 
 /* ----------------------------------------------------------------------------
@@ -217,20 +222,29 @@ typedef struct {
 #define GPU_BLK_CTRL_GPUMIX_AWAKEUPS_BYPASS_AWAKEUPS(x) (((uint32_t)(((uint32_t)(x)) << GPU_BLK_CTRL_GPUMIX_AWAKEUPS_BYPASS_AWAKEUPS_SHIFT)) & GPU_BLK_CTRL_GPUMIX_AWAKEUPS_BYPASS_AWAKEUPS_MASK)
 /*! @} */
 
+/*! @name GPU_QACTIVE - GPU QACTIVE Pin Value */
+/*! @{ */
+
+#define GPU_BLK_CTRL_GPUMIX_GPU_QACTIVE_QACTIVE_MASK (0x1U)
+#define GPU_BLK_CTRL_GPUMIX_GPU_QACTIVE_QACTIVE_SHIFT (0U)
+/*! QACTIVE - QACTIVE Pin Value */
+#define GPU_BLK_CTRL_GPUMIX_GPU_QACTIVE_QACTIVE(x) (((uint32_t)(((uint32_t)(x)) << GPU_BLK_CTRL_GPUMIX_GPU_QACTIVE_QACTIVE_SHIFT)) & GPU_BLK_CTRL_GPUMIX_GPU_QACTIVE_QACTIVE_MASK)
+/*! @} */
+
+/*! @name GPU_QDENY - GPU QDENY response status */
+/*! @{ */
+
+#define GPU_BLK_CTRL_GPUMIX_GPU_QDENY_QDENY_MASK (0x1U)
+#define GPU_BLK_CTRL_GPUMIX_GPU_QDENY_QDENY_SHIFT (0U)
+/*! QDENY - QDENY Pin Value */
+#define GPU_BLK_CTRL_GPUMIX_GPU_QDENY_QDENY(x)   (((uint32_t)(((uint32_t)(x)) << GPU_BLK_CTRL_GPUMIX_GPU_QDENY_QDENY_SHIFT)) & GPU_BLK_CTRL_GPUMIX_GPU_QDENY_QDENY_MASK)
+/*! @} */
+
 
 /*!
  * @}
  */ /* end of group GPU_BLK_CTRL_GPUMIX_Register_Masks */
 
-/* BLK_CTRL_GPUMIX - Peripheral instance base addresses */
-/** Peripheral BLK_CTRL_GPUMIX base address */
-#define BLK_CTRL_GPUMIX_BASE                (0x4D810000u)
-/** Peripheral BLK_CTRL_GPUMIX base pointer */
-#define BLK_CTRL_GPUMIX                     ((GPU_BLK_CTRL_GPUMIX_Type *)BLK_CTRL_GPUMIX_BASE)
-/** Array initializer of BLK_CTRL_GPUMIX peripheral base addresses */
-#define BLK_CTRL_GPUMIX_BASE_ADDRS           { BLK_CTRL_GPUMIX_BASE }
-/** Array initializer of BLK_CTRL_GPUMIX peripheral base pointers */
-#define BLK_CTRL_GPUMIX_BASE_PTRS            { BLK_CTRL_GPUMIX }
 
 /*!
  * @}
@@ -260,4 +274,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* GPU_BLK_CTRL_GPUMIX_H_ */
+#endif  /* PERI_GPU_BLK_CTRL_GPUMIX_H_ */
+

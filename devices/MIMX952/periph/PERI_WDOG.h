@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for WDOG
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file WDOG.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_WDOG.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for WDOG
  *
  * CMSIS Peripheral Access Layer for WDOG
  */
 
-#if !defined(WDOG_H_)
-#define WDOG_H_                                  /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_WDOG_H_)
+#define PERI_WDOG_H_                             /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -251,6 +254,14 @@ typedef struct {
  *  0b1..Enable
  */
 #define WDOG_CS_WIN(x)                           (((uint32_t)(((uint32_t)(x)) << WDOG_CS_WIN_SHIFT)) & WDOG_CS_WIN_MASK)
+
+#define WDOG_CS_CLEAR_MASK                       (0x10000U)
+#define WDOG_CS_CLEAR_SHIFT                      (16U)
+/*! CLEAR - WDOG Reset Clear
+ *  0b0..No effect
+ *  0b1..Clears WDOG reset.
+ */
+#define WDOG_CS_CLEAR(x)                         (((uint32_t)(((uint32_t)(x)) << WDOG_CS_CLEAR_SHIFT)) & WDOG_CS_CLEAR_MASK)
 /*! @} */
 
 /*! @name CNT - WDOG Counter */
@@ -333,5 +344,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* WDOG_H_ */
+#endif  /* PERI_WDOG_H_ */
 

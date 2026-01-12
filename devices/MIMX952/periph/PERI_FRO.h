@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for FRO
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file FRO.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_FRO.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for FRO
  *
  * CMSIS Peripheral Access Layer for FRO
  */
 
-#if !defined(FRO_H_)
-#define FRO_H_                                   /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_FRO_H_)
+#define PERI_FRO_H_                              /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -390,7 +393,7 @@ typedef struct {
 
 #define FRO_TRIMCNT_TRIMCNT_MASK                 (0xFFFFFFFFU)
 #define FRO_TRIMCNT_TRIMCNT_SHIFT                (0U)
-/*! TRIMCNT - Trim Expected Count */
+/*! TRIMCNT - Trim Count */
 #define FRO_TRIMCNT_TRIMCNT(x)                   (((uint32_t)(((uint32_t)(x)) << FRO_TRIMCNT_TRIMCNT_SHIFT)) & FRO_TRIMCNT_TRIMCNT_MASK)
 /*! @} */
 
@@ -428,5 +431,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* FRO_H_ */
+#endif  /* PERI_FRO_H_ */
 

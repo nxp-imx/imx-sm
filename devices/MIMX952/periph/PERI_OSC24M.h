@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 206
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for OSC24M
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file OSC24M.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_OSC24M.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for OSC24M
  *
  * CMSIS Peripheral Access Layer for OSC24M
  */
 
-#if !defined(OSC24M_H_)
-#define OSC24M_H_                                /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_OSC24M_H_)
+#define PERI_OSC24M_H_                           /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -119,7 +122,9 @@
 
 /** OSC24M - Register Layout Typedef */
 typedef struct {
-       uint8_t RESERVED_0[2048];
+       uint8_t RESERVED_0[8];
+  __IO uint32_t OSC_OK_DLY;                        /**< Crystal Oscillator OK Delay, offset: 0x8 */
+       uint8_t RESERVED_1[2036];
   __I  uint32_t DIGPROG_DEVICE_ID;                 /**< Device ID, offset: 0x800 */
 } OSC24M_Type;
 
@@ -132,22 +137,31 @@ typedef struct {
  * @{
  */
 
+/*! @name OSC_OK_DLY - Crystal Oscillator OK Delay */
+/*! @{ */
+
+#define OSC24M_OSC_OK_DLY_OSC_OK_DLY_MASK        (0xFFU)
+#define OSC24M_OSC_OK_DLY_OSC_OK_DLY_SHIFT       (0U)
+/*! OSC_OK_DLY - Oscillator Startup Delay Count */
+#define OSC24M_OSC_OK_DLY_OSC_OK_DLY(x)          (((uint32_t)(((uint32_t)(x)) << OSC24M_OSC_OK_DLY_OSC_OK_DLY_SHIFT)) & OSC24M_OSC_OK_DLY_OSC_OK_DLY_MASK)
+/*! @} */
+
 /*! @name DIGPROG_DEVICE_ID - Device ID */
 /*! @{ */
 
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK (0xFFU)
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT (0U)
-/*! DIGPROG_MINOR - Bit[3:0] is the metal layer revision. Bit[7:4] is the base layer revision. */
+/*! DIGPROG_MINOR - DIGPROG Minor Device ID */
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR(x) (((uint32_t)(((uint32_t)(x)) << OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT)) & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
 
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_LOWER_MASK (0xFF00U)
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_LOWER_SHIFT (8U)
-/*! DIGPROG_MAJOR_LOWER - DIGPROG_MAJOR_LOWER */
+/*! DIGPROG_MAJOR_LOWER - DIGPROG Major-Lower Device ID */
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_LOWER(x) (((uint32_t)(((uint32_t)(x)) << OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_LOWER_SHIFT)) & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_LOWER_MASK)
 
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_UPPER_MASK (0xFF0000U)
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_UPPER_SHIFT (16U)
-/*! DIGPROG_MAJOR_UPPER - DIGPROG_MAJOR_UPPER */
+/*! DIGPROG_MAJOR_UPPER - DIGPROG Major-Upper Device ID */
 #define OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_UPPER(x) (((uint32_t)(((uint32_t)(x)) << OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_UPPER_SHIFT)) & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MAJOR_UPPER_MASK)
 /*! @} */
 
@@ -185,5 +199,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* OSC24M_H_ */
+#endif  /* PERI_OSC24M_H_ */
 

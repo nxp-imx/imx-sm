@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for CCM
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file CCM.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_CCM.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for CCM
  *
  * CMSIS Peripheral Access Layer for CCM
  */
 
-#if !defined(CCM_H_)
-#define CCM_H_                                   /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_CCM_H_)
+#define PERI_CCM_H_                              /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -128,15 +131,15 @@
 typedef struct {
   struct {                                         /* offset: 0x0, array step: 0x80 */
     struct {                                         /* offset: 0x0 */
-      __IO uint32_t RW;                                /**< Clock Root Control Register, offset: 0x0 */
-      __IO uint32_t SET;                               /**< Clock Root Control Register, offset: 0x4 */
-      __IO uint32_t CLR;                               /**< Clock Root Control Register, offset: 0x8 */
-      __IO uint32_t TOG;                               /**< Clock Root Control Register, offset: 0xC */
+      __IO uint32_t RW;                                /**< Clock Root Control, offset: 0x0 */
+      __IO uint32_t SET;                               /**< Clock Root Control, offset: 0x4 */
+      __IO uint32_t CLR;                               /**< Clock Root Control, offset: 0x8 */
+      __IO uint32_t TOG;                               /**< Clock Root Control, offset: 0xC */
     } CLOCK_ROOT_CONTROL;
          uint8_t RESERVED_0[16];
-    __I  uint32_t STATUS0;                           /**< Clock root working status, array offset: 0x20, array step: 0x80 */
+    __I  uint32_t STATUS0;                           /**< Clock Root Working Status, array offset: 0x20, array step: 0x80 */
          uint8_t RESERVED_1[12];
-    __IO uint32_t AUTHEN;                            /**< Clock root access control, array offset: 0x30, array step: 0x80 */
+    __IO uint32_t AUTHEN;                            /**< Clock Root Access Control, array offset: 0x30, array step: 0x80 */
          uint8_t RESERVED_2[76];
   } CLOCK_ROOT[CCM_CLOCK_ROOT_COUNT];
        uint8_t RESERVED_0[1792];
@@ -160,74 +163,74 @@ typedef struct {
        uint8_t RESERVED_1[768];
   struct {                                         /* offset: 0x4C00, array step: 0x20 */
     struct {                                         /* offset: 0x4C00 */
-      __IO uint32_t RW;                                /**< General purpose register, offset: 0x4C00 */
-      __IO uint32_t SET;                               /**< General purpose register, offset: 0x4C04 */
-      __IO uint32_t CLR;                               /**< General purpose register, offset: 0x4C08 */
-      __IO uint32_t TOG;                               /**< General purpose register, offset: 0x4C0C */
+      __IO uint32_t RW;                                /**< General Purpose Register, offset: 0x4C00 */
+      __IO uint32_t SET;                               /**< General Purpose Register, offset: 0x4C04 */
+      __IO uint32_t CLR;                               /**< General Purpose Register, offset: 0x4C08 */
+      __IO uint32_t TOG;                               /**< General Purpose Register, offset: 0x4C0C */
     } GPR_PRIVATE;
     struct {                                         /* offset: 0x4C10 */
-      __IO uint32_t RW;                                /**< GPR access control, offset: 0x4C10 */
-      __IO uint32_t SET;                               /**< GPR access control, offset: 0x4C14 */
-      __IO uint32_t CLR;                               /**< GPR access control, offset: 0x4C18 */
-      __IO uint32_t TOG;                               /**< GPR access control, offset: 0x4C1C */
+      __IO uint32_t RW;                                /**< GPR Access Control, offset: 0x4C10 */
+      __IO uint32_t SET;                               /**< GPR Access Control, offset: 0x4C14 */
+      __IO uint32_t CLR;                               /**< GPR Access Control, offset: 0x4C18 */
+      __IO uint32_t TOG;                               /**< GPR Access Control, offset: 0x4C1C */
     } GPR_PRIVATE_AUTHEN;
   } GPR_PRIVATE[CCM_GPR_PRIVATE_COUNT];
        uint8_t RESERVED_2[768];
   struct {                                         /* offset: 0x5000, array step: 0x40 */
-    __IO uint32_t DIRECT;                            /**< Clock source direct control, array offset: 0x5000, array step: 0x40 */
-    __I  uint32_t LPM_STATUS0;                       /**< Low power mode information transfer status, array offset: 0x5004, array step: 0x40 */
-    __I  uint32_t LPM_STATUS1;                       /**< Low power mode information transfer status, array offset: 0x5008, array step: 0x40 */
+    __IO uint32_t DIRECT;                            /**< Clock Source Direct Control, array offset: 0x5000, array step: 0x40 */
+    __I  uint32_t LPM_STATUS0;                       /**< Low Power Mode Information Transfer Status, array offset: 0x5004, array step: 0x40 */
+    __I  uint32_t LPM_STATUS1;                       /**< Low Power Mode Information Transfer Status, array offset: 0x5008, array step: 0x40 */
          uint8_t RESERVED_0[4];
-    __IO uint32_t LPM0;                              /**< Clock source low power mode setting, array offset: 0x5010, array step: 0x40 */
-    __IO uint32_t LPM1;                              /**< clock source low power mode setting, array offset: 0x5014, array step: 0x40 */
+    __IO uint32_t LPM0;                              /**< Clock Source Low Power Mode Setting, array offset: 0x5010, array step: 0x40 */
+    __IO uint32_t LPM1;                              /**< Clock Source Low Power Mode Setting, array offset: 0x5014, array step: 0x40 */
          uint8_t RESERVED_1[4];
-    __I  uint32_t LPM_CUR;                           /**< LPM setting of current CPU domain, array offset: 0x501C, array step: 0x40 */
-    __I  uint32_t STATUS0;                           /**< Clock source working status, array offset: 0x5020, array step: 0x40 */
-    __I  uint32_t STATUS1;                           /**< Clock source domain status, array offset: 0x5024, array step: 0x40 */
+    __I  uint32_t LPM_CUR;                           /**< LPM Setting of Current CPU Domain, array offset: 0x501C, array step: 0x40 */
+    __I  uint32_t STATUS0;                           /**< Clock Source Working Status, array offset: 0x5020, array step: 0x40 */
+    __I  uint32_t STATUS1;                           /**< Clock Source Domain Status, array offset: 0x5024, array step: 0x40 */
          uint8_t RESERVED_2[8];
-    __IO uint32_t AUTHEN;                            /**< Clock Source access control, array offset: 0x5030, array step: 0x40 */
+    __IO uint32_t AUTHEN;                            /**< Clock Source Access Control, array offset: 0x5030, array step: 0x40 */
          uint8_t RESERVED_3[12];
   } OSCPLL[CCM_OSCPLL_COUNT];
        uint8_t RESERVED_3[9792];
   struct {                                         /* offset: 0x8000, array step: 0x40 */
-    __IO uint32_t DIRECT;                            /**< LPCG direct control, array offset: 0x8000, array step: 0x40 */
-    __I  uint32_t LPM_STATUS0;                       /**< Low power mode information transfer status, array offset: 0x8004, array step: 0x40 */
-    __I  uint32_t LPM_STATUS1;                       /**< Low power mode information transfer status, array offset: 0x8008, array step: 0x40 */
+    __IO uint32_t DIRECT;                            /**< LPCG Direct Control, array offset: 0x8000, array step: 0x40 */
+    __I  uint32_t LPM_STATUS0;                       /**< Low Power Mode Information Transfer Status, array offset: 0x8004, array step: 0x40 */
+    __I  uint32_t LPM_STATUS1;                       /**< Low Power Mode Information Transfer Status, array offset: 0x8008, array step: 0x40 */
          uint8_t RESERVED_0[4];
-    __IO uint32_t LPM0;                              /**< LPCG low power mode setting, array offset: 0x8010, array step: 0x40 */
-    __IO uint32_t LPM1;                              /**< LPCG low power mode setting, array offset: 0x8014, array step: 0x40 */
+    __IO uint32_t LPM0;                              /**< LPCG Low Power Mode Setting, array offset: 0x8010, array step: 0x40 */
+    __IO uint32_t LPM1;                              /**< LPCG Low Power Mode Setting, array offset: 0x8014, array step: 0x40 */
          uint8_t RESERVED_1[4];
-    __IO uint32_t LPM_CUR;                           /**< LPM setting of current CPU domain, array offset: 0x801C, array step: 0x40 */
-    __I  uint32_t STATUS0;                           /**< LPCG working status, array offset: 0x8020, array step: 0x40 */
-    __I  uint32_t STATUS1;                           /**< LPCG domain status, array offset: 0x8024, array step: 0x40 */
+    __IO uint32_t LPM_CUR;                           /**< LPM Setting of Current CPU Domain, array offset: 0x801C, array step: 0x40 */
+    __I  uint32_t STATUS0;                           /**< LPCG Working Status, array offset: 0x8020, array step: 0x40 */
+    __I  uint32_t STATUS1;                           /**< LPCG Domain Status, array offset: 0x8024, array step: 0x40 */
          uint8_t RESERVED_2[8];
-    __IO uint32_t AUTHEN;                            /**< LPCG access control, array offset: 0x8030, array step: 0x40 */
+    __IO uint32_t AUTHEN;                            /**< LPCG Access Control, array offset: 0x8030, array step: 0x40 */
          uint8_t RESERVED_3[12];
   } LPCG[CCM_LPCG_COUNT];
        uint8_t RESERVED_4[3840];
-  __IO uint32_t CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG0 to LPCG31 QACCEPTN TIMEOUT interrupt status register., offset: 0xD000 */
-  __IO uint32_t CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG32 to LPCG63 QACCEPTN TIMEOUT interrupt status register., offset: 0xD004 */
-  __IO uint32_t CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG64 to LPCG95 QACCEPTN TIMEOUT interrupt status register., offset: 0xD008 */
-  __IO uint32_t CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG96 to LPCG127 QACCEPTN TIMEOUT interrupt status register., offset: 0xD00C */
-  __IO uint32_t CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG128 to LPCG159 QACCEPTN TIMEOUT interrupt status register., offset: 0xD010 */
-  __IO uint32_t CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG160 to LPCG191 QACCEPTN TIMEOUT interrupt status register., offset: 0xD014 */
-  __IO uint32_t CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG192 to LPCG223 QACCEPTN TIMEOUT interrupt status register., offset: 0xD018 */
-  __IO uint32_t CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG224 to LPCG255 QACCEPTN TIMEOUT interrupt status register., offset: 0xD01C */
-  __IO uint32_t CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG256 to LPCG259 QACCEPTN TIMEOUT interrupt status register., offset: 0xD020 */
+  __IO uint32_t LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG0 to LPCG31 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD000 */
+  __IO uint32_t LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG32 to LPCG63 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD004 */
+  __IO uint32_t LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG64 to LPCG95 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD008 */
+  __IO uint32_t LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG96 to LPCG127 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD00C */
+  __IO uint32_t LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG128 to LPCG159 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD010 */
+  __IO uint32_t LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG160 to LPCG191 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD014 */
+  __IO uint32_t LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG192 to LPCG223 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD018 */
+  __IO uint32_t LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG224 to LPCG255 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD01C */
+  __IO uint32_t LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT; /**< LPCG256 to LPCG259 QACCEPTN TIMEOUT Interrupt Status Register, offset: 0xD020 */
        uint8_t RESERVED_5[4];
-  __IO uint32_t CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG0 to LPCG31 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD028 */
-  __IO uint32_t CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG32 to LPCG63 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD02C */
-  __IO uint32_t CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG64 to LPCG95 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD030 */
-  __IO uint32_t CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG96 to LPCG127 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD034 */
-  __IO uint32_t CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG128 to LPCG159 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD038 */
+  __IO uint32_t LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG0 to LPCG31 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD028 */
+  __IO uint32_t LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG32 to LPCG63 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD02C */
+  __IO uint32_t LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG64 to LPCG95 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD030 */
+  __IO uint32_t LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG96 to LPCG127 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD034 */
+  __IO uint32_t LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG128 to LPCG159 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD038 */
        uint8_t RESERVED_6[4];
-  __IO uint32_t CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG160 to LPCG191 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD040 */
-  __IO uint32_t CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG192 to LPCG223 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD044 */
-  __IO uint32_t CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG224 to LPCG255 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD048 */
-  __IO uint32_t CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG256 to LPCG259 QACCEPTN TIMEOUT interrupt mask register., offset: 0xD04C */
+  __IO uint32_t LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG160 to LPCG191 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD040 */
+  __IO uint32_t LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG192 to LPCG223 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD044 */
+  __IO uint32_t LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG224 to LPCG255 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD048 */
+  __IO uint32_t LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK; /**< LPCG256 to LPCG259 QACCEPTN TIMEOUT Interrupt Mask Register, offset: 0xD04C */
        uint8_t RESERVED_7[8];
-  __IO uint32_t M7MIX_0_LPCG_BLK_CTRL0;            /**< Block control register 0 for M7MIX_0 LPCG control, offset: 0xD058 */
-  __IO uint32_t M7MIX_0_LPCG_BLK_CTRL1;            /**< Block control register 1 for M7MIX_0 LPCG control, offset: 0xD05C */
+  __IO uint32_t M7MIX_0_LPCG_BLK_CTRL0;            /**< Block Control Register 0 for M7MIX_0 LPCG Control, offset: 0xD058 */
+  __IO uint32_t M7MIX_0_LPCG_BLK_CTRL1;            /**< Block Control Register 1 for M7MIX_0 LPCG Control, offset: 0xD05C */
 } CCM_Type;
 
 /* ----------------------------------------------------------------------------
@@ -239,7 +242,7 @@ typedef struct {
  * @{
  */
 
-/*! @name CLOCK_ROOT - Clock Root Control Register */
+/*! @name CLOCK_ROOT - Clock Root Control */
 /*! @{ */
 
 #define CCM_CLOCK_ROOT_DIV_MASK                  (0xFFU)
@@ -266,7 +269,7 @@ typedef struct {
 #define CCM_CLOCK_ROOT_OFF(x)                    (((uint32_t)(((uint32_t)(x)) << CCM_CLOCK_ROOT_OFF_SHIFT)) & CCM_CLOCK_ROOT_OFF_MASK)
 /*! @} */
 
-/*! @name CLOCK_ROOT_STATUS0 - Clock root working status */
+/*! @name CLOCK_ROOT_STATUS0 - Clock Root Working Status */
 /*! @{ */
 
 #define CCM_CLOCK_ROOT_STATUS0_DIV_MASK          (0xFFU)
@@ -314,7 +317,7 @@ typedef struct {
 /* The count of CCM_CLOCK_ROOT_STATUS0 */
 #define CCM_CLOCK_ROOT_STATUS0_COUNT             (130U)
 
-/*! @name CLOCK_ROOT_AUTHEN - Clock root access control */
+/*! @name CLOCK_ROOT_AUTHEN - Clock Root Access Control */
 /*! @{ */
 
 #define CCM_CLOCK_ROOT_AUTHEN_TZ_USER_MASK       (0x100U)
@@ -343,22 +346,22 @@ typedef struct {
 
 #define CCM_CLOCK_ROOT_AUTHEN_LOCK_LIST_MASK     (0x8000U)
 #define CCM_CLOCK_ROOT_AUTHEN_LOCK_LIST_SHIFT    (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_CLOCK_ROOT_AUTHEN_LOCK_LIST(x)       (((uint32_t)(((uint32_t)(x)) << CCM_CLOCK_ROOT_AUTHEN_LOCK_LIST_SHIFT)) & CCM_CLOCK_ROOT_AUTHEN_LOCK_LIST_MASK)
 
 #define CCM_CLOCK_ROOT_AUTHEN_WHITE_LIST_MASK    (0xFFFF0000U)
 #define CCM_CLOCK_ROOT_AUTHEN_WHITE_LIST_SHIFT   (16U)
-/*! WHITE_LIST - White list settings */
+/*! WHITE_LIST - Allow list settings */
 #define CCM_CLOCK_ROOT_AUTHEN_WHITE_LIST(x)      (((uint32_t)(((uint32_t)(x)) << CCM_CLOCK_ROOT_AUTHEN_WHITE_LIST_SHIFT)) & CCM_CLOCK_ROOT_AUTHEN_WHITE_LIST_MASK)
 /*! @} */
 
 /* The count of CCM_CLOCK_ROOT_AUTHEN */
 #define CCM_CLOCK_ROOT_AUTHEN_COUNT              (130U)
 
-/*! @name GPR_SHARED0_AUTHEN - GPR access control */
+/*! @name GPR_SHARED0_AUTHEN - GPR Access Control */
 /*! @{ */
 
 #define CCM_GPR_SHARED0_AUTHEN_TZ_USER_MASK      (0x100U)
@@ -387,15 +390,15 @@ typedef struct {
 
 #define CCM_GPR_SHARED0_AUTHEN_LOCK_LIST_MASK    (0x8000U)
 #define CCM_GPR_SHARED0_AUTHEN_LOCK_LIST_SHIFT   (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_GPR_SHARED0_AUTHEN_LOCK_LIST(x)      (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED0_AUTHEN_LOCK_LIST_SHIFT)) & CCM_GPR_SHARED0_AUTHEN_LOCK_LIST_MASK)
 
 #define CCM_GPR_SHARED0_AUTHEN_WHITE_LIST_MASK   (0xFFFF0000U)
 #define CCM_GPR_SHARED0_AUTHEN_WHITE_LIST_SHIFT  (16U)
-/*! WHITE_LIST - White list settings */
+/*! WHITE_LIST - Allow list settings */
 #define CCM_GPR_SHARED0_AUTHEN_WHITE_LIST(x)     (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED0_AUTHEN_WHITE_LIST_SHIFT)) & CCM_GPR_SHARED0_AUTHEN_WHITE_LIST_MASK)
 /*! @} */
 
@@ -404,62 +407,46 @@ typedef struct {
 
 #define CCM_GPR_SHARED1_CA55_CORE0_CLOCK_SELECT_MASK (0x1U)
 #define CCM_GPR_SHARED1_CA55_CORE0_CLOCK_SELECT_SHIFT (0U)
-/*! CA55_CORE0_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
+/*! CA55_CORE0_CLOCK_SELECT - Clock select signal between ccm clock root and Arm PLL clock
  *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
+ *  0b1..The clock output of Arm PLL is selected.
  */
 #define CCM_GPR_SHARED1_CA55_CORE0_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_CORE0_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_CORE0_CLOCK_SELECT_MASK)
 
 #define CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT_MASK (0x2U)
 #define CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT_SHIFT (1U)
-/*! CA55_CORE1_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
+/*! CA55_CORE1_CLOCK_SELECT - Clock select signal between ccm clock root and Arm PLL clock
  *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
+ *  0b1..The clock output of Arm PLL is selected.
  */
 #define CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT_MASK)
 
 #define CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT_MASK (0x4U)
 #define CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT_SHIFT (2U)
-/*! CA55_CORE2_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
+/*! CA55_CORE2_CLOCK_SELECT - Clock select signal between ccm clock root and Arm PLL clock
  *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
+ *  0b1..The clock output of Arm PLL is selected.
  */
 #define CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT_MASK)
 
 #define CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT_MASK (0x8U)
 #define CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT_SHIFT (3U)
-/*! CA55_CORE3_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
+/*! CA55_CORE3_CLOCK_SELECT - Clock select signal between ccm clock root and Arm PLL clock
  *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
+ *  0b1..The clock output of Arm PLL is selected.
  */
 #define CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT_MASK)
 
-#define CCM_GPR_SHARED1_CA55_CORE4_CLOCK_SELECT_MASK (0x10U)
-#define CCM_GPR_SHARED1_CA55_CORE4_CLOCK_SELECT_SHIFT (4U)
-/*! CA55_CORE4_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
- *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
- */
-#define CCM_GPR_SHARED1_CA55_CORE4_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_CORE4_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_CORE4_CLOCK_SELECT_MASK)
-
-#define CCM_GPR_SHARED1_CA55_CORE5_CLOCK_SELECT_MASK (0x20U)
-#define CCM_GPR_SHARED1_CA55_CORE5_CLOCK_SELECT_SHIFT (5U)
-/*! CA55_CORE5_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
- *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
- */
-#define CCM_GPR_SHARED1_CA55_CORE5_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_CORE5_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_CORE5_CLOCK_SELECT_MASK)
-
 #define CCM_GPR_SHARED1_CA55_PLATFORM_CLOCK_SELECT_MASK (0x40U)
 #define CCM_GPR_SHARED1_CA55_PLATFORM_CLOCK_SELECT_SHIFT (6U)
-/*! CA55_PLATFORM_CLOCK_SELECT - Clock select signal between ccm clock root and ARM PLL clock
+/*! CA55_PLATFORM_CLOCK_SELECT - Clock select signal between ccm clock root and Arm PLL clock
  *  0b0..arm_a55_clk_root is used.
- *  0b1..The clock output of ARM PLL is selected.
+ *  0b1..The clock output of Arm PLL is selected.
  */
 #define CCM_GPR_SHARED1_CA55_PLATFORM_CLOCK_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_CA55_PLATFORM_CLOCK_SELECT_SHIFT)) & CCM_GPR_SHARED1_CA55_PLATFORM_CLOCK_SELECT_MASK)
 /*! @} */
 
-/*! @name GPR_SHARED1_AUTHEN - GPR access control */
+/*! @name GPR_SHARED1_AUTHEN - GPR Access Control */
 /*! @{ */
 
 #define CCM_GPR_SHARED1_AUTHEN_TZ_USER_MASK      (0x100U)
@@ -488,15 +475,15 @@ typedef struct {
 
 #define CCM_GPR_SHARED1_AUTHEN_LOCK_LIST_MASK    (0x8000U)
 #define CCM_GPR_SHARED1_AUTHEN_LOCK_LIST_SHIFT   (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_GPR_SHARED1_AUTHEN_LOCK_LIST(x)      (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_AUTHEN_LOCK_LIST_SHIFT)) & CCM_GPR_SHARED1_AUTHEN_LOCK_LIST_MASK)
 
 #define CCM_GPR_SHARED1_AUTHEN_WHITE_LIST_MASK   (0xFFFF0000U)
 #define CCM_GPR_SHARED1_AUTHEN_WHITE_LIST_SHIFT  (16U)
-/*! WHITE_LIST - White list settings */
+/*! WHITE_LIST - Allow list settings */
 #define CCM_GPR_SHARED1_AUTHEN_WHITE_LIST(x)     (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED1_AUTHEN_WHITE_LIST_SHIFT)) & CCM_GPR_SHARED1_AUTHEN_WHITE_LIST_MASK)
 /*! @} */
 
@@ -505,9 +492,9 @@ typedef struct {
 
 #define CCM_GPR_SHARED2_DRAM_PLL_BYPASS_MASK     (0x1U)
 #define CCM_GPR_SHARED2_DRAM_PLL_BYPASS_SHIFT    (0U)
-/*! DRAM_PLL_BYPASS - Clock select signal between ccm clock root and DRAM PLL clock
- *  0b0..The clock output of DRAM PLL is selected.
- *  0b1..Dram_alt_clk_root is selected.
+/*! DRAM_PLL_BYPASS - Selects the mode between the DDR PHY Byass Mode and DRAM Normal Mode.
+ *  0b0..DRAM Normal Mode with high data rate (data rate >= 667 MT/s) is selected.
+ *  0b1..DDRPHY PLL Bypass Mode is selected.
  */
 #define CCM_GPR_SHARED2_DRAM_PLL_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED2_DRAM_PLL_BYPASS_SHIFT)) & CCM_GPR_SHARED2_DRAM_PLL_BYPASS_MASK)
 
@@ -520,7 +507,7 @@ typedef struct {
 #define CCM_GPR_SHARED2_ANAMIX_TEMPSENSE_CLK_SEL(x) (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED2_ANAMIX_TEMPSENSE_CLK_SEL_SHIFT)) & CCM_GPR_SHARED2_ANAMIX_TEMPSENSE_CLK_SEL_MASK)
 /*! @} */
 
-/*! @name GPR_SHARED2_AUTHEN - GPR access control */
+/*! @name GPR_SHARED2_AUTHEN - GPR Access Control */
 /*! @{ */
 
 #define CCM_GPR_SHARED2_AUTHEN_TZ_USER_MASK      (0x100U)
@@ -549,19 +536,19 @@ typedef struct {
 
 #define CCM_GPR_SHARED2_AUTHEN_LOCK_LIST_MASK    (0x8000U)
 #define CCM_GPR_SHARED2_AUTHEN_LOCK_LIST_SHIFT   (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_GPR_SHARED2_AUTHEN_LOCK_LIST(x)      (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED2_AUTHEN_LOCK_LIST_SHIFT)) & CCM_GPR_SHARED2_AUTHEN_LOCK_LIST_MASK)
 
 #define CCM_GPR_SHARED2_AUTHEN_WHITE_LIST_MASK   (0xFFFF0000U)
 #define CCM_GPR_SHARED2_AUTHEN_WHITE_LIST_SHIFT  (16U)
-/*! WHITE_LIST - White list settings */
+/*! WHITE_LIST - Allow list settings */
 #define CCM_GPR_SHARED2_AUTHEN_WHITE_LIST(x)     (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED2_AUTHEN_WHITE_LIST_SHIFT)) & CCM_GPR_SHARED2_AUTHEN_WHITE_LIST_MASK)
 /*! @} */
 
-/*! @name GPR_SHARED - GPR access control */
+/*! @name GPR_SHARED_GPR_SHARED_AUTHEN - GPR Access Control */
 /*! @{ */
 
 #define CCM_GPR_SHARED_TZ_USER_MASK              (0x100U)
@@ -602,7 +589,7 @@ typedef struct {
 #define CCM_GPR_SHARED_WHITE_LIST(x)             (((uint32_t)(((uint32_t)(x)) << CCM_GPR_SHARED_WHITE_LIST_SHIFT)) & CCM_GPR_SHARED_WHITE_LIST_MASK)
 /*! @} */
 
-/*! @name GPR_PRIVATE - General purpose register */
+/*! @name GPR_PRIVATE - General Purpose Register */
 /*! @{ */
 
 #define CCM_GPR_PRIVATE_GPR_MASK                 (0xFFFFFFFFU)
@@ -611,7 +598,7 @@ typedef struct {
 #define CCM_GPR_PRIVATE_GPR(x)                   (((uint32_t)(((uint32_t)(x)) << CCM_GPR_PRIVATE_GPR_SHIFT)) & CCM_GPR_PRIVATE_GPR_MASK)
 /*! @} */
 
-/*! @name GPR_PRIVATE - GPR access control */
+/*! @name GPR_PRIVATE - GPR Access Control */
 /*! @{ */
 
 #define CCM_GPR_PRIVATE_TZ_USER_MASK             (0x100U)
@@ -640,19 +627,19 @@ typedef struct {
 
 #define CCM_GPR_PRIVATE_LOCK_LIST_MASK           (0x8000U)
 #define CCM_GPR_PRIVATE_LOCK_LIST_SHIFT          (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_GPR_PRIVATE_LOCK_LIST(x)             (((uint32_t)(((uint32_t)(x)) << CCM_GPR_PRIVATE_LOCK_LIST_SHIFT)) & CCM_GPR_PRIVATE_LOCK_LIST_MASK)
 
 #define CCM_GPR_PRIVATE_WHITE_LIST_MASK          (0xFFFF0000U)
 #define CCM_GPR_PRIVATE_WHITE_LIST_SHIFT         (16U)
-/*! WHITE_LIST - White list settings */
+/*! WHITE_LIST - Allow list settings */
 #define CCM_GPR_PRIVATE_WHITE_LIST(x)            (((uint32_t)(((uint32_t)(x)) << CCM_GPR_PRIVATE_WHITE_LIST_SHIFT)) & CCM_GPR_PRIVATE_WHITE_LIST_MASK)
 /*! @} */
 
-/*! @name OSCPLL_DIRECT - Clock source direct control */
+/*! @name OSCPLL_DIRECT - Clock Source Direct Control */
 /*! @{ */
 
 #define CCM_OSCPLL_DIRECT_ON_MASK                (0x1U)
@@ -667,7 +654,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_DIRECT */
 #define CCM_OSCPLL_DIRECT_COUNT                  (39U)
 
-/*! @name OSCPLL_LPM_STATUS0 - Low power mode information transfer status */
+/*! @name OSCPLL_LPM_STATUS0 - Low Power Mode Information Transfer Status */
 /*! @{ */
 
 #define CCM_OSCPLL_LPM_STATUS0_CPU_MODE_DOMAIN0_MASK (0x3U)
@@ -794,7 +781,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_LPM_STATUS0 */
 #define CCM_OSCPLL_LPM_STATUS0_COUNT             (39U)
 
-/*! @name OSCPLL_LPM_STATUS1 - Low power mode information transfer status */
+/*! @name OSCPLL_LPM_STATUS1 - Low Power Mode Information Transfer Status */
 /*! @{ */
 
 #define CCM_OSCPLL_LPM_STATUS1_CPU_MODE_DOMAIN8_MASK (0x3U)
@@ -921,7 +908,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_LPM_STATUS1 */
 #define CCM_OSCPLL_LPM_STATUS1_COUNT             (39U)
 
-/*! @name OSCPLL_LPM0 - Clock source low power mode setting */
+/*! @name OSCPLL_LPM0 - Clock Source Low Power Mode Setting */
 /*! @{ */
 
 #define CCM_OSCPLL_LPM0_LPM_SETTING_D0_MASK      (0x7U)
@@ -1016,7 +1003,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_LPM0 */
 #define CCM_OSCPLL_LPM0_COUNT                    (39U)
 
-/*! @name OSCPLL_LPM1 - clock source low power mode setting */
+/*! @name OSCPLL_LPM1 - Clock Source Low Power Mode Setting */
 /*! @{ */
 
 #define CCM_OSCPLL_LPM1_LPM_SETTING_D8_MASK      (0x7U)
@@ -1111,7 +1098,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_LPM1 */
 #define CCM_OSCPLL_LPM1_COUNT                    (39U)
 
-/*! @name OSCPLL_LPM_CUR - LPM setting of current CPU domain */
+/*! @name OSCPLL_LPM_CUR - LPM Setting of Current CPU Domain */
 /*! @{ */
 
 #define CCM_OSCPLL_LPM_CUR_LPM_SETTING_CUR_MASK  (0x7U)
@@ -1123,7 +1110,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_LPM_CUR */
 #define CCM_OSCPLL_LPM_CUR_COUNT                 (39U)
 
-/*! @name OSCPLL_STATUS0 - Clock source working status */
+/*! @name OSCPLL_STATUS0 - Clock Source Working Status */
 /*! @{ */
 
 #define CCM_OSCPLL_STATUS0_ON_MASK               (0x1U)
@@ -1154,7 +1141,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_STATUS0 */
 #define CCM_OSCPLL_STATUS0_COUNT                 (39U)
 
-/*! @name OSCPLL_STATUS1 - Clock source domain status */
+/*! @name OSCPLL_STATUS1 - Clock Source Domain Status */
 /*! @{ */
 
 #define CCM_OSCPLL_STATUS1_DOMAIN_ACTIVE_MASK    (0xFFFFU)
@@ -1171,7 +1158,7 @@ typedef struct {
 /* The count of CCM_OSCPLL_STATUS1 */
 #define CCM_OSCPLL_STATUS1_COUNT                 (39U)
 
-/*! @name OSCPLL_AUTHEN - Clock Source access control */
+/*! @name OSCPLL_AUTHEN - Clock Source Access Control */
 /*! @{ */
 
 #define CCM_OSCPLL_AUTHEN_CPULPM_MODE_MASK       (0x4U)
@@ -1224,29 +1211,29 @@ typedef struct {
 
 #define CCM_OSCPLL_AUTHEN_LOCK_LIST_MASK         (0x8000U)
 #define CCM_OSCPLL_AUTHEN_LOCK_LIST_SHIFT        (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_OSCPLL_AUTHEN_LOCK_LIST(x)           (((uint32_t)(((uint32_t)(x)) << CCM_OSCPLL_AUTHEN_LOCK_LIST_SHIFT)) & CCM_OSCPLL_AUTHEN_LOCK_LIST_MASK)
 
 #define CCM_OSCPLL_AUTHEN_WHITE_LIST_MASK        (0xFFFF0000U)
 #define CCM_OSCPLL_AUTHEN_WHITE_LIST_SHIFT       (16U)
-/*! WHITE_LIST - White list */
+/*! WHITE_LIST - Allow list */
 #define CCM_OSCPLL_AUTHEN_WHITE_LIST(x)          (((uint32_t)(((uint32_t)(x)) << CCM_OSCPLL_AUTHEN_WHITE_LIST_SHIFT)) & CCM_OSCPLL_AUTHEN_WHITE_LIST_MASK)
 /*! @} */
 
 /* The count of CCM_OSCPLL_AUTHEN */
 #define CCM_OSCPLL_AUTHEN_COUNT                  (39U)
 
-/*! @name LPCG_DIRECT - LPCG direct control */
+/*! @name LPCG_DIRECT - LPCG Direct Control */
 /*! @{ */
 
 #define CCM_LPCG_DIRECT_ON_MASK                  (0x1U)
 #define CCM_LPCG_DIRECT_ON_SHIFT                 (0U)
-/*! ON - Turn on LPCG
- *  0b0..LPCG is OFF.
- *  0b1..LPCG is ON.
+/*! ON - clk_en Control
+ *  0b0..LPCG clk_en is low
+ *  0b1..LPCG clk_en is high
  */
 #define CCM_LPCG_DIRECT_ON(x)                    (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_DIRECT_ON_SHIFT)) & CCM_LPCG_DIRECT_ON_MASK)
 
@@ -1263,13 +1250,15 @@ typedef struct {
 /*! CLKOFF_ACK_TIMEOUT - record timeout event */
 #define CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT(x)    (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_SHIFT)) & CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_MASK)
 
-#define CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CLR_MASK (0x20U)
-#define CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CLR_SHIFT (5U)
-/*! CLKOFF_ACK_TIMEOUT_CLR - clear timeout counter
- *  0b0..keep in the timeout.
- *  0b1..clear the timeout.
+#define CCM_LPCG_DIRECT_QCH_FSM_STAT_MASK        (0x300U)
+#define CCM_LPCG_DIRECT_QCH_FSM_STAT_SHIFT       (8U)
+/*! QCH_FSM_STAT - LPCG clock off ACK QCH FSM status
+ *  0b00..QCH FSM in Q_EXIT state
+ *  0b01..QCH FSM in Q_RUN state
+ *  0b10..QCH FSM in Q_REQUEST state
+ *  0b11..QCH FSM in Q_STOPPED state
  */
-#define CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CLR(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CLR_SHIFT)) & CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CLR_MASK)
+#define CCM_LPCG_DIRECT_QCH_FSM_STAT(x)          (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_DIRECT_QCH_FSM_STAT_SHIFT)) & CCM_LPCG_DIRECT_QCH_FSM_STAT_MASK)
 
 #define CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK   (0xFF0000U)
 #define CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_SHIFT  (16U)
@@ -1280,7 +1269,7 @@ typedef struct {
 /* The count of CCM_LPCG_DIRECT */
 #define CCM_LPCG_DIRECT_COUNT                    (260U)
 
-/*! @name LPCG_LPM_STATUS0 - Low power mode information transfer status */
+/*! @name LPCG_LPM_STATUS0 - Low Power Mode Information Transfer Status */
 /*! @{ */
 
 #define CCM_LPCG_LPM_STATUS0_CPU_MODE_DOMAIN0_MASK (0x3U)
@@ -1407,7 +1396,7 @@ typedef struct {
 /* The count of CCM_LPCG_LPM_STATUS0 */
 #define CCM_LPCG_LPM_STATUS0_COUNT               (260U)
 
-/*! @name LPCG_LPM_STATUS1 - Low power mode information transfer status */
+/*! @name LPCG_LPM_STATUS1 - Low Power Mode Information Transfer Status */
 /*! @{ */
 
 #define CCM_LPCG_LPM_STATUS1_CPU_MODE_DOMAIN8_MASK (0x3U)
@@ -1534,7 +1523,7 @@ typedef struct {
 /* The count of CCM_LPCG_LPM_STATUS1 */
 #define CCM_LPCG_LPM_STATUS1_COUNT               (260U)
 
-/*! @name LPCG_LPM0 - LPCG low power mode setting */
+/*! @name LPCG_LPM0 - LPCG Low Power Mode Setting */
 /*! @{ */
 
 #define CCM_LPCG_LPM0_LPM_SETTING_D0_MASK        (0x3U)
@@ -1621,7 +1610,7 @@ typedef struct {
 /* The count of CCM_LPCG_LPM0 */
 #define CCM_LPCG_LPM0_COUNT                      (260U)
 
-/*! @name LPCG_LPM1 - LPCG low power mode setting */
+/*! @name LPCG_LPM1 - LPCG Low Power Mode Setting */
 /*! @{ */
 
 #define CCM_LPCG_LPM1_LPM_SETTING_D8_MASK        (0x3U)
@@ -1708,7 +1697,7 @@ typedef struct {
 /* The count of CCM_LPCG_LPM1 */
 #define CCM_LPCG_LPM1_COUNT                      (260U)
 
-/*! @name LPCG_LPM_CUR - LPM setting of current CPU domain */
+/*! @name LPCG_LPM_CUR - LPM Setting of Current CPU Domain */
 /*! @{ */
 
 #define CCM_LPCG_LPM_CUR_LPM_SETTING_CUR_MASK    (0x3U)
@@ -1720,14 +1709,14 @@ typedef struct {
 /* The count of CCM_LPCG_LPM_CUR */
 #define CCM_LPCG_LPM_CUR_COUNT                   (260U)
 
-/*! @name LPCG_STATUS0 - LPCG working status */
+/*! @name LPCG_STATUS0 - LPCG Working Status */
 /*! @{ */
 
 #define CCM_LPCG_STATUS0_ON_MASK                 (0x1U)
 #define CCM_LPCG_STATUS0_ON_SHIFT                (0U)
-/*! ON - LPCG work status
- *  0b0..LPCG is OFF.
- *  0b1..LPCG is ON.
+/*! ON - LPCG Work Status
+ *  0b0..LPCG clk_en is low
+ *  0b1..LPCG clk_en is high
  */
 #define CCM_LPCG_STATUS0_ON(x)                   (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_STATUS0_ON_SHIFT)) & CCM_LPCG_STATUS0_ON_MASK)
 /*! @} */
@@ -1735,7 +1724,7 @@ typedef struct {
 /* The count of CCM_LPCG_STATUS0 */
 #define CCM_LPCG_STATUS0_COUNT                   (260U)
 
-/*! @name LPCG_STATUS1 - LPCG domain status */
+/*! @name LPCG_STATUS1 - LPCG Domain Status */
 /*! @{ */
 
 #define CCM_LPCG_STATUS1_DOMAIN_ACTIVE_MASK      (0xFFFFU)
@@ -1752,7 +1741,7 @@ typedef struct {
 /* The count of CCM_LPCG_STATUS1 */
 #define CCM_LPCG_STATUS1_COUNT                   (260U)
 
-/*! @name LPCG_AUTHEN - LPCG access control */
+/*! @name LPCG_AUTHEN - LPCG Access Control */
 /*! @{ */
 
 #define CCM_LPCG_AUTHEN_CPULPM_MODE_MASK         (0x4U)
@@ -1805,198 +1794,198 @@ typedef struct {
 
 #define CCM_LPCG_AUTHEN_LOCK_LIST_MASK           (0x8000U)
 #define CCM_LPCG_AUTHEN_LOCK_LIST_SHIFT          (15U)
-/*! LOCK_LIST - Lock white list
- *  0b0..White list is not locked.
- *  0b1..White list is locked.
+/*! LOCK_LIST - Allow list lock
+ *  0b0..Allow list is not locked.
+ *  0b1..Allow list is locked.
  */
 #define CCM_LPCG_AUTHEN_LOCK_LIST(x)             (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_AUTHEN_LOCK_LIST_SHIFT)) & CCM_LPCG_AUTHEN_LOCK_LIST_MASK)
 
 #define CCM_LPCG_AUTHEN_WHITE_LIST_MASK          (0xFFFF0000U)
 #define CCM_LPCG_AUTHEN_WHITE_LIST_SHIFT         (16U)
-/*! WHITE_LIST - White list */
+/*! WHITE_LIST - Allow list */
 #define CCM_LPCG_AUTHEN_WHITE_LIST(x)            (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_AUTHEN_WHITE_LIST_SHIFT)) & CCM_LPCG_AUTHEN_WHITE_LIST_MASK)
 /*! @} */
 
 /* The count of CCM_LPCG_AUTHEN */
 #define CCM_LPCG_AUTHEN_COUNT                    (260U)
 
-/*! @name CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT - LPCG0 to LPCG31 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT - LPCG0 to LPCG31 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_LPCG0_31_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_LPCG0_31_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG0_31_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG0(bit0) to LPCG31(bit31) */
-#define CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_LPCG0_31_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_LPCG0_31_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_LPCG0_31_TMO_INT_STAT_MASK)
+#define CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG0(bit0) to LPCG31(bit31) */
+#define CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT - LPCG32 to LPCG63 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT - LPCG32 to LPCG63 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_LPCG32_63_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_LPCG32_63_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG32_63_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG32(bit0) to LPCG63(bit31) */
-#define CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_LPCG32_63_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_LPCG32_63_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_LPCG32_63_TMO_INT_STAT_MASK)
+#define CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG32(bit0) to LPCG63(bit31) */
+#define CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT - LPCG64 to LPCG95 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT - LPCG64 to LPCG95 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_LPCG64_95_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_LPCG64_95_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG64_95_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG64(bit0) to LPCG95(bit31) */
-#define CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_LPCG64_95_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_LPCG64_95_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_LPCG64_95_TMO_INT_STAT_MASK)
+#define CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG64(bit0) to LPCG95(bit31) */
+#define CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT - LPCG96 to LPCG127 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT - LPCG96 to LPCG127 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_LPCG96_127_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_LPCG96_127_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG96_127_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG96(bit0) to LPCG127(bit31) */
-#define CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_LPCG96_127_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_LPCG96_127_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_LPCG96_127_TMO_INT_STAT_MASK)
+#define CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG96(bit0) to LPCG127(bit31) */
+#define CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT - LPCG128 to LPCG159 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT - LPCG128 to LPCG159 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_LPCG128_159_TMO_INTSTAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_LPCG128_159_TMO_INTSTAT_SHIFT (0U)
-/*! LPCG128_159_TMO_INTSTAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG128(bit0) to LPCG159(bit31) */
-#define CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_LPCG128_159_TMO_INTSTAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_LPCG128_159_TMO_INTSTAT_SHIFT)) & CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_LPCG128_159_TMO_INTSTAT_MASK)
+#define CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_TMO_INTSTAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_TMO_INTSTAT_SHIFT (0U)
+/*! TMO_INTSTAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG128(bit0) to LPCG159(bit31) */
+#define CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_TMO_INTSTAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_TMO_INTSTAT_SHIFT)) & CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_STAT_TMO_INTSTAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT - LPCG160 to LPCG191 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT - LPCG160 to LPCG191 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_LPCG160_191_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_LPCG160_191_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG160_191_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG160(bit0) to LPCG191(bit31) */
-#define CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_LPCG160_191_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_LPCG160_191_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_LPCG160_191_TMO_INT_STAT_MASK)
+#define CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG160(bit0) to LPCG191(bit31) */
+#define CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT - LPCG192 to LPCG223 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT - LPCG192 to LPCG223 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_LPCG192_223_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_LPCG192_223_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG192_223_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG192(bit0) to LPCG223(bit31) */
-#define CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_LPCG192_223_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_LPCG192_223_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_LPCG192_223_TMO_INT_STAT_MASK)
+#define CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG192(bit0) to LPCG223(bit31) */
+#define CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT - LPCG224 to LPCG255 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT - LPCG224 to LPCG255 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_LPCG224_255_TMO_INT_STAT_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_LPCG224_255_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG224_255_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG224(bit0) to LPCG255(bit31) */
-#define CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_LPCG224_255_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_LPCG224_255_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_LPCG224_255_TMO_INT_STAT_MASK)
+#define CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFFFFFFFFU)
+#define CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG224(bit0) to LPCG255(bit31) */
+#define CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT - LPCG256 to LPCG259 QACCEPTN TIMEOUT interrupt status register. */
+/*! @name LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT - LPCG256 to LPCG259 QACCEPTN TIMEOUT Interrupt Status Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_LPCG256_259_TMO_INT_STAT_MASK (0xFU)
-#define CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_LPCG256_259_TMO_INT_STAT_SHIFT (0U)
-/*! LPCG256_259_TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG256(bit0) to LPCG259(bit3) */
-#define CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_LPCG256_259_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_LPCG256_259_TMO_INT_STAT_SHIFT)) & CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_LPCG256_259_TMO_INT_STAT_MASK)
+#define CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK (0xFU)
+#define CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT (0U)
+/*! TMO_INT_STAT - This register indicates QAccept_n Timeout Interrupt Status for LPCG256(bit0) to LPCG259(bit3) */
+#define CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_SHIFT)) & CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_STAT_TMO_INT_STAT_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK - LPCG0 to LPCG31 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK - LPCG0 to LPCG31 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_LPCG0_31_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_LPCG0_31_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG0_31_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG0(bit0) to LPCG31(bit31) */
-#define CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_LPCG0_31_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_LPCG0_31_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_LPCG0_31_TMO_INT_MASK_MASK)
+#define CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG0(bit0) to LPCG31(bit31) */
+#define CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG0_31_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK - LPCG32 to LPCG63 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK - LPCG32 to LPCG63 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_LPCG32_63_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_LPCG32_63_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG32_63_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG32(bit0) to LPCG63(bit31) */
-#define CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_LPCG32_63_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_LPCG32_63_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_LPCG32_63_TMO_INT_MASK_MASK)
+#define CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG32(bit0) to LPCG63(bit31) */
+#define CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG32_63_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK - LPCG64 to LPCG95 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK - LPCG64 to LPCG95 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_LPCG64_95_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_LPCG64_95_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG64_95_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG64(bit0) to LPCG95(bit31) */
-#define CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_LPCG64_95_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_LPCG64_95_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_LPCG64_95_TMO_INT_MASK_MASK)
+#define CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG64(bit0) to LPCG95(bit31) */
+#define CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG64_95_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK - LPCG96 to LPCG127 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK - LPCG96 to LPCG127 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_LPCG96_127_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_LPCG96_127_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG96_127_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG96(bit0) to LPCG127(bit31) */
-#define CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_LPCG96_127_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_LPCG96_127_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_LPCG96_127_TMO_INT_MASK_MASK)
+#define CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG96(bit0) to LPCG127(bit31) */
+#define CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG96_127_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK - LPCG128 to LPCG159 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK - LPCG128 to LPCG159 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_LPCG128_159_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_LPCG128_159_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG128_159_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG128(bit0) to LPCG159(bit31) */
-#define CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_LPCG128_159_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_LPCG128_159_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_LPCG128_159_TMO_INT_MASK_MASK)
+#define CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG128(bit0) to LPCG159(bit31) */
+#define CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG128_159_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK - LPCG160 to LPCG191 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK - LPCG160 to LPCG191 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_LPCG160_191_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_LPCG160_191_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG160_191_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG160(bit0) to LPCG191(bit31) */
-#define CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_LPCG160_191_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_LPCG160_191_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_LPCG160_191_TMO_INT_MASK_MASK)
+#define CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG160(bit0) to LPCG191(bit31) */
+#define CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG160_191_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK - LPCG192 to LPCG223 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK - LPCG192 to LPCG223 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_LPCG192_223_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_LPCG192_223_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG192_223_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG192(bit0) to LPCG223(bit31) */
-#define CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_LPCG192_223_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_LPCG192_223_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_LPCG192_223_TMO_INT_MASK_MASK)
+#define CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG192(bit0) to LPCG223(bit31) */
+#define CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG192_223_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK - LPCG224 to LPCG255 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK - LPCG224 to LPCG255 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_LPCG224_255_TMO_INT_MASK_MASK (0xFFFFFFFFU)
-#define CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_LPCG224_255_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG224_255_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG224(bit0) to LPCG255(bit31) */
-#define CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_LPCG224_255_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_LPCG224_255_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_LPCG224_255_TMO_INT_MASK_MASK)
+#define CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFFFFFFFFU)
+#define CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG224(bit0) to LPCG255(bit31) */
+#define CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG224_255_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK - LPCG256 to LPCG259 QACCEPTN TIMEOUT interrupt mask register. */
+/*! @name LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK - LPCG256 to LPCG259 QACCEPTN TIMEOUT Interrupt Mask Register */
 /*! @{ */
 
-#define CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_LPCG256_259_TMO_INT_MASK_MASK (0xFU)
-#define CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_LPCG256_259_TMO_INT_MASK_SHIFT (0U)
-/*! LPCG256_259_TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG256(bit0) to LPCG259(bit3) */
-#define CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_LPCG256_259_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_LPCG256_259_TMO_INT_MASK_SHIFT)) & CCM_CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_LPCG256_259_TMO_INT_MASK_MASK)
+#define CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK (0xFU)
+#define CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT (0U)
+/*! TMO_INT_MASK - This register used to mask QAccept_n Timeout interrupt for LPCG256(bit0) to LPCG259(bit3) */
+#define CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK(x) (((uint32_t)(((uint32_t)(x)) << CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_SHIFT)) & CCM_LPCG256_259_QACCEPTN_TIMEOUT_INT_MASK_TMO_INT_MASK_MASK)
 /*! @} */
 
-/*! @name M7MIX_0_LPCG_BLK_CTRL0 - Block control register 0 for M7MIX_0 LPCG control */
+/*! @name M7MIX_0_LPCG_BLK_CTRL0 - Block Control Register 0 for M7MIX_0 LPCG Control */
 /*! @{ */
 
 #define CCM_M7MIX_0_LPCG_BLK_CTRL0_M7MIX_0_LPCG_BLK_CTRL0_MASK (0xFFFFFFFFU)
 #define CCM_M7MIX_0_LPCG_BLK_CTRL0_M7MIX_0_LPCG_BLK_CTRL0_SHIFT (0U)
-/*! M7MIX_0_LPCG_BLK_CTRL0 - Block control register 0 bits for M7MIX_0 LPCG control */
+/*! M7MIX_0_LPCG_BLK_CTRL0 - Block Control Register 0 bits for M7MIX_0 LPCG Control */
 #define CCM_M7MIX_0_LPCG_BLK_CTRL0_M7MIX_0_LPCG_BLK_CTRL0(x) (((uint32_t)(((uint32_t)(x)) << CCM_M7MIX_0_LPCG_BLK_CTRL0_M7MIX_0_LPCG_BLK_CTRL0_SHIFT)) & CCM_M7MIX_0_LPCG_BLK_CTRL0_M7MIX_0_LPCG_BLK_CTRL0_MASK)
 /*! @} */
 
-/*! @name M7MIX_0_LPCG_BLK_CTRL1 - Block control register 1 for M7MIX_0 LPCG control */
+/*! @name M7MIX_0_LPCG_BLK_CTRL1 - Block Control Register 1 for M7MIX_0 LPCG Control */
 /*! @{ */
 
 #define CCM_M7MIX_0_LPCG_BLK_CTRL1_M7MIX_0_LPCG_BLK_CTRL1_MASK (0xFFFFFFFFU)
 #define CCM_M7MIX_0_LPCG_BLK_CTRL1_M7MIX_0_LPCG_BLK_CTRL1_SHIFT (0U)
-/*! M7MIX_0_LPCG_BLK_CTRL1 - Block control register 1 bits for M7MIX_0 LPCG control */
+/*! M7MIX_0_LPCG_BLK_CTRL1 - Block Control Register 1 bits for M7MIX_0 LPCG Control */
 #define CCM_M7MIX_0_LPCG_BLK_CTRL1_M7MIX_0_LPCG_BLK_CTRL1(x) (((uint32_t)(((uint32_t)(x)) << CCM_M7MIX_0_LPCG_BLK_CTRL1_M7MIX_0_LPCG_BLK_CTRL1_SHIFT)) & CCM_M7MIX_0_LPCG_BLK_CTRL1_M7MIX_0_LPCG_BLK_CTRL1_MASK)
 /*! @} */
 
@@ -2034,5 +2023,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* CCM_H_ */
+#endif  /* PERI_CCM_H_ */
 

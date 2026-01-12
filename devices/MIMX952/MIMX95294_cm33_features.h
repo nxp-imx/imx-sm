@@ -162,6 +162,8 @@
 #define FSL_FEATURE_MU_HAS_HR_BY_INSTANCEn(x) (0)
 /* @brief The number of general purpose interrupts supported by MU. */
 #define FSL_FEATURE_MU_GPI_COUNT (4)
+/* @brief MU has no boot controls */
+#define FSL_FEATURE_MU_NO_BOOT (1)
 
 /* FLEXCAN module features */
 

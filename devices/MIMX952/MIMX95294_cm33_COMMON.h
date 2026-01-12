@@ -2094,30 +2094,30 @@ typedef enum IRQn {
 /* DDR_BLK_CTRL_DDRMIX - Peripheral instance base addresses */
 #if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
   /** Peripheral DDRC__BLK_CTRL_DDRMIX base address */
-  #define DDRC__BLK_CTRL_DDRMIX_BASE               (0x5E010000u)
+  #define BLK_CTRL_DDRMIX_BASE               (0x5E010000u)
   /** Peripheral DDRC__BLK_CTRL_DDRMIX base address */
-  #define DDRC__BLK_CTRL_DDRMIX_BASE_NS            (0x4E010000u)
+  #define BLK_CTRL_DDRMIX_BASE_NS            (0x4E010000u)
   /** Peripheral DDRC__BLK_CTRL_DDRMIX base pointer */
-  #define DDRC__BLK_CTRL_DDRMIX                    ((DDR_BLK_CTRL_DDRMIX_Type *)DDRC__BLK_CTRL_DDRMIX_BASE)
+  #define BLK_CTRL_DDRMIX                    ((BLK_CTRL_DDRMIX_Type *)BLK_CTRL_DDRMIX_BASE)
   /** Peripheral DDRC__BLK_CTRL_DDRMIX base pointer */
-  #define DDRC__BLK_CTRL_DDRMIX_NS                 ((DDR_BLK_CTRL_DDRMIX_Type *)DDRC__BLK_CTRL_DDRMIX_BASE_NS)
+  #define BLK_CTRL_DDRMIX_NS                 ((BLK_CTRL_DDRMIX_Type *)BLK_CTRL_DDRMIX_BASE_NS)
   /** Array initializer of DDR_BLK_CTRL_DDRMIX peripheral base addresses */
-  #define DDR_BLK_CTRL_DDRMIX_BASE_ADDRS           { DDRC__BLK_CTRL_DDRMIX_BASE }
+  #define BLK_CTRL_DDRMIX_BASE_ADDRS           { BLK_CTRL_DDRMIX_BASE }
   /** Array initializer of DDR_BLK_CTRL_DDRMIX peripheral base pointers */
-  #define DDR_BLK_CTRL_DDRMIX_BASE_PTRS            { DDRC__BLK_CTRL_DDRMIX }
+  #define BLK_CTRL_DDRMIX_BASE_PTRS            { BLK_CTRL_DDRMIX }
   /** Array initializer of DDR_BLK_CTRL_DDRMIX peripheral base addresses */
-  #define DDR_BLK_CTRL_DDRMIX_BASE_ADDRS_NS        { DDRC__BLK_CTRL_DDRMIX_BASE_NS }
+  #define BLK_CTRL_DDRMIX_BASE_ADDRS_NS        { BLK_CTRL_DDRMIX_BASE_NS }
   /** Array initializer of DDR_BLK_CTRL_DDRMIX peripheral base pointers */
-  #define DDR_BLK_CTRL_DDRMIX_BASE_PTRS_NS         { DDRC__BLK_CTRL_DDRMIX_NS }
+  #define BLK_CTRL_DDRMIX_BASE_PTRS_NS         { BLK_CTRL_DDRMIX_NS }
 #else
   /** Peripheral DDRC__BLK_CTRL_DDRMIX base address */
-  #define DDRC__BLK_CTRL_DDRMIX_BASE               (0x4E010000u)
+  #define BLK_CTRL_DDRMIX_BASE               (0x4E010000u)
   /** Peripheral DDRC__BLK_CTRL_DDRMIX base pointer */
-  #define DDRC__BLK_CTRL_DDRMIX                    ((DDR_BLK_CTRL_DDRMIX_Type *)DDRC__BLK_CTRL_DDRMIX_BASE)
+  #define BLK_CTRL_DDRMIX                    ((BLK_CTRL_DDRMIX_Type *)BLK_CTRL_DDRMIX_BASE)
   /** Array initializer of DDR_BLK_CTRL_DDRMIX peripheral base addresses */
-  #define DDR_BLK_CTRL_DDRMIX_BASE_ADDRS           { DDRC__BLK_CTRL_DDRMIX_BASE }
+  #define BLK_CTRL_DDRMIX_BASE_ADDRS           { BLK_CTRL_DDRMIX_BASE }
   /** Array initializer of DDR_BLK_CTRL_DDRMIX peripheral base pointers */
-  #define DDR_BLK_CTRL_DDRMIX_BASE_PTRS            { DDRC__BLK_CTRL_DDRMIX }
+  #define BLK_CTRL_DDRMIX_BASE_PTRS            { BLK_CTRL_DDRMIX }
 #endif
 
 /* DDR_LSTCU - Peripheral instance base addresses */

@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for SRC_XSPR
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file SRC_XSPR.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_SRC_XSPR.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for SRC_XSPR
  *
  * CMSIS Peripheral Access Layer for SRC_XSPR
  */
 
-#if !defined(SRC_XSPR_H_)
-#define SRC_XSPR_H_                              /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_SRC_XSPR_H_)
+#define PERI_SRC_XSPR_H_                         /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -212,7 +215,7 @@ typedef struct {
 
 #define SRC_XSPR_AUTHEN_CTRL_LOCK_LIST_MASK      (0x8000U)
 #define SRC_XSPR_AUTHEN_CTRL_LOCK_LIST_SHIFT     (15U)
-/*! LOCK_LIST - White list lock
+/*! LOCK_LIST - Allow list lock
  *  0b0..WHITE_LIST value can be changed.
  *  0b1..WHITE_LIST value cannot be changed.
  */
@@ -220,7 +223,7 @@ typedef struct {
 
 #define SRC_XSPR_AUTHEN_CTRL_WHITE_LIST_MASK     (0xFFFF0000U)
 #define SRC_XSPR_AUTHEN_CTRL_WHITE_LIST_SHIFT    (16U)
-/*! WHITE_LIST - Domain ID white list
+/*! WHITE_LIST - Domain ID allow list
  *  0b0000000000000001..Core with domain ID=0 can write SRC MIX SLICE registers.
  *  0b0000000000000010..Core with domain ID=1 can write SRC MIX SLICE registers.
  *  0b0000000000000100..Core with domain ID=2 can write SRC MIX SLICE registers.
@@ -1318,5 +1321,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* SRC_XSPR_H_ */
+#endif  /* PERI_SRC_XSPR_H_ */
 

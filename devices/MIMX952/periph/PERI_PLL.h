@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for PLL
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file PLL.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_PLL.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for PLL
  *
  * CMSIS Peripheral Access Layer for PLL
  */
 
-#if !defined(PLL_H_)
-#define PLL_H_                                   /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_PLL_H_)
+#define PERI_PLL_H_                              /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -279,18 +282,7 @@ typedef PLL_Type HSIO_GHZ_LN_PLL_Type;
 
 #define PLL_DIV_ODIV_MASK                        (0xFFU)
 #define PLL_DIV_ODIV_SHIFT                       (0U)
-/*! ODIV - Output Frequency Divider for Clock Output
- *  0b00000000..Divide by 2
- *  0b00000001..Divide by 3
- *  0b00000010..Divide by 2
- *  0b00000011..Divide by 3
- *  0b00000100..Divide by 4
- *  0b00000101..Divide by 5
- *  0b00000110..Divide by 6
- *  0b00001010..Divide by 10
- *  0b10000010..Divide by 130
- *  0b11111111..Divide by 255
- */
+/*! ODIV - Output Frequency Divider for Clock Output */
 #define PLL_DIV_ODIV(x)                          (((uint32_t)(((uint32_t)(x)) << PLL_DIV_ODIV_SHIFT)) & PLL_DIV_ODIV_MASK)
 
 #define PLL_DIV_RDIV_MASK                        (0xE000U)
@@ -436,5 +428,5 @@ typedef PLL_Type HSIO_GHZ_LN_PLL_Type;
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* PLL_H_ */
+#endif  /* PERI_PLL_H_ */
 

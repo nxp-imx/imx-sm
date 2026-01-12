@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for GPC_GLOBAL
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file GPC_GLOBAL.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_GPC_GLOBAL.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for GPC_GLOBAL
  *
  * CMSIS Peripheral Access Layer for GPC_GLOBAL
  */
 
-#if !defined(GPC_GLOBAL_H_)
-#define GPC_GLOBAL_H_                            /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_GPC_GLOBAL_H_)
+#define PERI_GPC_GLOBAL_H_                       /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -125,7 +128,7 @@ typedef struct {
        uint8_t RESERVED_0[4];
   __IO uint32_t GPC_GLOB_AUTHEN_CTRL;              /**< GPC Global Authentication Control, offset: 0x4 */
        uint8_t RESERVED_1[20];
-  __IO uint32_t GPC_MASTER;                        /**< GPC master CPU configuration, offset: 0x1C */
+  __IO uint32_t GPC_MASTER;                        /**< GPC initiator CPU configuration, offset: 0x1C */
        uint8_t RESERVED_2[32];
   __IO uint32_t GPC_SYS_SLEEP;                     /**< GPC system sleep control, offset: 0x40 */
        uint8_t RESERVED_3[12];
@@ -187,7 +190,7 @@ typedef struct {
 
 #define GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_LOCK_LIST_MASK (0x8000U)
 #define GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_LOCK_LIST_SHIFT (15U)
-/*! LOCK_LIST - White list lock
+/*! LOCK_LIST - Allow list lock
  *  0b0..WHITE_LIST is not locked
  *  0b1..WHITE_LIST is locked
  */
@@ -195,16 +198,16 @@ typedef struct {
 
 #define GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST_MASK (0xFFFF0000U)
 #define GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST_SHIFT (16U)
-/*! WHITE_LIST - Domain ID white list */
+/*! WHITE_LIST - Domain ID allow list */
 #define GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST_SHIFT)) & GPC_GLOBAL_GPC_GLOB_AUTHEN_CTRL_WHITE_LIST_MASK)
 /*! @} */
 
-/*! @name GPC_MASTER - GPC master CPU configuration */
+/*! @name GPC_MASTER - GPC initiator CPU configuration */
 /*! @{ */
 
 #define GPC_GLOBAL_GPC_MASTER_CPU_MASTER_MASK    (0x7FU)
 #define GPC_GLOBAL_GPC_MASTER_CPU_MASTER_SHIFT   (0U)
-/*! CPU_MASTER - Setting to 1 means CPU is the master CPU of its domain */
+/*! CPU_MASTER - Setting to 1 means CPU is the initiator CPU of its domain */
 #define GPC_GLOBAL_GPC_MASTER_CPU_MASTER(x)      (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_MASTER_CPU_MASTER_SHIFT)) & GPC_GLOBAL_GPC_MASTER_CPU_MASTER_MASK)
 /*! @} */
 
@@ -372,5 +375,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* GPC_GLOBAL_H_ */
+#endif  /* PERI_GPC_GLOBAL_H_ */
 

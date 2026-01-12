@@ -37,11 +37,11 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
-**         CMSIS Peripheral Access Layer for BLK_CTRL_DDRMIX
+**         CMSIS Peripheral Access Layer for DDR_BLK_CTRL_DDRMIX
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
 **     Copyright 2016-2026 NXP
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file BLK_CTRL_DDRMIX.h
- * @version 1.0
- * @date 2026-01-10
- * @brief CMSIS Peripheral Access Layer for BLK_CTRL_DDRMIX
+ * @file PERI_DDR_BLK_CTRL_DDRMIX.h
+ * @version 2.0
+ * @date 2024-10-29
+ * @brief CMSIS Peripheral Access Layer for DDR_BLK_CTRL_DDRMIX
  *
- * CMSIS Peripheral Access Layer for BLK_CTRL_DDRMIX
+ * CMSIS Peripheral Access Layer for DDR_BLK_CTRL_DDRMIX
  */
 
-#if !defined(BLK_CTRL_DDRMIX_H_)
-#define BLK_CTRL_DDRMIX_H_                   /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_DDR_BLK_CTRL_DDRMIX_H_)
+#define PERI_DDR_BLK_CTRL_DDRMIX_H_              /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -119,25 +122,26 @@
 
 /** BLK_CTRL_DDRMIX - Register Layout Typedef */
 typedef struct {
-  __IO uint32_t HWFFC_CTRL;                        /**< DDRPHY DfiClk, DflCtlClk HWFFC Control, offset: 0x0 */
-  __IO uint32_t CA55_SEL_CTRL;                     /**< CA55 Arm Pll Observe Select, offset: 0x4 */
-  __IO uint32_t VREF_PSW_CTRL;                     /**< DRAM_VREF power switch, offset: 0x8 */
-  __IO uint32_t DDRC_STOP_CTRL;                    /**< DDR Controller ipg_stop SW control, offset: 0xC */
-  __IO uint32_t AUTO_CG_CTRL;                      /**< DDR Controller automatic clock gating control when no AXI transmit, offset: 0x10 */
-  __IO uint32_t SSI_PWR_CTRL;                      /**< NOC2DDR SSI slave power control, offset: 0x14 */
-  __IO uint32_t DDRC_EXCLUSIVE_EN;                 /**< DDRC AXI exclusive access monitor enable, offset: 0x18 */
-  __IO uint32_t DDRC_URGENT_EN;                    /**< DDRC real_time read urgent and read urgent enable, offset: 0x1C */
-  __IO uint32_t RT_MASTER_ID_0_1;                  /**< DDRC real_time master 6bit extend-ID range 0 and range 1, offset: 0x20 */
-  __IO uint32_t RT_MASTER_ID_2_3;                  /**< DDRC real_time master 6bit extend-ID range 2 and range 3, offset: 0x24 */
-  __IO uint32_t AXI_PARITY_ERR_CLR;                /**< DDRMIX AXI parity check clear register, offset: 0x28 */
-  __IO uint32_t AXI_PARITY_ERR_INJECT;             /**< DDRMIX AXI parity error injection register, offset: 0x2C */
-  __IO uint32_t RT_MASTER_ID_4_5;                  /**< DDRC real_time master 6bit extend-ID range 4 and range 5, offset: 0x30 */
-  __IO uint32_t RT_MASTER_ID_6_7;                  /**< DDRC real_time master 6bit extend-ID range 6 and range 7, offset: 0x34 */
-  __I  uint32_t FUSE_DISABLE_DDRMIX;               /**< Fuse to ddrmix_blk_ctrl, offset: 0x38 */
-  __IO uint32_t DDRPHY_BYPCLK_SRC_SEL;             /**< DDRPHY BypClk source select, offset: 0x3C */
-  __IO uint32_t LPCG_FORCE_ON_OFF;                 /**< FORCE_ON_OFF for LPCG instances, offset: 0x40 */
-  __IO uint32_t LPCG_FORCE_ON_OFF_SEL;             /**< FORCE_ON_OFF_SEL for LPCG instances, offset: 0x44 */
-  __IO uint32_t AUTO_IPG_STOP_ACK_EN;              /**< Enable for auto generated ddrc ipg_stop_ack, offset: 0x48 */
+  __IO uint32_t HWFFC_CTRL;                        /**< DDRPHY DfiClk and DflCtlClk HWFFC Control, offset: 0x0 */
+  __IO uint32_t CA55_SEL_CTRL;                     /**< CA55 Arm PLL Observe Select, offset: 0x4 */
+  __IO uint32_t VREF_PSW_CTRL;                     /**< DRAM_VREF Power Switch Control, offset: 0x8 */
+  __IO uint32_t DDRC_STOP_CTRL;                    /**< DDRC ipg_stop Signal Software Control, offset: 0xC */
+  __IO uint32_t AUTO_CG_CTRL;                      /**< DDRC Automatic Clock Gating Control, offset: 0x10 */
+  __IO uint32_t SSI_PWR_CTRL;                      /**< NOC2DDR SSI Target Power Control, offset: 0x14 */
+  __IO uint32_t DDRC_EXCLUSIVE_EN;                 /**< DDRC AXI Exclusive Access Monitor Enable, offset: 0x18 */
+  __IO uint32_t DDRC_URGENT_EN;                    /**< DDRC real_time Read Urgent and Read Urgent Enable, offset: 0x1C */
+  __IO uint32_t RT_MASTER_ID_0_1;                  /**< DDRC real_time Initiator Extend-ID Range 0 and 1, offset: 0x20 */
+  __IO uint32_t RT_MASTER_ID_2_3;                  /**< DDRC real_time Initiator Extend-ID Range 2 and 3, offset: 0x24 */
+  __IO uint32_t AXI_PARITY_ERR_CLR;                /**< DDRMIX AXI Parity Check Clear, offset: 0x28 */
+  __IO uint32_t AXI_PARITY_ERR_INJECT;             /**< DDRMIX AXI Parity Error Injection, offset: 0x2C */
+  __IO uint32_t RT_MASTER_ID_4_5;                  /**< DDRC real_time Initiator Extend-ID Range 4 and 5, offset: 0x30 */
+  __IO uint32_t RT_MASTER_ID_6_7;                  /**< DDRC real_time Initiator Extend-ID Range 6 and 7, offset: 0x34 */
+  __I  uint32_t FUSE_DISABLE_DDRMIX;               /**< Fuse to BLK_CTRL_DDRMIX, offset: 0x38 */
+       uint8_t RESERVED_0[4];
+  __IO uint32_t LPCG_FORCE_ON_OFF;                 /**< Force ON OFF Control for LPCG, offset: 0x40 */
+  __IO uint32_t LPCG_FORCE_ON_OFF_SEL;             /**< Force ON OFF Select for LPCG, offset: 0x44 */
+  __IO uint32_t AUTO_IPG_STOP_ACK_EN;              /**< Auto-generated DDRC ipg_stop_ack Signal, offset: 0x48 */
+  __IO uint32_t CHK_FAULT_DIS;                     /**< Fault disable for safety faults, offset: 0x4C */
 } BLK_CTRL_DDRMIX_Type;
 
 /* ----------------------------------------------------------------------------
@@ -149,445 +153,536 @@ typedef struct {
  * @{
  */
 
-/*! @name HWFFC_CTRL - DDRPHY DfiClk, DflCtlClk HWFFC Control */
+/*! @name HWFFC_CTRL - DDRPHY DfiClk and DflCtlClk HWFFC Control */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_EN_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_EN_SHIFT (0U)
-/*! HWFFC_EN - DDRPHY DfiClk, DfiCtlClk HWFFC Enable */
+/*! HWFFC_EN - DDRPHY DfiClk and DfiCtlClk HWFFC Enable
+ *  0b0..Disables
+ *  0b1..Enables
+ */
 #define BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_EN_SHIFT)) & BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_SEL_MASK (0x2U)
 #define BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_SEL_SHIFT (1U)
-/*! HWFFC_SEL - DDRPHY DfiClk, DfiCtlClk HWFFC Select */
+/*! HWFFC_SEL - DDRPHY DfiClk and DfiCtlClk HWFFC Select
+ *  0b0..Normal clock
+ *  0b1..Div2 frequency clock
+ */
 #define BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_SEL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_SEL_SHIFT)) & BLK_CTRL_DDRMIX_HWFFC_CTRL_HWFFC_SEL_MASK)
 /*! @} */
 
-/*! @name CA55_SEL_CTRL - CA55 Arm Pll Observe Select */
+/*! @name CA55_SEL_CTRL - CA55 Arm PLL Observe Select */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_CA55_SEL_CTRL_CA55_SEL_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_CA55_SEL_CTRL_CA55_SEL_SHIFT (0U)
-/*! CA55_SEL - CA55 Arm Pll select into DDRPHY */
+/*! CA55_SEL - CA55 Arm PLL Select
+ *  0b0..Normal DfiClk from DRAM PLL is selected
+ *  0b1..CA55MIX Arm PLL is selected
+ */
 #define BLK_CTRL_DDRMIX_CA55_SEL_CTRL_CA55_SEL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_CA55_SEL_CTRL_CA55_SEL_SHIFT)) & BLK_CTRL_DDRMIX_CA55_SEL_CTRL_CA55_SEL_MASK)
 /*! @} */
 
-/*! @name VREF_PSW_CTRL - DRAM_VREF power switch */
+/*! @name VREF_PSW_CTRL - DRAM_VREF Power Switch Control */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_VREF_PSW_CTRL_VREF_PSW_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_VREF_PSW_CTRL_VREF_PSW_SHIFT (0U)
-/*! VREF_PSW - DDRPHY DRAM_VREF Power Switch */
+/*! VREF_PSW - DDRPHY DRAM_VREF Power Switch
+ *  0b0..Power switch close. Prevent leakage.
+ *  0b1..Power switch open. This is set together with DDRPHY registers .
+ */
 #define BLK_CTRL_DDRMIX_VREF_PSW_CTRL_VREF_PSW(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_VREF_PSW_CTRL_VREF_PSW_SHIFT)) & BLK_CTRL_DDRMIX_VREF_PSW_CTRL_VREF_PSW_MASK)
 /*! @} */
 
-/*! @name DDRC_STOP_CTRL - DDR Controller ipg_stop SW control */
+/*! @name DDRC_STOP_CTRL - DDRC ipg_stop Signal Software Control */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_SHIFT (0U)
-/*! DDRC_STOP - DDR Controller ipg_stop. */
+/*! DDRC_STOP - DDRC ipg_stop
+ *  0b0..Clears DDRC ipg_stop signal
+ *  0b1..Sets DDRC ipg_stop signal
+ */
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_MASK)
 
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_ACK_MASK (0x2U)
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_ACK_SHIFT (1U)
-/*! DDRC_STOP_ACK - DDR Controller ipg_stop_ack. */
+/*! DDRC_STOP_ACK - DDRC ipg_stop_ack
+ *  0b0..DDRC ipg_stop_ack is a 0
+ *  0b1..DDRC ipg_stop_ack is a 1
+ */
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_ACK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_ACK_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_ACK_MASK)
 
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_DRAM_SELF_REFRESH_MASK (0x4U)
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_DRAM_SELF_REFRESH_SHIFT (2U)
-/*! DDRC_DRAM_SELF_REFRESH - DDR Controller ddrc_dram_self_refresh. */
+/*! DDRC_DRAM_SELF_REFRESH - DDRC ddrc_dram_self_refresh
+ *  0b0..DDRC ddrc_dram_self_refresh is 0
+ *  0b1..DDRC ddrc_dram_self_refresh is 1
+ */
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_DRAM_SELF_REFRESH(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_DRAM_SELF_REFRESH_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_DRAM_SELF_REFRESH_MASK)
 
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_EN_MASK (0x10U)
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_EN_SHIFT (4U)
-/*! DDRC_STOP_HOLD_EN - DDR Controller ipg_stop holds for a period of time before clearing. */
+/*! DDRC_STOP_HOLD_EN - DDRC ipg_stop Hold Period
+ *  0b0..Disables hold of DDRC ipg_stop signal. The hardware will clear ipg_stop immediately after DDRC ipg_stop_ack.
+ *  0b1..Enables hold of DDRC ipg_stop signal. The hardware will wait for a period of time before clearing DDRC ipg_stop.
+ */
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_EN_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_PERIOD_MASK (0xFFFFFF00U)
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_PERIOD_SHIFT (8U)
-/*! DDRC_STOP_HOLD_PERIOD - DDR Controller ipg_stop hold period before clearing. */
+/*! DDRC_STOP_HOLD_PERIOD - DDRC ipg_stop Hold Period */
 #define BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_PERIOD(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_PERIOD_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_STOP_CTRL_DDRC_STOP_HOLD_PERIOD_MASK)
 /*! @} */
 
-/*! @name AUTO_CG_CTRL - DDR Controller automatic clock gating control when no AXI transmit */
+/*! @name AUTO_CG_CTRL - DDRC Automatic Clock Gating Control */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_SSI_IDLE_STRAP_MASK (0xFFFFU)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_SSI_IDLE_STRAP_SHIFT (0U)
-/*! SSI_IDLE_STRAP - Number of cycles for SSI being idle before DDRC clock gating. */
+/*! SSI_IDLE_STRAP - SSI Idle Cycle Count */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_SSI_IDLE_STRAP(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_SSI_IDLE_STRAP_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_SSI_IDLE_STRAP_MASK)
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_AUTO_CG_ENA_MASK (0x10000U)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_AUTO_CG_ENA_SHIFT (16U)
-/*! AUTO_CG_ENA - DDR Controller automatic clock gating enable bit. */
+/*! AUTO_CG_ENA - DDRC Automatic Clock Gating Enable
+ *  0b0..Disables
+ *  0b1..Enables
+ */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_AUTO_CG_ENA(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_AUTO_CG_ENA_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_AUTO_CG_ENA_MASK)
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_HWFFC_ACG_FORCE_B_MASK (0x20000U)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_HWFFC_ACG_FORCE_B_SHIFT (17U)
-/*! HWFFC_ACG_FORCE_B - DDR Controller hwffc and auto CG send ipg_stop allow bit. Can only programmed once. */
+/*! HWFFC_ACG_FORCE_B - DDRC HWFFC and Auto Clock Gating Send ipg_stop Signal
+ *  0b0..DDRC HWFFC and auto CG cannot send ipg_stop signal
+ *  0b1..DDRC HWFFC and auto CG can send ipg_stop signal
+ */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_HWFFC_ACG_FORCE_B(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_HWFFC_ACG_FORCE_B_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_HWFFC_ACG_FORCE_B_MASK)
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_CLK_MASK (0x1000000U)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_CLK_SHIFT (24U)
-/*! GATE_DDRC_CLK - DDR Auto Clock Gating is allowed for DDR Controller clock ipg_clk_ddrc. */
+/*! GATE_DDRC_CLK - DDR Auto Clock Gating Allowed for DDRC ipg_clk_ddrc Clock
+ *  0b0..DDRC Auto Clock Gating will not gate the DDRC ipg_clk_ddrc clock
+ *  0b1..DDRC Auto Clock Gating will gate DDRC ipg_clk_ddrc clock inside DDRC, if there is no transaction
+ */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_CLK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_CLK_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_CLK_MASK)
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_IPS_CLK_MASK (0x4000000U)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_IPS_CLK_SHIFT (26U)
-/*! GATE_DDRC_IPS_CLK - DDR Auto Clock Gating is allowed for DDR Controller IPS clock ips_clk_ddrc. */
+/*! GATE_DDRC_IPS_CLK - DDR Auto Clock Gating Allowed for DDRC IPS ips_clk_ddrc Clock
+ *  0b0..DDRC Auto Clock Gating will not gate the DDRC IPS ips_clk_ddrc clock
+ *  0b1..DDRC Auto Clock Gating will gate DDRC IPS ips_clk_ddrc clock inside DDRC, if there is no transaction
+ */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_IPS_CLK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_IPS_CLK_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRC_IPS_CLK_MASK)
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_DFICLK_MASK (0x10000000U)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_DFICLK_SHIFT (28U)
-/*! GATE_DDRPHY_DFICLK - DDR Auto Clock Gating is allowed for DDRPHY DfiClk clock. */
+/*! GATE_DDRPHY_DFICLK - DDR Auto Clock Gating Allowed for DDRPHY DfiClk Clock
+ *  0b0..DDRC Auto Clock Gating will not gate the DDRPHY DfiClk clock
+ *  0b1..DDRC Auto Clock Gating will gate DDRPHY DfiClk clock inside DDDRPHY, if there is no transaction
+ */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_DFICLK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_DFICLK_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_DFICLK_MASK)
 
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_APBCLK_MASK (0x40000000U)
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_APBCLK_SHIFT (30U)
-/*! GATE_DDRPHY_APBCLK - DDR Auto Clock Gating is allowed for DDRPHY APBCLK clock. */
+/*! GATE_DDRPHY_APBCLK - DDR Auto Clock Gating Allowed for DDRPHY APBCLK Clock
+ *  0b0..DDRC Auto Clock Gating will not gate the DDRPHY APBCLK clock
+ *  0b1..DDRC Auto Clock Gating will gate DDRPHY APBCLK clock inside DDDRPHY, if there is no transaction
+ */
 #define BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_APBCLK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_APBCLK_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_CG_CTRL_GATE_DDRPHY_APBCLK_MASK)
 /*! @} */
 
-/*! @name SSI_PWR_CTRL - NOC2DDR SSI slave power control */
+/*! @name SSI_PWR_CTRL - NOC2DDR SSI Target Power Control */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_SSI_PWR_CTRL_POWER_CONTROL_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_SSI_PWR_CTRL_POWER_CONTROL_SHIFT (0U)
-/*! POWER_CONTROL - NOC2DDR SSI slave power_control signal */
+/*! POWER_CONTROL - NOC2DDR SSI Target power_control Signal
+ *  0b0..NOC2DDR SSI target power_control is 0
+ *  0b1..NOC2DDR SSI target power_control is 1
+ */
 #define BLK_CTRL_DDRMIX_SSI_PWR_CTRL_POWER_CONTROL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_SSI_PWR_CTRL_POWER_CONTROL_SHIFT)) & BLK_CTRL_DDRMIX_SSI_PWR_CTRL_POWER_CONTROL_MASK)
 
 #define BLK_CTRL_DDRMIX_SSI_PWR_CTRL_ISO_CONTROL_MASK (0x2U)
 #define BLK_CTRL_DDRMIX_SSI_PWR_CTRL_ISO_CONTROL_SHIFT (1U)
-/*! ISO_CONTROL - NOC2DDR SSI slave iso_control signal */
+/*! ISO_CONTROL - NOC2DDR SSI Target iso_control Signal
+ *  0b0..NOC2DDR SSI target iso_control is 0
+ *  0b1..NOC2DDR SSI target iso_control is 1
+ */
 #define BLK_CTRL_DDRMIX_SSI_PWR_CTRL_ISO_CONTROL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_SSI_PWR_CTRL_ISO_CONTROL_SHIFT)) & BLK_CTRL_DDRMIX_SSI_PWR_CTRL_ISO_CONTROL_MASK)
 /*! @} */
 
-/*! @name DDRC_EXCLUSIVE_EN - DDRC AXI exclusive access monitor enable */
+/*! @name DDRC_EXCLUSIVE_EN - DDRC AXI Exclusive Access Monitor Enable */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_DDRC_EXCLUSIVE_EN_EXCLUSIVE_EN_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_DDRC_EXCLUSIVE_EN_EXCLUSIVE_EN_SHIFT (0U)
-/*! EXCLUSIVE_EN - DDRC AXI exclusive access monitor enable */
+/*! EXCLUSIVE_EN - Exclusive Access Monitor Enable
+ *  0b0..Disables
+ *  0b1..Enables
+ */
 #define BLK_CTRL_DDRMIX_DDRC_EXCLUSIVE_EN_EXCLUSIVE_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_EXCLUSIVE_EN_EXCLUSIVE_EN_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_EXCLUSIVE_EN_EXCLUSIVE_EN_MASK)
 /*! @} */
 
-/*! @name DDRC_URGENT_EN - DDRC real_time read urgent and read urgent enable */
+/*! @name DDRC_URGENT_EN - DDRC real_time Read Urgent and Read Urgent Enable */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_DDRC_URGENT_EN_READ_URGENT_EN_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_DDRC_URGENT_EN_READ_URGENT_EN_SHIFT (0U)
-/*! READ_URGENT_EN - DDRC ddrc_read_urgent is enabled */
+/*! READ_URGENT_EN - DDRC ddrc_read_urgent Enable
+ *  0b0..Disables. Real time initiators urgent signal will not reach DDRC read urgent.
+ *  0b1..Enables. Real time initiators will sent urgent signal to DDRC read urgent.
+ */
 #define BLK_CTRL_DDRMIX_DDRC_URGENT_EN_READ_URGENT_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_URGENT_EN_READ_URGENT_EN_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_URGENT_EN_READ_URGENT_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_DDRC_URGENT_EN_AR_RT_URGENT_EN_MASK (0x2U)
 #define BLK_CTRL_DDRMIX_DDRC_URGENT_EN_AR_RT_URGENT_EN_SHIFT (1U)
-/*! AR_RT_URGENT_EN - DDRC ipa_ar_rt_urgent is enabled */
+/*! AR_RT_URGENT_EN - DDRC ipa_ar_rt_urgent Enable
+ *  0b0..Disables. Real time initiators urgent signal will not reach DDRC ar_rt urgent.
+ *  0b1..Enables. Real time initiators will sent urgent signal to DDRC ar_rt urgent.
+ */
 #define BLK_CTRL_DDRMIX_DDRC_URGENT_EN_AR_RT_URGENT_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRC_URGENT_EN_AR_RT_URGENT_EN_SHIFT)) & BLK_CTRL_DDRMIX_DDRC_URGENT_EN_AR_RT_URGENT_EN_MASK)
 /*! @} */
 
-/*! @name RT_MASTER_ID_0_1 - DDRC real_time master 6bit extend-ID range 0 and range 1 */
+/*! @name RT_MASTER_ID_0_1 - DDRC real_time Initiator Extend-ID Range 0 and 1 */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_ID_MASK (0x3FU)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_ID_SHIFT (0U)
-/*! RANGE_0_ID - DDRC real_time master ID range 0 ID */
+/*! RANGE_0_ID - DDRC real_time Initiator ID Range 0 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_MASK_MASK (0x3F00U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_MASK_SHIFT (8U)
-/*! RANGE_0_MASK - DDRC real_time master ID range 0 ID mask */
+/*! RANGE_0_MASK - DDRC real_time Initiator ID Range 0 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_EN_MASK (0x8000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_EN_SHIFT (15U)
-/*! RANGE_0_EN - DDRC real_time master ID range 0 enable */
+/*! RANGE_0_EN - DDRC real_time Initiator ID Range 0 Enable
+ *  0b0..Disables. ID range 0 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 0 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_0_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_ID_MASK (0x3F0000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_ID_SHIFT (16U)
-/*! RANGE_1_ID - DDRC real_time master ID range 1 ID */
+/*! RANGE_1_ID - DDRC real_time Initiator ID Range 1 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_MASK_MASK (0x3F000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_MASK_SHIFT (24U)
-/*! RANGE_1_MASK - DDRC real_time master ID range 1 ID mask */
+/*! RANGE_1_MASK - DDRC real_time Initiator ID Range 1 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_EN_MASK (0x80000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_EN_SHIFT (31U)
-/*! RANGE_1_EN - DDRC real_time master ID range 1 enable */
+/*! RANGE_1_EN - DDRC real_time Initiator ID Range 1 Enable
+ *  0b0..Disables. ID range 1 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 1 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_0_1_RANGE_1_EN_MASK)
 /*! @} */
 
-/*! @name RT_MASTER_ID_2_3 - DDRC real_time master 6bit extend-ID range 2 and range 3 */
+/*! @name RT_MASTER_ID_2_3 - DDRC real_time Initiator Extend-ID Range 2 and 3 */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_ID_MASK (0x3FU)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_ID_SHIFT (0U)
-/*! RANGE_2_ID - DDRC real_time master ID range 2 ID */
+/*! RANGE_2_ID - DDRC real_time Initiator ID Range 2 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_MASK_MASK (0x3F00U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_MASK_SHIFT (8U)
-/*! RANGE_2_MASK - DDRC real_time master ID range 2 ID mask */
+/*! RANGE_2_MASK - DDRC real_time Initiator ID Range 2 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_EN_MASK (0x8000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_EN_SHIFT (15U)
-/*! RANGE_2_EN - DDRC real_time master ID range 2 enable */
+/*! RANGE_2_EN - DDRC real_time Initiator ID Range 2 Enable
+ *  0b0..Disables. ID range 2 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 2 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_2_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_ID_MASK (0x3F0000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_ID_SHIFT (16U)
-/*! RANGE_3_ID - DDRC real_time master ID range 3 ID */
+/*! RANGE_3_ID - DDRC real_time Initiator ID Range 3 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_MASK_MASK (0x3F000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_MASK_SHIFT (24U)
-/*! RANGE_3_MASK - DDRC real_time master ID range 3 ID mask */
+/*! RANGE_3_MASK - DDRC real_time Initiator ID Range 3 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_EN_MASK (0x80000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_EN_SHIFT (31U)
-/*! RANGE_3_EN - DDRC real_time master ID range 3 enable */
+/*! RANGE_3_EN - DDRC real_time Initiator ID Range 3 Enable
+ *  0b0..Disables. ID range 3 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 3 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_2_3_RANGE_3_EN_MASK)
 /*! @} */
 
-/*! @name AXI_PARITY_ERR_CLR - DDRMIX AXI parity check clear register */
+/*! @name AXI_PARITY_ERR_CLR - DDRMIX AXI Parity Check Clear */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_MST_ERR_CLR_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_MST_ERR_CLR_SHIFT (0U)
-/*! MST_ERR_CLR - DDRMIX AXI parity master d_ip_axi_parity_master error clear */
+/*! MST_ERR_CLR - Initiator Error Clear
+ *  0b0..Do not clear
+ *  0b1..Clear
+ */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_MST_ERR_CLR(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_MST_ERR_CLR_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_MST_ERR_CLR_MASK)
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_SLV_ERR_CLR_MASK (0x100U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_SLV_ERR_CLR_SHIFT (8U)
-/*! SLV_ERR_CLR - DDRMIX AXI parity slave d_ip_axi_parity_slave error clear */
+/*! SLV_ERR_CLR - Target Error Clear
+ *  0b0..Do not clear
+ *  0b1..Clear
+ */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_SLV_ERR_CLR(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_SLV_ERR_CLR_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_SLV_ERR_CLR_MASK)
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_MASK (0x70000U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_SHIFT (16U)
-/*! ERR_HOLD - DDRMIX AXI parity error hold time */
+/*! ERR_HOLD - Error Hold Time
+ *  0b000..One
+ *  0b001..Two
+ *  0b010..Four
+ *  0b011..Eight
+ *  0b100..Sixteen
+ *  0b101..Thirty Two
+ *  0b110..Sixty Four
+ *  0b111..One Hundred Twenty Eight
+ */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_MASK)
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_EN_MASK (0x80000U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_EN_SHIFT (19U)
-/*! ERR_HOLD_EN - DDRMIX DDRC error hold enable */
+/*! ERR_HOLD_EN - Error Hold Enable */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_EN_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_CLR_ERR_HOLD_EN_MASK)
 /*! @} */
 
-/*! @name AXI_PARITY_ERR_INJECT - DDRMIX AXI parity error injection register */
+/*! @name AXI_PARITY_ERR_INJECT - DDRMIX AXI Parity Error Injection */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_WDATA_ERR_INJ_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_WDATA_ERR_INJ_SHIFT (0U)
-/*! WDATA_ERR_INJ - DDRMIX AXI parity error injection on wdatachk[0] */
+/*! WDATA_ERR_INJ - DDRMIX AXI Parity Error Injection on wdatachk[0]
+ *  0b0..No injection
+ *  0b1..Injection
+ */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_WDATA_ERR_INJ(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_WDATA_ERR_INJ_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_WDATA_ERR_INJ_MASK)
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_MASK (0x2U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_SHIFT (1U)
-/*! RDATA_ERR_INJ - DDRMIX AXI parity error injection on rdatachk[0] */
+/*! RDATA_ERR_INJ - DDRMIX AXI Parity Error Injection on rdatachk[0]
+ *  0b0..No injection
+ *  0b1..Injection
+ */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_MASK)
 
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_DDRC_MASK (0x4U)
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_DDRC_SHIFT (2U)
-/*! RDATA_ERR_INJ_DDRC - DDRC AXI parity error injection on rdatachk[0] */
+/*! RDATA_ERR_INJ_DDRC - DDRC AXI Parity Error Injection on rdatachk[0]
+ *  0b0..No injection
+ *  0b1..Injection
+ */
 #define BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_DDRC(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_DDRC_SHIFT)) & BLK_CTRL_DDRMIX_AXI_PARITY_ERR_INJECT_RDATA_ERR_INJ_DDRC_MASK)
 /*! @} */
 
-/*! @name RT_MASTER_ID_4_5 - DDRC real_time master 6bit extend-ID range 4 and range 5 */
+/*! @name RT_MASTER_ID_4_5 - DDRC real_time Initiator Extend-ID Range 4 and 5 */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_ID_MASK (0x3FU)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_ID_SHIFT (0U)
-/*! RANGE_4_ID - DDRC real_time master ID range 4 ID */
+/*! RANGE_4_ID - DDRC real_time Initiator ID Range 4 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_MASK_MASK (0x3F00U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_MASK_SHIFT (8U)
-/*! RANGE_4_MASK - DDRC real_time master ID range 4 ID mask */
+/*! RANGE_4_MASK - DDRC real_time Initiator ID Range 4 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_EN_MASK (0x8000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_EN_SHIFT (15U)
-/*! RANGE_4_EN - DDRC real_time master ID range 4 enable */
+/*! RANGE_4_EN - DDRC real_time Initiator ID Range 4 Enable
+ *  0b0..Disables. ID range 4 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 4 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_4_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_ID_MASK (0x3F0000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_ID_SHIFT (16U)
-/*! RANGE_5_ID - DDRC real_time master ID range 5 ID */
+/*! RANGE_5_ID - DDRC real_time Initiator ID Range 5 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_MASK_MASK (0x3F000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_MASK_SHIFT (24U)
-/*! RANGE_5_MASK - DDRC real_time master ID range 5 ID mask */
+/*! RANGE_5_MASK - DDRC real_time Initiator ID Range 5 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_EN_MASK (0x80000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_EN_SHIFT (31U)
-/*! RANGE_5_EN - DDRC real_time master ID range 5 enable */
+/*! RANGE_5_EN - DDRC real_time Initiator ID Range 5 Enable
+ *  0b0..Disables. ID range 5 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 5 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_4_5_RANGE_5_EN_MASK)
 /*! @} */
 
-/*! @name RT_MASTER_ID_6_7 - DDRC real_time master 6bit extend-ID range 6 and range 7 */
+/*! @name RT_MASTER_ID_6_7 - DDRC real_time Initiator Extend-ID Range 6 and 7 */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_ID_MASK (0x3FU)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_ID_SHIFT (0U)
-/*! RANGE_6_ID - DDRC real_time master ID range 6 ID */
+/*! RANGE_6_ID - DDRC real_time Initiator ID Range 6 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_MASK_MASK (0x3F00U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_MASK_SHIFT (8U)
-/*! RANGE_6_MASK - DDRC real_time master ID range 6 ID mask */
+/*! RANGE_6_MASK - DDRC real_time Initiator ID Range 6 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_EN_MASK (0x8000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_EN_SHIFT (15U)
-/*! RANGE_6_EN - DDRC real_time master ID range 6 enable */
+/*! RANGE_6_EN - DDRC real_time Initiator ID Range 6 Enable
+ *  0b0..Disables. ID range 6 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 6 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_6_EN_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_ID_MASK (0x3F0000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_ID_SHIFT (16U)
-/*! RANGE_7_ID - DDRC real_time master ID range 7 ID */
+/*! RANGE_7_ID - DDRC real_time Initiator ID Range 7 ID */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_ID(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_ID_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_ID_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_MASK_MASK (0x3F000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_MASK_SHIFT (24U)
-/*! RANGE_7_MASK - DDRC real_time master ID range 7 ID mask */
+/*! RANGE_7_MASK - DDRC real_time Initiator ID Range 7 ID Mask */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_MASK(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_MASK_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_MASK_MASK)
 
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_EN_MASK (0x80000000U)
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_EN_SHIFT (31U)
-/*! RANGE_7_EN - DDRC real_time master ID range 7 enable */
+/*! RANGE_7_EN - DDRC real_time Initiator ID Range 7 Enable
+ *  0b0..Disables. ID range 7 will not be used to generate ipa_ar_real_time.
+ *  0b1..Enables. ID range 7 will be used to generate ipa_ar_real_time.
+ */
 #define BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_EN_SHIFT)) & BLK_CTRL_DDRMIX_RT_MASTER_ID_6_7_RANGE_7_EN_MASK)
 /*! @} */
 
-/*! @name FUSE_DISABLE_DDRMIX - Fuse to ddrmix_blk_ctrl */
+/*! @name FUSE_DISABLE_DDRMIX - Fuse to BLK_CTRL_DDRMIX */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_FUSE_DISABLE_DDRMIX_FUSE_DISABLE_DDRMIX_MASK (0x3U)
 #define BLK_CTRL_DDRMIX_FUSE_DISABLE_DDRMIX_FUSE_DISABLE_DDRMIX_SHIFT (0U)
-/*! FUSE_DISABLE_DDRMIX - Read only reg for fuse mapped to ddrmix_blk_ctrl. */
+/*! FUSE_DISABLE_DDRMIX - Fuse Mapped to BLK_CTRL_DDRMIX
+ *  0b00..The value from fuse map DDRMIX_BLK_CTRL is 0
+ *  0b01..The value from fuse map DDRMIX_BLK_CTRL is 1
+ */
 #define BLK_CTRL_DDRMIX_FUSE_DISABLE_DDRMIX_FUSE_DISABLE_DDRMIX(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_FUSE_DISABLE_DDRMIX_FUSE_DISABLE_DDRMIX_SHIFT)) & BLK_CTRL_DDRMIX_FUSE_DISABLE_DDRMIX_FUSE_DISABLE_DDRMIX_MASK)
 /*! @} */
 
-/*! @name DDRPHY_BYPCLK_SRC_SEL - DDRPHY BypClk source select */
+/*! @name LPCG_FORCE_ON_OFF - Force ON OFF Control for LPCG */
 /*! @{ */
 
-#define BLK_CTRL_DDRMIX_DDRPHY_BYPCLK_SRC_SEL_DRAM_PLL_SRC_EN_MASK (0x1U)
-#define BLK_CTRL_DDRMIX_DDRPHY_BYPCLK_SRC_SEL_DRAM_PLL_SRC_EN_SHIFT (0U)
-/*! DRAM_PLL_SRC_EN - 1: Use DRAM PLL clk for DDRPHY Bypass clk, 0: Use CCM clk for DDRPHY Bypass clk */
-#define BLK_CTRL_DDRMIX_DDRPHY_BYPCLK_SRC_SEL_DRAM_PLL_SRC_EN(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_DDRPHY_BYPCLK_SRC_SEL_DRAM_PLL_SRC_EN_SHIFT)) & BLK_CTRL_DDRMIX_DDRPHY_BYPCLK_SRC_SEL_DRAM_PLL_SRC_EN_MASK)
-/*! @} */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_CTRL_MASK (0x1U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_CTRL_SHIFT (0U)
+/*! CTRL - force_on_off for CTRL Group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_CTRL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_CTRL_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_CTRL_MASK)
 
-/*! @name LPCG_FORCE_ON_OFF - FORCE_ON_OFF for LPCG instances */
-/*! @{ */
-
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDR_CTRL_MASK (0x1U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDR_CTRL_SHIFT (0U)
-/*! DDR_CTRL - force_on_off for DDR_CTRL group */
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDR_CTRL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDR_CTRL_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDR_CTRL_MASK)
-
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SAFETY_MASK (0x2U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SAFETY_SHIFT (1U)
-/*! SAFETY - force_on_off for SAFETY group */
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SAFETY(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SAFETY_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SAFETY_MASK)
-
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI_MASK (0x4U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI_SHIFT (2U)
-/*! SSI - force_on_off for SSI group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI_MASK (0x2U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI_SHIFT (1U)
+/*! SSI - force_on_off for SSI Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SSI_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI_MASK (0x8U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI_SHIFT (3U)
-/*! DDRPHY_DFI - force_on_off for DDRPHY DFI group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI_MASK (0x4U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI_SHIFT (2U)
+/*! DDRPHY_DFI - force_on_off for DDRPHY DFI Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_DFI_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_MASK (0x10U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SHIFT (4U)
-/*! INFRA - force_on_off_sel for INFRA group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_MASK (0x8U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SHIFT (3U)
+/*! INFRA - force_on_off_sel for INFRA Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SECURITY_MASK (0x20U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SECURITY_SHIFT (5U)
-/*! INFRA_SECURITY - force_on_off for INFRA_SECURITY group */
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SECURITY(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SECURITY_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_INFRA_SECURITY_MASK)
-
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU_MASK (0x40U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU_SHIFT (6U)
-/*! LSTCU - force_on_off for group LSTCU */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU_MASK (0x10U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU_SHIFT (4U)
+/*! LSTCU - force_on_off for LSTCU Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_LSTCU_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk_MASK (0x80U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk_SHIFT (7U)
-/*! PllBypClk - force_on_off for group PllBypClk */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk_MASK (0x20U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk_SHIFT (5U)
+/*! PllBypClk - force_on_off for PllBypClk Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_PllBypClk_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT_MASK (0x100U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT_SHIFT (8U)
-/*! DDRPHY_ALT - force_on_off for group DDRPHY_ALT */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT_MASK (0x40U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT_SHIFT (6U)
+/*! DDRPHY_ALT - force_on_off for DDRPHY_ALT Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_DDRPHY_ALT_MASK)
 /*! @} */
 
-/*! @name LPCG_FORCE_ON_OFF_SEL - FORCE_ON_OFF_SEL for LPCG instances */
+/*! @name LPCG_FORCE_ON_OFF_SEL - Force ON OFF Select for LPCG */
 /*! @{ */
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDR_CTRL_MASK (0x1U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDR_CTRL_SHIFT (0U)
-/*! DDR_CTRL - force_on_off_sel for DDR_CTRL group */
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDR_CTRL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDR_CTRL_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDR_CTRL_MASK)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_CTRL_MASK (0x1U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_CTRL_SHIFT (0U)
+/*! CTRL - force_on_off_sel for CTRL Group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_CTRL(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_CTRL_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_CTRL_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SAFETY_MASK (0x2U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SAFETY_SHIFT (1U)
-/*! SAFETY - force_on_off_sel for SAFETY group */
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SAFETY(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SAFETY_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SAFETY_MASK)
-
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI_MASK (0x4U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI_SHIFT (2U)
-/*! SSI - force_on_off_sel for SSI group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI_MASK (0x2U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI_SHIFT (1U)
+/*! SSI - force_on_off_sel for SSI Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_SSI_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI_MASK (0x8U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI_SHIFT (3U)
-/*! DDRPHY_DFI - force_on_off_sel for DDRPHY DFI group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI_MASK (0x4U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI_SHIFT (2U)
+/*! DDRPHY_DFI - force_on_off_sel for DDRPHY DFI Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_DFI_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_MASK (0x10U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SHIFT (4U)
-/*! INFRA - force_on_off_sel for INFRA group */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_MASK (0x8U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SHIFT (3U)
+/*! INFRA - force_on_off_sel for INFRA Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SECURITY_MASK (0x20U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SECURITY_SHIFT (5U)
-/*! INFRA_SECURITY - force_on_off_sel for INFRA_SECURITY group */
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SECURITY(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SECURITY_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_INFRA_SECURITY_MASK)
-
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU_MASK (0x40U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU_SHIFT (6U)
-/*! LSTCU - force_on_off_sel for group LSTCU */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU_MASK (0x10U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU_SHIFT (4U)
+/*! LSTCU - force_on_off_sel for LSTCU Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_LSTCU_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk_MASK (0x80U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk_SHIFT (7U)
-/*! PllBypClk - force_on_off_sel for group PllBypClk */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk_MASK (0x20U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk_SHIFT (5U)
+/*! PllBypClk - force_on_off_sel for PllBypClk Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_PllBypClk_MASK)
 
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT_MASK (0x100U)
-#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT_SHIFT (8U)
-/*! DDRPHY_ALT - force_on_off_sel for DDRPHY_ALT */
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT_MASK (0x40U)
+#define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT_SHIFT (6U)
+/*! DDRPHY_ALT - force_on_off_sel for DDRPHY_ALT Group */
 #define BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT_SHIFT)) & BLK_CTRL_DDRMIX_LPCG_FORCE_ON_OFF_SEL_DDRPHY_ALT_MASK)
 /*! @} */
 
-/*! @name AUTO_IPG_STOP_ACK_EN - Enable for auto generated ddrc ipg_stop_ack */
+/*! @name AUTO_IPG_STOP_ACK_EN - Auto-generated DDRC ipg_stop_ack Signal */
 /*! @{ */
 
 #define BLK_CTRL_DDRMIX_AUTO_IPG_STOP_ACK_EN_auto_ipg_stop_ack_en_MASK (0x1U)
 #define BLK_CTRL_DDRMIX_AUTO_IPG_STOP_ACK_EN_auto_ipg_stop_ack_en_SHIFT (0U)
-/*! auto_ipg_stop_ack_en - Enable for auto generated ddrc ipg_stop_ack */
+/*! auto_ipg_stop_ack_en - Auto-generated DDRC ipg_stop_ack Signal */
 #define BLK_CTRL_DDRMIX_AUTO_IPG_STOP_ACK_EN_auto_ipg_stop_ack_en(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_AUTO_IPG_STOP_ACK_EN_auto_ipg_stop_ack_en_SHIFT)) & BLK_CTRL_DDRMIX_AUTO_IPG_STOP_ACK_EN_auto_ipg_stop_ack_en_MASK)
+/*! @} */
+
+/*! @name CHK_FAULT_DIS - Fault disable for safety faults */
+/*! @{ */
+
+#define BLK_CTRL_DDRMIX_CHK_FAULT_DIS_phy_intfc_chk_fault_dis_MASK (0x1U)
+#define BLK_CTRL_DDRMIX_CHK_FAULT_DIS_phy_intfc_chk_fault_dis_SHIFT (0U)
+/*! phy_intfc_chk_fault_dis - disable signal for phy_intfc_chk_fault
+ *  0b0..phy_intfc_chk_fault is enabled
+ *  0b1..phy_intfc_chk_fault is disabled
+ */
+#define BLK_CTRL_DDRMIX_CHK_FAULT_DIS_phy_intfc_chk_fault_dis(x) (((uint32_t)(((uint32_t)(x)) << BLK_CTRL_DDRMIX_CHK_FAULT_DIS_phy_intfc_chk_fault_dis_SHIFT)) & BLK_CTRL_DDRMIX_CHK_FAULT_DIS_phy_intfc_chk_fault_dis_MASK)
 /*! @} */
 
 
@@ -595,16 +690,6 @@ typedef struct {
  * @}
  */ /* end of group BLK_CTRL_DDRMIX_Register_Masks */
 
-
-/* BLK_CTRL_DDRMIX - Peripheral instance base addresses */
-/** Peripheral DDRC__BLK_CTRL_DDRMIX base address */
-#define BLK_CTRL_DDRMIX_BASE               (0x4E010000u)
-/** Peripheral BLK_CTRL_DDRMIX base pointer */
-#define BLK_CTRL_DDRMIX                    ((BLK_CTRL_DDRMIX_Type *)BLK_CTRL_DDRMIX_BASE)
-/** Array initializer of BLK_CTRL_DDRMIX peripheral base addresses */
-#define BLK_CTRL_DDRMIX_BASE_ADDRS           { BLK_CTRL_DDRMIX_BASE }
-/** Array initializer of BLK_CTRL_DDRMIX peripheral base pointers */
-#define BLK_CTRL_DDRMIX_BASE_PTRS            { BLK_CTRL_DDRMIX }
 
 /*!
  * @}
@@ -634,5 +719,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* BLK_CTRL_DDRMIX_H_ */
+#endif  /* PERI_DDR_BLK_CTRL_DDRMIX_H_ */
 

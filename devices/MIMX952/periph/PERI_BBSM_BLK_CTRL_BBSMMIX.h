@@ -37,8 +37,8 @@
 **                          MIMX95294XVZN_cm33
 **                          MIMX95294XVZN_cm7
 **
-**     Version:             rev. 1.0, 2026
-**     Build:               b241030
+**     Version:             rev. 2.0, 2024-10-29
+**     Build:               b260108
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for BBSM_BLK_CTRL_BBSMMIX
@@ -51,23 +51,26 @@
 **     mail:                 support@nxp.com
 **
 **     Revisions:
-**     - rev. 1.0 (2026-01-10)
+**     - rev. 1.0 (2023-01-10)
 **         Initial version.
+**     - rev. 2.0 (2024-10-29)
+**         Change the device header file from single flat file to multiple files based on peripherals,
+**         each peripheral with dedicated header file located in periphN folder.
 **
 ** ###################################################################
 */
 
 /*!
- * @file BBSM_BLK_CTRL_BBSMMIX.h
- * @version 1.0
- * @date 2026-01-10
+ * @file PERI_BBSM_BLK_CTRL_BBSMMIX.h
+ * @version 2.0
+ * @date 2024-10-29
  * @brief CMSIS Peripheral Access Layer for BBSM_BLK_CTRL_BBSMMIX
  *
  * CMSIS Peripheral Access Layer for BBSM_BLK_CTRL_BBSMMIX
  */
 
-#if !defined(BBSM_BLK_CTRL_BBSMMIX_H_)
-#define BBSM_BLK_CTRL_BBSMMIX_H_                 /**< Symbol preventing repeated inclusion */
+#if !defined(PERI_BBSM_BLK_CTRL_BBSMMIX_H_)
+#define PERI_BBSM_BLK_CTRL_BBSMMIX_H_            /**< Symbol preventing repeated inclusion */
 
 #if (defined(CPU_MIMX95294AVTN_ca55) || defined(CPU_MIMX95294AVYN_ca55) || defined(CPU_MIMX95294AVZN_ca55) || defined(CPU_MIMX95294CVTN_ca55) || defined(CPU_MIMX95294CVYN_ca55) || defined(CPU_MIMX95294CVZN_ca55) || defined(CPU_MIMX95294DVTN_ca55) || defined(CPU_MIMX95294DVYN_ca55) || defined(CPU_MIMX95294DVZN_ca55) || defined(CPU_MIMX95294XVTN_ca55) || defined(CPU_MIMX95294XVYN_ca55) || defined(CPU_MIMX95294XVZN_ca55))
 #include "MIMX95294_ca55_COMMON.h"
@@ -145,25 +148,25 @@ typedef struct {
 
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_fast_MASK (0x2000U)
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_fast_SHIFT (13U)
-/*! tst_xtal_fast - Indicates fast external XTAL crystal
- *  0b0..Fast external XTAL crystal is disabled
- *  0b1..Fast external XTAL crystal is enabled
+/*! tst_xtal_fast - Indicates that XTAL clock frequency is higher than 48 kHz
+ *  0b0..XTAL clock is not too fast
+ *  0b1..XTAL clock is too fast
  */
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_fast(x) (((uint32_t)(((uint32_t)(x)) << BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_fast_SHIFT)) & BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_fast_MASK)
 
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_slow_MASK (0x4000U)
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_slow_SHIFT (14U)
-/*! tst_xtal_slow - Indicates slow external XTAL crystal
- *  0b0..Slow external XTAL crystal is disabled
- *  0b1..Slow external XTAL crystal is enabled
+/*! tst_xtal_slow - Indicates that XTAL clock frequency is lower than 20 kHz
+ *  0b0..XTAL clock is not too slow
+ *  0b1..XTAL clock is too slow
  */
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_slow(x) (((uint32_t)(((uint32_t)(x)) << BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_slow_SHIFT)) & BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_tst_xtal_slow_MASK)
 
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_xtal_ok_MASK (0x8000U)
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_xtal_ok_SHIFT (15U)
-/*! xtal_ok - Indicates XTAL clock is in frequency range and source of 32 kHz clock
- *  0b0..XTAL clock is not in frequency range and source of 32 KHz clock
- *  0b1..XTAL clock is in frequency range and source of 32 KHz clock
+/*! xtal_ok - Indicates XTAL clock is in frequency range and is the source of 32 kHz clock
+ *  0b0..XTAL clock is not in frequency range and is not source of 32 kHz clock
+ *  0b1..XTAL clock is in frequency range and is source of 32 kHz clock
  */
 #define BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_xtal_ok(x) (((uint32_t)(((uint32_t)(x)) << BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_xtal_ok_SHIFT)) & BBSM_BLK_CTRL_BBSMMIX_SNVS_CLKRST_CTRL_xtal_ok_MASK)
 /*! @} */
@@ -202,5 +205,5 @@ typedef struct {
  */ /* end of group Peripheral_access_layer */
 
 
-#endif  /* BBSM_BLK_CTRL_BBSMMIX_H_ */
+#endif  /* PERI_BBSM_BLK_CTRL_BBSMMIX_H_ */
 
