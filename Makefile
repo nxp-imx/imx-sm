@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2025 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -282,6 +282,7 @@ really-clean:
 	@echo "Cleaning ...."
 	$(AT)rm -rf $(BUILD)
 	$(AT)rm -f sm/doc/build_info
+	$(AT)rm -rf *.gcov
 
 include ./sm/makefiles/build_info.mak
 include ./sm/makefiles/configtool.mak

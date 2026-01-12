@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -683,6 +683,12 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
         if (clockIndex < CLOCK_NUM_ROOT)
         {
             /* Query number of parents */
+            /*
+             * The clockIndex parameter is already validated
+             * against CLOCK_NUM_ROOT, so this function will
+             * never return an error
+             */
+            /* gcov_excl_multiline 5 */
             if (!CCM_RootMuxNumInputsGet(clockIndex, numParents))
             {
                 status = SM_ERR_NOT_FOUND;
@@ -697,9 +703,10 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
                 else
                 {
                     /* Query specified parent */
+                    /* gcov_excl_ntbr_nextline */
                     if (!CCM_RootMuxInputGet(clockIndex, sel, parentId))
                     {
-                        status = SM_ERR_NOT_FOUND;
+                        status = SM_ERR_NOT_FOUND;  /* gcov_excl_line */
                     }
                 }
             }
@@ -711,6 +718,12 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
             if (clockIndex < CLOCK_NUM_GPR_SEL)
             {
                 /* Query number of parents */
+                /*
+                 * The clockIndex parameter is already validated
+                 * against NUM_GPR_CLOCK, so this function will
+                 * never return an error
+                 */
+                /* gcov_excl_multiline 5 */
                 if (!CCM_GprSelMuxNumInputsGet(clockIndex, numParents))
                 {
                     status = SM_ERR_NOT_FOUND;
@@ -725,6 +738,12 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
                     else
                     {
                         /* Query specified parent */
+                        /*
+                         * The funtion parameters are already validated
+                         * against the max values, so this condition will
+                         * never hit
+                         */
+                        /* gcov_excl_multiline 5 */
                         if (!CCM_GprSelMuxInputGet(clockIndex, sel,
                             parentId))
                         {
@@ -737,11 +756,23 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * The clockIndex parameter is already validated
+                 * against NUM_GPR_CLOCK, so this function will
+                 * never return an error
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     /* Query if CGC has a parent */
                     uint32_t rootIdx;
 
+                    /*
+                     * The clockIndex parameter is already validated
+                     * against CLOCK_NUM_CGC, so this statement will
+                     * never execute
+                     */
+                    /* gcov_excl_ntbr_nextline */
                     if (CCM_CgcGetParent(clockIndex, &rootIdx))
                     {
                         /* CGCs have at most a single parent */
@@ -757,12 +788,12 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
                     }
                     else
                     {
-                        status = SM_ERR_NOT_FOUND;
+                        status = SM_ERR_NOT_FOUND; /* gcov_excl_line  */
                     }
                 }
                 else
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line  */
                 }
             }
         }
@@ -867,13 +898,18 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * The condition for the MAX clock index has already
+                 * been validated.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     status = SM_ERR_INVALID_PARAMETERS;
                 }
                 else
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line  */
                 }
             }
         }
@@ -919,13 +955,18 @@ int32_t DEV_SM_ClockRateGet(uint32_t clockId, uint64_t *rate)
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * The condition for the MAX clock index has already
+                 * been validated.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     *rate = CCM_CgcGetRate(clockIndex);
                 }
                 else
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line  */
                 }
             }
         }
@@ -952,24 +993,43 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
         /* Disable bypass when enabling clock source */
         if (enable)
         {
+            /*
+             * Returning false from the underlying driver function
+             * is not feasible because the clock index has already
+             * been validated against the maximum available clock sources.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!CLOCK_SourceSetBypass(clockId, false))
             {
-                status = SM_ERR_INVALID_PARAMETERS;
+                status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
             }
         }
         if (status == SM_ERR_SUCCESS)
         {
+            /*
+             * Returning false from the underlying driver function
+             * is not feasible because the clock index has already
+             * been validated against the maximum available clock sources.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!CLOCK_SourceSetEnable(clockId, enable))
             {
-                status = SM_ERR_INVALID_PARAMETERS;
+                status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
             }
         }
         /* Enable bypass when disabling clock source */
+        /* gcov_excl_ntbr_nextline */
         if ((status == SM_ERR_SUCCESS) && !enable)
         {
+            /*
+             * Returning false from the underlying driver function
+             * is not feasible because the clock index has already
+             * been validated against the maximum available clock sources.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!CLOCK_SourceSetBypass(clockId, true))
             {
-                status = SM_ERR_INVALID_PARAMETERS;
+                status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
             }
         }
     }
@@ -986,9 +1046,15 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
             }
             else
             {
+                /*
+                 * Returning false from the underlying driver function
+                 * is not feasible because the clock index has already
+                 * been validated against the maximum clock roots.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (!CCM_RootSetEnable(clockIndex, enable))
                 {
-                    status = SM_ERR_INVALID_PARAMETERS;
+                    status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
                 }
             }
         }
@@ -996,14 +1062,26 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
         {
             clockIndex = clockIndex - CLOCK_NUM_ROOT;
 
+            /*
+             * Returning false from the underlying driver function
+             * is not feasible because the clock index has already
+             * been validated against the maximum GPR sel.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (clockIndex < CLOCK_NUM_GPR_SEL)
             {
-                status = SM_ERR_INVALID_PARAMETERS;
+                status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
             }
             else
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * Returning false from the underlying driver function
+                 * is not feasible because the clock index has already
+                 * been validated against the maximum cgc clocks.
+                 */
+                /* gcov_excl_multiline 11 */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     if (!CCM_CgcSetEnable(clockIndex, enable))
@@ -1059,13 +1137,18 @@ int32_t DEV_SM_ClockIsEnabled(uint32_t clockId, bool *enabled)
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * The condition for the MAX clock index has already
+                 * been validated.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     *enabled = CCM_CgcGetEnable(clockIndex);
                 }
                 else
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line */
                 }
             }
         }
@@ -1120,6 +1203,11 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * The condition for the MAX clock index has already
+                 * been validated.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     uint32_t rootIdx = parent - CLOCK_NUM_SRC;
@@ -1131,7 +1219,7 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
                 }
                 else
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line */
                 }
             }
         }
@@ -1166,8 +1254,15 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 
         if (clockIndex < CLOCK_NUM_ROOT)
         {
+            /*
+             * The clockIndex parameter is already validated
+             * against CLOCK_NUM_ROOT, so this function will
+             * never return an error
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!CCM_RootGetParent(clockIndex, parent))
             {
+                /* gcov_excl_nextline */
                 status = SM_ERR_INVALID_PARAMETERS;
             }
         }
@@ -1177,30 +1272,45 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 
             if (clockIndex < CLOCK_NUM_GPR_SEL)
             {
+                /*
+                 * The clockIndex parameter is already validated
+                 * against CLOCK_NUM_GPR_SEL, so this function will
+                 * never return an error
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (!CCM_GprSelGetParent(clockIndex, parent))
                 {
-                    status = SM_ERR_INVALID_PARAMETERS;
+                    status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line  */
                 }
             }
             else
             {
                 clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
 
+                /*
+                 * The clockIndex parameter is already validated
+                 * against CLOCK_NUM_CGC, so this statement will
+                 * never execute
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
                     uint32_t rootIdx;
+
+                    /* gcov_excl_ntbr_nextline */
                     if (CCM_CgcGetParent(clockIndex, &rootIdx))
                     {
                         *parent = rootIdx + CLOCK_NUM_SRC;
                     }
                     else
                     {
+                        /* gcov_excl_nextline */
                         status = SM_ERR_INVALID_PARAMETERS;
                     }
                 }
                 else
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line  */
                 }
             }
         }
@@ -1406,9 +1516,10 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
         if (pwrDomainId < DEV_SM_NUM_POWER)
         {
             /* Check fuse state of power domain */
+            /* gcov_excl_ntbr_nextline - configtool enforces */
             if (DEV_SM_FusePdDisabled(pwrDomainId))
             {
-                rc = true;
+                rc = true; /* gcov_excl_line  */
             }
         }
         else

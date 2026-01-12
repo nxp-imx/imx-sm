@@ -189,9 +189,10 @@ int32_t DEV_SM_CameraConfigLoad(void)
     /* Load TRDC C config */
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_C);
 
+    /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
-        /* Load device config */
         status = CONFIG_Load(NULL, s_configData);
     }
 
@@ -283,6 +284,7 @@ int32_t DEV_SM_DdrConfigLoad(void)
 #endif
 
     /* Restore PLL context */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         if (s_pllContextValidDdr)
@@ -310,6 +312,7 @@ int32_t DEV_SM_DisplayConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_D);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -324,6 +327,7 @@ int32_t DEV_SM_DisplayConfigLoad(void)
 #endif
 
     /* Restore PLL context */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         if (s_pllContextValidLdb)
@@ -351,6 +355,7 @@ int32_t DEV_SM_GpuConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_G);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -394,6 +399,7 @@ int32_t DEV_SM_HsioTopConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_H);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -408,6 +414,7 @@ int32_t DEV_SM_HsioTopConfigLoad(void)
 #endif
 
     /* Restore PLL context */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         if (s_pllContextValidHsio)
@@ -481,6 +488,7 @@ int32_t DEV_SM_NetcConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_E);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -509,6 +517,7 @@ int32_t DEV_SM_NocConfigLoad(void)
     /* Load TRDC N config */
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_N);
 
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
 #if (defined(FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127) && FSL_FEATURE_BLK_CTRL_NOC_HAS_ERRATA_52127)
@@ -590,6 +599,7 @@ int32_t DEV_SM_VpuConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_V);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -620,12 +630,14 @@ int32_t DEV_SM_WkupConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_W);
 
     /* Load TRDC X config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = DEV_SM_RdcLoad(DEV_SM_TRDC_X);
     }
 
     /* Load WKUP block control config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load((const uint32_t*) BLK_CTRL_WAKEUPMIX_BASE,
@@ -718,6 +730,7 @@ int32_t DEV_SM_AonConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_A);
 
     /* Load AON NS block control config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load((const uint32_t*) BLK_CTRL_NS_AONMIX_BASE,
@@ -725,6 +738,7 @@ int32_t DEV_SM_AonConfigLoad(void)
     }
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);

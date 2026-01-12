@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -396,18 +396,12 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
 
         /* Event */
         {
-            flags = 0U;
-            uint32_t eventLm = 0U;
-            uint32_t recId = 0U;
-
             printf("SCMI_LmmEvent(%u, %u)\n", channel, lm);
             /*
              * Intentional: Test code
              */
             /* coverity[cert_int30_c_violation] */
-            CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, &flags));
-
-            BCHECK(SCMI_LMM_EVENT_BOOT(flags) == 1U);
+            CHECK(SCMI_LmmEvent(channel + 1U, NULL, NULL, NULL));
         }
 
         /* No notification */

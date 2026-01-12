@@ -96,8 +96,11 @@ int32_t DEV_SM_SystemInit(void)
     BRD_SM_ShutdownRecordLoad(&s_shutdownRecord);
 
     /* Update if reason available from SRC */
+    /* gcov_excl_ntbr_nextline - reset required to test */
     if ((srcResetReason != RST_REASON_POR) && !s_shutdownRecord.valid)
     {
+        /* Executes on non-POR reset causing gcov data loss */
+        /* gcov_excl_multiline 3 */
         s_shutdownRecord.reason = srcResetReason;
         s_shutdownRecord.valid = true;
     }
@@ -150,8 +153,15 @@ int32_t DEV_SM_SystemReset(void)
     int32_t status = SM_ERR_SUCCESS;
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
+    /*
+     * Calling this function will reset the entire system,
+     * resulting in the loss of all gcov coverage data.
+     * Therefore, it cannot be invoked for test coverage purposes.
+     * As a result, both line and branch coverage for this function
+     * are excluded from the gcov report.
+     */
     /* coverity[misra_c_2012_rule_14_3_violation] */
+    /* gcov_excl_multiline 5 */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -180,6 +190,14 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
+    /*
+     * Calling this function will reset the entire system,
+     * resulting in the loss of all gcov coverage data.
+     * Therefore, it cannot be invoked for test coverage purposes.
+     * As a result, both line and branch coverage for this function
+     * are excluded from the gcov report.
+     */
+    /* gcov_excl_multiline 5 */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -199,7 +217,15 @@ int32_t DEV_SM_SystemShutdown(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
+    /*
+     * Calling this function will shutdown the entire system,
+     * resulting in the loss of all gcov coverage data.
+     * Therefore, it cannot be invoked for test coverage purposes.
+     * As a result, both line and branch coverage for this function
+     * are excluded from the gcov report.
+     */
     /* coverity[misra_c_2012_rule_14_3_violation] */
+    /* gcov_excl_multiline 9 */
     if (status == SM_ERR_SUCCESS)
     {
         /* Inform ELE */
@@ -334,7 +360,15 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
+    /*
+     * Calling this function will reset the entire system,
+     * resulting in the loss of all gcov coverage data.
+     * Therefore, it cannot be invoked for test coverage purposes.
+     * As a result, both line and branch coverage for this function
+     * are excluded from the gcov report.
+     */
     /* coverity[misra_c_2012_rule_14_3_violation] */
+    /*  gcov_excl_multiline 5 */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -557,8 +591,13 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
             else
             {
+                /*
+                 * Simulating a test case where SleepCnt exceeds UINT32_MAX
+                 * is not feasible. Therefore, it has been excluded from the
+                 * code coverage data.
+                 */
                 /* Initialize to zero in case of wrap */
-                g_syslog.sysSleepRecord.sleepCnt = 0U;
+                g_syslog.sysSleepRecord.sleepCnt = 0U; /* gcov_excl_line */
             }
 
             bool ddrInRetention = false;

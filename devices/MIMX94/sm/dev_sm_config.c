@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -157,6 +157,7 @@ int32_t DEV_SM_DdrConfigLoad(void)
 #endif
 
     /* Restore PLL context */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         if (s_pllContextValidDdr)
@@ -184,6 +185,7 @@ int32_t DEV_SM_DisplayConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_D);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -198,6 +200,7 @@ int32_t DEV_SM_DisplayConfigLoad(void)
 #endif
 
     /* Restore PLL context */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         if (s_pllContextValidLdb)
@@ -225,6 +228,7 @@ int32_t DEV_SM_HsioTopConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_H);
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -262,6 +266,7 @@ int32_t DEV_SM_HsioWaonConfigLoad(void)
 #endif
 
     /* Restore PLL context */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         if (s_pllContextValidHsio)
@@ -335,12 +340,14 @@ int32_t DEV_SM_NetcConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_E);
 
     /* Load TRDC_S config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = DEV_SM_RdcLoad(DEV_SM_TRDC_S);
     }
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -354,6 +361,7 @@ int32_t DEV_SM_NetcConfigLoad(void)
     }
 #endif
 
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         /* Check if M33S CPUWAIT context was saved during NETCMIX power down */
@@ -385,6 +393,7 @@ int32_t DEV_SM_NocConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_N);
 
     /* Load NOC block control config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load((const uint32_t*) BLK_CTRL_NOCMIX_BASE,
@@ -392,6 +401,7 @@ int32_t DEV_SM_NocConfigLoad(void)
     }
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -464,12 +474,14 @@ int32_t DEV_SM_WkupConfigLoad(void)
     }
 
     /* Load TRDC M config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = DEV_SM_RdcLoad(DEV_SM_TRDC_M);
     }
 
     /* Load WKUP block control config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load((const uint32_t*) BLK_CTRL_WAKEUPMIX_BASE,
@@ -481,6 +493,7 @@ int32_t DEV_SM_WkupConfigLoad(void)
     BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1 = wkupGpioCtrl1;
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
@@ -547,6 +560,7 @@ int32_t DEV_SM_AonConfigLoad(void)
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_A);
 
     /* Load AON NS block control config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load((const uint32_t*) BLK_CTRL_NS_AONMIX_BASE,
@@ -554,6 +568,7 @@ int32_t DEV_SM_AonConfigLoad(void)
     }
 
     /* Load device config */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -53,6 +53,11 @@ static bool tsEnb[DEV_SM_NUM_SENSOR];
 
 static uint32_t s_sensorId = 0U;
 static uint8_t s_eventControl = 0U;
+
+/* Local functions */
+
+static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
+    int64_t value, uint8_t eventControl);
 
 /*--------------------------------------------------------------------------*/
 /* Initialize sensors                                                       */
@@ -255,8 +260,17 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
         /* Check if enabled */
         if (sensorEnb[sensorId])
         {
-            s_eventControl = eventControl;
-            s_sensorId = sensorId;
+            /* Check trip point */
+            if (tripPoint >= 2U)
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+            else
+            {
+                /* Configure sensor threshold */
+                status = DEV_SM_SensorThresholdSet(sensorId, tripPoint, value,
+                    eventControl);
+            }
         }
         else
         {
@@ -356,5 +370,60 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
             LMM_SensorEvent(s_sensorId, 0U, 0U);
         }
     }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set sensor threshold                                                     */
+/*--------------------------------------------------------------------------*/
+static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
+    int64_t value, uint8_t eventControl)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    int64_t raw64 = 0LL;
+
+    if ((value <= (INT64_MAX / 64)) && (value >= (INT64_MIN / 64)))
+    {
+        raw64 = (value * 64) / 100;
+    }
+    else
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Check raw64 fit in int16_t */
+    if ((status == SM_ERR_SUCCESS) && (CHECK_I64_FIT_I16(raw64)))
+    {
+        if (eventControl == DEV_SM_SENSOR_TP_NONE)
+        {
+            /* Disable threshold */
+            s_eventControl = 0U;
+        }
+        else
+        {
+            /* Convert event control to mode */
+            switch (eventControl)
+            {
+                case DEV_SM_SENSOR_TP_RISING:
+                case DEV_SM_SENSOR_TP_FALLING:
+                case DEV_SM_SENSOR_TP_BOTH:
+                case DEV_SM_SENSOR_TP_HIGH:
+                case DEV_SM_SENSOR_TP_LOW:
+                    s_eventControl = eventControl;
+                    s_sensorId = sensorId;
+                    break;
+                default:
+                    status = SM_ERR_INVALID_PARAMETERS;
+                    break;
+            }
+        }
+    }
+    else
+    {
+        /* Set the status if value is greater than int16_t max range */
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
 }
 

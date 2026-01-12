@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -88,8 +88,12 @@ void TEST_DevSmFuse(void)
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif
 
+#ifdef DEV_SM_PD_A55C0
     (void) DEV_SM_FusePdDisabled(DEV_SM_PD_A55C0);
+#endif
+#ifdef DEV_SM_FUSE_A55_CORE0_DISABLE
     (void) DEV_SM_FuseCpuDisabled(DEV_SM_FUSE_A55_CORE0_DISABLE);
+#endif
 #endif
 
     printf("\n");

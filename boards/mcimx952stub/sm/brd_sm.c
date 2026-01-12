@@ -195,6 +195,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /*--------------------------------------------------------------------------*/
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
+/* gcov_excl_start - calling will lose gcov data */
 _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
 #if defined(MONITOR) || defined(RUN_TEST)
@@ -215,6 +216,7 @@ _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
         ; /* Intentional empty while */
     }
 }
+/* gcov_excl_stop */
 
 /*--------------------------------------------------------------------------*/
 /* Board timer tick                                                         */
@@ -443,6 +445,7 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 /*--------------------------------------------------------------------------*/
 /* Reset board                                                              */
 /*--------------------------------------------------------------------------*/
+/* gcov_excl_start */
 /* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t BRD_SM_SystemReset(void)
 {
@@ -457,6 +460,7 @@ int32_t BRD_SM_SystemReset(void)
         ; /* Intentional empty while */
     }
 }
+/* gcov_excl_stop */
 
 /*--------------------------------------------------------------------------*/
 /* Reset device to a specific stage                                         */

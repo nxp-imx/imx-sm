@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -118,7 +118,7 @@ void TEST_DevSmPower(void)
     NECHECK(DEV_SM_PowerStateSet(DEV_SM_NUM_POWER, powerState),
         SM_ERR_NOT_FOUND);
 
-#ifndef SIMU
+#ifdef DEV_SM_PD_WAKEUP
     /* To imporve the coverage of the default case of set function */
     SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
     NECHECK(DEV_SM_PowerStateSet(PWR_MIX_SLICE_IDX_A55C0,
@@ -127,19 +127,19 @@ void TEST_DevSmPower(void)
         DEV_SM_POWER_STATE_OFF), SM_ERR_POWER);
     SM_TestModeSet(SM_TEST_MODE_OFF);
 
-    NECHECK(DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, 2U /*Invalid power state*/),
-        SM_ERR_INVALID_PARAMETERS);
+    NECHECK(DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
+        2U /* Invalid power state */), SM_ERR_INVALID_PARAMETERS);
 
     /*
      * To cover the failure case of DEV_SM_PowerRetModeSet:
      * Invalid pwr domain ID
      * */
-    NECHECK(DEV_SM_PowerRetModeSet(PWR_NUM_MIX_SLICE, 0x0U /*ret mask*/),
+    NECHECK(DEV_SM_PowerRetModeSet(PWR_NUM_MIX_SLICE, 0x0U /* ret mask */),
         SM_ERR_NOT_FOUND);
 
     SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
-    NECHECK(DEV_SM_PowerRetModeSet(PWR_MIX_SLICE_IDX_A55C0, 0x0U /*ret mask*/),
-        SM_ERR_NOT_FOUND);
+    NECHECK(DEV_SM_PowerRetModeSet(PWR_MIX_SLICE_IDX_A55C0,
+        0x0U /* ret mask */), SM_ERR_NOT_FOUND);
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif
 

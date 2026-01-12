@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -63,7 +63,6 @@
 /* coverity[misra_c_2012_rule_17_11_violation] */
 void TEST_All(void)
 {
-#ifndef TEST_MIN
     /* Run device SM tests */
     TEST_DevSmPower();
     TEST_DevSmClock();
@@ -85,11 +84,14 @@ void TEST_All(void)
 #endif
 
     /* Run board SM tests */
-#ifdef SIMU
+
+    /* Intentional: BrdSmSensor Test code */
+    /* coverity[misra_c_2012_rule_2_2_violation] */
     TEST_BrdSmSensor();
-    TEST_BrdSm();
+#ifdef SIMU
     TEST_BrdSmControl();
 #endif
+    TEST_BrdSm();
 
     /* Run LMM tests */
     TEST_LmmClock();
@@ -105,7 +107,6 @@ void TEST_All(void)
     TEST_LmmPower();
 #ifdef SIMU
     TEST_LmmFault();
-#endif
 #endif
 
     /* Run SCMI tests */

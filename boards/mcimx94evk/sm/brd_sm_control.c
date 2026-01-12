@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -64,7 +64,7 @@ int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if ctrlId is within bounds*/
+    /* Check to see if ctrlId is within bounds */
     if (ctrlId < SM_NUM_CTRL)
     {
         /* Check if device or board */
@@ -96,7 +96,7 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
     /* Default to no return */
     *numRtn = 0U;
 
-    /* Check to see if ctrlId is within bounds*/
+    /* Check to see if ctrlId is within bounds */
     if (ctrlId < SM_NUM_CTRL)
     {
         /* Check if device or board */
@@ -149,7 +149,7 @@ int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if ctrlId is within bounds*/
+    /* Check to see if ctrlId is within bounds */
     if (ctrlId < SM_NUM_CTRL)
     {
         /* Check if device or board */
@@ -183,7 +183,7 @@ int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if ctrlId is within bounds*/
+    /* Check to see if ctrlId is within bounds */
     if (ctrlId < SM_NUM_CTRL)
     {
         /* Check if device or board */

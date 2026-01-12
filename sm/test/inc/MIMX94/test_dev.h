@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -93,6 +93,14 @@
 #define HAS_FUSE_GET_SPEED
 
 #define DEV_SM_FAULT_ID     DEV_SM_FAULT_RESV98
+
+#define DEV_SM_CPU_TEST   DEV_SM_CPU_A55C0
+#define DEV_SM_PLAT_TEST  DEV_SM_CPU_A55P
+
+#define SM_NUM_THRESHOLDS     3U
+#define SM_NUM_EVENTCONTROLS  6U
+
+#define DEV_SM_TEST_REASON_UNUSED DEV_SM_REASON_UNUSED5
 
 /* Local defines */
 

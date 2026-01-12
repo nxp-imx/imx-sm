@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,8 +60,10 @@ void TEST_DevSmClock(void)
     dev_sm_clock_range_t clockRange = { 0 };
     uint64_t rate = 0U;
     bool enabled = false;
+#if defined(SIMU) || defined(CLOCK_NUM_ROOT)
     uint32_t parentId = 0U;
     uint32_t numParents = 0U;
+#endif
 
 #ifdef SIMU
     uint32_t parent = 0U;
@@ -171,13 +173,22 @@ void TEST_DevSmClock(void)
 #endif
     }
 
-#ifndef SIMU
+#ifdef CLOCK_NUM_ROOT
     /* Pass invalid argument for idx */
     NECHECK(DEV_SM_ClockParentDescribe(5U, 1U, &parentId, &numParents),
         SM_ERR_OUT_OF_RANGE);
 
     NECHECK(DEV_SM_ClockParentDescribe(CLOCK_NUM_ROOT, 4U, &parentId,
         &numParents), SM_ERR_OUT_OF_RANGE);
+
+    NECHECK(DEV_SM_ClockParentDescribe((CLOCK_NUM_SRC + CLOCK_NUM_ROOT), 4U,
+        &parentId, &numParents), SM_ERR_OUT_OF_RANGE);
+
+    NECHECK(DEV_SM_ClockParentDescribe((CLOCK_NUM_SRC + CLOCK_NUM_ROOT +
+        CLOCK_NUM_GPR_SEL), 4U, &parentId, &numParents), SM_ERR_OUT_OF_RANGE);
+
+    NECHECK(DEV_SM_ClockParentDescribe(CLOCK_SRC_RESERVED20, 4U, &parentId,
+        &numParents), SM_ERR_NOT_FOUND);
 #endif
 
     /* Test API bounds */
@@ -197,6 +208,15 @@ void TEST_DevSmClock(void)
     NECHECK(DEV_SM_ClockEnable(DEV_SM_NUM_CLOCK, true), SM_ERR_NOT_FOUND);
     NECHECK(DEV_SM_ClockIsEnabled(DEV_SM_NUM_CLOCK, &enabled),
         SM_ERR_NOT_FOUND);
+
+#ifdef CLOCK_SRC_RESERVED20
+    NECHECK(DEV_SM_ClockParentSet(CLOCK_SRC_RESERVED20, 0U),
+        SM_ERR_NOT_FOUND);
+
+    bool extSupported;
+    NECHECK(DEV_SM_ClockExtendedInfo(CLOCK_SRC_RESERVED20, &extSupported),
+        SM_ERR_NOT_FOUND);
+#endif
 
 #ifdef SIMU
     NECHECK(DEV_SM_ClockParentSet(DEV_SM_NUM_CLOCK, 0U),
@@ -220,7 +240,7 @@ void TEST_DevSmClock(void)
     NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
         DEV_SM_CLOCK_EXT_SSC, &extConfigValue), SM_ERR_NOT_FOUND);
 
-#ifndef SIMU
+#ifdef CLOCK_SRC_SYSPLL1_VCO
     CHECK(DEV_SM_ClockExtendedGet(CLOCK_SRC_SYSPLL1_VCO,
         DEV_SM_CLOCK_EXT_SSC, &extConfigValue));
 

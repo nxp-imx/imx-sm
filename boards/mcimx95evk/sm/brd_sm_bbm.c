@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -153,6 +153,7 @@ int32_t BRD_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
     }
     else
     {
+        /* gcov_excl_ntbr_nextline - range check above */
         if ((rtcId - DEV_SM_NUM_RTC) < BRD_SM_NUM_RTC)
         {
             /* Return pointer to name */
@@ -161,7 +162,7 @@ int32_t BRD_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
         else
         {
             /* Set the status */
-            status = SM_ERR_INVALID_PARAMETERS;
+            status = SM_ERR_INVALID_PARAMETERS;  /* gcov_excl_line */
         }
     }
 

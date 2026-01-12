@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -214,6 +214,7 @@ int32_t RPC_SCMI_AgentInit(uint32_t agentId)
                 s_token[scmiChannel] = 0U;
 
                 /* Reset transport */
+                /* gcov_excl_ntbr_nextline - configtool enforces */
                 switch (g_scmiChannelConfig[scmiChannel].xportType)
                 {
                     case SM_XPORT_SMT:
@@ -222,6 +223,7 @@ int32_t RPC_SCMI_AgentInit(uint32_t agentId)
                             g_scmiChannelConfig[scmiChannel].xportChannel,
                             noIrq, initCount);
                         break;
+                    /* gcov_excl_multiline 4 - configtool enforces */
                     default:
                         status = SM_ERR_INVALID_PARAMETERS;
                         break;
@@ -289,6 +291,7 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
         s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 
         /* Send message via transport */
+        /* gcov_excl_ntbr_nextline - configtool enforces */
         switch (g_scmiChannelConfig[scmiChannel].xportType)
         {
             case SM_XPORT_SMT:
@@ -296,6 +299,7 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
                     g_scmiChannelConfig[scmiChannel].xportChannel, len,
                     false, notify);
                 break;
+            /* gcov_excl_multiline 4 - configtool enforces */
             default:
                 status = SM_ERR_NOT_SUPPORTED;
                 break;
@@ -318,9 +322,11 @@ bool RPC_SCMI_P2aTxQFull(uint32_t agentId, uint32_t len, uint32_t queue)
     bool rtn = false;
 
     /* Check value doesn't wrap */
+    /* gcov_excl_ntbr_nextline - code logic prevents */
     if (SM_SCMI_MAX_NOTIFY >= s_queue[agentId][queue].count)
     {
-        if ((len / 4U) > (SM_SCMI_MAX_NOTIFY - s_queue[agentId][queue].count))
+        if ((len / 4U) > (SM_SCMI_MAX_NOTIFY
+            - s_queue[agentId][queue].count))
         {
             rtn = true;
         }
@@ -461,9 +467,10 @@ int32_t RPC_SCMI_Reset(uint8_t scmiInst)
         }
 
         /* Exit on error */
+        /* gcov_excl_ntbr_nextline - reset functions never error */
         if (status != SM_ERR_SUCCESS)
         {
-            break;
+            break;  /* gcov_excl_line */
         }
     }
 
@@ -954,6 +961,7 @@ static int32_t RPC_SCMI_A2pRx(scmi_caller_t *caller, void* msgRx,
     uint32_t scmiChannel = caller->scmiChannel;
 
     /* Copy out message */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
         case SM_XPORT_SMT:
@@ -961,6 +969,7 @@ static int32_t RPC_SCMI_A2pRx(scmi_caller_t *caller, void* msgRx,
                 g_scmiChannelConfig[scmiChannel].xportChannel,
                 msgRx, &size, true);
             break;
+        /* gcov_excl_multiline 4 - configtool enforces */
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -1025,12 +1034,14 @@ static int32_t RPC_SCMI_A2pTx(const scmi_caller_t *caller, uint32_t len,
     }
 
     /* Send response via transport */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
         case SM_XPORT_SMT:
             rtn = RPC_SMT_Tx(g_scmiChannelConfig[scmiChannel].xportChannel,
                 newLen, true, true);
             break;
+        /* gcov_excl_multiline 4 - configtool enforces */
         default:
             rtn = SM_ERR_NOT_SUPPORTED;
             break;

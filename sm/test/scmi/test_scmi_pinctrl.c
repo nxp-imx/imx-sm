@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -494,11 +494,30 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         CHECK(SCMI_PinctrlSettingsGet(channel, identifier, attributes,
             &functionSelected, &numConfigs, configs));
 
-        /* Set to the current config */
+        /* Test SION enable */
         uint32_t num = SCMI_PINCTRL_NUM_CONFIG_FLAGS_NUM_CONFIGS(numConfigs);
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(num) |
             SCMI_PINCTRL_GET_ATTR_SELECTOR(0UL);
+        uint8_t index;
+        for (index = 0U; index < numConfigs; index++)
+        {
+            if ((configs[index].type == SCMI_PINCTRL_TYPE_MUX) &&
+                ((configs[index].value & 0x10U) == 0U))
+            {
+                configs[index].value |= 0x10U;
+                break;
+            }
+        }
+        printf("SCMI_PinctrlSettingsConfigure(%u, %u, %u)\n", channel,
+            identifier, attributes);
+        CHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
+            attributes, configs));
+        if (index < numConfigs)
+        {
+            configs[index].value &= ~(0x10U);
+        }
 
+        /* Set to the current config */
         printf("SCMI_PinctrlSettingsConfigure(%u, %u, %u)\n", channel,
             identifier, attributes);
         CHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,

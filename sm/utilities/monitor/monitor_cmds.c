@@ -3900,13 +3900,13 @@ static int32_t MONITOR_CmdDdr(int32_t argc, const char * const argv[])
 
         if (status == SM_ERR_SUCCESS)
         {
-            printf("%03u: LPDDR%s-%u (x%u", ddrRgdId, ddrTypeNames[ddrType],
+            printf("%03u: LPDDR%s-%u (x%u, ", ddrRgdId, ddrTypeNames[ddrType],
                 mts, ddrWidth);
-            if (eccEnb)
+            if (!eccEnb)
             {
-                printf(", ecc");
+                printf("no ");
             }
-            printf("), 0x%X%08X", INT64_H(startAddr), INT64_L(startAddr));
+            printf("ecc), 0x%X%08X", INT64_H(startAddr), INT64_L(startAddr));
             printf("-0x%X%08X\n", INT64_H(endAddr), INT64_L(endAddr));
         }
 

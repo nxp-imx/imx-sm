@@ -46,12 +46,69 @@
 
 /* Local defines */
 
+#define BRD_SM_RST_REC_FIRST  0U     /* First GPR for shutdown record */
+#define BRD_SM_RST_REC_NUM    4U     /* Number of GPR for shutdown record */
+
+/* Defines to encode the reason */
+#define BRD_SM_REC_REASON_MASK  (0x000000FFU)
+#define BRD_SM_REC_REASON_SHIFT (0U)
+#define BRD_SM_REC_REASON(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_REASON_SHIFT)) & \
+    BRD_SM_REC_REASON_MASK)
+
+/* Defines to encode the error ID */
+#define BRD_SM_REC_EID_MASK  (0x007FFF00U)
+#define BRD_SM_REC_EID_SHIFT (8U)
+#define BRD_SM_REC_EID(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_EID_SHIFT)) & \
+    BRD_SM_REC_EID_MASK)
+#define BRD_SM_REC_EID_SIGN  (0x00004000U)
+#define BRD_SM_REC_EID_EXT   (0xFFFF8000U)
+
+/* Defines to encode the valid flag for the errId */
+#define BRD_SM_REC_VERR_MASK  (0x00800000U)
+#define BRD_SM_REC_VERR_SHIFT (23U)
+#define BRD_SM_REC_VERR(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_VERR_SHIFT)) & \
+    BRD_SM_REC_VERR_MASK)
+
+/* Defines to encode the source/origin */
+#define BRD_SM_REC_SRC_MASK  (0x0F000000U)
+#define BRD_SM_REC_SRC_SHIFT (24U)
+#define BRD_SM_REC_SRC(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_SRC_SHIFT)) & \
+    BRD_SM_REC_SRC_MASK)
+
+/* Defines to encode the valid flag for the source */
+#define BRD_SM_REC_VSRC_MASK  (0x10000000U)
+#define BRD_SM_REC_VSRC_SHIFT (28U)
+#define BRD_SM_REC_VSRC(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_VSRC_SHIFT)) & \
+    BRD_SM_REC_VSRC_MASK)
+
+/* Defines to encode the extended info length */
+#define BRD_SM_REC_LEN_MASK  (0x60000000U)
+#define BRD_SM_REC_LEN_SHIFT (29U)
+#define BRD_SM_REC_LEN(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_LEN_SHIFT)) & \
+    BRD_SM_REC_LEN_MASK)
+
+/* Defines to encode the valid */
+#define BRD_SM_REC_VLD_MASK  (0x80000000U)
+#define BRD_SM_REC_VLD_SHIFT (31U)
+#define BRD_SM_REC_VLD(x) \
+    (((uint32_t)(((uint32_t)(x)) << BRD_SM_REC_VLD_SHIFT)) & \
+    BRD_SM_REC_VLD_MASK)
+
+#define BRD_SM_NUM_GPR       (8U)
+
 /* Local types */
 
 /* Local variables */
 
 static int32_t s_voltLevel[DEV_SM_NUM_VOLT];
 static uint8_t s_voltMode[DEV_SM_NUM_VOLT];
+static uint32_t s_gprValue[BRD_SM_NUM_GPR];
 
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
@@ -242,6 +299,109 @@ void BRD_SM_ResetRecordPrint(string name, dev_sm_rst_rec_t resetRec)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Load and clear persistent shutdown record of previous boot               */
+/*--------------------------------------------------------------------------*/
+void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
+{
+#if BRD_SM_RST_REC_NUM > 0
+    uint32_t hdr = 0U;
+    uint32_t *ePtr = &(shutdownRec->extInfo[0]);
+
+    /* Read and clear header */
+    hdr = s_gprValue[BRD_SM_RST_REC_FIRST];
+    s_gprValue[BRD_SM_RST_REC_FIRST] = 0U;
+
+    /* Valid? */
+    if (((hdr & BRD_SM_REC_VLD_MASK ) >> BRD_SM_REC_VLD_SHIFT) != 0U)
+    {
+        shutdownRec->valid = true;
+
+        /* Parse header */
+        shutdownRec->reason = (hdr & BRD_SM_REC_REASON_MASK ) >>
+            BRD_SM_REC_REASON_SHIFT;
+        shutdownRec->errId = (hdr & BRD_SM_REC_EID_MASK ) >>
+            BRD_SM_REC_EID_SHIFT;
+        shutdownRec->validErr = ((hdr & BRD_SM_REC_VERR_MASK ) != 0U);
+        shutdownRec->origin = (hdr & BRD_SM_REC_SRC_MASK ) >>
+            BRD_SM_REC_SRC_SHIFT;
+        shutdownRec->validOrigin = ((hdr & BRD_SM_REC_VSRC_MASK ) != 0U);
+        shutdownRec->extLen = (hdr & BRD_SM_REC_LEN_MASK ) >>
+            BRD_SM_REC_LEN_SHIFT;
+
+        /* Sign extend */
+        if ((shutdownRec->errId & BRD_SM_REC_EID_SIGN) != 0U)
+        {
+            shutdownRec->errId |= BRD_SM_REC_EID_EXT;
+        }
+
+        shutdownRec->extLen = MIN(shutdownRec->extLen, DEV_SM_NUM_EXT_INFO);
+    }
+
+    /* Copy out extended info */
+    for (uint8_t idx = 1U; idx < BRD_SM_RST_REC_NUM; idx++)
+    {
+        if (idx <= shutdownRec->extLen)
+        {
+            *ePtr = s_gprValue[idx + BRD_SM_RST_REC_FIRST];
+            ePtr++;
+        }
+        else
+        {
+            break;
+        }
+    }
+#endif
+
+}
+
+/*--------------------------------------------------------------------------*/
+/* Save shutdown record to persistent storage                               */
+/*--------------------------------------------------------------------------*/
+void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
+{
+#if BRD_SM_RST_REC_NUM > 0
+    uint32_t hdr;
+    const uint32_t *ePtr = &(shutdownRec.extInfo[0]);
+
+    /* Store extended info */
+    for (uint8_t idx = 1U; idx < BRD_SM_RST_REC_NUM; idx++)
+    {
+        if (idx <= shutdownRec.extLen)
+        {
+            s_gprValue[idx + BRD_SM_RST_REC_FIRST] = *ePtr;
+            ePtr++;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    /* Create header */
+    hdr = BRD_SM_REC_REASON(shutdownRec.reason)
+        | BRD_SM_REC_EID(shutdownRec.errId)
+        | BRD_SM_REC_VERR(shutdownRec.validErr ? 1U : 0U)
+        | BRD_SM_REC_SRC(shutdownRec.origin)
+        | BRD_SM_REC_VSRC(shutdownRec.validOrigin ? 1U : 0U)
+        | BRD_SM_REC_LEN(shutdownRec.extLen)
+        | BRD_SM_REC_VLD(shutdownRec.valid ? 1U : 0U);
+
+    /* Save header */
+    s_gprValue[BRD_SM_RST_REC_FIRST] = hdr;
+#endif
+
+    /* Print shutdown record */
+    if (shutdownRec.reset)
+    {
+        BRD_SM_ResetRecordPrint("\nReset request:", shutdownRec);
+    }
+    else
+    {
+        BRD_SM_ResetRecordPrint("\nShutdown request:", shutdownRec);
+    }
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set mode of specified SoC supply                                         */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SupplyModeSet(uint32_t domain, uint8_t voltMode)
@@ -255,7 +415,7 @@ int32_t BRD_SM_SupplyModeSet(uint32_t domain, uint8_t voltMode)
     }
     else
     {
-        status = SM_ERR_HARDWARE_ERROR;
+        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
@@ -276,7 +436,7 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
     }
     else
     {
-        status = SM_ERR_HARDWARE_ERROR;
+        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
@@ -297,7 +457,7 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
     }
     else
     {
-        status = SM_ERR_HARDWARE_ERROR;
+        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
@@ -318,7 +478,7 @@ int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
     }
     else
     {
-        status = SM_ERR_HARDWARE_ERROR;
+        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */

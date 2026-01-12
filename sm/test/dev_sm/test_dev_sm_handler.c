@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -273,6 +273,7 @@ void TEST_DevSmHandler(void)
     (void) DEV_SM_GetTimerMsec();
 #endif
 
+#ifdef MU6_B_IRQ_HANDLER
     uint32_t basePrio = 0U;
     (void) DEV_SM_IrqPrioBaseGet(MU6_B_IRQ_HANDLER, &basePrio);
 
@@ -280,6 +281,13 @@ void TEST_DevSmHandler(void)
     (void) DEV_SM_IrqPrioCntrGet(MU6_B_IRQ_HANDLER, &irqCntr);
 
     (void) DEV_SM_IrqPrioCntrSet(MU6_B_IRQ_HANDLER, irqCntr);
+#endif
+    basePrio = 1U << __NVIC_PRIO_BITS;
+    (void) DEV_SM_IrqPrioBaseSet(MU6_B_IRQ_HANDLER, basePrio);
+    (void) DEV_SM_IrqPrioBaseSet(NotAvail_IRQn, 0U);
+    (void) DEV_SM_IrqPrioBaseGet(NotAvail_IRQn, &basePrio);
+    (void) DEV_SM_IrqPrioCntrSet(NotAvail_IRQn, 0U);
+    (void) DEV_SM_IrqPrioCntrGet(NotAvail_IRQn, &irqCntr);
 
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif

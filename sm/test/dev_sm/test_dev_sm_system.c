@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024-2025 NXP
+** Copyright 2024-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -290,6 +290,16 @@ void TEST_DevSmSystem(void)
 
         /* Reset the test mode */
         SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
+
+    /* SystemShutdownRecSet Coverage */
+    {
+        dev_sm_rst_rec_t shutdownRec = { 0 };
+        shutdownRec.reason = DEV_SM_TEST_REASON_UNUSED;
+        shutdownRec.errId = 17U;
+
+        printf("DEV_SM_SystemShutdownRecSet()\n");
+        DEV_SM_SystemShutdownRecSet(shutdownRec);
     }
 
     {

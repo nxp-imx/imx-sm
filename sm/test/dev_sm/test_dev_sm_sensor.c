@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -161,6 +161,38 @@ void TEST_DevSmSensor(void)
         NECHECK(DEV_SM_SensorTripPointSet(
             sensorId, 0U, 0, 0U), SM_ERR_NOT_SUPPORTED);
     }
+
+    /* Additional sensor tests */
+    printf("DEV_SM_SensorEnable(%u)\n", DEV_SM_SENSOR_TEMP_ANA);
+    CHECK(DEV_SM_SensorEnable(
+        DEV_SM_SENSOR_TEMP_ANA, enable, false));
+
+    /* Disable interrupt */
+    printf("DEV_SM_SensorTripPointSet(%u)\n", DEV_SM_SENSOR_TEMP_ANA);
+    CHECK(DEV_SM_SensorTripPointSet(
+        DEV_SM_SENSOR_TEMP_ANA, 0U, 0LL, DEV_SM_SENSOR_TP_NONE));
+
+    /* Invalid threshold value */
+    printf("DEV_SM_SensorTripPointSet(%u)\n", DEV_SM_SENSOR_TEMP_ANA);
+    NECHECK(DEV_SM_SensorTripPointSet(
+        DEV_SM_SENSOR_TEMP_ANA, 0U, INT64_MAX, 0U), SM_ERR_INVALID_PARAMETERS);
+
+    /* Out of bounds trippoint */
+    printf("DEV_SM_SensorTripPointSet(%u)\n", SM_NUM_THRESHOLDS);
+    NECHECK(DEV_SM_SensorTripPointSet(
+        DEV_SM_SENSOR_TEMP_ANA, SM_NUM_THRESHOLDS, 0LL, 0U),
+        SM_ERR_INVALID_PARAMETERS);
+
+    /* Invalid eventControl value */
+    printf("DEV_SM_SensorTripPointSet(%u)\n", DEV_SM_SENSOR_TEMP_ANA);
+    NECHECK(DEV_SM_SensorTripPointSet(
+        DEV_SM_SENSOR_TEMP_ANA, 0U, 0LL, SM_NUM_EVENTCONTROLS),
+        SM_ERR_INVALID_PARAMETERS);
+
+    /* DEV_SM_SENSOR_TP_LOW eventControl */
+    printf("DEV_SM_SensorTripPointSet(%u)\n", DEV_SM_SENSOR_TEMP_ANA);
+    CHECK(DEV_SM_SensorTripPointSet(
+        DEV_SM_SENSOR_TEMP_ANA, 0U, 0LL, DEV_SM_SENSOR_TP_LOW));
 
     /* Test API bounds */
     printf("\n**** Device SM Sensor API Err Tests ***\n\n");

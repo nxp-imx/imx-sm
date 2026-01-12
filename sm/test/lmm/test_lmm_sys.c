@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -126,11 +126,7 @@ void TEST_LmmSys(void)
     /* Check the LM CPU state */
     {
         uint32_t lmId = SM_LM_DEFAULT;
-#ifdef DEV_SM_CPU_A55C0
-        uint32_t cpuId = DEV_SM_CPU_A55C0;
-#else
-        uint32_t cpuId = DEV_SM_CPU_2;
-#endif
+        uint32_t cpuId = DEV_SM_CPU_TEST;
 
         printf("LM_CpuCheck(%u %u)\n", lmId, cpuId);
         bool rc = LM_CpuCheck(lmId, cpuId);

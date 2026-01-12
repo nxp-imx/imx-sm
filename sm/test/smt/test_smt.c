@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -42,6 +42,7 @@
 
 #include "test.h"
 #include "rpc_smt.h"
+#include "smt.h"
 
 /* Local defines */
 
@@ -57,6 +58,10 @@
 void TEST_Smt(void)
 {
     printf("**** SMT Tests ***\n\n");
+
+    /* Invalid parameter */
+    NECHECK(SMT_ChannelConfig(5000U, 0U, 0U, 0U),
+        SM_ERR_INVALID_PARAMETERS);
 
     /* Init out of range */
     NECHECK(RPC_SMT_Init(SM_NUM_SMT_CHN, false, 0U),

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -118,6 +118,8 @@ void TEST_ScmiSystem(void)
             SCMI_SYS_NOTIFY_ENABLE(1U)),
             SM_ERR_INVALID_PARAMETERS);
 
+        NECHECK(SCMI_SystemPowerStateNotifier(SM_NUM_TEST_CHN, NULL,
+            NULL, NULL, NULL), SM_ERR_INVALID_PARAMETERS);
     }
 
     /* Invalid notification */
@@ -169,7 +171,7 @@ void TEST_ScmiSystem(void)
 /*==========================================================================*/
 
 /*--------------------------------------------------------------------------*/
-/* Test SCMI performance functions with NOTIFY access                       */
+/* Test SCMI system functions with NOTIFY access                            */
 /*--------------------------------------------------------------------------*/
 static void TEST_ScmiSystemNotify(bool pass, uint32_t channel)
 {
@@ -211,7 +213,7 @@ static void TEST_ScmiSystemNotify(bool pass, uint32_t channel)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Test SCMI performance functions with SET access                          */
+/* Test SCMI system functions with SET access                               */
 /*--------------------------------------------------------------------------*/
 static void TEST_ScmiSystemSet(bool pass, uint32_t channel)
 {
@@ -352,7 +354,7 @@ static void TEST_ScmiSystemSet(bool pass, uint32_t channel)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Test SCMI performance functions with EXCLUSIVE access                    */
+/* Test SCMI system functions with EXCLUSIVE access                         */
 /*--------------------------------------------------------------------------*/
 static void TEST_ScmiSystemExclusive(bool pass, uint32_t channel,
     uint32_t lmId)

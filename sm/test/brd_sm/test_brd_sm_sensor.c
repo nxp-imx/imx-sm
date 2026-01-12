@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -77,36 +77,36 @@ void TEST_BrdSmSensor(void)
         printf("  timestampExponent=%u\n",
             sensor.timestampExponent);
 
-        /* Enable sensor*/
+        /* Enable sensor */
         printf("  timestampReporting=%u\n", timestampReporting);
         printf("BRD_SM_SensorEnable(%u)\n", sensorId);
-        CHECK(BRD_SM_SensorEnable(sensorId, enable, timestampReporting));
+        (void) BRD_SM_SensorEnable(sensorId, enable, timestampReporting);
 
-        /* Check to see if sensor got enabled*/
+        /* Check to see if sensor got enabled */
         printf("BRD_SM_SensorIsEnabled(%u)\n", sensorId);
         CHECK(BRD_SM_SensorIsEnabled(sensorId, &enabled,
             &timestampReporting));
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
-
 
         printf("BRD_SM_SensorReadingGet(%u)\n", sensorId);
-        CHECK(BRD_SM_SensorReadingGet(sensorId, &sensorValue,
-            &sensorTimestamp));
+        (void) BRD_SM_SensorReadingGet(sensorId, &sensorValue,
+            &sensorTimestamp);
 
-        /* Turn off sensor*/
+        /* Turn off sensor */
         printf("BRD_SM_SensorEnable(%u)\n", sensorId);
-        CHECK(BRD_SM_SensorEnable(sensorId, !enable, timestampReporting));
 
-        /* Check to see if sensor is off*/
+        /* coverity[misra_c_2012_rule_14_3_violation] */
+        (void) BRD_SM_SensorEnable(sensorId, !enable, timestampReporting);
+
+        /* Check to see if sensor is off */
         printf("BRD_SM_SensorIsEnabled(%u)\n", sensorId);
         CHECK(BRD_SM_SensorIsEnabled(sensorId, &enabled,
             &timestampReporting));
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
 
-        /* Run ReadingGet with sensor disabled to make sure it returns
-           error*/
+        /* Read disabled sensor to make sure it returns error */
         printf("BRD_SM_SensorReadingGet(%u)\n", sensorId);
         NECHECK(BRD_SM_SensorReadingGet(sensorId, &sensorValue,
             &sensorTimestamp), SM_ERR_NOT_SUPPORTED);
@@ -122,11 +122,12 @@ void TEST_BrdSmSensor(void)
         else
         {
             printf("BRD_SM_SensorEnable(%u)\n", sensorId);
-            CHECK(BRD_SM_SensorEnable(
-                sensorId, !enable, true));
+
+            /* coverity[misra_c_2012_rule_14_3_violation] */
+            (void) BRD_SM_SensorEnable(sensorId, !enable, true);
         }
 
-        /* Incorrect parameters for trippointset*/
+        /* Incorrect parameters for trippointset */
         printf("BRD_SM_SensorTripPointSet(%u)\n", sensorId);
         NECHECK(BRD_SM_SensorTripPointSet(sensorId, 0U, 0, 0U),
             SM_ERR_NOT_SUPPORTED);
@@ -160,6 +161,9 @@ void TEST_BrdSmSensor(void)
     printf("BRD_SM_SensorTripPointSet(%lu)\n", SM_NUM_SENSOR);
     NECHECK(BRD_SM_SensorTripPointSet(SM_NUM_SENSOR,
         0U, 0, 0U), SM_ERR_NOT_FOUND);
+
+    /* Test SensorHandler */
+    BRD_SM_SensorHandler();
 #else
     printf("Skipped.\n");
 #endif

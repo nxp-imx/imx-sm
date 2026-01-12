@@ -87,24 +87,28 @@ int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover)
     const rom_handover_t *ptr = (const rom_handover_t *) HANDOVER_BASE;
 
     /* Check barker */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if (ptr->barker != HANDOVER_BARKER)
     {
-        status = SM_ERR_NOT_SUPPORTED;
+        status = SM_ERR_NOT_SUPPORTED;  /* gcov_excl_line */
     }
 
     /* Check version */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if ((status == SM_ERR_SUCCESS) && (ptr->ver != HANDOVER_VER))
     {
-        status = SM_ERR_NOT_SUPPORTED;
+        status = SM_ERR_NOT_SUPPORTED;  /* gcov_excl_line */
     }
 
     /* Check size */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if ((status == SM_ERR_SUCCESS) && (ptr->size < sizeof(rom_handover_t)))
     {
-        status = SM_ERR_NOT_SUPPORTED;
+        status = SM_ERR_NOT_SUPPORTED;  /* gcov_excl_line */
     }
 
     /* Return pointer to data */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if (status == SM_ERR_SUCCESS)
     {
         *handover = ptr;
@@ -123,24 +127,28 @@ int32_t DEV_SM_RomPassoverGet(const rom_passover_t **passover)
     const rom_passover_t *ptr = (const rom_passover_t *) PASSOVER_BASE;
 
     /* Check tag */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if (ptr->tag != PASSOVER_TAG)
     {
-        status = SM_ERR_NOT_SUPPORTED;
+        status = SM_ERR_NOT_SUPPORTED;  /* gcov_excl_line */
     }
 
     /* Check version */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if ((status == SM_ERR_SUCCESS) && (ptr->ver != PASSOVER_VER))
     {
-        status = SM_ERR_NOT_SUPPORTED;
+        status = SM_ERR_NOT_SUPPORTED;  /* gcov_excl_line */
     }
 
     /* Check size */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if ((status == SM_ERR_SUCCESS) && (ptr->size < sizeof(rom_passover_t)))
     {
-        status = SM_ERR_NOT_SUPPORTED;
+        status = SM_ERR_NOT_SUPPORTED;  /* gcov_excl_line */
     }
 
     /* Return pointer to data */
+    /* gcov_excl_ntbr_nextline - ROM enforces */
     if (status == SM_ERR_SUCCESS)
     {
         *passover = ptr;

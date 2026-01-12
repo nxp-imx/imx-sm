@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -524,6 +524,10 @@ void TEST_ScmiMisc(void)
 
         printf("SCMI_MiscControlExtSet(%u)\n", SM_TEST_DEFAULT_CHN);
 
+        /* Invalid channel */
+        NECHECK(SCMI_MiscControlExtSet(SM_NUM_TEST_CHN, numDevCtrl, addr,
+            len, 25, &extval[0]), SM_ERR_INVALID_PARAMETERS);
+
         /* Invalid numVal value */
         NECHECK(SCMI_MiscControlExtSet(SM_TEST_DEFAULT_CHN, numDevCtrl, addr,
             len, 25, &extval[0]), SM_ERR_INVALID_PARAMETERS);
@@ -543,6 +547,10 @@ void TEST_ScmiMisc(void)
         uint32_t numVal = 0U;
 
         printf("SCMI_MiscControlExtGet(%u)\n", SM_TEST_DEFAULT_CHN);
+
+        /* Invalid channel */
+        NECHECK(SCMI_MiscControlExtGet(SM_NUM_TEST_CHN, numDevCtrl, addr,
+            len, &numVal, &extval[0]), SM_ERR_INVALID_PARAMETERS);
 
         /* Invalid devCtrl */
         NECHECK(SCMI_MiscControlExtGet(SM_TEST_DEFAULT_CHN, numDevCtrl, addr,
@@ -599,7 +607,7 @@ static void TEST_ScmiMiscGet(bool pass, uint32_t channel,
     uint32_t numVal = 0U;
     uint32_t val = 0U;
 
-    /* Adequate Set Permissions */
+    /* Adequate Permissions */
     if (pass)
     {
         printf("SCMI_MiscControlGet(%u, %u)\n", channel, ctrlId);
@@ -717,6 +725,10 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
             CHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0U, numVal, &numVal,
                 &val));
             printf("SCMI_MiscControlExtGet: extVal: %x\n", val);
+
+            printf("SCMI_MiscControlExtGet(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0U, numVal, NULL,
+                NULL));
         }
 #endif
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024-2025 NXP
+** Copyright 2024-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -40,10 +40,16 @@
 /* Defines */
 
 #define BOARD_PERF_VDROP         0
-#define DEV_SM_CPU_A55P          8U
+#define DEV_SM_CPU_TEST          DEV_SM_CPU_2
+#define DEV_SM_PLAT_TEST         DEV_SM_CPU_8
 #define FUSA_LM_SAFE_TYPE_ERROR  3U
 #define FUSA_LM_ACCESS_DENIED    7U
 #define MAX_MISC_BRD_CTRL_ID     0x8005
+
+#define DEV_SM_SENSOR_TEMP_ANA  DEV_SM_SENSOR_0   /*!< ANA sensor */
+#define DEV_SM_SENSOR_TEMP_A55  DEV_SM_SENSOR_1   /*!< CA55 sensor */
+#define SM_NUM_THRESHOLDS     3U
+#define SM_NUM_EVENTCONTROLS  6U
 
 /* Local defines */
 

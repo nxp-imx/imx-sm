@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -104,15 +104,17 @@ int32_t RPC_SMT_Init(uint32_t smtChannel, bool noIrq, uint32_t initCount)
     }
 
     /* Check buffer */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     if ((status == SM_ERR_SUCCESS) && (buf == NULL))
     {
-        status = SM_ERR_GENERIC_ERROR;
+        status = SM_ERR_GENERIC_ERROR; /* gcov_excl_line  */
     }
 
     /* Check for error? */
     if (status == SM_ERR_SUCCESS)
     {
         /* Init mailbox */
+        /* gcov_excl_ntbr_nextline - configtool enforces */
         switch (s_smtConfig[smtChannel].mbType)
         {
 #ifdef USES_MB_LOOPBACK
@@ -127,6 +129,7 @@ int32_t RPC_SMT_Init(uint32_t smtChannel, bool noIrq, uint32_t initCount)
                     s_smtConfig[smtChannel].mbDoorbell, noIrq, initCount);
                 break;
 #endif
+            /* gcov_excl_multiline 4 - configtool enforces */
             default:
                 status = SM_ERR_INVALID_PARAMETERS;
                 break;
@@ -166,7 +169,7 @@ void *RPC_SMT_HdrAddrGet(uint32_t smtChannel)
     rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
 
     /* Get address of header */
-    if (buf != NULL)
+    if (buf != NULL) /* gcov_excl_ntbr_line - configtool enforces */
     {
         rtn = (void*) &buf->header;
     }
@@ -183,7 +186,7 @@ bool RPC_SMT_ChannelFree(uint32_t smtChannel)
     bool freeState = true;
 
     /* Check for valid buffer */
-    if (buf != NULL)
+    if (buf != NULL) /* gcov_excl_ntbr_line - configtool enforces */
     {
         freeState = ((buf->channelStatus & SMT_FREE) != 0U);
     }
@@ -197,11 +200,13 @@ bool RPC_SMT_ChannelFree(uint32_t smtChannel)
 void RPC_SMT_Dispatch(uint32_t smtChannel)
 {
     /* Call RPC-specific dispatcher */
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     switch (s_smtConfig[smtChannel].rpcType)
     {
         case SM_RPC_SCMI:
             RPC_SCMI_Dispatch(s_smtConfig[smtChannel].rpcChannel);
             break;
+        /* gcov_excl_multiline 4 - configtool enforces */
         default:
             ; /* Intentional empty default */
             break;
@@ -234,6 +239,7 @@ bool RPC_SMT_DoorbellState(uint32_t smtChannel)
     /* Check channel */
     if (smtChannel < SM_NUM_SMT_CHN)
     {
+        /* gcov_excl_ntbr_nextline - configtool enforces */
         switch (s_smtConfig[smtChannel].mbType)
         {
 #ifdef USES_MB_LOOPBACK
@@ -249,6 +255,7 @@ bool RPC_SMT_DoorbellState(uint32_t smtChannel)
                     s_smtConfig[smtChannel].mbDoorbell);
                 break;
 #endif
+            /* gcov_excl_multiline 4 - configtool enforces */
             default:
                 ; /* Intentional empty default */
                 break;
@@ -275,6 +282,7 @@ int32_t RPC_SMT_IsAborted(uint32_t smtChannel)
     /* Check for error? */
     if (status == SM_ERR_SUCCESS)
     {
+        /* gcov_excl_ntbr_nextline - configtool enforces */
         switch (s_smtConfig[smtChannel].mbType)
         {
 #ifdef USES_MB_LOOPBACK
@@ -289,6 +297,7 @@ int32_t RPC_SMT_IsAborted(uint32_t smtChannel)
                     s_smtConfig[smtChannel].mbDoorbell);
                 break;
 #endif
+            /* gcov_excl_multiline 4 - configtool enforces */
             default:
                 status = SM_ERR_INVALID_PARAMETERS;
                 break;
@@ -529,6 +538,7 @@ static rpc_smt_buf_t *RPC_SMT_SmaGet(uint32_t smtChannel)
     /* Check channel */
     if (smtChannel < SM_NUM_SMT_CHN)
     {
+        /* gcov_excl_ntbr_nextline - configtool enforces */
         switch (s_smtConfig[smtChannel].mbType)
         {
 #ifdef USES_MB_LOOPBACK
@@ -545,6 +555,7 @@ static rpc_smt_buf_t *RPC_SMT_SmaGet(uint32_t smtChannel)
                     s_smtConfig[smtChannel].mbDoorbell);
                 break;
 #endif
+            /* gcov_excl_multiline 4 - configtool enforces */
             default:
                 ; /* Intentional empty default */
                 break;
@@ -562,6 +573,7 @@ static int32_t RPC_SMT_DoorbellRing(uint32_t smtChannel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /* gcov_excl_ntbr_nextline - configtool enforces */
     switch (s_smtConfig[smtChannel].mbType)
     {
 #ifdef USES_MB_LOOPBACK
@@ -575,6 +587,7 @@ static int32_t RPC_SMT_DoorbellRing(uint32_t smtChannel)
                 s_smtConfig[smtChannel].mbDoorbell);
             break;
 #endif
+        /* gcov_excl_multiline 4 - configtool enforces */
         default:
             ; /* Intentional empty default */
             break;

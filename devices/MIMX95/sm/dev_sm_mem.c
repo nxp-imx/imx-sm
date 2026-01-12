@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -86,6 +86,7 @@ int32_t DEV_SM_MemInit(void)
     status = DEV_SM_ClockIsEnabled(DEV_SM_CLK_DRAMPLL, &enabled);
 
     /* Check state of PLL */
+    /* gcov_excl_ntbr_nextline - cannot fail with known good clock */
     if ((status == SM_ERR_SUCCESS) && enabled)
     {
         const struct ddr_info *ddr = (struct ddr_info*) &__DdrInfo;
@@ -96,9 +97,10 @@ int32_t DEV_SM_MemInit(void)
 #endif
 
         /* Get DDR info */
+        /* gcov_excl_ntbr_nextline - clock check ensures this never fails */
         if (!DDR_GetDRAMInfo(ddr, &info))
         {
-            info.totalRegions = 0U;
+            info.totalRegions = 0U;  /* gcov_excl_line  */
         }
     }
     else
@@ -164,6 +166,7 @@ int32_t DEV_SM_MemDdrRetentionEnter(void)
 
     /* Get power state of DDRMIX */
     status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
+    /* gcov_excl_ntbr_nextline - cannot fail with known good power domain */
     if (status == SM_ERR_SUCCESS)
     {
         /* DDRMIX must be ON to apply retention */
@@ -234,6 +237,7 @@ int32_t DEV_SM_MemDdrRetentionExit(void)
 
     /* Get power state of DDRMIX */
     status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
+    /* gcov_excl_ntbr_nextline - cannot fail with known good power domain */
     if (status == SM_ERR_SUCCESS)
     {
         /* DDRMIX must be ON to remove retention */
@@ -382,6 +386,7 @@ static void DEV_SM_RxReplicaInit(void)
 
     status = DEV_SM_ClockRateGet(DEV_SM_CLK_DRAMPLL, &rate);
 
+    /* gcov_excl_ntbr_nextline - cannot fail with known good power domain */
     if (status == SM_ERR_SUCCESS)
     {
         s_rxClkDelay.dramFreqMhz = U64_U32(rate / 1000000U);
