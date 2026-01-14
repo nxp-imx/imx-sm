@@ -194,13 +194,38 @@ cfg.exists:
 	@if [ ! -d "$(ROOT_DIR)/configs/$(CONFIG)" ]; then (echo "Incorrect/missing $(CONFIG) config"; exit 1); fi
 
 ifneq ($(SOC),simu)
+
 ifeq ($(GCOV),1)
 # GCOV=1 files
 $(OUT)/dev_%.o : dev_%.c $(OUT)/build_info.h
-	@echo "Compiling $<"
+	@echo "Compiling $< (with gcov)"
 	$(AT)mkdir -p $(dir $@)
 	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
 endif
+
+ifeq ($(GCOV),2)
+# GCOV=2 files
+$(OUT)/brd_%.o : brd_%.c $(OUT)/build_info.h
+	@echo "Compiling $< (with gcov)"
+	$(AT)mkdir -p $(dir $@)
+	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
+
+$(OUT)/board.o : board.c $(OUT)/build_info.h
+	@echo "Compiling $< (with gcov)"
+	$(AT)mkdir -p $(dir $@)
+	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
+
+$(OUT)/hardware_init.o : hardware_init.c $(OUT)/build_info.h
+	@echo "Compiling $< (with gcov)"
+	$(AT)mkdir -p $(dir $@)
+	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
+
+$(OUT)/pin_mux.o : pin_mux.c $(OUT)/build_info.h
+	@echo "Compiling $< (with gcov)"
+	$(AT)mkdir -p $(dir $@)
+	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
+endif
+
 endif
 
 $(OUT)/%.o : %.c $(OUT)/build_info.h

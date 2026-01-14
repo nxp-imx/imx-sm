@@ -109,7 +109,7 @@ LFLAGS = -lasan -lubsan
 endif
 endif
 LFLAGS += -m32 -Wl,-lrt
-ifeq ($(GCOV),1)
+ifneq ($(GCOV),0)
 	LFLAGS += -lgcov --coverage
 endif
 
