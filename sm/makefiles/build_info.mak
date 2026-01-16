@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2025 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -30,7 +30,7 @@
 ##
 ## ###################################################################
 
-SM_VERSION = imx_sm_2026q1
+SM_VERSION = imx_sm_2026q1_er1
 SM_PREV_VER = imx_sm_2025q4
 SM_SNAP = 0
 

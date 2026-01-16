@@ -8,7 +8,7 @@ the data could change.
 SM 2026Q1 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2025q4) and this release (imx_sm_2026q1).
+Below is a list of changes between the previous release (imx_sm_2025q4) and this release (imx_sm_2026q1_er1).
 
 New Feature {#RN_CL_NEW}
 ------------
@@ -32,6 +32,11 @@ Improvement {#RN_CL_IMP}
 | [SM-332](https://jira.sw.nxp.com/projects/SM/issues/SM-332) | Sync misc. changes across SoC [[detail]](@ref RN_DETAIL_SM_332) |   | Y | Y | Y |
 | [SM-337](https://jira.sw.nxp.com/projects/SM/issues/SM-337) | Disallow RTC time and alarm configuration outside of range [[detail]](@ref RN_DETAIL_SM_337) |   | Y | Y | Y |
 | [SM-339](https://jira.sw.nxp.com/projects/SM/issues/SM-339) | Support V2X fast hash for uboot and kernel containers authentication [[detail]](@ref RN_DETAIL_SM_339) |   | Y | Y | Y |
+| [SM-343](https://jira.sw.nxp.com/projects/SM/issues/SM-343) | Assign GPIO2 to M7 in the mx952evkrpmsg cfg [[detail]](@ref RN_DETAIL_SM_343) |   | | | Y |
+| [SM-347](https://jira.sw.nxp.com/projects/SM/issues/SM-347) | Update to latest SDK header files for i.MX952 [[detail]](@ref RN_DETAIL_SM_347) |   | | | Y |
+| [SM-350](https://jira.sw.nxp.com/projects/SM/issues/SM-350) | Give SEMA41 access to SM for testing on i.MX952 [[detail]](@ref RN_DETAIL_SM_350) |   | | | Y |
+| [SM-351](https://jira.sw.nxp.com/projects/SM/issues/SM-351) | Misc. coding standards fixes [[detail]](@ref RN_DETAIL_SM_351) |   | | | Y |
+| [SM-353](https://jira.sw.nxp.com/projects/SM/issues/SM-353) | Add alt mode selections to start M70 or M71 [[detail]](@ref RN_DETAIL_SM_353) |   | | Y | |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -44,8 +49,9 @@ Bug {#RN_CL_BUG}
 | [SM-335](https://jira.sw.nxp.com/projects/SM/issues/SM-335) | Only first BBNSM RTC rollover generates a notification [[detail]](@ref RN_DETAIL_SM_335) |   | Y | Y | Y |
 | [SM-336](https://jira.sw.nxp.com/projects/SM/issues/SM-336) | Incorrect index assigned for board RTC instance [[detail]](@ref RN_DETAIL_SM_336) |   | Y | Y | Y |
 | [SM-341](https://jira.sw.nxp.com/projects/SM/issues/SM-341) | SCMI misc unit test fails if no OEI init of DDR [[detail]](@ref RN_DETAIL_SM_341) |   | Y | Y | Y |
-| [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | AP access to VPU ATUs with VPU CGC causes an SM WDOG reset |   | | | Y |
 | [SM-346](https://jira.sw.nxp.com/projects/SM/issues/SM-346) | Fix DDR RX Replica sequence: re-enable PHY master before locking PHY CSRs [[detail]](@ref RN_DETAIL_SM_346) |   | Y | Y | Y |
+| [SM-349](https://jira.sw.nxp.com/projects/SM/issues/SM-349) | Allow M7 to access EDMA2_MP for i.MX95EVK-RPSMG & SOF [[detail]](@ref RN_DETAIL_SM_349) |   | Y | | |
+| [SM-354](https://jira.sw.nxp.com/projects/SM/issues/SM-354) | Incorrect source input for dram_apb_clk_root [[detail]](@ref RN_DETAIL_SM_354) |   | Y | | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -55,6 +61,8 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX952<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|
 | [SM-334](https://jira.sw.nxp.com/projects/SM/issues/SM-334) | Implement SWA for ERR052794 (DDR Self refresh workaround) [[detail]](@ref RN_DETAIL_SM_334) |   | Y | Y | Y |
+| [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | Manage CGCs that interfere with CPU shutdown [[detail]](@ref RN_DETAIL_SM_345) |   | | | Y |
+| [SM-355](https://jira.sw.nxp.com/projects/SM/issues/SM-355) | Reassign V2X MDAC to workaround a V2X ROM authentication issue [[detail]](@ref RN_DETAIL_SM_355) |   | | | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -209,8 +217,53 @@ SM-341: SCMI misc unit test fails if no OEI init of DDR {#RN_DETAIL_SM_341}
 
 Fixed unit test issue when the DRC has not been initialized.
 
+SM-343: Assign GPIO2 to M7 in the mx952evkrpmsg cfg {#RN_DETAIL_SM_343}
+----------
+
+Updated the mx952evkrpmsg.cfg file to assign GPIO2 to the M7.
+
+SM-345: Manage CGCs that interfere with CPU shutdown {#RN_DETAIL_SM_345}
+----------
+
+CGC (Clock Gate Control) nodes can be assigned to agents to provide granular control of clock gating within the SoC.  Agent accesses to peripheral interfaces clocked from a CGC that is disabled can result in an unrecoverable system hang.  SM will enable CGC outputs impacting CPU shutdown operations to avoid such hazards.
+
 SM-346: Fix DDR RX Replica sequence: re-enable PHY master before locking PHY CSRs {#RN_DETAIL_SM_346}
 ----------
 
 Fix code sequence issue, where re-enabling of PHY master interface should be performed before re-locking of the PHY CSRs
+
+SM-347: Update to latest SDK header files for i.MX952 {#RN_DETAIL_SM_347}
+----------
+
+Updated i.MX952 SDK headers to rev. 2.0.
+
+SM-349: Allow M7 to access EDMA2_MP for i.MX95EVK-RPSMG & SOF {#RN_DETAIL_SM_349}
+----------
+
+Updated the noted cfg files. Both were missing the definition of the ACCESS macro for the M7.
+
+SM-350: Give SEMA41 access to SM for testing on i.MX952 {#RN_DETAIL_SM_350}
+----------
+
+Update the mx952alt.cfg file to give SM access to the SEMA41 module.
+
+SM-351: Misc. coding standards fixes {#RN_DETAIL_SM_351}
+----------
+
+Resolved several MISRA issues with the i.MX952 EVK board port.
+
+SM-353: Add alt mode selections to start M70 or M71 {#RN_DETAIL_SM_353}
+----------
+
+mSel 4 and 5 options added to the mx95alt.cfg file to allow starting the M70 or M71 cores.
+
+SM-354: Incorrect source input for dram_apb_clk_root {#RN_DETAIL_SM_354}
+----------
+
+Source input2 of dram_apb_clk_root was updated for i.MX95_B0 and i.MX952_A0.  SM clock root tables were updated to reflect that input2 is connected to SYS_PLL1_DFS1_CLK (800MHz) instead of SYS_PLL1_DFS1_DIV2_CLK (400MHz).
+
+SM-355: Reassign V2X MDAC to workaround a V2X ROM authentication issue {#RN_DETAIL_SM_355}
+----------
+
+Moved one of the MU MDACS to V2X and moved a spare MDAC to the MU.
 

@@ -1,6 +1,8 @@
 Introduction {#mainpage}
 ============
 
+**Note this is an engineering release. It is not suitable for production!**
+
 This document contains release notes for the i.MX9 System Manager (SM). This includes:
 
 - [Highlights](@ref RN_HIGH)
@@ -26,7 +28,6 @@ The table below lists the release information:
 | Tested mkimage    | #MKIMAGE_BRANCH             |
 | Tested Linux      | #MKIMAGE_BUILD              |
 
-<br>
 <br>
 
 Highlights {#RN_HIGH}
