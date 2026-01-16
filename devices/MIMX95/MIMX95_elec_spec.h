@@ -94,6 +94,7 @@
 #define ES_160MHZ                   160000000ULL
 #define ES_200MHZ                   200000000ULL
 #define ES_250MHZ                   250000000ULL
+#define ES_267MHZ                   266666667ULL
 #define ES_333MHZ                   333333333ULL
 #define ES_350MHZ                   350000000ULL
 #define ES_400MHZ                   400000000ULL
@@ -435,7 +436,7 @@
 #define ES_MAX_HZ_A55MTRBUS         ES_133MHZ
 #define ES_MAX_HZ_A55PERIPH         ES_400MHZ
 #define ES_MAX_HZ_DRAMALT           ES_667MHZ
-#define ES_MAX_HZ_DRAMAPB           ES_133MHZ
+#define ES_MAX_HZ_DRAMAPB           ES_267MHZ
 #define ES_MAX_HZ_DISPAPB           ES_133MHZ
 #define ES_MAX_HZ_DISPAXI           ES_800MHZ
 #define ES_MAX_HZ_DISPDP            ES_667MHZ
