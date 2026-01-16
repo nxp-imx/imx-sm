@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@ static void MONITOR_DisplayBlkCfg(uint32_t mbc, uint32_t did, uint32_t mem,
 static void MONITOR_DumpRegion(uint32_t addr, uint32_t len);
 static void MONITOR_DisplayErr(uint32_t rdcId, uint32_t did,
     uint32_t derrloc);
-static void MONITOR_DisplayDErr(char rdcLabel, bool mrc, uint32_t inst,
+static void MONITOR_DisplayDErr(uint32_t rdcId, bool mrc, uint32_t inst,
     TRDC_DERR_Type *derr);
 static int32_t MONITOR_TrdcNameToBase(const char *trdcName,
     uint32_t *trdcBase);
@@ -757,7 +757,7 @@ static void MONITOR_DisplayErr(uint32_t rdcId, uint32_t did,
             {
                 if ((mbcinst & (1UL << mbc)) != 0U)
                 {
-                    MONITOR_DisplayDErr(rdcLabel, false, mbc,
+                    MONITOR_DisplayDErr(rdcId, false, mbc,
                         (TRDC_DERR_Type*) &(mgr->MBC_DERR[mbc]));
                 }
             }
@@ -775,7 +775,7 @@ static void MONITOR_DisplayErr(uint32_t rdcId, uint32_t did,
             {
                 if ((mrcinst & (1UL << mrc)) != 0U)
                 {
-                    MONITOR_DisplayDErr(rdcLabel, true, mrc,
+                    MONITOR_DisplayDErr(rdcId, true, mrc,
                         (TRDC_DERR_Type*) &(mgr->MRC_DERR[mrc]));
                 }
             }
@@ -786,92 +786,106 @@ static void MONITOR_DisplayErr(uint32_t rdcId, uint32_t did,
 /*--------------------------------------------------------------------------*/
 /* Convert resource name to an ID                                           */
 /*--------------------------------------------------------------------------*/
-static void MONITOR_DisplayDErr(char rdcLabel, bool mrc, uint32_t inst,
+static void MONITOR_DisplayDErr(uint32_t rdcId, bool mrc, uint32_t inst,
     TRDC_DERR_Type *derr)
 {
-    uint32_t blk = ((derr->W0 & 0x007F0000UL)
-        >> 16);
-    bool eaddr = false;
-    uint32_t est = ((derr->W1 & TRDC_W1_EST_MASK)
-        >> TRDC_W1_EST_SHIFT);
-    uint32_t edid = ((derr->W1 & TRDC_W1_EDID_MASK)
-        >> TRDC_W1_EDID_SHIFT);
-    uint32_t erw = ((derr->W1 & TRDC_W1_ERW_MASK)
-        >> TRDC_W1_ERW_SHIFT);
-    uint32_t eport = ((derr->W1 & TRDC_W1_EPORT_MASK)
-        >> TRDC_W1_EPORT_SHIFT);
-    uint32_t eatr = ((derr->W1 & TRDC_W1_EATR_MASK)
-        >> TRDC_W1_EATR_SHIFT);
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t trdcBase;
+    char rdcLabel;
 
-    /* Next word if EST not set */
-    if (est == 0U)
+    /* Get RDC info */
+    status = DEV_SM_RdcInfoGet(rdcId, NULL, &rdcLabel, &trdcBase);
+
+    if (status == SM_ERR_SUCCESS)
     {
-        eaddr = true;
-        edid = ((derr->W2 & TRDC_W1_EDID_MASK)
+        bool eaddr = false;
+        uint32_t est = ((derr->W1 & TRDC_W1_EST_MASK)
+            >> TRDC_W1_EST_SHIFT);
+        uint32_t edid = ((derr->W1 & TRDC_W1_EDID_MASK)
             >> TRDC_W1_EDID_SHIFT);
-        erw = ((derr->W2 & TRDC_W1_ERW_MASK)
+        uint32_t erw = ((derr->W1 & TRDC_W1_ERW_MASK)
             >> TRDC_W1_ERW_SHIFT);
-        eport = ((derr->W2 & TRDC_W1_EPORT_MASK)
+        uint32_t eport = ((derr->W1 & TRDC_W1_EPORT_MASK)
             >> TRDC_W1_EPORT_SHIFT);
-        eatr = ((derr->W2 & TRDC_W1_EATR_MASK)
+        uint32_t eatr = ((derr->W1 & TRDC_W1_EATR_MASK)
             >> TRDC_W1_EATR_SHIFT);
-    }
 
-    /* Print error */
-    printf("DOM%u ", edid);
-    if ((eatr & 0x4U) != 0U)
-    {
-        printf("ns ");
-    }
-    else
-    {
-        printf("sec ");
-    }
-    if ((eatr & 0x2U) != 0U)
-    {
-        printf("prv ");
-    }
-    else
-    {
-        printf("usr ");
-    }
-    if ((eatr & 0x1U) != 0U)
-    {
-        if (erw != 0U)
+        /* Next word if EST not set */
+        if (est == 0U)
         {
-            printf("write to ");
+            eaddr = true;
+            edid = ((derr->W2 & TRDC_W1_EDID_MASK)
+                >> TRDC_W1_EDID_SHIFT);
+            erw = ((derr->W2 & TRDC_W1_ERW_MASK)
+                >> TRDC_W1_ERW_SHIFT);
+            eport = ((derr->W2 & TRDC_W1_EPORT_MASK)
+                >> TRDC_W1_EPORT_SHIFT);
+            eatr = ((derr->W2 & TRDC_W1_EATR_MASK)
+                >> TRDC_W1_EATR_SHIFT);
+        }
+
+        /* Print error */
+        printf("DOM%u ", edid);
+        if ((eatr & 0x4U) != 0U)
+        {
+            printf("ns ");
         }
         else
         {
-            printf("read from ");
+            printf("sec ");
         }
-    }
-    else
-    {
-        printf("fetch from ");
-    }
-    printf("0x");
-    if (eaddr)
-    {
-        printf("%01X", derr->W1);
-    }
-    printf("%08X, ", derr->W0);
+        if ((eatr & 0x2U) != 0U)
+        {
+            printf("prv ");
+        }
+        else
+        {
+            printf("usr ");
+        }
+        if ((eatr & 0x1U) != 0U)
+        {
+            if (erw != 0U)
+            {
+                printf("write to ");
+            }
+            else
+            {
+                printf("read from ");
+            }
+        }
+        else
+        {
+            printf("fetch from ");
+        }
+        printf("0x");
+        if (eaddr)
+        {
+            printf("%01X", derr->W1);
+        }
+        printf("%08X, ", derr->W0);
 
-    /* Print TRDC info */
-    if (mrc)
-    {
-        printf("MRC_%c%u=%u, ", rdcLabel, inst, eport);
-        printf("MRC%u_DOM%u\n", inst, edid);
-    }
-    else
-    {
-        printf("MBC_%c%u=%u.%u, ", rdcLabel, inst, eport, blk);
-        printf("MBC%u_DOM%u_MEM%u_BLK_CFG_W%u[%u]\n",
-            inst, edid, eport, blk / 8U, blk % 8U);
-    }
+        /* Print TRDC info */
+        if (mrc)
+        {
+            printf("MRC_%c%u=%u, ", rdcLabel, inst, eport);
+            printf("MRC%u_DOM%u\n", inst, edid);
+        }
+        else
+        {
+            uint32_t *addr = (uint32_t *)(trdcBase + 0x10000 +
+                (inst * 0x2000) + (eport * 0x4));
+            uint32_t blkSize = (1U << (((*addr) >> 16U) & 0x1FU));
+            uint32_t numBlk = ((*addr) & 0x3FFU);
+            uint32_t blk = ((derr->W0 / blkSize) & (numBlk - 1U));
 
-    /* Clear error */
-    derr->W3 = TRDC_W3_RECR(1U);
+            printf("MBC_%c%u=%u.%u, ", rdcLabel, inst, eport, blk);
+            printf("MBC%u_DOM%u_MEM%u_BLK_CFG_W%u[%u]\n",
+                inst, edid, eport, blk / 8U, blk % 8U);
+        }
+
+        /* Clear error */
+        derr->W3 = TRDC_W3_RECR(1U);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
