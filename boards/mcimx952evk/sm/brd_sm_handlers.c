@@ -177,6 +177,17 @@ int32_t BRD_SM_SerialDevicesInit(void)
             }
         }
 
+#ifdef PMIC_BOUNCE_BBSM
+        /* Bounce BBSM supply on reset */
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (!PF09_PmicWrite(&g_pf09Dev, 0x81U, 0x2U, 0x2U))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+#endif
+
         /* Save and clear any fault flags */
         if (status == SM_ERR_SUCCESS)
         {
