@@ -28,7 +28,6 @@ Improvement {#RN_CL_IMP}
 | [SM-322](https://jira.sw.nxp.com/projects/SM/issues/SM-322) | Give AP NS LMM 1 API access in mx95evksof [[detail]](@ref RN_DETAIL_SM_322) |   | Y | | |
 | [SM-323](https://jira.sw.nxp.com/projects/SM/issues/SM-323) | Improve ELE reset logging [[detail]](@ref RN_DETAIL_SM_323) |   | Y | Y | Y |
 | [SM-324](https://jira.sw.nxp.com/projects/SM/issues/SM-324) | Support fuse.r reading multiple fuses [[detail]](@ref RN_DETAIL_SM_324) |   | Y | Y | Y |
-| [SM-329](https://jira.sw.nxp.com/projects/SM/issues/SM-329) |  Remove A55 access to the GPU CGC on i.MX952 |   | | | Y |
 | [SM-332](https://jira.sw.nxp.com/projects/SM/issues/SM-332) | Sync misc. changes across SoC [[detail]](@ref RN_DETAIL_SM_332) |   | Y | Y | Y |
 | [SM-337](https://jira.sw.nxp.com/projects/SM/issues/SM-337) | Disallow RTC time and alarm configuration outside of range [[detail]](@ref RN_DETAIL_SM_337) |   | Y | Y | Y |
 | [SM-339](https://jira.sw.nxp.com/projects/SM/issues/SM-339) | Support V2X fast hash for uboot and kernel containers authentication [[detail]](@ref RN_DETAIL_SM_339) |   | Y | Y | Y |
@@ -63,6 +62,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-334](https://jira.sw.nxp.com/projects/SM/issues/SM-334) | Implement SWA for ERR052794 (DDR Self refresh workaround) [[detail]](@ref RN_DETAIL_SM_334) |   | Y | Y | Y |
 | [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | Manage CGCs that interfere with CPU shutdown [[detail]](@ref RN_DETAIL_SM_345) |   | | | Y |
 | [SM-355](https://jira.sw.nxp.com/projects/SM/issues/SM-355) | Reassign V2X MDAC to workaround a V2X ROM authentication issue [[detail]](@ref RN_DETAIL_SM_355) |   | | | Y |
+| [SM-359](https://jira.sw.nxp.com/projects/SM/issues/SM-359) | Add optional code to bounce the BBSM supply on reset [[detail]](@ref RN_DETAIL_SM_359) |   | | | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -266,4 +266,13 @@ SM-355: Reassign V2X MDAC to workaround a V2X ROM authentication issue {#RN_DETA
 ----------
 
 Moved one of the MU MDACS to V2X and moved a spare MDAC to the MU.
+
+SM-359: Add optional code to bounce the BBSM supply on reset {#RN_DETAIL_SM_359}
+----------
+
+The EVK reference port includes example code to bounce the BBSM supply on a reset. To enable this, add the following define to the local defines section of  boards/mcimx952evk/sm/brd_sm_handlers.c and then recompile the SM.
+
+#define PMIC_BOUNCE_BBSM
+
+If customers desire this behavior, add the block of code in this file enabled by this define to the customer board port.
 
