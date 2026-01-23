@@ -63,6 +63,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | Manage CGCs that interfere with CPU shutdown [[detail]](@ref RN_DETAIL_SM_345) |   | | | Y |
 | [SM-355](https://jira.sw.nxp.com/projects/SM/issues/SM-355) | Reassign V2X MDAC to workaround a V2X ROM authentication issue [[detail]](@ref RN_DETAIL_SM_355) |   | | | Y |
 | [SM-359](https://jira.sw.nxp.com/projects/SM/issues/SM-359) | Add optional code to bounce the BBSM supply on reset [[detail]](@ref RN_DETAIL_SM_359) |   | | | Y |
+| [SM-360](https://jira.sw.nxp.com/projects/SM/issues/SM-360) | Support PF5B PMIC on i.MX94 EVK |   | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -155,7 +156,9 @@ SM-328: Add MX95 device-level support to configure VIDEO_PLL1 during DISP1PIX ra
 Problem: Some host operating systems do not support multiple VIDEOPLL1 and VIDEOPLL1_VCO frequencies, which limits supported video modes to those which have a pixel clock divisible from a single VIDEOPLL1 frequency.
 
 Fix: Add support for dynamically configuring VIDEOPLL1 and VIDEOPLL1_VCO frequencies. The code maps a known set of pixel clock rates to suitable VIDEOPLL1 and VIDEOPLL1_VCO frequencies. Currently supported MIPI DSI pixel clock rates (in MHz):
-  297, 296.703, 241.5, 148.5, 148.352, 108.108, 74.25, 74.176, 71, 65, 54.054, 54, 40, 27.027, 27, 25.2, 25.175.
+297, 296.703, 241.5, 148.5, 148.352, 108.108, 74.25, 74.176, 71, 65, 54.054, 54, 40, 27.027, 27, 25.2, 25.175.
+
+Note this support is only available for the DISP1PIX clock domain and the enablement is controlled via a vendor-specific SCMI extended clock attribute (0x81).  Setting this attribute to a non-zero value will enable the support.  By default, the attribute is set to zero and configuring the DISP1PIX clock rate will not impact the VIDEOPLL1 or VIDEOPLL1_VCO clock rates.
 
 SM-330: Configtool does not support hash comments unless at the start of a line {#RN_DETAIL_SM_330}
 ----------
@@ -272,7 +275,7 @@ SM-359: Add optional code to bounce the BBSM supply on reset {#RN_DETAIL_SM_359}
 
 The EVK reference port includes example code to bounce the BBSM supply on a reset. To enable this, add the following define to the local defines section of  boards/mcimx952evk/sm/brd_sm_handlers.c and then recompile the SM.
 
-#define PMIC_BOUNCE_BBSM
+    #define PMIC_BOUNCE_BBSM
 
 If customers desire this behavior, add the block of code in this file enabled by this define to the customer board port.
 
