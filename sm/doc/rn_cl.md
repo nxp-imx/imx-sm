@@ -63,7 +63,6 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | Manage CGCs that interfere with CPU shutdown [[detail]](@ref RN_DETAIL_SM_345) |   | | | Y |
 | [SM-355](https://jira.sw.nxp.com/projects/SM/issues/SM-355) | Reassign V2X MDAC to workaround a V2X ROM authentication issue [[detail]](@ref RN_DETAIL_SM_355) |   | | | Y |
 | [SM-359](https://jira.sw.nxp.com/projects/SM/issues/SM-359) | Add optional code to bounce the BBSM supply on reset [[detail]](@ref RN_DETAIL_SM_359) |   | | | Y |
-| [SM-360](https://jira.sw.nxp.com/projects/SM/issues/SM-360) | Support PF5B PMIC on i.MX94 EVK |   | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
