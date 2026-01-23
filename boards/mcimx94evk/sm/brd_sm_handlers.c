@@ -120,6 +120,8 @@ int32_t BRD_SM_SerialDevicesInit(void)
 
     if (status == SM_ERR_SUCCESS)
     {
+        bool ctrl = true;
+
         /* Fill in PF09 PMIC handle */
         g_pf09Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         g_pf09Dev.devAddr = BOARD_PF09_DEV_ADDR;
@@ -163,30 +165,44 @@ int32_t BRD_SM_SerialDevicesInit(void)
             }
         }
 
-        /* Change the LDO3 sequence */
+        /* Get GPIO3 STBY control */
         if (status == SM_ERR_SUCCESS)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x4AU, 0x1EU, 0xFFU))
+            if (!PF09_GpioCtrlGet(&g_pf09Dev, PF09_GPIO3,
+                PF53_STATE_VSTBY, &ctrl))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
         }
 
-        /* Set the LDO3 OV bypass */
-        if (status == SM_ERR_SUCCESS)
+        /* Modifying LDO3 if PF53 is disabled during STBY */
+        if (ctrl == false)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x7FU, 0xFCU, 0xFFU))
+            /* Change the LDO3 sequence */
+            if (status == SM_ERR_SUCCESS)
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                if (!PF09_PmicWrite(&g_pf09Dev, 0x4AU, 0x1EU, 0xFFU))
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
             }
-        }
 
-        /* Enable the LDO3 in RUN mode */
-        if (status == SM_ERR_SUCCESS)
-        {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x7DU, 0x20U, 0xFFU))
+            /* Set the LDO3 OV bypass */
+            if (status == SM_ERR_SUCCESS)
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                if (!PF09_PmicWrite(&g_pf09Dev, 0x7FU, 0xFCU, 0xFFU))
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
+            }
+
+            /* Enable the LDO3 in RUN mode */
+            if (status == SM_ERR_SUCCESS)
+            {
+                if (!PF09_PmicWrite(&g_pf09Dev, 0x7DU, 0x20U, 0xFFU))
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
             }
         }
 
