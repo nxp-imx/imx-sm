@@ -66,12 +66,6 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
         status = DEV_SM_SystemInit();
     }
 
-    /* Init the memory */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = DEV_SM_MemInit();
-    }
-
     /* Init fault handling */
     if (status == SM_ERR_SUCCESS)
     {
@@ -96,6 +90,12 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     if (status == SM_ERR_SUCCESS)
     {
         status = DEV_SM_PowerInit();
+    }
+
+    /* Init the memory */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = DEV_SM_MemInit();
     }
 
 #ifdef DEVICE_HAS_ELE

@@ -76,11 +76,17 @@ extern uint32_t *__DdrInfo;
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_MemInit(void)
 {
+    int32_t status;
+    bool enabled = false;
+
     /* Default to no DDR regions */
     info.totalRegions = 0U;
 
-    /* Check power state of DDRMIX */
-    if (SRC_MixIsPwrReady(DEV_SM_PD_DDR))
+    /* Get DDR PLL state */
+    status = DEV_SM_ClockIsEnabled(DEV_SM_CLK_DRAMPLL, &enabled);
+
+    /* Check state of PLL */
+    if ((status == SM_ERR_SUCCESS) && enabled)
     {
         const struct ddr_info *ddr = (struct ddr_info*) &__DdrInfo;
 
@@ -94,6 +100,10 @@ int32_t DEV_SM_MemInit(void)
         {
             info.totalRegions = 0U;
         }
+    }
+    else
+    {
+        (void) DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF);
     }
 
     /* Return status */

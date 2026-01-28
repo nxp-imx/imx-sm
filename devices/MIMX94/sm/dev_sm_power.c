@@ -49,7 +49,7 @@
 static uint8_t s_powerStateM33S = DEV_SM_POWER_STATE_OFF;
 
 /*--------------------------------------------------------------------------*/
-/* Initialize CPU domains                                                   */
+/* Initialize power domains                                                 */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_PowerInit(void)
 {
