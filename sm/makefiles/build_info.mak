@@ -30,7 +30,7 @@
 ##
 ## ###################################################################
 
-SM_VERSION = imx_sm_2026q1_er1
+SM_VERSION = imx_sm_2026q1
 SM_PREV_VER = imx_sm_2025q4
 SM_SNAP = 0
 

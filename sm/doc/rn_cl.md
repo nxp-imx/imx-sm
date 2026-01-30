@@ -8,7 +8,7 @@ the data could change.
 SM 2026Q1 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2025q4) and this release (imx_sm_2026q1_er1).
+Below is a list of changes between the previous release (imx_sm_2025q4) and this release (imx_sm_2026q1).
 
 New Feature {#RN_CL_NEW}
 ------------
@@ -63,6 +63,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-345](https://jira.sw.nxp.com/projects/SM/issues/SM-345) | Manage CGCs that interfere with CPU shutdown [[detail]](@ref RN_DETAIL_SM_345) |   | | | Y |
 | [SM-355](https://jira.sw.nxp.com/projects/SM/issues/SM-355) | Reassign V2X MDAC to workaround a V2X ROM authentication issue [[detail]](@ref RN_DETAIL_SM_355) |   | | | Y |
 | [SM-359](https://jira.sw.nxp.com/projects/SM/issues/SM-359) | Add optional code to bounce the BBSM supply on reset [[detail]](@ref RN_DETAIL_SM_359) |   | | | Y |
+| [SM-360](https://jira.sw.nxp.com/projects/SM/issues/SM-360) | Support PF5B PMIC on i.MX94 EVK [[detail]](@ref RN_DETAIL_SM_360) |   | | Y | |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -277,4 +278,9 @@ The EVK reference port includes example code to bounce the BBSM supply on a rese
     #define PMIC_BOUNCE_BBSM
 
 If customers desire this behavior, add the block of code in this file enabled by this define to the customer board port.
+
+SM-360: Support PF5B PMIC on i.MX94 EVK {#RN_DETAIL_SM_360}
+----------
+
+Modified board code to not modify LDO3 if PF53B is on the EVK. Customers should make the same changes to their board code.
 

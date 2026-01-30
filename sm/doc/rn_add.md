@@ -53,6 +53,7 @@ Customers **must** make the following changes in their board port:
 
 - Fixed issue with the PCA2131 RTC domain index
 - Increased ELE group interrupts to preempt critical
+- LDO3 change if using PF53B
 
 Optional, but recommended:
 
