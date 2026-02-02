@@ -57,8 +57,10 @@ typedef struct
  * @name PF53 Buck regulator operation mode
  */
 /** @{ */
-#define PF53_SW_MODE_OFF  0U  /*!< Switcher off */
-#define PF53_SW_MODE_PWM  3U  /*!< Switcher PWM */
+#define PF53_SW_MODE_OFF        0U  /*!< Switcher off */
+#define PF53_SW_MODE_PFM_20MHz  1U  /*!< Switcher PFM with 20MHz */
+#define PF53_SW_MODE_PFM_100KHz 2U  /*!< Switcher PFM with 100KHz */
+#define PF53_SW_MODE_PWM        3U  /*!< Switcher PWM */
 /** @} */
 
 /*!

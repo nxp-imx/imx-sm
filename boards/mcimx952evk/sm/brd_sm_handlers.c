@@ -168,15 +168,6 @@ int32_t BRD_SM_SerialDevicesInit(void)
             }
         }
 
-        /* Set the OV debounce to 50us due to errata ER011/12 */
-        if (status == SM_ERR_SUCCESS)
-        {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x37U, 0x94U, 0xFFU))
-            {
-                status = SM_ERR_HARDWARE_ERROR;
-            }
-        }
-
 #ifdef PMIC_BOUNCE_BBSM
         /* Bounce BBSM supply on reset */
         if (status == SM_ERR_SUCCESS)
