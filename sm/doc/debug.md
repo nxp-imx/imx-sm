@@ -120,6 +120,8 @@ If the reset reason is an M33 exception (cm33_exc) and the M33 SM was able to ta
 |  -10    | Cortex-M33 usage fault interrupt       | M33 PC, CFSR         |
 |   31    | Watchdog 1 interrupt                   | M33 PC               |
 |   32    | Watchdog 2 interrupt                   | M33 PC               |
+|   38    | M7 lockup Error                        |                      |
+|   39    | M7 reset request                       |                      |
 |  160    | ELE group 1 no clock                   | ELE_RST/IRQ_REQ_STAT |
 |  161    | ELE group 2 clock too slow             | ELE_RST/IRQ_REQ_STAT |
 |  162    | ELE group 3 fault                      | ELE_RST/IRQ_REQ_STAT |
@@ -139,8 +141,6 @@ If the reset reason is an FCCU fault (fccu) and the M33 SM was able to take an i
 |  19   | WDOG3 timeout (watchdog reset request)     |                   |
 |  20   | WDOG4 timeout (watchdog reset request)     |                   |
 |  21   | WDOG5 timeout (watchdog reset request)     |                   |
-|  38   | M7 lockup Error                            |                   |
-|  39   | M7 reset request                           |                   |
 | 22-33 | Software generated fault 0-11              |                   |
 
 These are the faults enabled by default in the non-FuSa SM. See section @ref FCCU_CONFIG for info
@@ -162,6 +162,12 @@ If the reset reason is an M33 exception (cm33_exc) and the M33 SM was able to ta
 |  -10   | Cortex-M33 usage fault interrupt       | M33 PC, CFSR         |
 |   36   | Watchdog 1 interrupt                   | M33 PC               |
 |   37   | Watchdog 2 interrupt                   | M33 PC               |
+|   38   | M7 0 lockup Error                      |                      |
+|   39   | M7 0 reset request                     |                      |
+|   74   | M7 1 lockup Error                      |                      |
+|   75   | M7 1 reset request                     |                      |
+|   87   | M33S lockup Error                      |                      |
+|   88   | M33S reset request                     |                      |
 |  303   | ELE group 1 no clock                   | ELE_RST/IRQ_REQ_STAT |
 |  304   | ELE group 2 clock too slow             | ELE_RST/IRQ_REQ_STAT |
 |  305   | ELE group 3 fault                      | ELE_RST/IRQ_REQ_STAT |
@@ -182,15 +188,9 @@ If the reset reason is an FCCU fault (fccu) and the M33 SM was able to take an i
 |  20     | WDOG4 timeout (watchdog reset request)     |                   |
 |  21     | WDOG5 timeout (watchdog reset request)     |                   |
 | 22-33   | Software generated fault 0-11              |                   |
-|  38     | M7 0 lockup Error                          |                   |
-|  39     | M7 0 reset request                         |                   |
-|  74     | M7 1 lockup Error                          |                   |
-|  75     | M7 1 reset request                         |                   |
 |  84     | WDOG6 timeout (Watchdog reset request)     |                   |
 |  85     | WDOG7 timeout (Watchdog reset request)     |                   |
 |  86     | WDOG8 timeout (Watchdog reset request)     |                   |
-|  87     | M33S lockup Error                          |                   |
-|  88     | M33S reset request                         |                   |
 | 101-112 | Software generated fault 12-23             |                   |
 
 These are the faults enabled by default in the non-FuSa SM. See section @ref FCCU_CONFIG for info
@@ -212,6 +212,8 @@ If the reset reason is an M33 exception (cm33_exc) and the M33 SM was able to ta
 |  -10    | Cortex-M33 usage fault interrupt       | M33 PC, CFSR         |
 |   31    | Watchdog 1 interrupt                   | M33 PC               |
 |   32    | Watchdog 2 interrupt                   | M33 PC               |
+|   38    | M7 lockup Error                        |                      |
+|   39    | M7 reset request                       |                      |
 |  160    | ELE group 1 no clock                   | ELE_RST/IRQ_REQ_STAT |
 |  161    | ELE group 2 clock too slow             | ELE_RST/IRQ_REQ_STAT |
 |  162    | ELE group 3 fault                      | ELE_RST/IRQ_REQ_STAT |
@@ -231,8 +233,6 @@ If the reset reason is an FCCU fault (fccu) and the M33 SM was able to take an i
 |  19   | WDOG3 timeout (watchdog reset request)     |                   |
 |  20   | WDOG4 timeout (watchdog reset request)     |                   |
 |  21   | WDOG5 timeout (watchdog reset request)     |                   |
-|  38   | M7 lockup Error                            |                   |
-|  39   | M7 reset request                           |                   |
 | 22-33 | Software generated fault 0-11              |                   |
 
 These are the faults enabled by default in the non-FuSa SM. See section @ref FCCU_CONFIG for info
