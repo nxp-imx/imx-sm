@@ -199,8 +199,8 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
         /* -------------------- */
         { /*!< Faults Enabled */
             (uint32)0xFFFC000BUL,
-            (uint32)0x00000003UL,
-            (uint32)0x00000000UL,
+            (uint32)0x74000003UL,
+            (uint32)0x0000003FUL,
             (uint32)0x00000000UL
         },
         { /*!< Reaction Set ID's */
@@ -372,6 +372,7 @@ const eMcem_ConfigType eMcem_Config =
 * @retval           EMCEM_ERR_RECOVERED      Fault has been recovered.
 * @retval           EMCEM_ERR_NOT_RECOVERED  Fault has not been recovered.
 */
+
 eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId )
 {
     int32_t status;

@@ -161,6 +161,8 @@
     [DEV_SM_FAULT_SW2] = {.reaction = LMM_REACT_GRP_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_SW3] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_SW4] = {.reaction = LMM_REACT_SYS_SHUTDOWN, .lm = 0U}, \
+    [DEV_SM_FAULT_MAIN_NOC] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_CENTRAL_NOC] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_M7_LOCKUP] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M7_RESET] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_SW0] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \

@@ -47,6 +47,11 @@
 
 /* Local defines */
 
+#define NOC_WAKEUP_MISSION_FAULT    58U
+#define NOC_CENTRAL_MISSION_FAULT   60U
+#define NOC_CENTRAL_TIMEOUT_REG     0xF0U
+#define NOC_WAKEUP_TIMEOUT_REG      0x8CU
+
 /* Local types */
 
 /* Local variables */
@@ -76,14 +81,48 @@ int32_t DEV_SM_FaultInit(void)
 int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
 {
     int32_t status;
+    dev_sm_rst_rec_t modResetRec = resetRec;
+
+    if (modResetRec.errId == NOC_WAKEUP_MISSION_FAULT)
+    {
+        /* Update extended info in reset record */
+        if (BLK_CTRL_WAKEUPMIX->INITIATOR_TIMEOUT != 0U)
+        {
+            modResetRec.extLen = 1U;
+            modResetRec.extInfo[0U] = BLK_CTRL_WAKEUPMIX->INITIATOR_TIMEOUT;
+            /*
+             * Clear the initiator timeout register in case the requested
+             * is not reset.
+             */
+            BLK_CTRL_WAKEUPMIX->INITIATOR_TIMEOUT = modResetRec.extInfo[0U];
+        }
+    }
+    else if (modResetRec.errId == NOC_CENTRAL_MISSION_FAULT)
+    {
+        if (NOC__BLK_CTRL_NOCMIX->INITIATOR_TIMEOUT != 0U)
+        {
+            modResetRec.extLen = 1U;
+            modResetRec.extInfo[0U] = NOC__BLK_CTRL_NOCMIX->INITIATOR_TIMEOUT;
+            /*
+             * Clear the initiator timeout register in case the requested
+             * is not reset.
+             */
+            NOC__BLK_CTRL_NOCMIX->INITIATOR_TIMEOUT = modResetRec.extInfo[0U];
+            Write32(0x490000f0, modResetRec.extInfo[0U]);
+        }
+    }
+    else
+    {
+        ; /* Intentionally empty */
+    }
 
     /* Call handler */
-    status = SM_FAULTCOMPLETE(resetRec);
+    status = SM_FAULTCOMPLETE(modResetRec);
 
     /* Clear fault on success */
     if (status == SM_ERR_SUCCESS)
     {
-        status = DEV_SM_FaultSet(0U, resetRec.errId, false);
+        status = DEV_SM_FaultSet(0U, modResetRec.errId, false);
     }
     else
     {

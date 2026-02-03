@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -203,6 +203,8 @@
     [DEV_SM_FAULT_SWNCF03] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_SWNCF04] = {.reaction = LMM_REACT_SYS_SHUTDOWN, .lm = 0U}, \
     [DEV_SM_FAULT_DDR_MBE] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_NOC_MAIN] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_NOC_CENTRAL] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_M33_SYNC_LOCKUP] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M33_SYNC_RST] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M7_LOCKUP] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \

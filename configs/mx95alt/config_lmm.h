@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -166,6 +166,9 @@
     [DEV_SM_FAULT_SW3] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_SW4] = {.reaction = LMM_REACT_SYS_SHUTDOWN, .lm = 0U}, \
     [DEV_SM_FAULT_DRAM] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_MAIN_NOC] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_MEGA_NOC] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_CENTRAL_NOC] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_M7_LOCKUP] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M7_RESET] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_SW0] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \

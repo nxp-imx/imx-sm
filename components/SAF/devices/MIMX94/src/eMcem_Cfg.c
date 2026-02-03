@@ -15,7 +15,7 @@
 *   SW Version           : 0.8.4
 *   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2025 NXP
+*   Copyright 2025-2026 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -201,15 +201,15 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
         /* -------------------- */
         { /*!< Faults Enabled */
             (uint32)0xFFFC000BUL,
-            (uint32)0x00000003UL,
-            (uint32)0x00700000UL,
+            (uint32)0x74000003UL,
+            (uint32)0x00700003UL,
             (uint32)0x0001FFE0UL
         },
         { /*!< Reaction Set ID's */
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
-            (uint32)0x00006000UL,
+            (uint32)0x00000000UL,
             (uint32)0x00060000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
@@ -410,6 +410,7 @@ const eMcem_ConfigType eMcem_Config =
 * @retval           EMCEM_ERR_RECOVERED      Fault has been recovered.
 * @retval           EMCEM_ERR_NOT_RECOVERED  Fault has not been recovered.
 */
+
 eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId )
 {
     int32_t status;

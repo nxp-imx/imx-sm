@@ -71,7 +71,8 @@ typedef struct {
   __IO uint32_t DBG_TRACE_CTL;                     /**< DEBUG TRACE control, offset: 0x70 */
        uint8_t RESERVED_3[16];
   __IO uint32_t SMMU_TBU_IRQ_SETUP;                /**< SMMU TBU IRQ resynchronization setup, offset: 0x84 */
-       uint8_t RESERVED_4[8];
+       uint8_t RESERVED_4[4];
+  __IO uint32_t INITIATOR_TIMEOUT;                 /**< NOC Initiator Timeout Status, offset: 0x8C */
   __IO uint32_t NIU_TO_MA0;                        /**< Timeout Control for NOC main NIU master m_a_0, offset: 0x90 */
   __IO uint32_t NIU_TO_MA1;                        /**< Timeout Control for NOC main NIU master m_a_1x, offset: 0x94 */
   __IO uint32_t NIU_TO_MA2;                        /**< Timeout Control for NOC main NIU master m_a_2, offset: 0x98 */

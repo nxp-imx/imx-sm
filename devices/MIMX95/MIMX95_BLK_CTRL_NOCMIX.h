@@ -88,6 +88,7 @@ typedef struct {
   __IO uint32_t NIU_TO_CTRL_HSIO;                  /**< HSIOMIX NIU Timeout Control Register, offset: 0xE4 */
   __IO uint32_t NIU_TO_CTRL_DISPLAY_BE;            /**< DISPLAYMIX (best effort) NIU Timeout Control Register, offset: 0xE8 */
   __IO uint32_t NIU_TO_CTRL_VPU;                   /**< VPUMIX NIU Timeout Control Register, offset: 0xEC */
+  __IO uint32_t INITIATOR_TIMEOUT;                 /**< Initiator Timeout Status, offset: 0xF0 */
 } BLK_CTRL_NOCMIX_Type;
 
 /* ----------------------------------------------------------------------------

@@ -132,16 +132,27 @@ these causes. Debug of faults with a PC can be done using the map file generated
 
 If the reset reason is an FCCU fault (fccu) and the M33 SM was able to take an interrupt:
 
-| errId | Fault Description                          | extInfo[]         |
-|-------|--------------------------------------------|-------------------|
-|   0   | Temp sensor over-temperature (ANA)         |                   |
-|   1   | Temp sensor over-temperature (CORTEX-A)    |                   |
-|   3   | DDR ECC multi-bit error                    |                   |
-|  18   | WDOG2 timeout (watchdog reset request)     | M33 PC            |
-|  19   | WDOG3 timeout (watchdog reset request)     |                   |
-|  20   | WDOG4 timeout (watchdog reset request)     |                   |
-|  21   | WDOG5 timeout (watchdog reset request)     |                   |
-| 22-33 | Software generated fault 0-11              |                   |
+| errId | Fault Description                          | extInfo[]                |
+|-------|--------------------------------------------|--------------------------|
+|   0   | Temp sensor over-temperature (ANA)         |                          |
+|   1   | Temp sensor over-temperature (CORTEX-A)    |                          |
+|   3   | DDR ECC multi-bit error                    |                          |
+|  18   | WDOG2 timeout (watchdog reset request)     | M33 PC                   |
+|  19   | WDOG3 timeout (watchdog reset request)     |                          |
+|  20   | WDOG4 timeout (watchdog reset request)     |                          |
+|  21   | WDOG5 timeout (watchdog reset request)     |                          |
+| 22-33 | Software generated fault 0-11              |                          |
+|  58   | FlexNOC_Main Mission Fault                 | Wakeup Initiator timeout |
+|  59   | FlexNOC_Mega Mission Fault                 | Wakeup Initiator timeout |
+|  60   | FlexNOC_Central Mission Fault              | NOC Initiator timeout    |
+|  61   | AXBS_M33_0 AON domain parity               |                          |
+|  62   | AXBS AON domain parity                     |                          |
+|  64   | AON parity (non AXBS_M33_0 and AXBS)       |                          |
+|  65   | Wakeup domain parity                       |                          |
+|  66   | NOC domain parity gaskets                  |                          |
+|  67   | Cortex-M7 domain parity                    |                          |
+|  68   | DDR domain parity                          |                          |
+|  69   | NPU domain parity                          |                          |
 
 These are the faults enabled by default in the non-FuSa SM. See section @ref FCCU_CONFIG for info
 on configuring the FCCU. See the SoC RM for a complete list of faults. SW generated faults 0-5
@@ -178,20 +189,30 @@ these causes. Debug of faults with a PC can be done using the map file generated
 
 If the reset reason is an FCCU fault (fccu) and the M33 SM was able to take an interrupt:
 
-| errId   | Fault Description                          | extInfo[]         |
-|---------|--------------------------------------------|-------------------|
-|   0     | Temp sensor over-temperature (ANA)         |                   |
-|   1     | Temp sensor over-temperature (CORTEX-A)    |                   |
-|   3     | DDR ECC multi-bit error                    |                   |
-|  18     | WDOG2 timeout (watchdog reset request)     | M33 PC            |
-|  19     | WDOG3 timeout (watchdog reset request)     |                   |
-|  20     | WDOG4 timeout (watchdog reset request)     |                   |
-|  21     | WDOG5 timeout (watchdog reset request)     |                   |
-| 22-33   | Software generated fault 0-11              |                   |
-|  84     | WDOG6 timeout (Watchdog reset request)     |                   |
-|  85     | WDOG7 timeout (Watchdog reset request)     |                   |
-|  86     | WDOG8 timeout (Watchdog reset request)     |                   |
-| 101-112 | Software generated fault 12-23             |                   |
+| errId   | Fault Description                          | extInfo[]                |
+|---------|--------------------------------------------|--------------------------|
+|   0     | Temp sensor over-temperature (ANA)         |                          |
+|   1     | Temp sensor over-temperature (CORTEX-A)    |                          |
+|   3     | DDR ECC multi-bit error                    |                          |
+|  18     | WDOG2 timeout (watchdog reset request)     | M33 PC                   |
+|  19     | WDOG3 timeout (watchdog reset request)     |                          |
+|  20     | WDOG4 timeout (watchdog reset request)     |                          |
+|  21     | WDOG5 timeout (watchdog reset request)     |                          |
+| 22-33   | Software generated fault 0-11              |                          |
+|  58     | FlexNOC Main Mission Fault                 | Wakeup Initiator timeout |
+|  60     | FlexNOC Central Mission Fault              | NOC Initiator timeout    |
+|  61     | AXBS_M33_0 AON domain parity               |                          |
+|  62     | AXBS AON domain parity                     |                          |
+|  64     | AON parity (non AXBS_M33_0 and AXBS)       |                          |
+|  65     | Wakeup domain parity                       |                          |
+|  66     | NOC domain parity gaskets                  |                          |
+|  67     | Cortex-M7 domain parity                    |                          |
+|  68     | DDR domain parity                          |                          |
+|  69     | NPU domain parity                          |                          |
+|  84     | WDOG6 timeout (Watchdog reset request)     |                          |
+|  85     | WDOG7 timeout (Watchdog reset request)     |                          |
+|  86     | WDOG8 timeout (Watchdog reset request)     |                          |
+| 101-112 | Software generated fault 12-23             |                          |
 
 These are the faults enabled by default in the non-FuSa SM. See section @ref FCCU_CONFIG for info
 on configuring the FCCU. See the SoC RM for a complete list of faults. SW generated faults 0-5
@@ -224,16 +245,27 @@ these causes. Debug of faults with a PC can be done using the map file generated
 
 If the reset reason is an FCCU fault (fccu) and the M33 SM was able to take an interrupt:
 
-| errId | Fault Description                          | extInfo[]         |
-|-------|--------------------------------------------|-------------------|
-|   0   | Temp sensor over-temperature (ANA)         |                   |
-|   1   | Temp sensor over-temperature (CORTEX-A)    |                   |
-|   3   | DDR ECC multi-bit error                    |                   |
-|  18   | WDOG2 timeout (watchdog reset request)     | M33 PC            |
-|  19   | WDOG3 timeout (watchdog reset request)     |                   |
-|  20   | WDOG4 timeout (watchdog reset request)     |                   |
-|  21   | WDOG5 timeout (watchdog reset request)     |                   |
-| 22-33 | Software generated fault 0-11              |                   |
+| errId | Fault Description                          | extInfo[]                |
+|-------|--------------------------------------------|--------------------------|
+|   0   | Temp sensor over-temperature (ANA)         |                          |
+|   1   | Temp sensor over-temperature (CORTEX-A)    |                          |
+|   3   | DDR ECC multi-bit error                    |                          |
+|  18   | WDOG2 timeout (watchdog reset request)     | M33 PC                   |
+|  19   | WDOG3 timeout (watchdog reset request)     |                          |
+|  20   | WDOG4 timeout (watchdog reset request)     |                          |
+|  21   | WDOG5 timeout (watchdog reset request)     |                          |
+| 22-33 | Software generated fault 0-11              |                          |
+|  58   | FlexNOC Main Mission Fault                 | Wakeup Initiator timeout |
+|  60   | FlexNOC Central Mission Fault              | NOC Initiator timeout    |
+|  61   | AXBS_M33_0 AON domain parity               |                          |
+|  62   | AXBS AON domain parity                     |                          |
+|  64   | AON parity (non AXBS_M33_0 and AXBS)       |                          |
+|  65   | Wakeup domain parity                       |                          |
+|  66   | NOC domain parity gaskets                  |                          |
+|  67   | Cortex-M7 domain parity                    |                          |
+|  68   | DDR domain parity                          |                          |
+|  69   | NPU domain parity                          |                          |
+
 
 These are the faults enabled by default in the non-FuSa SM. See section @ref FCCU_CONFIG for info
 on configuring the FCCU. See the SoC RM for a complete list of faults. SW generated faults 0-5
@@ -265,6 +297,11 @@ System reset due to PMIC thermal alarm:
 
     Reset: reason=pmic
       0x00000101 <- PF09 hfault/fault flags
+
+System reset due to an FCCU NOCMIX mission fault:
+
+    Reset: reason=fccu, errId=60
+      0x00000020 <- NOCMIX Initiator timeout status, cortex-a55 domain (m_e_1b_rd port) read timeout
 
 System powered off and on via the ON/OFF button:
 

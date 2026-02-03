@@ -15,7 +15,7 @@
 *   SW Version           : 0.8.4
 *   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2023-2025 NXP
+*   Copyright 2023-2026 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -197,14 +197,14 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
         /* -------------------- */
         { /*!< Faults Enabled */
             (uint32)0xFFFC000BUL,
-            (uint32)0x00000003UL,
-            (uint32)0x00000000UL
+            (uint32)0x7C000003UL,
+            (uint32)0x0000003FUL
         },
         { /*!< Reaction Set ID's */
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
-            (uint32)0x00006000UL,
+            (uint32)0x00000000UL,
             (uint32)0x00060000UL,
             (uint32)0x00000000UL,
             (uint32)0x00000000UL,
