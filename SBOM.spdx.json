@@ -2,23 +2,23 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2026-01-20T09:33:51Z",
+    "created": "2026-01-26T02:11:57Z",
     "creators": [
       "Organization: NXP"
     ],
     "licenseListVersion": "3.26"
   },
-  "name": "imx-sm-LF_6.18.2_IMX952_ER",
+  "name": "imx-sm-LF_6.18.2_1.0.0",
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://nxp.com/spdx/ca9906bc-00c2-430a-9357-4d1d596fd819",
+  "documentNamespace": "https://nxp.com/spdx/bde51693-957e-46d6-a1b4-37cf28b3817e",
   "packages": [
     {
-      "SPDXID": "SPDXRef-package-ca9906bc-00c2-430a-9357-4d1d596fd819",
+      "SPDXID": "SPDXRef-package-bde51693-957e-46d6-a1b4-37cf28b3817e",
       "name": "imx-sm",
-      "versionInfo": "LF_6.18.2_IMX952_ER",
+      "versionInfo": "LF_6.18.2_1.0.0",
       "licenseConcluded": "(BSD-3-Clause)",
       "licenseDeclared": "(BSD-3-Clause)",
-      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b rel_imx_sm_2026q1_er1",
+      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b rel_imx_sm_2026q1",
       "originator": "Organization: NXP",
       "supplier": "NOASSERTION",
       "externalRefs": [],
@@ -42,10 +42,10 @@
     {
       "spdxElementId": "SPDXRef-DOCUMENT",
       "relationshipType": "DESCRIBES",
-      "relatedSpdxElement": "SPDXRef-package-ca9906bc-00c2-430a-9357-4d1d596fd819"
+      "relatedSpdxElement": "SPDXRef-package-bde51693-957e-46d6-a1b4-37cf28b3817e"
     },
     {
-      "spdxElementId": "SPDXRef-package-ca9906bc-00c2-430a-9357-4d1d596fd819",
+      "spdxElementId": "SPDXRef-package-bde51693-957e-46d6-a1b4-37cf28b3817e",
       "relationshipType": "CONTAINS",
       "relatedSpdxElement": "SPDXRef-package-f872a562-49f7-464f-a9a6-2ceb45966850"
     }
