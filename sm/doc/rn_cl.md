@@ -64,7 +64,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-355](https://jira.sw.nxp.com/projects/SM/issues/SM-355) | Reassign V2X MDAC to workaround a V2X ROM authentication issue [[detail]](@ref RN_DETAIL_SM_355) |   | | | Y |
 | [SM-357](https://jira.sw.nxp.com/projects/SM/issues/SM-357) | Misc. PMIC updates [[detail]](@ref RN_DETAIL_SM_357) |   | Y | Y | Y |
 | [SM-359](https://jira.sw.nxp.com/projects/SM/issues/SM-359) | Add optional code to bounce the BBSM supply on reset [[detail]](@ref RN_DETAIL_SM_359) |   | | | Y |
-| [SM-360](https://jira.sw.nxp.com/projects/SM/issues/SM-360) | Support PF5B PMIC on i.MX94 EVK [[detail]](@ref RN_DETAIL_SM_360) |   | | Y | |
+| [SM-360](https://jira.sw.nxp.com/projects/SM/issues/SM-360) | Support PF53B PMIC on i.MX94 EVK [[detail]](@ref RN_DETAIL_SM_360) |   | | Y | |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -285,7 +285,7 @@ The EVK reference port includes example code to bounce the BBSM supply on a rese
 
 If customers desire this behavior, add the block of code in this file enabled by this define to the customer board port.
 
-SM-360: Support PF5B PMIC on i.MX94 EVK {#RN_DETAIL_SM_360}
+SM-360: Support PF53B PMIC on i.MX94 EVK {#RN_DETAIL_SM_360}
 ----------
 
 Modified board code to not modify LDO3 if PF53B is on the EVK. Customers should make the same changes to their board code.
