@@ -172,7 +172,8 @@ int32_t BRD_SM_SerialDevicesInit(void)
         /* Bounce BBSM supply on reset */
         if (status == SM_ERR_SUCCESS)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x81U, 0x2U, 0x2U))
+            if (!PF09_PmicWrite(&g_pf09Dev, PF09_REG_VAON_CFG2,
+                0x2U, 0x2U))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }

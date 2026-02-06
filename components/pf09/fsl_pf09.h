@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2026 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -143,6 +143,146 @@ typedef struct
 #define PF09_UVDET_FAIL   0x40U  /*!< UVDET threshold */
 /** @} */
 
+/*!
+ * @name PF09 registers
+ */
+/** @{ */
+#define PF09_FAMILY_ID          0x09U  /*!< PF09 family id */
+#define PF09_REV_B0             0x20U  /*!< PF09 silicon rev B0 */
+#define PF09_REV_C0             0x30U  /*!< PF09 silicon rev C0 */
+
+#define PF09_NUM_LDO            5U     /*!< Number of LDO regulators */
+#define PF09_NUM_BUCK           3U     /*!< Number of buck regulators */
+#define PF09_NUM_REG            0x82U  /*!< Total number of registers */
+
+#define PF09_REG_DEV_ID         0x00U  /*!< Device ID */
+#define PF09_REG_DEV_FAM_ID     0x01U  /*!< Device family ID */
+#define PF09_REG_REV_ID         0x02U  /*!< Silicon revision ID */
+#define PF09_REG_PROG_ID1       0x03U  /*!< Programmed ID 1 */
+#define PF09_REG_PROG_ID2       0x04U  /*!< Programmed ID 2 */
+#define PF09_REG_SYSTEM_INT     0x05U  /*!< System interrupt status */
+#define PF09_REG_STATUS1_INT    0x06U  /*!< Status group 1 interrupt */
+#define PF09_REG_STATUS1_MASK   0x07U  /*!< Status group 1 interrupt mask */
+#define PF09_REG_STATUS1_SNS    0x08U  /*!< Status group 1 sense */
+#define PF09_REG_STATUS2_INT    0x09U  /*!< Status group 2 interrupt */
+#define PF09_REG_STATUS2_MASK   0x0AU  /*!< Status group 2 interrupt mask */
+#define PF09_REG_STATUS2_SNS    0x0BU  /*!< Status group 2 sense */
+#define PF09_REG_STATUS3_INT    0x0CU  /*!< Status group 3 interrupt */
+#define PF09_REG_STATUS3_MASK   0x0DU  /*!< Status group 3 interrupt mask */
+#define PF09_REG_SW_MODE_INT    0x0EU  /*!< Switcher mode interrupt */
+#define PF09_REG_SW_MODE_MASK   0x0FU  /*!< Switcher mode interrupt mask */
+#define PF09_REG_SW_ILIM_INT    0x10U  /*!< Switcher current-limit interrupt */
+#define PF09_REG_SW_ILIM_MASK   0x11U  /*!< Switcher current-limit mask */
+#define PF09_REG_SW_ILIM_SNS    0x12U  /*!< Switcher current-limit sense */
+#define PF09_REG_LDO_ILIM_INT   0x13U  /*!< LDO current-limit interrupt */
+#define PF09_REG_LDO_ILIM_MASK  0x14U  /*!< LDO current-limit mask */
+#define PF09_REG_LDO_ILIM_SNS   0x15U  /*!< LDO current-limit sense */
+#define PF09_REG_SW_UV_INT      0x16U  /*!< Switcher undervoltage interrupt */
+#define PF09_REG_SW_UV_MASK     0x17U  /*!< Switcher undervoltage mask */
+#define PF09_REG_SW_UV_SNS      0x18U  /*!< Switcher undervoltage sense */
+#define PF09_REG_SW_OV_INT      0x19U  /*!< Switcher overvoltage interrupt */
+#define PF09_REG_SW_OV_MASK     0x1AU  /*!< Switcher overvoltage mask */
+#define PF09_REG_SW_OV_SNS      0x1BU  /*!< Switcher overvoltage sense */
+#define PF09_REG_LDO_UV_INT     0x1CU  /*!< LDO undervoltage interrupt */
+#define PF09_REG_LDO_UV_MASK    0x1DU  /*!< LDO undervoltage mask */
+#define PF09_REG_LDO_UV_SNS     0x1EU  /*!< LDO undervoltage sense */
+#define PF09_REG_LDO_OV_INT     0x1FU  /*!< LDO overvoltage interrupt */
+#define PF09_REG_LDO_OV_MASK    0x20U  /*!< LDO overvoltage mask */
+#define PF09_REG_LDO_OV_SNS     0x21U  /*!< LDO overvoltage sense */
+#define PF09_REG_PWRON_INT      0x22U  /*!< Power-on event interrupt */
+#define PF09_REG_PWRON_MASK     0x23U  /*!< Power-on event interrupt mask */
+#define PF09_REG_IO_INT         0x24U  /*!< I/O interrupt */
+#define PF09_REG_IO_MSK         0x25U  /*!< I/O interrupt mask */
+#define PF09_REG_IO_SNS         0x26U  /*!< I/O sense */
+#define PF09_REG_IOSHORT_SNS    0x27U  /*!< I/O short-circuit sense */
+#define PF09_REG_ABIST_OV1      0x28U  /*!< ABIST overvoltage result 1 */
+#define PF09_REG_ABIST_OV2      0x29U  /*!< ABIST overvoltage result 2 */
+#define PF09_REG_ABIST_UV1      0x2AU  /*!< ABIST undervoltage result 1 */
+#define PF09_REG_ABIST_UV2      0x2BU  /*!< ABIST undervoltage result 2 */
+#define PF09_REG_ABIST_IO       0x2CU  /*!< ABIST I/O test result */
+#define PF09_REG_TEST_FLAGS     0x2DU  /*!< Test flags */
+#define PF09_REG_HFAULT_FLAGS   0x2EU  /*!< Hard fault flags */
+#define PF09_REG_FAULT_FLAGS    0x2FU  /*!< Fault flags */
+#define PF09_REG_FS0B_CFG       0x30U  /*!< FS0B config */
+#define PF09_REG_FCCU_CFG       0x31U  /*!< FCCU config */
+#define PF09_REG_RSTB_CFG1      0x32U  /*!< RSTB config 1 */
+#define PF09_REG_SECURE_WR1     0x35U  /*!< Secure write 1 */
+#define PF09_REG_SECURE_WR2     0x36U  /*!< Secure write 2 */
+#define PF09_REG_VMON_CFG1      0x37U  /*!< Voltage monitor config 1 */
+#define PF09_REG_SYS_CFG1       0x38U  /*!< System config 1 */
+#define PF09_REG_GPO_CFG        0x39U  /*!< GPIO config */
+#define PF09_REG_GPO_CTRL       0x3AU  /*!< GPIO ctrl */
+#define PF09_REG_PWRUP_CFG      0x3BU  /*!< Power-up config */
+#define PF09_REG_RSTB_PWRUP     0x3CU  /*!< RSTB power-up config */
+#define PF09_REG_GPIO1_PWRUP    0x3DU  /*!< GPIO1 power-up config */
+#define PF09_REG_GPIO2_PWRUP    0x3EU  /*!< GPIO2 power-up config */
+#define PF09_REG_GPIO3_PWRUP    0x3FU  /*!< GPIO3 power-up config */
+#define PF09_REG_GPIO4_PWRUP    0x40U  /*!< GPIO4 power-up config */
+#define PF09_REG_VMON1_PWRUP    0x41U  /*!< VMON1 power-up config */
+#define PF09_REG_VMON2_PWRUP    0x42U  /*!< VMON2 power-up config */
+#define PF09_REG_SW1_PWRUP      0x43U  /*!< SW1 power-up config */
+#define PF09_REG_SW2_PWRUP      0x44U  /*!< SW2 power-up config */
+#define PF09_REG_SW3_PWRUP      0x45U  /*!< SW3 power-up config */
+#define PF09_REG_SW4_PWRUP      0x46U  /*!< SW4 power-up config */
+#define PF09_REG_SW5_PWRUP      0x47U  /*!< SW5 power-up config */
+#define PF09_REG_LDO1_PWRUP     0x48U  /*!< LDO1 power-up config */
+#define PF09_REG_LDO2_PWRUP     0x49U  /*!< LDO2 power-up config */
+#define PF09_REG_LDO3_PWRUP     0x4AU  /*!< LDO3 power-up config */
+#define PF09_REG_WD_CTRL1       0x4EU  /*!< Watchdog ctrl 1 */
+#define PF09_REG_WD_CTRL2       0x4FU  /*!< Watchdog ctrl 2 */
+#define PF09_REG_WD_CFG1        0x50U  /*!< Watchdog config 1 */
+#define PF09_REG_WD_CFG2        0x51U  /*!< Watchdog config 2 */
+#define PF09_REG_WD_CNT1        0x52U  /*!< Watchdog counter 1 */
+#define PF09_REG_WD_CNT2        0x53U  /*!< Watchdog counter 2 */
+#define PF09_REG_FAULT_CFG      0x54U  /*!< Fault handling config */
+#define PF09_REG_FAULT_CNT      0x55U  /*!< Fault counter */
+#define PF09_REG_DFS_CNT        0x56U  /*!< DFS counter/status */
+#define PF09_REG_AMUX_CFG       0x57U  /*!< Analog mux config */
+#define PF09_REG_VMON1_RUN_CFG  0x58U  /*!< VMON1 run config */
+#define PF09_REG_VMON1_STBY_CFG 0x59U  /*!< VMON1 standby config */
+#define PF09_REG_VMON1_CTRL     0x5AU  /*!< VMON1 ctrl register */
+#define PF09_REG_VMON2_RUN_CFG  0x5BU  /*!< VMON2 run config */
+#define PF09_REG_VMON2_STBY_CFG 0x5CU  /*!< VMON2 standby config */
+#define PF09_REG_VMON2_CTRL     0x5DU  /*!< VMON2 ctrl */
+#define PF09_REG_SW1_VRUN       0x5EU  /*!< SW1 run voltage */
+#define PF09_REG_SW1_VSTBY      0x5FU  /*!< SW1 standby voltage */
+#define PF09_REG_SW1_MODE       0x60U  /*!< SW1 mode */
+#define PF09_REG_SW1_CFG1       0x61U  /*!< SW1 config 1 */
+#define PF09_REG_SW1_CFG2       0x62U  /*!< SW1 config 2 */
+#define PF09_REG_SW2_VRUN       0x63U  /*!< SW2 run voltage */
+#define PF09_REG_SW2_VSTBY      0x64U  /*!< SW2 standby voltage */
+#define PF09_REG_SW2_MODE       0x65U  /*!< SW2 mode */
+#define PF09_REG_SW2_CFG1       0x66U  /*!< SW2 config 1 */
+#define PF09_REG_SW2_CFG2       0x67U  /*!< SW2 config 2 */
+#define PF09_REG_SW3_VRUN       0x68U  /*!< SW3 run voltage */
+#define PF09_REG_SW3_VSTBY      0x69U  /*!< SW3 standby voltage */
+#define PF09_REG_SW3_MODE       0x6AU  /*!< SW3 mode */
+#define PF09_REG_SW3_CFG1       0x6BU  /*!< SW3 config 1 */
+#define PF09_REG_SW3_CFG2       0x6CU  /*!< SW3 config 2 */
+#define PF09_REG_SW4_VRUN       0x6DU  /*!< SW4 run voltage */
+#define PF09_REG_SW4_VSTBY      0x6EU  /*!< SW4 standby voltageg */
+#define PF09_REG_SW4_MODE       0x6FU  /*!< SW4 mode */
+#define PF09_REG_SW4_CFG1       0x70U  /*!< SW4 config 1 */
+#define PF09_REG_SW4_CFG2       0x71U  /*!< SW4 config 2 */
+#define PF09_REG_SW5_VRUN       0x72U  /*!< SW5 run voltage */
+#define PF09_REG_SW5_VSTBY      0x73U  /*!< SW5 standby voltage */
+#define PF09_REG_SW5_MODE       0x74U  /*!< SW5 mode */
+#define PF09_REG_SW5_CFG1       0x75U  /*!< SW5 config 1 */
+#define PF09_REG_SW5_CFG2       0x76U  /*!< SW5 config 2 */
+#define PF09_REG_LDO1_RUN       0x77U  /*!< LDO1 run voltage */
+#define PF09_REG_LDO1_STBY      0x78U  /*!< LDO1 standby voltage */
+#define PF09_REG_LDO1_CFG2      0x79U  /*!< LDO1 config 2 */
+#define PF09_REG_LDO2_RUN       0x7AU  /*!< LDO2 run voltage */
+#define PF09_REG_LDO2_STBY      0x7BU  /*!< LDO2 standby voltage */
+#define PF09_REG_LDO2_CFG2      0x7CU  /*!< LDO2 config 2 */
+#define PF09_REG_LDO3_RUN       0x7DU  /*!< LDO3 run voltage */
+#define PF09_REG_LDO3_STBY      0x7EU  /*!< LDO3 standby voltage */
+#define PF09_REG_LDO3_CFG2      0x7FU  /*!< LDO3 config 2 */
+#define PF09_REG_VAON_CFG1      0x80U  /*!< VAON config 1 */
+#define PF09_REG_VAON_CFG2      0x81U  /*!< VAON config 2 */
+#define PF09_REG_SYS_DIAG       0x82U  /*!< System diagnostics */
+/** @} */
+
 /*******************************************************************************
  * API
  ******************************************************************************/
@@ -158,7 +298,7 @@ extern "C" {
  *
  * @return True if successful.
  */
-bool PF09_Init(const PF09_Type *dev);
+bool PF09_Init(PF09_Type *dev);
 
 /*!
  * Get PF09 info

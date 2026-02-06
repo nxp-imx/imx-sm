@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 NXP
+ * Copyright 2023-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -35,31 +35,7 @@
 
 /* Local Defines */
 
-#define PF53_NUM_REG            0x1AU
 
-#define PF53_REG_DEV_ID         0x00U
-#define PF53_REG_REV_ID         0x01U
-#define PF53_REG_EMREV_ID       0x02U
-#define PF53_REG_PROG_ID        0x03U
-#define PF53_REG_CONFIG1        0x04U
-#define PF53_REG_INT_STATUS1    0x05U
-#define PF53_REG_INT_SENSE1     0x06U
-#define PF53_REG_INT_STATUS2    0x07U
-#define PF53_REG_INT_SENSE2     0x08U
-
-#define PF53_REG_SW1_VOLT       0x0DU
-#define PF53_REG_SW1_STBY_VOLT  0x0EU
-#define PF53_REG_SW1_CTRL1      0x0FU
-#define PF53_REG_SW1_CTRL2      0x10U
-#define PF53_REG_CLK_CTRL       0x11U
-
-#define PF53_REG_RANDOM_CHK     0x14U
-#define PF53_REG_RANDOM_GEN     0x15U
-#define PF53_REG_WD_CTRL1       0x16U
-#define PF53_REG_WD_SEED        0x17U
-#define PF53_REG_WD_ANSWER      0x18U
-#define PF53_REG_FLT_CNT1       0x19U
-#define PF53_REG_FLT_CNT2       0x1AU
 
 /* Local Types */
 
@@ -83,11 +59,19 @@ static status_t PF53_LPI2C_Receive(LPI2C_Type *base, uint8_t deviceAddress,
 /*--------------------------------------------------------------------------*/
 /* Initialize PMIC                                                          */
 /*--------------------------------------------------------------------------*/
-bool PF53_Init(const PF53_Type *dev)
+bool PF53_Init(PF53_Type *dev)
 {
-    uint8_t devId;
+    bool rc = true;
 
-    bool rc = PF53_PmicRead(dev, PF53_REG_DEV_ID, &devId);
+    /* Read PF53 device id regs */
+    for (uint8_t addr = 0U; addr < PF53_ID_LEN; addr++)
+    {
+        rc = PF53_PmicRead(dev, addr, &(dev->id[addr]));
+        if (!rc)
+        {
+            break;
+        }
+    }
 
     return rc;
 }

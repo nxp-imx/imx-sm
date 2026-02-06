@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -165,7 +165,8 @@ int32_t BRD_SM_SerialDevicesInit(void)
         /* Change the LDO3 sequence */
         if (status == SM_ERR_SUCCESS)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x4AU, 0x1EU, 0xFFU))
+            if (!PF09_PmicWrite(&g_pf09Dev, PF09_REG_LDO3_PWRUP,
+                0x1EU, 0xFFU))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
@@ -174,7 +175,8 @@ int32_t BRD_SM_SerialDevicesInit(void)
         /* Set the LDO3 OV bypass */
         if (status == SM_ERR_SUCCESS)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x7FU, 0xFCU, 0xFFU))
+            if (!PF09_PmicWrite(&g_pf09Dev, PF09_REG_LDO3_CFG2,
+                0xFCU, 0xFFU))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
@@ -183,18 +185,24 @@ int32_t BRD_SM_SerialDevicesInit(void)
         /* Enable the LDO3 in RUN mode */
         if (status == SM_ERR_SUCCESS)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x7DU, 0x20U, 0xFFU))
+            if (!PF09_PmicWrite(&g_pf09Dev, PF09_REG_LDO3_RUN,
+                0x20U, 0xFFU))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
         }
 
-        /* Set the OV debounce to 50us due to errata ER011/12 */
-        if (status == SM_ERR_SUCCESS)
+        /* Set the OV debounce to 50us due to errata ER011/12
+           for rev B0 */
+        if (g_pf09Dev.id[PF09_REG_REV_ID] == PF09_REV_B0)
         {
-            if (!PF09_PmicWrite(&g_pf09Dev, 0x37U, 0x94U, 0xFFU))
+            if (status == SM_ERR_SUCCESS)
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                if (!PF09_PmicWrite(&g_pf09Dev, PF09_REG_VMON_CFG1,
+                    0x94U, 0xFFU))
+                {
+                    status = SM_ERR_HARDWARE_ERROR;
+                }
             }
         }
 

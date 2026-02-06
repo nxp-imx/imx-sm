@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 NXP
+ * Copyright 2023-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -34,112 +34,6 @@
 #include "fsl_pf09.h"
 
 /* Local Defines */
-
-#define PF09_FAMILY_ID          0x09U
-
-#define PF09_NUM_LDO            5U
-#define PF09_NUM_BUCK           3U
-#define PF09_NUM_REG            0x82U
-
-#define PF09_REG_DEV_ID         0x00U
-#define PF09_REG_DEV_FAM_ID     0x01U
-#define PF09_REG_REV_ID         0x02U
-#define PF09_REG_PROG_ID1       0x03U
-#define PF09_REG_PROG_ID2       0x04U
-#define PF09_REG_SYSTEM_INT     0x05U
-#define PF09_REG_STATUS1_INT    0x06U
-#define PF09_REG_STATUS1_MASK   0x07U
-#define PF09_REG_STATUS1_SNS    0x08U
-#define PF09_REG_STATUS2_INT    0x09U
-#define PF09_REG_STATUS2_MASK   0x0AU
-#define PF09_REG_STATUS2_SNS    0x0BU
-#define PF09_REG_STATUS3_INT    0x0CU
-#define PF09_REG_STATUS3_MASK   0x0DU
-#define PF09_REG_SW_MODE_INT    0x0EU
-#define PF09_REG_SW_MODE_MASK   0x0FU
-#define PF09_REG_SW_ILIM_INT    0x10U
-#define PF09_REG_SW_ILIM_MASK   0x11U
-#define PF09_REG_SW_ILIM_SNS    0x12U
-#define PF09_REG_LDO_ILIM_INT   0x13U
-#define PF09_REG_LDO_ILIM_MASK  0x14U
-#define PF09_REG_LDO_ILIM_SNS   0x15U
-#define PF09_REG_SW_UV_INT      0x16U
-#define PF09_REG_SW_UV_MASK     0x17U
-#define PF09_REG_SW_UV_SNS      0x18U
-#define PF09_REG_SW_OV_INT      0x19U
-#define PF09_REG_SW_OV_MASK     0x1AU
-#define PF09_REG_SW_OV_SNS      0x1BU
-#define PF09_REG_LDO_UV_INT     0x1CU
-#define PF09_REG_LDO_UV_MASK    0x1DU
-#define PF09_REG_LDO_UV_SNS     0x1EU
-#define PF09_REG_LDO_OV_INT     0x1FU
-#define PF09_REG_LDO_OV_MASK    0x20U
-#define PF09_REG_LDO_OV_SNS     0x21U
-#define PF09_REG_PWRON_INT      0x22U
-#define PF09_REG_PWRON_MASK     0x23U
-#define PF09_REG_IO_INT         0x24U
-#define PF09_REG_HFAULT_FLAGS   0x2EU
-#define PF09_REG_FAULT_FLAGS    0x2FU
-#define PF09_REG_FS0B_CFG       0x30U
-#define PF09_REG_FCCU_CFG       0x31U
-#define PF09_REG_RSTB_CFG1      0x32U
-#define PF09_REG_SECURE_WR1     0x35U
-#define PF09_REG_SECURE_WR2     0x36U
-#define PF09_REG_VMON_CFG1      0x37U
-#define PF09_REG_SYS_CFG1       0x38U
-#define PF09_REG_GPO_CFG        0x39U
-#define PF09_REG_GPO_CTRL       0x3AU
-#define PF09_REG_LDO3_PWRUP     0x4AU
-#define PF09_REG_WD_CTRL1       0x4EU
-#define PF09_REG_WD_CTRL2       0x4FU
-#define PF09_REG_WD_CFG1        0x50U
-#define PF09_REG_WD_CFG2        0x51U
-#define PF09_REG_WD_CNT1        0x52U
-#define PF09_REG_WD_CNT2        0x53U
-#define PF09_REG_FAULT_CFG      0x54U
-#define PF09_REG_FAULT_CNT      0x55U
-#define PF09_REG_DFS_CNT        0x56U
-#define PF09_REG_AMUX_CFG       0x57U
-#define PF09_REG_VMON1_RUN_CFG  0x58U
-#define PF09_REG_VMON1_STBY_CFG 0x59U
-#define PF09_REG_VMON1_CTRL     0x5AU
-#define PF09_REG_VMON2_RUN_CFG  0x5BU
-#define PF09_REG_VMON2_STBY_CFG 0x5CU
-#define PF09_REG_VMON2_CTRL     0x5DU
-#define PF09_REG_SW1_VRUN       0x5EU
-#define PF09_REG_SW1_VSTBY      0x5FU
-#define PF09_REG_SW1_MODE       0x60U
-#define PF09_REG_SW1_CFG1       0x61U
-#define PF09_REG_SW1_CFG2       0x62U
-#define PF09_REG_SW2_VRUN       0x63U
-#define PF09_REG_SW2_VSTBY      0x64U
-#define PF09_REG_SW2_MODE       0x65U
-#define PF09_REG_SW2_CFG1       0x66U
-#define PF09_REG_SW2_CFG2       0x67U
-#define PF09_REG_SW3_VRUN       0x68U
-#define PF09_REG_SW3_VSTBY      0x69U
-#define PF09_REG_SW3_MODE       0x6AU
-#define PF09_REG_SW3_CFG1       0x6BU
-#define PF09_REG_SW3_CFG2       0x6CU
-#define PF09_REG_SW4_VRUN       0x6DU
-#define PF09_REG_SW4_VSTBY      0x6EU
-#define PF09_REG_SW4_MODE       0x6FU
-#define PF09_REG_SW4_CFG1       0x70U
-#define PF09_REG_SW4_CFG2       0x71U
-#define PF09_REG_SW5_VRUN       0x72U
-#define PF09_REG_SW5_VSTBY      0x73U
-#define PF09_REG_SW5_MODE       0x74U
-#define PF09_REG_SW5_CFG1       0x75U
-#define PF09_REG_SW5_CFG2       0x76U
-#define PF09_REG_LDO1_RUN       0x77U
-#define PF09_REG_LDO1_STBY      0x78U
-#define PF09_REG_LDO1_CFG2      0x79U
-#define PF09_REG_LDO2_RUN       0x7AU
-#define PF09_REG_LDO2_STBY      0x7BU
-#define PF09_REG_LDO2_CFG2      0x7CU
-#define PF09_REG_LDO3_RUN       0x7EU
-#define PF09_REG_LDO3_STBY      0x7EU
-#define PF09_REG_LDO3_CFG2      0x7FU
 
 #define STATUS2_I_BIT           1U
 #define STATUS1_MSK             1U
@@ -193,14 +87,22 @@ static const mask_reg_t maskInfo[PF09_MASK_LEN] =
 /*--------------------------------------------------------------------------*/
 /* Initialize PMIC                                                          */
 /*--------------------------------------------------------------------------*/
-bool PF09_Init(const PF09_Type *dev)
+bool PF09_Init(PF09_Type *dev)
 {
-    uint8_t revId;
+    bool rc = false;
 
-    bool rc = PF09_PmicRead(dev, PF09_REG_REV_ID, &revId);
+    /* Read PF09 device id regs */
+    for (uint8_t addr = 0U; addr < PF09_ID_LEN; addr++)
+    {
+        rc = PF09_PmicRead(dev, addr, &(dev->id[addr]));
+        if (!rc)
+        {
+            break;
+        }
+    }
 
     /* Disable XRESET monitor in STANDBY */
-    if (rc && (revId < 0x20U))
+    if (rc && (dev->id[PF09_REG_REV_ID] < 0x20U))
     {
         rc = PF09_XrstStbyEnable(dev, false);
     }

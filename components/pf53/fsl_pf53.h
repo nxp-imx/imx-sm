@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2026 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -74,6 +74,44 @@ typedef struct
 /*! Number of mask words */
 #define PF53_MASK_LEN  2U
 
+/*!
+ * @name PF53 registers
+ */
+/** @{ */
+#define PF53_REV_B3             0x23U /*!< PF53 silicon rev B3 */
+#define PF53B_REV_B4            0x24U /*!< PF53B silicon rev B4 */
+
+#define PF53_NUM_REG            0x1AU /*!< Total number of registers  */
+
+#define PF53_REG_DEV_ID         0x00U /*!< Device ID */
+#define PF53_REG_REV_ID         0x01U /*!< Revision ID */
+#define PF53_REG_EMREV_ID       0x02U /*!< Program ID */
+#define PF53_REG_PROG_ID        0x03U /*!< Program ID */
+#define PF53_REG_CONFIG1        0x04U /*!< Config 1 */
+#define PF53_REG_INT_STATUS1    0x05U /*!< Interrupt status 1 */
+#define PF53_REG_INT_SENSE1     0x06U /*!< Interrupt sense 1 */
+#define PF53_REG_INT_STATUS2    0x07U /*!< Interrupt status 2 */
+#define PF53_REG_INT_SENSE2     0x08U /*!< Interrupt sense 2 */
+#define PF53_REG_BIST_STAT1     0x09U /*!< BIST stat 1 */
+#define PF53_REG_BIST_CTRL      0x0AU /*!< BIST ctrl */
+#define PF53_REG_STATE          0x0BU /*!< State status */
+#define PF53_REG_STATE_CTRL     0x0CU /*!< State ctrl */
+#define PF53_REG_SW1_VOLT       0x0DU /*!< SW1 run voltage */
+#define PF53_REG_SW1_STBY_VOLT  0x0EU /*!< SW1 standby voltage */
+#define PF53_REG_SW1_CTRL1      0x0FU /*!< SW1 ctrl 1 */
+#define PF53_REG_SW1_CTRL2      0x10U /*!< SW1 ctrl 2 */
+#define PF53_REG_CLK_CTRL       0x11U /*!< Clock ctrl */
+#define PF53_REG_SEQ_CTRL1      0x12U /*!< Sequence ctrl 1 */
+#define PF53_REG_SEQ_CTRL2      0x13U /*!< Sequence ctrl 2 */
+#define PF53_REG_RANDOM_CHK     0x14U /*!< Random code Check */
+#define PF53_REG_RANDOM_GEN     0x15U /*!< Random code Generate */
+#define PF53_REG_WD_CTRL1       0x16U /*!< Watchdog ctrl 1 */
+#define PF53_REG_WD_SEED        0x17U /*!< Watchdog seed */
+#define PF53_REG_WD_ANSWER      0x18U /*!< Watchdog answer */
+#define PF53_REG_FLT_CNT1       0x19U /*!< Fault count1 */
+#define PF53_REG_FLT_CNT2       0x1AU /*!< Fault count2 */
+/** @} */
+
 /*******************************************************************************
  * API
  ******************************************************************************/
@@ -89,7 +127,7 @@ extern "C" {
  *
  * @return True if successful.
  */
-bool PF53_Init(const PF53_Type *dev);
+bool PF53_Init(PF53_Type *dev);
 
 /*!
  * Get PF53 info
