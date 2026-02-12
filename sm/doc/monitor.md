@@ -49,7 +49,7 @@ Info Commands
 | v2x info                    | display V2X info like FW load status                         |
 | v2x ping                    | ask ELE to ping V2X                                          |
 | [err](@ref DEBUG_ERR)       | display logged errors (API or RDC captured), clears log      |
-| btime                       | display boot time info                                       |
+| btime [init]                | display boot time info                                       |
 | trdc.raw *rdc* [*did*]      | raw dump of TRDC *rdc*, limit to *did* if specified          |
 | trdc *rdc* [*did*]          | formatted dump of TRDC *rdc*, limit to *did* if specified    |
 | syslog [*flags*]            | display syslog, flags and log device specific                |

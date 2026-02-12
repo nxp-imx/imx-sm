@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ static bool s_lmmInited = false;
 
 /* Boot times */
 /* coverity[misra_c_2012_rule_8_9_violation] */
-uint64_t g_bootTime[SM_BT_SUB + 1U];
+uint64_t g_bootTime[SM_BT_BRD + 1U];
 
 #ifdef HAS_SM_TEST_MODE
 uint32_t g_testMode = SM_TEST_MODE_OFF;

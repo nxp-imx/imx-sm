@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -129,6 +129,8 @@
 /** @{ */
 #define SM_BT_START  0U  /*!< Start time */
 #define SM_BT_SUB    1U  /*!< Time to subtract */
+#define SM_BT_DEV    2U  /*!< Time to subtract */
+#define SM_BT_BRD    3U  /*!< Time to subtract */
 /** @} */
 
 /*! Macro to create bit field */
@@ -233,7 +235,7 @@ typedef const char *string;
 /* Global variables */
 
 /*! Boot times */
-extern uint64_t g_bootTime[SM_BT_SUB + 1U];
+extern uint64_t g_bootTime[SM_BT_BRD + 1U];
 
 /* Functions */
 

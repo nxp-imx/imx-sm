@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -1032,6 +1032,8 @@ static int32_t MONITOR_CmdBtime(int32_t argc, const char * const argv[])
     int32_t status = SM_ERR_SUCCESS;
     uint32_t startTime = (uint32_t) g_bootTime[SM_BT_START];
     uint32_t subTime = (uint32_t) g_bootTime[SM_BT_SUB];
+    uint32_t devTime = (uint32_t) g_bootTime[SM_BT_DEV];
+    uint32_t brdTime = (uint32_t) g_bootTime[SM_BT_BRD];
 
     /* Display SM start time */
     printf("SM start time: %uuS\n", startTime);
@@ -1048,6 +1050,14 @@ static int32_t MONITOR_CmdBtime(int32_t argc, const char * const argv[])
             printf("LM%u boot time: SM start + %uuS\n", lmId,
                 (uint32_t) (bt - startTime - subTime));
         }
+    }
+
+    /* Dump init durations */
+    if (argc > 0)
+    {
+        printf("\nInit Durations:\n");
+        printf("  Device: %uuS\n", devTime);
+        printf("  Board:  %uuS\n", brdTime);
     }
 
     /* Return status */

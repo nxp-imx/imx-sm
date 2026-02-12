@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -113,6 +113,10 @@
 #define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_LOW  /* Boot perf low */
 #endif
 
+/* Timeing macros */
+#define TIME_START(X)   (X) = DEV_SM_Usec64Get()
+#define TIME_ADD(X, Y)  (Y) += (DEV_SM_Usec64Get() - (X))
+
 /* Local types */
 
 /* Local variables */
@@ -131,9 +135,13 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     uint64_t addr;
     uint32_t ms;
     uint32_t flags;
+    uint64_t usec;
 
     /* Init board hardware */
+    TIME_START(usec);
     BOARD_InitHardware();
+    /* coverity[cert_int30_c_violation] - just for test */
+    TIME_ADD(usec, g_bootTime[SM_BT_BRD]);
 
     /* Get the boot mode select */
     if (DEV_SM_RomBootCpuGet(DEV_SM_CPU_M33P, &addr, &ms, &flags)
@@ -143,14 +151,21 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     }
 
     /* Initialize devices connected to serial buses (PMIC, IOExp, etc) */
+    TIME_START(usec);
     status = BRD_SM_SerialDevicesInit();
+    /* coverity[cert_int30_c_violation] - just for test */
+    TIME_ADD(usec, g_bootTime[SM_BT_BRD]);
 
     if (status == SM_ERR_SUCCESS)
     {
         /* Init the device */
+        TIME_START(usec);
         status = DEV_SM_Init(BOARD_BOOT_LEVEL, BOARD_PERF_LEVEL);
+        /* coverity[cert_int30_c_violation] - just for test */
+        TIME_ADD(usec, g_bootTime[SM_BT_DEV]);
     }
 
+    TIME_START(usec);
     if (status == SM_ERR_SUCCESS)
     {
         /* Complete board init after device init */
@@ -186,6 +201,8 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     {
         SRC_XSPR_HSIOMIX_TOP->SLICE_SW_CTRL &= (~ipIsoMask);
     }
+    /* coverity[cert_int30_c_violation] - just for test */
+    TIME_ADD(usec, g_bootTime[SM_BT_BRD]);
 
     /* Return status */
     return status;

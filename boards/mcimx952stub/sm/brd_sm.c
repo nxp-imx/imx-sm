@@ -104,6 +104,10 @@
 #define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf level */
 #define BOARD_PERF_LEVEL  DEV_SM_PERF_LVL_ODV  /* Target perf level */
 
+/* Timeing macros */
+#define TIME_START(X)   (X) = DEV_SM_Usec64Get()
+#define TIME_ADD(X, Y)  (Y) += (DEV_SM_Usec64Get() - (X))
+
 /* Local types */
 
 /* Local variables */
@@ -132,9 +136,13 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     uint64_t addr;
     uint32_t ms;
     uint32_t flags;
+    uint64_t usec;
 
     /* Init board hardware */
+    TIME_START(usec);
     BOARD_InitHardware();
+    /* coverity[cert_int30_c_violation] - just for test */
+    TIME_ADD(usec, g_bootTime[SM_BT_BRD]);
 
 #ifdef INC_LIBC
     /* Send BELL characters as indicator SM is starting */
@@ -157,8 +165,12 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     }
 
     /* Init the device */
+    TIME_START(usec);
     status = DEV_SM_Init(BOARD_BOOT_LEVEL, BOARD_PERF_LEVEL);
+    /* coverity[cert_int30_c_violation] - just for test */
+    TIME_ADD(usec, g_bootTime[SM_BT_DEV]);
 
+    TIME_START(usec);
     if (status == SM_ERR_SUCCESS)
     {
         /* Complete board init after device init */
@@ -173,6 +185,8 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
         /* Switch WDOG to FCCU mode */
         BOARD_WdogModeSet(BOARD_WDOG_MODE_FCCU);
     }
+    /* coverity[cert_int30_c_violation] - just for test */
+    TIME_ADD(usec, g_bootTime[SM_BT_BRD]);
 
     /* Return status */
     return status;
