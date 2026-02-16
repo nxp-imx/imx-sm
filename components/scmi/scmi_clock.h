@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -328,62 +328,75 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
 /*!
  * Get clock attributes.
  *
- * @param[in]     channel     A2P channel for comms
- * @param[in]     clockId     Identifier for the clock device
- * @param[out]    attributes  Clock attributes:<BR>
- *                            Bit[31] Clock rate change notifications
- *                            support.<BR>
- *                            Set to 1 if clock rate change notifications are
- *                            supported for this clock.<BR>
- *                            Set to 0 if clock rate change notifications are
- *                            not supported for this clock.<BR>
- *                            Bit[30] Clock rate change requested notifications
- *                            support.<BR>
- *                            Set to 1 if clock rate change requested
- *                            notifications are supported for this clock.<BR>
- *                            Set to 0 if clock rate change requested
- *                            notifications are not supported for this
- *                            clock.<BR>
- *                            Bit[29] Extended Clock name.<BR>
- *                            If set to 1, the clock name is greater than 16
- *                            bytes.<BR>
- *                            If set to 0, extended clock name is not
- *                            supported.<BR>
- *                            Bit[28] Parent clock identifier support.<BR>
- *                            Set to 1 if parent clock identifiers are
- *                            advertised for this clock.<BR>
- *                            Set to 0 if parent clock identifiers are not
- *                            advertised for this clock.<BR>
- *                            Bit[27] Extended configuration support.<BR>
- *                            Set to 1 if extended configurations are supported
- *                            for this clock. Extended configurations can be
- *                            accessed using the SCMI_ClockConfigSet() and the
- *                            SCMI_ClockConfigSet() functions.<BR>
- *                            Set to 0 if extended configurations are not
- *                            supported for this clock.<BR>
- *                            Bits[26:2] Reserved, must be zero.<BR>
- *                            Bit[1] Restricted clock.<BR>
- *                            Set to 1 if the clock has restrictions on
- *                            changing some of its configuration or settings,
- *                            and the CLOCK_GET_PERMISSIONS command, as
- *                            specified in Section 4.6.2.16, can be used to
- *                            discover the restrictions in place. Set to 0 if
- *                            either of the following are true:<BR>
- *                            -- The clocks restrictions cannot be discovered
- *                            because CLOCK_GET_PERMISSIONS is not
- *                            implemented.<BR>
- *                            -- The clock has no restrictions on changing its
- *                            configuration or setting. Attempts to change a
- *                            restricted clock configuration or setting returns
- *                            DENIED.<BR>
- *                            Bit[0] Enabled/disabled.<BR>
- *                            If set to 1, the clock device is enabled.<BR>
- *                            If set to 0, the clock device is disabled
- * @param[out]    name        A NULL terminated ASCII string with the clock
- *                            name, of up to 16 bytes. When Bit[29] of
- *                            attributes field is set to 1, this field contains
- *                            the lower 15 bytes of the NULL terminated clock
- *                            name
+ * @param[in]     channel           A2P channel for comms
+ * @param[in]     clockId           Identifier for the clock device
+ * @param[out]    attributes        Clock attributes:<BR>
+ *                                  Bit[31] Clock rate change notifications
+ *                                  support.<BR>
+ *                                  Set to 1 if clock rate change notifications
+ *                                  are supported for this clock.<BR>
+ *                                  Set to 0 if clock rate change notifications
+ *                                  are not supported for this clock.<BR>
+ *                                  Bit[30] Clock rate change requested
+ *                                  notifications support.<BR>
+ *                                  Set to 1 if clock rate change requested
+ *                                  notifications are supported for this
+ *                                  clock.<BR>
+ *                                  Set to 0 if clock rate change requested
+ *                                  notifications are not supported for this
+ *                                  clock.<BR>
+ *                                  Bit[29] Extended Clock name.<BR>
+ *                                  If set to 1, the clock name is greater than
+ *                                  16 bytes.<BR>
+ *                                  If set to 0, extended clock name is not
+ *                                  supported.<BR>
+ *                                  Bit[28] Parent clock identifier
+ *                                  support.<BR>
+ *                                  Set to 1 if parent clock identifiers are
+ *                                  advertised for this clock.<BR>
+ *                                  Set to 0 if parent clock identifiers are
+ *                                  not advertised for this clock.<BR>
+ *                                  Bit[27] Extended configuration support.<BR>
+ *                                  Set to 1 if extended configurations are
+ *                                  supported for this clock. Extended
+ *                                  configurations can be accessed using the
+ *                                  SCMI_ClockConfigSet() and the
+ *                                  SCMI_ClockConfigSet() functions.<BR>
+ *                                  Set to 0 if extended configurations are not
+ *                                  supported for this clock.<BR>
+ *                                  Bits[26:2] Reserved, must be zero.<BR>
+ *                                  Bit[1] Restricted clock.<BR>
+ *                                  Set to 1 if the clock has restrictions on
+ *                                  changing some of its configuration or
+ *                                  settings, and the CLOCK_GET_PERMISSIONS
+ *                                  command, as specified in Section 4.6.2.16,
+ *                                  can be used to discover the restrictions in
+ *                                  place. Set to 0 if either of the following
+ *                                  are true:<BR>
+ *                                  -- The clocks restrictions cannot be
+ *                                  discovered because CLOCK_GET_PERMISSIONS is
+ *                                  not implemented.<BR>
+ *                                  -- The clock has no restrictions on
+ *                                  changing its configuration or setting.
+ *                                  Attempts to change a restricted clock
+ *                                  configuration or setting returns
+ *                                  DENIED.<BR>
+ *                                  Bit[0] Enabled/disabled.<BR>
+ *                                  If set to 1, the clock device is
+ *                                  enabled.<BR>
+ *                                  If set to 0, the clock device is disabled
+ * @param[out]    name              A NULL terminated ASCII string with the
+ *                                  clock name, of up to 16 bytes. When Bit[29]
+ *                                  of attributes field is set to 1, this field
+ *                                  contains the lower 15 bytes of the NULL
+ *                                  terminated clock name
+ * @param[out]    clockEnableDelay  Worst-case delay: The worst-case delay
+ *                                  incurred by the platform to enable the
+ *                                  clock in response to a clock enable request
+ *                                  from an agent. This field is specified in
+ *                                  microseconds.<BR>
+ *                                  If set to 0, this field is not supported by
+ *                                  the platform
  *
  * This function returns the attributes that are associated with a specific
  * clock. An agent might be allowed access to only a subset of the clocks
@@ -410,7 +423,7 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
  *   device.
  */
 int32_t SCMI_ClockAttributes(uint32_t channel, uint32_t clockId,
-    uint32_t *attributes, uint8_t *name);
+    uint32_t *attributes, uint8_t *name, uint32_t *clockEnableDelay);
 
 /*!
  * Get clock rate description.

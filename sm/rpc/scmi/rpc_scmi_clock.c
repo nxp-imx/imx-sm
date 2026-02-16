@@ -203,6 +203,8 @@ typedef struct
     uint32_t attributes;
     /* ASCII name string */
     uint8_t name[CLOCK_MAX_NAME];
+    /* Worst-case delay */
+    uint32_t clockEnableDelay;
 } msg_tclock3_t;
 
 /* Request type for ClockDescribeRates() */
@@ -727,6 +729,11 @@ static int32_t ClockProtocolMessageAttributes(const scmi_caller_t *caller,
 /* - out->name: A NULL terminated ASCII string with the clock name, of up   */
 /*   to 16 bytes. When Bit[29] of attributes field is set to 1, this field  */
 /*   contains the lower 15 bytes of the NULL terminated clock name          */
+/* - out->clockEnableDelay: Worst-case delay: The worst-case delay          */
+/*   incurred by the platform to enable the clock in response to a clock    */
+/*   enable request from an agent. This field is specified in               */
+/*   microseconds.                                                          */
+/*   If set to 0, this field is not supported by the platform               */
 /*                                                                          */
 /* Process the CLOCK_ATTRIBUTES message. Platform handler for               */
 /* SCMI_ClockAttributes(). See section 4.6.2.5 in the SCMI spec.            */
@@ -825,6 +832,9 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
 
         /* Copy out name */
         RPC_SCMI_StrCpy(out->name, nameAddr, CLOCK_MAX_NAME);
+
+        /* Clock enable delay currently not supported */
+        out->clockEnableDelay = 0U;
     }
 
     /* Return status */

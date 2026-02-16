@@ -117,10 +117,10 @@ void TEST_ScmiClock(void)
     /* Test clock attributes for invalid clock and invalid channel */
     {
         NCHECK(SCMI_ClockAttributes(SM_TEST_DEFAULT_CHN, numClocks, NULL,
-            NULL));
+            NULL, NULL));
 
         NECHECK(SCMI_ClockAttributes(SM_SCMI_NUM_CHN, numClocks, NULL,
-            NULL), SCMI_ERR_INVALID_PARAMETERS);
+            NULL, NULL), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Test clock rate set for invalid clock and invalid channel */
@@ -243,9 +243,11 @@ void TEST_ScmiClock(void)
         bool cgc = false;
         uint32_t attributes = 0U;
         uint8_t name[SCMI_CLOCK_MAX_NAME] = { 0 };
+        uint32_t clockEnableDelay = 0U;
         uint8_t perm = g_scmiAgentConfig[agentId].clkPerms[clockId];
 
-        status = SCMI_ClockAttributes(channel, clockId, &attributes, name);
+        status = SCMI_ClockAttributes(channel, clockId, &attributes, name,
+            &clockEnableDelay);
         if (status == SCMI_ERR_SUCCESS)
         {
             const char *cN = (char*) name;
@@ -308,13 +310,14 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId, bool sel,
 {
     uint32_t attributes = 0U;
     uint8_t name[SCMI_CLOCK_MAX_NAME];
+    uint32_t clockEnableDelay = 0U;
     uint32_t numRatesFlags = 0U;
     scmi_clock_rate_t rates[SCMI_CLOCK_MAX_RATES] = { 0 };
 
     printf("SCMI_ClockAttributes(%u, %u)\n", channel, clockId);
     name[0] = 0U;
     CHECK(SCMI_ClockAttributes(channel, clockId, &attributes,
-        name));
+        name, &clockEnableDelay));
     printf("  enabled=%u\n",
         SCMI_CLOCK_ATTR_ENABLED(attributes));
     printf("  extendedName=%u\n",
@@ -326,9 +329,10 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId, bool sel,
     printf("  parentSup=%u\n",
         SCMI_CLOCK_ATTR_PARENT(attributes));
     printf("  name=%s\n",  name);
+    printf("  clockEnableDelay=%u\n", clockEnableDelay);
 
     CHECK(SCMI_ClockAttributes(channel, clockId, NULL,
-        NULL));
+        NULL, NULL));
 
     printf("SCMI_ClockDescribeRates(%u, %u)\n", channel, clockId);
     CHECK(SCMI_ClockDescribeRates(channel, clockId, 0U,
@@ -386,7 +390,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId, bool sel,
         uint32_t parents[SCMI_CLOCK_MAX_PARENTS] = { 0 };
 
         CHECK(SCMI_ClockAttributes(channel, clockId, &attributesParent,
-            name));
+            name, &clockEnableDelay));
 
         if (SCMI_CLOCK_ATTR_PARENT(attributesParent) == 1U)
         {
@@ -446,7 +450,7 @@ static void TEST_ScmiClockSet(bool pass, uint32_t channel,
         {
             printf("SCMI_ClockAttributes(%u, %u)\n", channel, clockId);
             CHECK(SCMI_ClockAttributes(channel, clockId, &attributes,
-                NULL));
+                NULL, NULL));
             printf("  enabled=%u\n",
                 SCMI_CLOCK_ATTR_ENABLED(attributes));
         }
@@ -523,7 +527,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 
         printf("SCMI_ClockAttributes(%u)\n", clockId);
         CHECK(SCMI_ClockAttributes(channel, clockId, &attributes,
-            NULL));
+            NULL, NULL));
         printf("  enabled=%u\n",
             SCMI_CLOCK_ATTR_ENABLED(attributes));
 
@@ -538,7 +542,8 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
         uint32_t attributes = 0U;
         uint32_t permissions = 0U;
 
-        CHECK(SCMI_ClockAttributes(channel, clockId, &attributes, NULL));
+        CHECK(SCMI_ClockAttributes(channel, clockId, &attributes, NULL,
+            NULL));
 
         printf("SCMI_ClockParentGet(%u, %u)\n", channel, clockId);
         CHECK(SCMI_ClockParentGet(channel, clockId, &parentId));
