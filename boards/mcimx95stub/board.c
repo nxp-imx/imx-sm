@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 NXP
+ * Copyright 2023-2026 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -37,6 +37,7 @@
 #define BOARD_WDOG_IRQn             WDOG2_IRQn
 #define BOARD_WDOG_CLK_SRC          kWDOG32_ClockSource1  /* lpo_clk @ 32K */
 #define BOARD_WDOG_TIMEOUT          0xFFFFU  /* 65535 ticks @ 32K = 2 sec */
+#define ROM_WDOG_SRMASK             (1UL << RST_REASON_WDOG1)
 #define BOARD_WDOG_SRMASK           (1UL << RST_REASON_WDOG2)
 #define BOARD_WDOG_ANY_INIT         ~(BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK)
 #define BOARD_WDOG_ANY_MASK         BLK_CTRL_S_AONMIX_WDOG_ANY_MASK_WDOG2_MASK
@@ -405,6 +406,9 @@ void BOARD_InitTimers(void)
     /* Switch WDOG to COLD mode */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_COLD);
 
+    /* Disallow ROM WDOG to generate internal warm reset */
+    SRC_GEN->SRMASK |= ROM_WDOG_SRMASK;
+
     /* Halt SM WDOG on M33 debug entry */
     BLK_CTRL_NS_AONMIX->IPG_DEBUG_CM33 = (BOARD_WDOG_IPG_DEBUG);
 
@@ -535,10 +539,10 @@ void BOARD_SystemSleepEnter(uint32_t sleepMode, uint32_t sleepFlags)
         /* Disable WDOG */
         WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
 
-        /* Waits until for new configuration to take effect. */
+        /* Waits for new configuration to take effect. */
         while (0U == ((BOARD_WDOG_BASE_PTR->CS) & WDOG_CS_RCS_MASK))
         {
-            ;
+            ; /* Intentional empty while */
         }
     }
 }
