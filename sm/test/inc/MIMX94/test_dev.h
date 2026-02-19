@@ -102,6 +102,8 @@
 
 #define DEV_SM_TEST_REASON_UNUSED DEV_SM_REASON_UNUSED5
 
+#define TEST_LPI_IDX DEV_SM_NUM_PERLPI
+
 /* Local defines */
 
 /* Types */

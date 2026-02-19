@@ -200,6 +200,8 @@ void TEST_DevSmClock(void)
 #ifdef SIMU
     NECHECK(DEV_SM_ClockParentDescribe(DEV_SM_NUM_CLOCK, 0U, &parentId,
         &numParents), SM_ERR_NOT_FOUND);
+    NECHECK(DEV_SM_ClockExtendedSet(DEV_SM_CLK_1,
+        DEV_SM_NUM_CLOCK_EXT, 0x0U), SM_ERR_NOT_FOUND);
 #endif
 
     NECHECK(DEV_SM_ClockRateSet(DEV_SM_NUM_CLOCK, 0U, 0U),
@@ -222,6 +224,9 @@ void TEST_DevSmClock(void)
     NECHECK(DEV_SM_ClockParentSet(DEV_SM_NUM_CLOCK, 0U),
         SM_ERR_NOT_FOUND);
     NECHECK(DEV_SM_ClockParentGet(DEV_SM_NUM_CLOCK, &parent),
+        SM_ERR_NOT_FOUND);
+    bool extSupported;
+    NECHECK(DEV_SM_ClockExtendedInfo(DEV_SM_NUM_CLOCK, &extSupported),
         SM_ERR_NOT_FOUND);
 #endif
 

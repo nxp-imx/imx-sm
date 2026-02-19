@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device performance domains */
-#define DEV_SM_NUM_PERF  2U
+#define DEV_SM_NUM_PERF  3U
 
 /*!
  * @name Device performance domain indexes
@@ -62,6 +62,7 @@
 /** @{ */
 #define DEV_SM_PERF_0  0U  /*!< Perf 0 */
 #define DEV_SM_PERF_1  1U  /*!< Perf 0 */
+#define DEV_SM_PERF_2  2U  /*!< Perf 2 */
 /** @} */
 
 /* Types */

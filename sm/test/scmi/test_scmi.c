@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -241,6 +241,16 @@ void TEST_Scmi(void)
 
         /* Invalid SCMI agent num value */
         NECHECK(RPC_SCMI_AgentInit(SM_SCMI_NUM_AGNT), SM_ERR_OUT_OF_RANGE);
+    }
+
+    {
+        lmm_rpc_trigger_t trg =
+        {
+            .event = 0xFFFFFFFFUL
+        };
+
+        /* Invalid trigger event */
+        NECHECK(RPC_SCMI_Trigger(&trg), SM_ERR_INVALID_PARAMETERS);
     }
 
     printf("\n");

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -256,14 +256,13 @@ void MB_MU_Handler(uint32_t mu)
                 if ((flags & mask) != 0U)
                 {
                     /* Call transport */
+                    /* coverity[misra_c_2012_rule_16_1_violation] */
+                    /* coverity[misra_c_2012_rule_16_6_violation] */
                     switch (s_mbMuConfig[mb].xportType[gi])
                     {
-                        case SM_XPORT_SMT:
+                        default:
                             RPC_SMT_Dispatch(
                                 s_mbMuConfig[mb].xportChannel[gi]);
-                            break;
-                        default:
-                            ; /* Intentional empty default */
                             break;
                     }
                 }

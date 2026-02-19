@@ -302,6 +302,7 @@ void GPIO1_0_IRQHandler(void)
     if ((status & BIT8(PCAL6408A_INPUT_PF09_INT)) != 0U)
     {
         /* Asserts low */
+        /* gcov_excl_ntbr_nextline - rising edge not seen */
         if ((val & BIT8(PCAL6408A_INPUT_PF09_INT)) == 0U)
         {
             BRD_SM_Pf09Handler();
@@ -312,6 +313,7 @@ void GPIO1_0_IRQHandler(void)
     if ((status & BIT8(PCAL6408A_INPUT_PCA2131_INT)) != 0U)
     {
         /* Asserts low */
+        /* gcov_excl_ntbr_nextline - rising edge not seen */
         if ((val & BIT8(PCAL6408A_INPUT_PCA2131_INT)) == 0U)
         {
             BRD_SM_BbmHandler();

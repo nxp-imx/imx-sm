@@ -544,6 +544,7 @@ static int32_t SystemPowerStateSet(const scmi_caller_t *caller,
         if (!graceful)
         {
             /* Check target power state */
+            /* gcov_excl_multiline 9 - would lose gcov data */
             if (in->systemState < SYS_STATE_FULL_SHUTDOWN)
             {
                 reqPerm = SM_SCMI_PERM_PRIV;

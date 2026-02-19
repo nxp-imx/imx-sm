@@ -285,6 +285,9 @@ static void TEST_ScmiLmmNotify(bool pass, uint32_t channel, uint32_t lm)
     {
         printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, lm, flags);
         CHECK(SCMI_LmmNotify(channel, lm, flags));
+
+        printf("SCMI_LmmNotify(%u, %u, 0x%08X)\n", channel, 0U, flags);
+        CHECK(SCMI_LmmNotify(channel, 0U, flags));
     }
     /* Access denied */
     else
@@ -461,6 +464,20 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
         {
             printf("SCMI_LmmShutdown(%u, %u)\n", channel, lm);
             NECHECK(SCMI_LmmShutdown(channel, lmId, flags),
+                SCMI_ERR_INVALID_PARAMETERS);
+        }
+
+        /* LmmSuspend -- Call on Self */
+        {
+            printf("SCMI_LmmSuspend(%u, %u)\n", channel, lm);
+            NECHECK(SCMI_LmmSuspend(channel, lmId),
+                SCMI_ERR_INVALID_PARAMETERS);
+        }
+
+        /* LmmPowerOn -- Call on Self */
+        {
+            printf("SCMI_LmmPowerOn(%u, %u)\n", channel, lm);
+            NECHECK(SCMI_LmmPowerOn(channel, lmId),
                 SCMI_ERR_INVALID_PARAMETERS);
         }
 

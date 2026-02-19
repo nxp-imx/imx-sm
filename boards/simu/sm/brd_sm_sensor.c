@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -64,7 +64,7 @@ int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
 
     static string const s_name[BRD_SM_NUM_SENSOR] =
     {
-        "temp_brd_0"
+        "brd_temp0"
     };
 
     /* Get max string width */

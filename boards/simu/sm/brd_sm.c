@@ -106,8 +106,6 @@
 
 /* Local variables */
 
-static int32_t s_voltLevel[DEV_SM_NUM_VOLT];
-static uint8_t s_voltMode[DEV_SM_NUM_VOLT];
 static uint32_t s_gprValue[BRD_SM_NUM_GPR];
 
 /*--------------------------------------------------------------------------*/
@@ -406,20 +404,8 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SupplyModeSet(uint32_t domain, uint8_t voltMode)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Load for tests */
-    if (domain < DEV_SM_NUM_VOLT)
-    {
-        s_voltMode[domain] = voltMode;
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Return status */
-    return status;
+    /* Set voltage mode */
+    return BRD_SM_VoltageModeSet(domain, voltMode);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -427,20 +413,8 @@ int32_t BRD_SM_SupplyModeSet(uint32_t domain, uint8_t voltMode)
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Load for tests */
-    if (domain < DEV_SM_NUM_VOLT)
-    {
-        *voltMode = s_voltMode[domain];
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Return status */
-    return status;
+    /* Get voltage mode */
+    return BRD_SM_VoltageModeGet(domain, voltMode);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -448,20 +422,8 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Load for tests */
-    if (domain < DEV_SM_NUM_VOLT)
-    {
-        s_voltLevel[domain] = microVolt;
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Return status */
-    return status;
+    /* Set voltage level */
+    return BRD_SM_VoltageLevelSet(domain, microVolt);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -469,19 +431,7 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Load for tests */
-    if (domain < DEV_SM_NUM_VOLT)
-    {
-        *microVolt = s_voltLevel[domain];
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Return status */
-    return status;
+    /* Get voltage level */
+    return BRD_SM_VoltageLevelGet(domain, microVolt);
 }
 

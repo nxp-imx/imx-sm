@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -276,6 +276,7 @@ void TEST(void);
 #ifdef TEST_ALL
 void TEST_BrdSmSensor(void);
 void TEST_BrdSm(void);
+void TEST_BrdSmVoltage(void);
 void TEST_BrdSmControl(void);
 void TEST_DevSmPower(void);
 void TEST_DevSmClock(void);

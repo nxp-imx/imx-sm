@@ -224,6 +224,11 @@ $(OUT)/pin_mux.o : pin_mux.c $(OUT)/build_info.h
 	@echo "Compiling $< (with gcov)"
 	$(AT)mkdir -p $(dir $@)
 	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
+
+$(OUT)/mb_mu.o : mb_mu.c $(OUT)/build_info.h
+	@echo "Compiling $< (with gcov)"
+	$(AT)mkdir -p $(dir $@)
+	$(AT)${CC} ${GCFLAGS} ${INCLUDE} -c $< -o $@
 endif
 
 endif

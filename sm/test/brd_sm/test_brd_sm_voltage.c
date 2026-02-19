@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024, 2026 NXP
+** Copyright 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -33,78 +33,34 @@
 */
 
 /*==========================================================================*/
-/* Unit test for the device SM System API.                                  */
+/* Unit test for the board SM voltage API.                                  */
 /*==========================================================================*/
-
-/* LM_00010 */
-
-/* Include Config */
 
 /* Includes */
 
 #include "test.h"
-#include "lmm.h"
-#include "sm.h"
-#include "dev_sm_api.h"
-
-/* Local defines */
-
-/* Local types */
-
-/* Local variables */
-
-/* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test device SM Sys                                                       */
+/* Test device SM voltage                                                   */
 /*--------------------------------------------------------------------------*/
-void TEST_LmmVoltage(void)
+void TEST_BrdSmVoltage(void)
 {
-    printf("\n**** LMM Voltage API Tests ***\n\n");
+    /* Board tests */
+    printf("**** Board SM Voltage API Tests ***\n\n");
 
-    uint32_t lmId = 0U;
-    uint8_t voltMode = 0U;
-    int32_t voltLevel = 0;
+#ifdef BRD_SM_NUM_VOLT
+    dev_sm_voltage_range_t range = { 0 };
+    int32_t voltageLevel = -1;
 
-    /* Invalid Params */
-    {
-        /* Case 1: Invalid lmId */
-        NECHECK(LMM_VoltageModeSet(SM_NUM_LM, 0U, 0U),
-            SM_ERR_INVALID_PARAMETERS);
+    /* BRD_SM_VoltageDescribe: Invalid domain Id */
+    NECHECK(BRD_SM_VoltageDescribe(SM_NUM_VOLT, &range), SM_ERR_NOT_FOUND);
 
-        /* Case 2: Invalid domainId */
-        NECHECK(LMM_VoltageModeSet(0U, SM_NUM_VOLT, 0U),
-            SM_ERR_INVALID_PARAMETERS);
-
-        /* Case 3: Invalid lmId && domainId */
-        NECHECK(LMM_VoltageModeSet(SM_NUM_LM, SM_NUM_VOLT, 0U),
-            SM_ERR_INVALID_PARAMETERS);
-    }
-
-    printf("\n**** LMM Voltage Mode Get/Set Tests ***\n\n");
-
-    for (uint32_t domainId = 0U; domainId < SM_NUM_VOLT; domainId++)
-    {
-        /* Get Voltage Mode */
-        printf("LMM_VoltageModeGet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_VoltageModeGet(lmId, domainId, &voltMode));
-
-        /* Set Voltage Mode */
-        printf("LMM_VoltageModeSet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_VoltageModeSet(lmId, domainId, voltMode));
-    }
-
-    printf("\n**** LMM Voltage Level Get/Set Tests ***\n\n");
-    for (uint32_t domainId = 0U; domainId < SM_NUM_VOLT; domainId++)
-    {
-        /* Get Voltage Level */
-        printf("LMM_VoltageLevelGet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_VoltageLevelGet(lmId, domainId, &voltLevel));
-
-        /* Set Voltage Level */
-        printf("LMM_VoltageLevelSet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_VoltageLevelSet(lmId, domainId, voltLevel));
-    }
+    /* BRD_SM_VoltageLevelSet: Invalid voltage value */
+    NECHECK(BRD_SM_VoltageLevelSet(SM_NUM_VOLT, voltageLevel),
+        SM_ERR_INVALID_PARAMETERS);
+#else
+    printf("Skipped.\n");
+#endif
 
     printf("\n");
 }

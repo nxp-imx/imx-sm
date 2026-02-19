@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -75,8 +75,16 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 /*--------------------------------------------------------------------------*/
 uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 {
+    uint32_t rtn = 0U;
+
+    /* PD7 disabled */
+    if (fuseId == 7U)
+    {
+        rtn = 1U;
+    }
+
     /* Return result */
-    return 0U;
+    return rtn;
 }
 
 /*--------------------------------------------------------------------------*/

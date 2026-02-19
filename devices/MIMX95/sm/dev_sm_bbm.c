@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -167,9 +167,14 @@ int32_t DEV_SM_BbmGprSet(uint32_t index, uint32_t value)
     else
     {
         /* Set GPR and translate error */
+        /*
+         * The condition for the MAX GPR index has already
+         * been validated.
+         */
+        /* gcov_excl_ntbr_nextline */
         if (!BBNSM_GprSetValue(BBNSM, (uint8_t) index, value))
         {
-            status = SM_ERR_INVALID_PARAMETERS;
+            status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
         }
     }
 
@@ -192,9 +197,14 @@ int32_t DEV_SM_BbmGprGet(uint32_t index, uint32_t *value)
     else
     {
         /* Get GPR and translate error */
+        /*
+         * The condition for the MAX GPR index has already
+         * been validated.
+         */
+        /* gcov_excl_ntbr_nextline */
         if (!BBNSM_GprGetValue(BBNSM, (uint8_t) index, value))
         {
-            status = SM_ERR_INVALID_PARAMETERS;
+            status = SM_ERR_INVALID_PARAMETERS; /* gcov_excl_line */
         }
     }
 

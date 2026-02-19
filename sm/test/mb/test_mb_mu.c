@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -73,6 +73,11 @@ void TEST_MbMu(void)
         SM_ERR_OUT_OF_RANGE);
     NECHECK(MB_MU_IsAborted(0U, SM_NUM_MB_MU_DB),
         SM_ERR_OUT_OF_RANGE);
+
+    /* Get doorbell state */
+    (void) MB_MU_DoorbellState(0U, 0U);
+    (void) MB_MU_DoorbellState(SM_NUM_MB_MU, 0U);
+    (void) MB_MU_DoorbellState(0U, 100U);
 
     printf("\n");
 }

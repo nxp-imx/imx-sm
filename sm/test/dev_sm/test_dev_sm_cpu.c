@@ -196,6 +196,17 @@ void TEST_DevSmCpu(void)
             sleepflag), SM_ERR_NOT_FOUND);
         SM_TestModeSet(SM_TEST_MODE_OFF);
 
+        sleepMode = DEV_SM_CPU_SLEEP_MODE_WAIT;
+        sleepflag = 0x4U;
+        printf("DEV_SM_CpuSleepModeSet(%u)\n", DEV_SM_CPU_M33P);
+        NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_CPU_M33P, sleepMode,
+            sleepflag), SM_ERR_INVALID_PARAMETERS);
+
+        sleepMode = DEV_SM_CPU_SLEEP_MODE_RUN;
+        sleepflag = 0x2U;
+        printf("DEV_SM_CpuSleepModeSet(%u)\n", DEV_SM_CPU_M33P);
+        CHECK(DEV_SM_CpuSleepModeSet(DEV_SM_CPU_M33P, sleepMode,
+            sleepflag));
 #else
         /* Invalid Sleep Mode */
         sleepMode = 5U;
@@ -286,6 +297,13 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuPerLpmConfigSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuPerLpmConfigSet(DEV_SM_NUM_CPU, perID,
             lpmsetting), SM_ERR_NOT_FOUND);
+
+#ifdef TEST_LPI_IDX
+        /* Invalid perLPI Id */
+        printf("DEV_SM_CpuPerLpmConfigSet(%u)\n", DEV_SM_CPU_M33P);
+        NECHECK(DEV_SM_CpuPerLpmConfigSet(DEV_SM_CPU_M33P, TEST_LPI_IDX,
+            lpmsetting), SM_ERR_HARDWARE_ERROR);
+#endif
 
 #ifndef SIMU
         /* Valid cpuId */

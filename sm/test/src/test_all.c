@@ -93,6 +93,10 @@ void TEST_All(void)
 #endif
     TEST_BrdSm();
 
+    /* Intentional: BrdSmVoltage Test code */
+    /* coverity[misra_c_2012_rule_2_2_violation] */
+    TEST_BrdSmVoltage();
+
     /* Run LMM tests */
     TEST_LmmClock();
     TEST_LmmPerf();

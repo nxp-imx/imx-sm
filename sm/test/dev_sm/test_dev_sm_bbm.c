@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -107,6 +107,10 @@ void TEST_DevSmBbm(void)
         printf("DEV_SM_BbmRtcNameGet(%lu)\n", DEV_SM_NUM_RTC);
         NECHECK(DEV_SM_BbmRtcNameGet(DEV_SM_NUM_RTC, &name, &len),
             SM_ERR_NOT_FOUND);
+
+        printf("DEV_SM_BbmRtcAlarmSet(%lu)\n", DEV_SM_NUM_RTC);
+        NECHECK(DEV_SM_BbmRtcAlarmSet(DEV_SM_NUM_RTC, true, 0x800000000ULL),
+            SM_ERR_INVALID_PARAMETERS);
     }
 
     printf("\n");

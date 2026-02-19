@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025  NXP
+**     Copyright 2023-2026  NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -230,10 +230,18 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 bool DEV_SM_PerfIsReserved(uint32_t domainId)
 {
     bool rc = false;
+    static bool const s_perfIsReserved[DEV_SM_NUM_PERF] =
+    {
+        [DEV_SM_PERF_2] = true
+    };
 
     if (domainId >= DEV_SM_NUM_PERF)
     {
         rc = true;
+    }
+    else
+    {
+        rc = s_perfIsReserved[domainId];
     }
 
     return rc;

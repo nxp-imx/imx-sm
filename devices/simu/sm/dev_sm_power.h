@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device power domains */
-#define DEV_SM_NUM_POWER        7UL
+#define DEV_SM_NUM_POWER        8UL
 
 /*! Number of device power states */
 #define DEV_SM_NUM_POWER_STATE  4U
@@ -70,6 +70,7 @@
 #define DEV_SM_PD_4  4U  /*!< Power domain 4 */
 #define DEV_SM_PD_5  5U  /*!< Power domain 5 */
 #define DEV_SM_PD_6  6U  /*!< Power domain 6 */
+#define DEV_SM_PD_7  7U  /*!< Power domain 7 */
 /** @} */
 
 /*!

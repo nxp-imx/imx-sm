@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -138,8 +138,11 @@ int32_t BRD_SM_VoltageDescribe(uint32_t domainId,
     }
 
     /* Return results */
-    if ((status != SM_ERR_SUCCESS) && rc)
+    if (rc)
     {
+        /* Set the status if parameters are out of range */
+        status = SM_ERR_INVALID_PARAMETERS;
+
         /* Validate the parameters values are with in int32 range */
         if (CHECK_U32_FIT_I32(info.maxV) && CHECK_U32_FIT_I32(info.minV) &&
             CHECK_U32_FIT_I32(info.stepV))
@@ -148,11 +151,6 @@ int32_t BRD_SM_VoltageDescribe(uint32_t domainId,
             range->lowestVolt = (int32_t) info.minV;
             range->stepSize = (int32_t) info.stepV;
             status = SM_ERR_SUCCESS;
-        }
-        else
-        {
-            /* Set the status if parameters are out of range */
-            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
 
@@ -279,16 +277,15 @@ int32_t BRD_SM_VoltageModeGet(uint32_t domainId, uint8_t *voltMode)
             break;
     }
 
-    /* Return result */
-    if ((status == SM_ERR_SUCCESS) && rc)
-    {
-        *voltMode = enable ? DEV_SM_VOLT_MODE_ON : DEV_SM_VOLT_MODE_OFF;
-    }
-
-    /* Translate error */
-    if ((status == SM_ERR_SUCCESS) && !rc)
+    /* Return result and translate error */
+    if (status == SM_ERR_SUCCESS)
     {
         status = SM_ERR_HARDWARE_ERROR;
+        if (rc)
+        {
+            *voltMode = enable ? DEV_SM_VOLT_MODE_ON : DEV_SM_VOLT_MODE_OFF;
+            status = SM_ERR_SUCCESS;
+        }
     }
 
     /* Return status */
@@ -420,23 +417,22 @@ int32_t BRD_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
     }
 
     /* Return result */
-    if ((status == SM_ERR_SUCCESS) && rc)
-    {
-        /* Check level value within int32_t range */
-        if (CHECK_U32_FIT_I32(level))
-        {
-            *voltageLevel = (int32_t) level;
-        }
-        else
-        {
-            status = SM_ERR_INVALID_PARAMETERS;
-        }
-    }
-
-    /* Translate error */
-    if ((status == SM_ERR_SUCCESS) && !rc)
+    if (status == SM_ERR_SUCCESS)
     {
         status = SM_ERR_HARDWARE_ERROR;
+
+        if (rc)
+        {
+            /* Set the status if parameters are out of range */
+            status = SM_ERR_INVALID_PARAMETERS;
+
+            /* Check level value within int32_t range */
+            if (CHECK_U32_FIT_I32(level))
+            {
+                *voltageLevel = (int32_t) level;
+                status = SM_ERR_SUCCESS;
+            }
+        }
     }
 
     /* Return status */

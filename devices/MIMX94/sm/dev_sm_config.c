@@ -162,9 +162,14 @@ int32_t DEV_SM_DdrConfigLoad(void)
     {
         if (s_pllContextValidDdr)
         {
+            /*
+             * Driver always returns true because a hard coded valid
+             * PLL is used.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!FRACTPLL_SetContext(CLOCK_PLL_DRAM, &s_pllContextDdr))
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                status = SM_ERR_HARDWARE_ERROR; /* gcov_excl_line  */
             }
         }
     }
@@ -205,9 +210,14 @@ int32_t DEV_SM_DisplayConfigLoad(void)
     {
         if (s_pllContextValidLdb)
         {
+            /*
+             * Driver always returns true because a hard coded valid
+             * PLL is used.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!FRACTPLL_SetContext(CLOCK_PLL_LDB, &s_pllContextLdb))
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                status = SM_ERR_HARDWARE_ERROR; /* gcov_excl_line  */
             }
         }
     }
@@ -271,9 +281,14 @@ int32_t DEV_SM_HsioWaonConfigLoad(void)
     {
         if (s_pllContextValidHsio)
         {
+            /*
+             * Driver always returns true because a hard coded valid
+             * PLL is used.
+             */
+            /* gcov_excl_ntbr_nextline */
             if (!FRACTPLL_SetContext(CLOCK_PLL_HSIO, &s_pllContextHsio))
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                status = SM_ERR_HARDWARE_ERROR; /* gcov_excl_line  */
             }
         }
     }
@@ -416,6 +431,10 @@ int32_t DEV_SM_NocConfigLoad(void)
 #endif
 
     /* Path to configure A55 temp sensor dependends on NOC and WAKEUP MIXes */
+    /*
+     * It needs modifying the the boot sequence of mix power domains
+     */
+    /* gcov_excl_multiline 10 - Boot sequence dependent */
     if ((!s_tempSensorA55Enabled) &&
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_A55P)) &&
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_WAKEUP)))
@@ -508,6 +527,10 @@ int32_t DEV_SM_WkupConfigLoad(void)
 #endif
 
     /* Path to configure A55 temp sensor dependends on NOC and WAKEUP MIXes */
+    /*
+     * It needs modifying the the boot sequence of mix power domains
+     */
+    /* gcov_excl_multiline 10 - Boot sequence dependent */
     if ((!s_tempSensorA55Enabled) &&
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_A55P)) &&
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_NOC)))
@@ -712,6 +735,11 @@ int32_t DEV_SM_DdrPowerDownPre(void)
 {
     int32_t status;
 
+    /*
+     * Driver always returns true because a hard‑coded valid
+     * PLL is used.
+     */
+    /* gcov_excl_ntbr_nextline */
     if (FRACTPLL_GetContext(CLOCK_PLL_DRAM, &s_pllContextDdr))
     {
         s_pllContextValidDdr = true;
@@ -719,6 +747,7 @@ int32_t DEV_SM_DdrPowerDownPre(void)
     }
     else
     {
+        /* gcov_excl_multiline 3 */
         s_pllContextValidDdr = false;
         status = SM_ERR_HARDWARE_ERROR;
     }
@@ -734,6 +763,11 @@ int32_t DEV_SM_DisplayPowerDownPre(void)
 {
     int32_t status;
 
+    /*
+     * Driver always returns true because a hard‑coded valid
+     * PLL is used.
+     */
+    /* gcov_excl_ntbr_nextline */
     if (FRACTPLL_GetContext(CLOCK_PLL_LDB, &s_pllContextLdb))
     {
         s_pllContextValidLdb = true;
@@ -741,6 +775,7 @@ int32_t DEV_SM_DisplayPowerDownPre(void)
     }
     else
     {
+        /* gcov_excl_multiline 3 */
         s_pllContextValidLdb = false;
         status = SM_ERR_HARDWARE_ERROR;
     }
@@ -756,6 +791,11 @@ int32_t DEV_SM_HsioTopPowerDownPre(void)
 {
     int32_t status;
 
+    /*
+     * Driver always returns true because a hard‑coded valid
+     * PLL is used.
+     */
+    /* gcov_excl_ntbr_nextline */
     if (FRACTPLL_GetContext(CLOCK_PLL_HSIO, &s_pllContextHsio))
     {
         s_pllContextValidHsio = true;
@@ -763,6 +803,7 @@ int32_t DEV_SM_HsioTopPowerDownPre(void)
     }
     else
     {
+        /* gcov_excl_multiline 3 */
         s_pllContextValidHsio = false;
         status = SM_ERR_HARDWARE_ERROR;
     }

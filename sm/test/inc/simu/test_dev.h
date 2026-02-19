@@ -39,7 +39,6 @@
 
 /* Defines */
 
-#define BOARD_PERF_VDROP         0
 #define DEV_SM_CPU_TEST          DEV_SM_CPU_2
 #define DEV_SM_PLAT_TEST         DEV_SM_CPU_8
 #define FUSA_LM_SAFE_TYPE_ERROR  3U

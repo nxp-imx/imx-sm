@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2025 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -53,6 +53,7 @@ ifeq ($(T), all)
 	OBJS += \
 		$(OUT)/test_brd_sm_sensor.o     \
 		$(OUT)/test_brd_sm.o            \
+		$(OUT)/test_brd_sm_voltage.o    \
 		$(OUT)/test_brd_sm_control.o    \
 		$(OUT)/test_lmm_clock.o         \
 		$(OUT)/test_lmm_perf.o          \

@@ -33,7 +33,7 @@
 */
 
 /*==========================================================================*/
-/* Unit test for the board SM BBM API.                                      */
+/* Unit test for the board SM Brd API.                                      */
 /*==========================================================================*/
 
 /* Includes */
@@ -43,7 +43,7 @@
 #include "lmm_sys.h"
 
 /*--------------------------------------------------------------------------*/
-/* Test board SM sensor                                                     */
+/* Test board SM brd code                                                   */
 /*--------------------------------------------------------------------------*/
 void TEST_BrdSm(void)
 {
@@ -78,6 +78,14 @@ void TEST_BrdSm(void)
         reaction = LMM_REACT_NONE + 1U;
         NECHECK(BRD_SM_FaultReactionGet(resetRec, &reaction, &LmId),
             SM_ERR_INVALID_PARAMETERS);
+
+        /* Get all fault reactions */
+        resetRec.reason = DEV_SM_REASON_POR;
+        resetRec.valid = true;
+        for (reaction = 0U; reaction <= LMM_REACT_NONE; reaction++)
+        {
+            CHECK(BRD_SM_FaultReactionGet(resetRec, &reaction, &LmId));
+        }
 
         /* BRD_SM_SupplyModeSet: Invalid domain Id */
         NECHECK(BRD_SM_SupplyModeSet(SM_NUM_VOLT, 0U),

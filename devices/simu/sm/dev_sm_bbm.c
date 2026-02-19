@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -243,20 +243,28 @@ int32_t DEV_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
     /* Enable? */
     if (enable)
     {
-        uint64_t ticks = val << 15U;
-
-        /* Check if valid time */
-        if (ticks <= s_ticks)
+        /* Check if value fits in 32-bit mask */
+        if (BITS_FIT_IN_MASK(val, 0xFFFFFFFFULL) != 0U)
         {
-            status = SM_ERR_INVALID_PARAMETERS;
+            uint64_t ticks = val << 15U;
+
+            /* Check if valid time */
+            if (ticks <= s_ticks)
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+            else
+            {
+                /* Save alarm */
+                s_alarm = ticks;
+
+                /* Enable */
+                s_alarmEnable = true;
+            }
         }
         else
         {
-            /* Save alarm */
-            s_alarm = ticks;
-
-            /* Enable */
-            s_alarmEnable = true;
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else

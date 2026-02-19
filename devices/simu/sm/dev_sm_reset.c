@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -139,10 +139,18 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
 bool DEV_SM_ResetIsReserved(uint32_t domainId)
 {
     bool rc = false;
+    static bool const s_resetIsReserved[DEV_SM_NUM_RESET] =
+    {
+        [DEV_SM_RST_3] = true
+    };
 
     if (domainId >= DEV_SM_NUM_RESET)
     {
         rc = true;
+    }
+    else
+    {
+        rc = s_resetIsReserved[domainId];
     }
 
     return rc;

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device reset domains */
-#define DEV_SM_NUM_RESET  3U
+#define DEV_SM_NUM_RESET  4U
 
 /*!
  * @name Device reset domain indexes
@@ -63,6 +63,7 @@
 #define DEV_SM_RST_0  0U  /*!< Reset 0 */
 #define DEV_SM_RST_1  1U  /*!< Reset 1 */
 #define DEV_SM_RST_2  2U  /*!< Reset 2 */
+#define DEV_SM_RST_3  3U  /*!< Reset 3 */
 /** @} */
 
 /*!

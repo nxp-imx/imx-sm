@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -333,9 +333,15 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
             else
             {
                 /* Set wake mux to GPC/GIC */
+
+                /*
+                 * The condition for the MAX cpu index has already
+                 * been validated.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (!CPU_WakeMuxSet(modCpuId, irqMuxGic))
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line */
                 }
                 else
                 {
@@ -360,9 +366,15 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
             else
             {
                 /* Set LP compute mode enable */
+
+                /*
+                 * The condition for the MAX cpu index has already
+                 * been validated.
+                 */
+                /* gcov_excl_ntbr_nextline */
                 if (!(CPU_LpComputeSet(modCpuId, enableLpCompute)))
                 {
-                    status = SM_ERR_NOT_FOUND;
+                    status = SM_ERR_NOT_FOUND; /* gcov_excl_line */
                 }
             }
         }
