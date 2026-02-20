@@ -60,7 +60,7 @@
 /* Defines */
 
 /*! Initial PCAL6416A interrupt mask */
-#define PCAL6416A_INITIAL_MASK  0xFFF7U
+#define PCAL6416A_INITIAL_MASK  0xFFFBU
 
 /*! Number of board IRQs participating dynamic prioritization */
 #define BOARD_NUM_IRQ_PRIO_IDX                 1U
