@@ -95,9 +95,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
     LPI2C_Type *const s_i2cBases[] = LPI2C_BASE_PTRS;
-    GLITCHFILTER_Type *const s_gfBases[] = GLITCHFILTER_BASE_PTRS;
     pcal6416a_config_t pcal6416Config;
-    glitchfilter_config_t gfConfig;
 
     /* Fill in PCAL6416A dev */
     g_pcal6416aDev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
@@ -273,9 +271,21 @@ int32_t BRD_SM_SerialDevicesInit(void)
             0U
         };
 
-        /* Config the glitchfilter for GPIO1-2 */
-        GLITCHFILTER_GetDefaultConfig(&gfConfig);
-        GLITCHFILTER_Init(s_gfBases[0], 2U, &gfConfig);
+        /* Check silicon version */
+        if (DEV_SM_SiVerGet() == DEV_SM_SIVER_A0)
+        {
+            GLITCHFILTER_Type *const s_gfBases[] = GLITCHFILTER_BASE_PTRS;
+            glitchfilter_config_t gfConfig;
+
+            /* Config the glitchfilter for GPIO1-2 */
+            GLITCHFILTER_GetDefaultConfig(&gfConfig);
+            GLITCHFILTER_Init(s_gfBases[0], 2U, &gfConfig);
+        }
+        else
+        {
+            /* Bypass glitchfilter for GPIO1 */
+            BLK_CTRL_NS_AONMIX->QREQ_N &= ~0x2UL;
+        }
 
         /* Init GPIO1-2 */
         RGPIO_PinInit(GPIO1, 2U, &gpioConfig);

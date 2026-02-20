@@ -284,15 +284,19 @@ void BOARD_InitClocks(void)
             CLOCK_ROUND_RULE_CEILING);
     }
 
-    /* Configure GLITCHFILTER clock */
-    if (rc)
+    /* Check silicon version */
+    if (DEV_SM_SiVerGet() == DEV_SM_SIVER_A0)
     {
-        rc = CCM_RootSetParent(CLOCK_ROOT_GLITCHFILTER, CLOCK_SRC_FRO);
-    }
-    if (rc)
-    {
-        rc = CCM_RootSetRate(CLOCK_ROOT_GLITCHFILTER, ES_24MHZ,
-            CLOCK_ROUND_RULE_CEILING);
+        /* Configure GLITCHFILTER clock */
+        if (rc)
+        {
+            rc = CCM_RootSetParent(CLOCK_ROOT_GLITCHFILTER, CLOCK_SRC_FRO);
+        }
+        if (rc)
+        {
+            rc = CCM_RootSetRate(CLOCK_ROOT_GLITCHFILTER, ES_24MHZ,
+                CLOCK_ROUND_RULE_CEILING);
+        }
     }
 
     if (!rc)
@@ -570,9 +574,13 @@ void BOARD_SystemSleepPrepare(uint32_t sleepMode, uint32_t sleepFlags)
 /*--------------------------------------------------------------------------*/
 void BOARD_SystemSleepEnter(uint32_t sleepMode, uint32_t sleepFlags)
 {
-    /* Leave FRO on so GLITCHFILTER will run */
-    DEV_SM_SystemSleepModeSet(sleepMode, sleepFlags
-        | DEV_SM_SSF_FRO_ACTIVE_MASK);
+    /* Check silicon version */
+    if (DEV_SM_SiVerGet() == DEV_SM_SIVER_A0)
+    {
+        /* Leave FRO on so GLITCHFILTER will run */
+        DEV_SM_SystemSleepModeSet(sleepMode, sleepFlags
+            | DEV_SM_SSF_FRO_ACTIVE_MASK);
+    }
 
     /* Disable SysTick */
     uint32_t sysTickMask = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;

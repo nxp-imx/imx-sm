@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -80,6 +80,7 @@
  */
 /** @{ */
 #define DEV_SM_SIVER_A0  0x00000000U  /*!< A0 */
+#define DEV_SM_SIVER_A1  0x00000001U  /*!< A1 */
 /** @} */
 
 /*!
