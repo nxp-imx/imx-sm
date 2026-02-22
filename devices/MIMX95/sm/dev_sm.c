@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -209,7 +209,7 @@ void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList)
 /* Power domain postamble for power-up                                      */
 /*--------------------------------------------------------------------------*/
 /* Just one switch */
-/* coverity[ccm] */
+/* #lizard forgives - exclude from CCM metrics */
 int32_t DEV_SM_PowerUpPost(uint32_t domainId)
 {
     int32_t status = SM_ERR_SUCCESS;

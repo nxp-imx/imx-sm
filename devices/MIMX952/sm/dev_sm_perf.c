@@ -2543,6 +2543,10 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             }
             break;
 
+        /*
+         * Caller ensures valid parameters
+         */
+        /* gcov_excl_multiline 4 */
         default:
             status = SM_ERR_NOT_FOUND;
             break;

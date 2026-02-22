@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -152,6 +152,36 @@ void TEST_DevSmPerf(void)
         printf("DEV_SM_PerfSystemSleep(%u)\n", DEV_SM_NUM_PERF);
         NECHECK(DEV_SM_PerfSystemSleep(DEV_SM_NUM_PERF),
             SM_ERR_OUT_OF_RANGE);
+
+        CHECK(DEV_SM_PerfSystemSleep(DEV_SM_PERF_LVL_PRK));
+
+#ifdef DEV_SM_PERF_WAKEUP
+        CHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_WAKEUP, &numLevels));
+        NECHECK(DEV_SM_PerfFreqSet (DEV_SM_PERF_WAKEUP, numLevels),
+            SM_ERR_OUT_OF_RANGE);
+#endif
+#ifdef DEV_SM_PERF_VPU
+        CHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_VPU, &numLevels));
+        NECHECK(DEV_SM_PerfFreqSet (DEV_SM_PERF_VPU, numLevels),
+            SM_ERR_OUT_OF_RANGE);
+#endif
+#ifdef DEV_SM_PERF_CAM
+        CHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_CAM, &numLevels));
+        NECHECK(DEV_SM_PerfFreqSet (DEV_SM_PERF_CAM, numLevels),
+            SM_ERR_OUT_OF_RANGE);
+#endif
+#ifdef DEV_SM_PERF_DISP
+        CHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_DISP, &numLevels));
+        NECHECK(DEV_SM_PerfFreqSet (DEV_SM_PERF_DISP, numLevels),
+            SM_ERR_OUT_OF_RANGE);
+#endif
+#ifdef DEV_SM_PERF_A55
+        CHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_A55, &numLevels));
+        NECHECK(DEV_SM_PerfFreqSet (DEV_SM_PERF_A55, numLevels),
+            SM_ERR_OUT_OF_RANGE);
+#endif
+        NECHECK(DEV_SM_PerfFreqSet (DEV_SM_NUM_PERF, numLevels),
+            SM_ERR_NOT_FOUND);
 
         dev_sm_perf_info_t info = { 0 };
         printf("DEV_SM_PerfInfoGet(%u)\n", DEV_SM_NUM_PERF);

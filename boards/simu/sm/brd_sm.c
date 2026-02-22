@@ -48,6 +48,8 @@
 
 #define BRD_SM_RST_REC_FIRST  0U     /* First GPR for shutdown record */
 #define BRD_SM_RST_REC_NUM    4U     /* Number of GPR for shutdown record */
+#define BRD_SM_PMIC_ADDR      8U     /* Simulated PMIC addr */
+#define BRD_SM_PMIC_REG       5U     /* Simulated PMIC register number */
 
 /* Defines to encode the reason */
 #define BRD_SM_REC_REASON_MASK  (0x000000FFU)
@@ -107,6 +109,7 @@
 /* Local variables */
 
 static uint32_t s_gprValue[BRD_SM_NUM_GPR];
+static u_int8_t pmicInfo[BRD_SM_PMIC_REG] = {0x20, 0x09, 0x30, 0x00, 0x01};
 
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
@@ -398,6 +401,87 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
         BRD_SM_ResetRecordPrint("\nShutdown request:", shutdownRec);
     }
 }
+
+/*--------------------------------------------------------------------------*/
+/* Get PMIC info                                                            */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_PmicInfoGet(uint32_t idx, uint8_t *devAddr, uint8_t **info,
+    uint8_t *len)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (idx == 0U)
+    {
+        *devAddr = BRD_SM_PMIC_ADDR;
+        *info = pmicInfo;
+        *len = BRD_SM_PMIC_REG;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* PMIC register write                                                      */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_PmicWrite(uint8_t devAddr, uint8_t regAddr, uint8_t val,
+    uint8_t mask)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (devAddr == BRD_SM_PMIC_ADDR)
+    {
+        if (regAddr < BRD_SM_PMIC_REG)
+        {
+            pmicInfo[regAddr] = val;
+        }
+        else
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+    else
+    {
+        /* Invalid device address */
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* PMIC register read                                                       */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_PmicRead(uint8_t devAddr, uint8_t regAddr, uint8_t *val)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (devAddr == BRD_SM_PMIC_ADDR)
+    {
+        if (regAddr < BRD_SM_PMIC_REG)
+        {
+            *val = pmicInfo[regAddr];
+        }
+        else
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+    else
+    {
+        /* Invalid device address */
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
 
 /*--------------------------------------------------------------------------*/
 /* Set mode of specified SoC supply                                         */

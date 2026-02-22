@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -2575,6 +2575,10 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             perfDesc = s_perfDescDram;
             break;
 
+        /*
+         * Caller ensures valid parameters
+         */
+        /* gcov_excl_multiline 4 */
         default:
             status = SM_ERR_NOT_FOUND;
             break;

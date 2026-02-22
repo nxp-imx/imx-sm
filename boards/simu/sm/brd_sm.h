@@ -47,6 +47,9 @@
  */
 /*==========================================================================*/
 
+/*! Has simulated PMIC */
+#define BOARD_HAS_PMIC  /*!< Has a PMIC */
+
 /* Includes */
 
 #include "sm.h"
