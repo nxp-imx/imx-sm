@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2025 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -30,32 +30,39 @@
 ##
 ## ###################################################################
 
-# SMCT is expected as a path to SM Config Tool root directory
+# SMCT is expected as a path to SM Config Tool root directory or '0','1'
 ifdef SMCT
-# SMCT needs python3 or python in general
+# when '0', use the configtool.pl
+ifneq (0, $(SMCT))
+# when '1', use 'smct' command without path, expecting it is installed
+ifeq (1, $(SMCT))
+SMCT_RUN="smct"
+else
+# Will run as 'smct.py'. Need python3 or just python
 ifndef PYTHON3
-	PY3_ERRCODE=$(shell (python3 --version 1>/dev/null 2>/dev/null); echo $$?)
+PY3_ERRCODE=$(shell (python3 --version 1>/dev/null 2>/dev/null); echo $$?)
 ifeq (0, $(PY3_ERRCODE))
-	PYTHON3 := python3
+PYTHON3 := python3
 else
-	PYTHON3 := python
+PYTHON3 := python
 endif
 endif
-	# probe running SMCT
-	SMCT_ERRCODE=$(shell ($(PYTHON3) $(SMCT)/smct.py --version 1>/dev/null 2>/dev/null); echo $$?)
-else
-	SMCT_ERRCODE=1
+SMCT_RUN = $(PYTHON3) $(SMCT)/smct.py
+endif
+# probe running SMCT
+SMCT_ERRCODE=$(shell ($(SMCT_RUN) --version 1>/dev/null 2>/dev/null); echo $$?)
+endif
 endif
 
 # Generate configuration using SMCT (if specified) or using default configtool.pl
 cfg :
-ifeq (0,$(SMCT_ERRCODE))
-	@echo "Generating ./configs/$(CONFIG) using smct.py"
-	$(AT)$(PYTHON3) $(SMCT)/smct.py -f --sm_dir $(ROOT_DIR) --load_cfg $(CONFIG).cfg -o $(CONFIG)
-else
-ifdef SMCT
-	@echo "Warning: SMCT tool directory specified ($(SMCT)) but '$(PYTHON3) smct.py' has failed"
+ifdef SMCT_RUN
+ifneq (0,$(SMCT_ERRCODE))
+	@echo "Warning: '$(SMCT_RUN) --version' has failed"
 endif
+	@echo "Generating ./configs/$(CONFIG) using smct.py"
+	$(AT)$(SMCT_RUN) -f --sm_dir $(ROOT_DIR) --load_cfg $(CONFIG).cfg -o $(CONFIG)
+else
 	@echo "Generating ./configs/$(CONFIG) using configtool.pl"
 	$(AT)$(ROOT_DIR)/configs/configtool.pl -i ./configs/$(CONFIG).cfg -o ./configs/$(CONFIG)
 endif
