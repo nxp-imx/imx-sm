@@ -131,7 +131,8 @@ Resource Commands
 | sensor.w *sensor*           | enable/display *sensor* (on = enable, off = disable)         |
 | rst.r                       | display reset status for all reset domains                   |
 | rst.w *rst* *action*        | assert/negate/auto (aka toggle) reset *rst*                  |
-| volt.r                      | display mode/microvolts for all voltage domains              |
+| volt.r [*vlt*]              | display mode/microvolts of *vlt* (default = all)             |
+| volt.r [*vlt*] range        | display range of *vlt* (default = all)                       |
 | volt.w *domain* *mode/uV*   | set *mode/microvolts* for voltage *domain*                   |
 | bb.r rtc                    | display time in seconds for all RTC                          |
 | bb.r ticks                  | display time in ticks for all RTC                            |
