@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -543,6 +543,7 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
     const scmi_msg_t *in = caller->msgCopy;
+    /* coverity[null_field:FALSE] - check by single caller */
     scmi_msg_status_t *out = caller->msg;
     uint32_t lenOut = sizeof(scmi_msg_status_t);
 
@@ -1017,6 +1018,11 @@ static int32_t MiscControlGet(const scmi_caller_t *caller,
     /* Update length */
     if (status == SM_ERR_SUCCESS)
     {
+        /*
+         * False Positive: Cannot exceed size of buffer
+         * in MU 1K SRAM so cannot exceed a 32-bit int
+         */
+        /* coverity[cert_int30_c_violation:FALSE] */
         *len = (3U + out->numVal) * sizeof(uint32_t);
     }
 

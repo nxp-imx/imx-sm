@@ -83,7 +83,7 @@ int32_t DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
     /* Clear fault on success */
     if (status == SM_ERR_SUCCESS)
     {
-        status = DEV_SM_FaultSet(0U, resetRec.errId, 0U);
+        status = DEV_SM_FaultSet(0U, resetRec.errId, false);
     }
     else
     {

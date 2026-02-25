@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024-2025 NXP
+** Copyright 2024-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -67,52 +67,52 @@ void TEST_DevSmFault(void)
         uint32_t faultId  = DEV_SM_FAULT_1;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_2;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_3;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_4;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_5;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_6;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, 1), SM_ERR_GENERIC_ERROR);
+        NECHECK(DEV_SM_FaultSet(lmId, faultId, true), SM_ERR_GENERIC_ERROR);
 
         faultId  = DEV_SM_FAULT_7;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_8;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_9;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
 
         faultId  = DEV_SM_FAULT_10;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, 1));
+        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
     }
 #endif
 
@@ -123,7 +123,7 @@ void TEST_DevSmFault(void)
         uint32_t faultId = DEV_SM_NUM_FAULT;
 
         printf("DEV_SM_FaultSet Invalid faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, 0), SM_ERR_OUT_OF_RANGE);
+        NECHECK(DEV_SM_FaultSet(lmId, faultId, false), SM_ERR_OUT_OF_RANGE);
     }
 
     /* Get a fault state */

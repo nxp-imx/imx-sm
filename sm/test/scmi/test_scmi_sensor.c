@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -648,8 +648,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         /* Reset */
         uint32_t sysManager = 0U;
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
-            &g_swReason));
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
     }
 #endif
 }

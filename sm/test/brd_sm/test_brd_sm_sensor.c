@@ -116,7 +116,7 @@ void TEST_BrdSmSensor(void)
         if (!sensor.timestampSupport)
         {
             printf("BRD_SM_SensorEnable(%u)\n", sensorId);
-            NECHECK(BRD_SM_SensorEnable(
+            NECHECK(BRD_SM_SensorEnable( \
                 sensorId, !enable, true), SM_ERR_NOT_SUPPORTED);
         }
         else

@@ -504,8 +504,7 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
         uint32_t sysManager = 0U;
 
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
-            &g_swReason));
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
 #endif
     }
 

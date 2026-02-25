@@ -425,8 +425,7 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
     }
 
     /* To Impove the test coverage for the negative case */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-        anyChildPowered = true);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, anyChildPowered = true);
 
     return anyChildPowered;
 }

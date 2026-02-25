@@ -146,13 +146,13 @@ void TEST_DevSmSensor(void)
         if (!sensor.timestampSupport)
         {
             printf("DEV_SM_SensorEnable(%u)\n", sensorId);
-            NECHECK(DEV_SM_SensorEnable(
+            NECHECK(DEV_SM_SensorEnable( \
                 sensorId, !enable, true), SM_ERR_NOT_SUPPORTED);
         }
         else
         {
             printf("DEV_SM_SensorEnable(%u)\n", sensorId);
-            CHECK(DEV_SM_SensorEnable(
+            CHECK(DEV_SM_SensorEnable( \
                 sensorId, !enable, true));
         }
 
@@ -164,8 +164,7 @@ void TEST_DevSmSensor(void)
 
     /* Additional sensor tests */
     printf("DEV_SM_SensorEnable(%u)\n", DEV_SM_SENSOR_TEMP_ANA);
-    CHECK(DEV_SM_SensorEnable(
-        DEV_SM_SENSOR_TEMP_ANA, enable, false));
+    CHECK(DEV_SM_SensorEnable( DEV_SM_SENSOR_TEMP_ANA, enable, false));
 
     /* Disable interrupt */
     printf("DEV_SM_SensorTripPointSet(%u)\n", DEV_SM_SENSOR_TEMP_ANA);

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -515,7 +515,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
         /* Reset */
         uint32_t sysManager = 0U;
         printf("LMM_SystemLmReset(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmReset(sysManager, 0U, lmId, true, false,
+        CHECK(LMM_SystemLmReset(sysManager, 0U, lmId, true, false, \
             &g_swReason));
 
         /* Ensure Clock was turned off */

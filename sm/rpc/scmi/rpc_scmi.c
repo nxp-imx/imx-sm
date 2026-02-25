@@ -1014,7 +1014,9 @@ static int32_t RPC_SCMI_A2pTx(const scmi_caller_t *caller, uint32_t len,
     uint32_t newLen = len;
 
     /* Add in header */
+    /* coverity[null_field:FALSE] - check by single caller */
     caller->msg->header = header;
+    /* coverity[null_field:FALSE] - check by single caller */
     caller->msg->status = status;
 
 #ifdef MONITOR

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 NXP
+ * Copyright 2005-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -423,8 +423,7 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
     }
 
     /* Added to improve the test coverage */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-        anyChildPowered = 1U);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, anyChildPowered = true);
 
     return anyChildPowered;
 }

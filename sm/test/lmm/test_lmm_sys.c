@@ -68,7 +68,7 @@ void TEST_LmmSys(void)
     /* System Model SelSet */
     {
         printf("LMM_SystemModeSelSet(SM_LM_NUM_MSEL)\n");
-        NECHECK(LMM_SystemModeSelSet(SM_LM_NUM_MSEL),
+        NECHECK(LMM_SystemModeSelSet(SM_LM_NUM_MSEL), \
             SM_ERR_INVALID_PARAMETERS);
     }
 
@@ -97,8 +97,8 @@ void TEST_LmmSys(void)
         lmm_rst_rec_t shutdownRec = { 0 };
 
         printf("LMM_SystemLmShutdown(%d)\n", SM_NUM_LM);
-        NECHECK(LMM_SystemLmShutdown(SM_NUM_LM, agentId, shutdownLm,
-            true /*graceful*/, &shutdownRec),
+        NECHECK(LMM_SystemLmShutdown(SM_NUM_LM, agentId, shutdownLm, \
+            true /*graceful*/, &shutdownRec), \
             SM_ERR_NOT_FOUND);
     }
 
@@ -108,8 +108,8 @@ void TEST_LmmSys(void)
         lmm_rst_rec_t resetRec = { 0 };
 
         printf("LMM_SystemLmReset(%d)\n", SM_NUM_LM);
-        NECHECK(LMM_SystemLmReset(SM_NUM_LM, agentId, resetLm,
-            true /*warm*/, true  /*graceful*/, &resetRec),
+        NECHECK(LMM_SystemLmReset(SM_NUM_LM, agentId, resetLm, \
+            true /*warm*/, true  /*graceful*/, &resetRec), \
             SM_ERR_NOT_FOUND);
     }
 

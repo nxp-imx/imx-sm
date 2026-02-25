@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -69,7 +69,7 @@ void TEST_LmmCpu(void)
     /* CPU Reset Vector set */
     {
         uint64_t resetvector = 0x123456789U;
-        CHECK(LMM_CpuResetVectorSet(LmId, CpuId, resetvector,
+        CHECK(LMM_CpuResetVectorSet(LmId, CpuId, resetvector, \
             false, true, false, true))
 
         /* CPU Hold */

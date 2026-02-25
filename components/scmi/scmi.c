@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -278,15 +278,21 @@ int32_t SCMI_P2aPending(uint32_t channel, uint32_t *protocolId,
 int32_t SCMI_P2aRx(uint32_t channel, uint32_t protocolId,
     uint32_t messageId, uint32_t minLen, uint32_t *header)
 {
-    int32_t status;
+    int32_t status = SCMI_ERR_SUCCESS;
     const drv_scmi_msg_status_t *msg;
     uint32_t len = 0U;
 
-    /* Get transport buffer address */
     msg = (const drv_scmi_msg_status_t*) SCMI_HdrAddrGet(channel);
+    if (msg == NULL)
+    {
+        status = SMT_ERR_INVALID_PARAMETERS;
+    }
 
     /* Receive message via transport */
-    status = SMT_Rx(channel, &len, true);
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SMT_Rx(channel, &len, true);
+    }
 
     /* Check size */
     if ((status == SCMI_ERR_SUCCESS) && (len < minLen))

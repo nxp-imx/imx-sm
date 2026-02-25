@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -291,6 +291,7 @@ int32_t RPC_SCMI_VoltageDispatchCommand(scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
     const scmi_msg_t *in = caller->msgCopy;
+    /* coverity[null_field:FALSE] - check by single caller */
     scmi_msg_status_t *out = caller->msg;
     uint32_t lenOut = sizeof(scmi_msg_status_t);
 
