@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -119,11 +119,17 @@ int32_t MONITOR_FindN(string const *list, int32_t max, const char *str);
  * @param[in]     line         Line to parse
  * @param[out]    argc         Return number of arguments
  * @param[out]    argv         Array of pointers to arguments
+ * @param[in]     maxArgs      Max number of arguments
  *
  * This function plits the line at space boundaries and creates a
  * pointer list to each. Note it modifies \a line.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
  */
-void MONITOR_ParseLine(char *line, int32_t *argc, const char *argv[]);
+int32_t MONITOR_ParseLine(char *line, int32_t *argc, const char *argv[],
+    int32_t maxArgs);
 
 /*!
  * Get character pending status.

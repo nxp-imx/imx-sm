@@ -60,7 +60,7 @@
 
 /* Defines */
 
-#define MAXARGS     15
+#define MAXARGS     30
 
 #define BYTE        1
 #define WORD        2
@@ -166,7 +166,7 @@ static uint32_t s_lm = SM_LM_DEFAULT;
 /*--------------------------------------------------------------------------*/
 int32_t MONITOR_Dispatch(char *line)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
     int32_t argc = 0;
     const char *argv[MAXARGS];
 
@@ -239,10 +239,10 @@ int32_t MONITOR_Dispatch(char *line)
     };
 
     /* Parse Line */
-    MONITOR_ParseLine(line, &argc, argv);
+    status = MONITOR_ParseLine(line, &argc, argv, MAXARGS);
 
     /* Parse command */
-    if (argc != 0)
+    if ((status == SM_ERR_SUCCESS) && (argc != 0))
     {
         int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
             argv[0]);
@@ -3123,7 +3123,7 @@ static int32_t MONITOR_CmdExtCtrl(int32_t argc, const char * const argv[],
         uint32_t ctrl;
         uint32_t addr;
         uint32_t len = 0U;
-        uint32_t val[24];
+        uint32_t val[MAXARGS];
 
         /* Get control */
         status = MONITOR_ConvU32(argv[0], &ctrl);

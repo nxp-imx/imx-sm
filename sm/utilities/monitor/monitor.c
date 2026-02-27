@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -227,14 +227,24 @@ int32_t MONITOR_FindN(string const *list, int32_t max, const char *str)
 /*--------------------------------------------------------------------------*/
 /* Parse line                                                               */
 /*--------------------------------------------------------------------------*/
-void MONITOR_ParseLine(char *lineStr, int32_t *argc, const char *argv[])
+int32_t MONITOR_ParseLine(char *lineStr, int32_t *argc, const char *argv[],
+    int32_t maxArgs)
 {
+    int32_t status = SM_ERR_SUCCESS;
+
     char *p = lineStr;
     int32_t arg = 0;
 
     /* Parse Line */
     while (*p != EOL)
     {
+        /* Check argv space */
+        if (arg >= maxArgs)
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+            break;
+        }
+
         /* Skip white space */
         while (*p == ' ')
         {
@@ -264,6 +274,9 @@ void MONITOR_ParseLine(char *lineStr, int32_t *argc, const char *argv[])
 
     /* Return count */
     *argc = arg;
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
