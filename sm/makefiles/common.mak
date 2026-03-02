@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2025 NXP
+## Copyright 2025-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -31,4 +31,5 @@
 ## ###################################################################
 
 # Toolchain Version
-export TC_VERSION ?= 14.2.rel1
+export TC_VERSION ?= 15.2.rel1
+
