@@ -37,8 +37,8 @@ SM_SNAP = 0
 SM_DEVICES = i.MX95 (B0), i.MX94 (A0), i.MX952 (A0)
 SM_ELE_VER = 2.0.5
 
-MKIMAGE_BRANCH = lf-6.18.2_1.0.0
-MKIMAGE_BUILD = Linux_IMX_6.18.2_1.0.0_RC2
+MKIMAGE_BRANCH = master
+MKIMAGE_BUILD = Linux_IMX_Trunk
 MKIMAGE_N = latest
 
 GIT_EXISTS=$(shell (git rev-parse --show-cdup 2>/dev/null) && echo 1 || echo 0)
