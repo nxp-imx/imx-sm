@@ -1065,7 +1065,7 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
                 /* gcov_excl_multiline 11 */
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
-                    if (!CCM_CgcSetEnable(clockIndex, enable))
+                    if (!CLOCK_CgcSetEnable(clockIndex, enable))
                     {
                         status = SM_ERR_INVALID_PARAMETERS;
                     }
