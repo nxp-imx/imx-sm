@@ -172,7 +172,7 @@ static boolean eMcem_CallTestHandler( uint8 u8FaultID)
     boolean bReturnValue = (boolean)TRUE;
 
     /* Check if test handler is set */
-    if( NULL_PTR != eMcem_TestHandlers[u8FaultID] )
+    if( (u8FaultID < EMCEM_VFCCU_FAULT_LINES_COUNT) && (NULL_PTR != eMcem_TestHandlers[u8FaultID]) )
     {
         /* Test handler is set. Call handler and check if error has been recovered */
         if( EMCEM_ERR_NOT_RECOVERED == eMcem_TestHandlers[u8FaultID]( u8FaultID ) )
@@ -250,7 +250,7 @@ static eMcem_ErrRecoveryType eMcem_CallAlarmHandler( eMcem_FaultType nFaultId, u
 #endif /* EMCEM_FAULT_STATISTICS_ENABLED */
 
             /* SysMan will have CVFCCU config */
-            if( NULL_PTR != eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.eMcem_AlarmHandler[u8LocalFaultId] )
+            if( (u8LocalFaultId < EMCEM_CVFCCU_MAX_FAULTS) && (NULL_PTR != eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.eMcem_AlarmHandler[u8LocalFaultId]) )
             {
                 nReturnValue = eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.eMcem_AlarmHandler[u8LocalFaultId]( nFaultId );
 
