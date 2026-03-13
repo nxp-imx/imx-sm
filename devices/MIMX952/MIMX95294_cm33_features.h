@@ -785,7 +785,7 @@
 /* GPU module features */
 
 /* @brief AWAKEUPS Bypass Enable (0 = enable auto-cg, 1 = disable auto-cg) */
-#define FSL_FEATURE_GPU_AWAKEUPS_BYPASS_EN (1U)
+#define FSL_FEATURE_GPU_AWAKEUPS_BYPASS_EN (0U)
 
 #endif /* _MIMX95294_cm33_FEATURES_H_ */
 

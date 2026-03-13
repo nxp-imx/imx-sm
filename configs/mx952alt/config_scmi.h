@@ -115,7 +115,6 @@
         .clkPerms[DEV_SM_CLK_GPT3] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT5] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_GPU_CGC] = SM_SCMI_PERM_SET, \
         .clkPerms[DEV_SM_CLK_HSIOPCIEAUX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPCIE_CGC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPLL] = SM_SCMI_PERM_ALL, \
@@ -591,7 +590,6 @@
         .clkPerms[DEV_SM_CLK_GPT3] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT5] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_GPU_CGC] = SM_SCMI_PERM_SET, \
         .clkPerms[DEV_SM_CLK_HSIOPCIEAUX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPCIE_CGC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPLL] = SM_SCMI_PERM_ALL, \
@@ -1058,7 +1056,6 @@
         .clkPerms[DEV_SM_CLK_GPT3] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT5] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_GPU_CGC] = SM_SCMI_PERM_SET, \
         .clkPerms[DEV_SM_CLK_HSIOPCIEAUX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPCIE_CGC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_HSIOPLL] = SM_SCMI_PERM_ALL, \
