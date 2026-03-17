@@ -163,6 +163,18 @@ int32_t MONITOR_NameToId(const char *rsrcName, uint32_t *id,
     func_t func, uint32_t max);
 
 /*!
+ * Convert a string to a 8-bit unsigned integer.
+ *
+ * @param[in]     str          String to convert
+ * @param[out]    val          Return number
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t MONITOR_ConvU8(const char *str, uint8_t *val);
+
+/*!
  * Convert a string to a 32-bit unsigned integer.
  *
  * @param[in]     str          String to convert
@@ -197,6 +209,18 @@ int32_t MONITOR_ConvU64(const char *str, uint64_t *val);
  * Return errors (see @ref STATUS "SM error codes"):
  */
 int32_t MONITOR_ConvI32(const char *str, int32_t *val);
+
+/*!
+ * Convert a string to a 64-bit integer.
+ *
+ * @param[in]     str          String to convert
+ * @param[out]    val          Return number
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t MONITOR_ConvI64(const char *str, int64_t *val);
 
 /*!
  * Find matching string.

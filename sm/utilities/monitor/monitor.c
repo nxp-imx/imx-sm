@@ -837,6 +837,30 @@ int32_t MONITOR_NameToId(const char *rsrcName, uint32_t *id,
         *id = index;
     }
 
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Convert U8                                                               */
+/*--------------------------------------------------------------------------*/
+int32_t MONITOR_ConvU8(const char *str, uint8_t *val)
+{
+    int32_t status;
+    uint64_t temp = 0U;
+
+    status = MONITOR_ConvU64(str, &temp);
+
+    if ((status == SM_ERR_SUCCESS) && (temp <= UINT8_MAX))
+    {
+        *val = (uint8_t) temp;
+    }
+    else
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return status */
     return status;
 }
 
@@ -845,20 +869,21 @@ int32_t MONITOR_NameToId(const char *rsrcName, uint32_t *id,
 /*--------------------------------------------------------------------------*/
 int32_t MONITOR_ConvU32(const char *str, uint32_t *val)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
+    uint64_t temp = 0U;
 
-    errno = 0;
-    uint32_t temp = strtoul(str, NULL, 0);
+    status = MONITOR_ConvU64(str, &temp);
 
-    if (errno == 0)
+    if ((status == SM_ERR_SUCCESS) && (temp <= UINT32_MAX))
     {
-        *val = temp;
+        *val = (uint32_t) temp;
     }
     else
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
+    /* Return status */
     return status;
 }
 
@@ -868,19 +893,27 @@ int32_t MONITOR_ConvU32(const char *str, uint32_t *val)
 int32_t MONITOR_ConvU64(const char *str, uint64_t *val)
 {
     int32_t status = SM_ERR_SUCCESS;
+    char *endptr = NULL;
 
     errno = 0;
-    uint64_t temp = strtoull(str, NULL, 0);
+    uint64_t temp = strtoull(str, &endptr, 0);
 
-    if (errno == 0)
-    {
-        *val = temp;
-    }
-    else
+    if ((errno != 0) || (temp > UINT64_MAX))
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
+    if (endptr == str || *endptr != EOL)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        *val = (uint64_t) temp;
+    }
+
+    /* Return status */
     return status;
 }
 
@@ -889,20 +922,53 @@ int32_t MONITOR_ConvU64(const char *str, uint64_t *val)
 /*--------------------------------------------------------------------------*/
 int32_t MONITOR_ConvI32(const char *str, int32_t *val)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
+    int64_t temp = 0;
 
-    errno = 0;
-    int32_t temp = strtol(str, NULL, 0);
+    status = MONITOR_ConvI64(str, &temp);
 
-    if (errno == 0)
+    if ((status == SM_ERR_SUCCESS) && (temp <= INT32_MAX)
+        && (temp >= INT32_MIN))
     {
-        *val = temp;
+        *val = (int32_t) temp;
     }
     else
     {
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Convert I64                                                              */
+/*--------------------------------------------------------------------------*/
+int32_t MONITOR_ConvI64(const char *str, int64_t *val)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    char *endptr = NULL;
+
+    errno = 0;
+    int64_t temp = strtoll(str, &endptr, 0);
+
+    if ((errno != 0) || (temp > INT64_MAX)
+        || (temp < INT64_MIN))
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    if (endptr == str || *endptr != EOL)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        *val = (int64_t) temp;
+    }
+
+    /* Return status */
     return status;
 }
 
@@ -933,7 +999,7 @@ string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Enter ciritical section                                                  */
+/* Enter critical section                                                   */
 /*--------------------------------------------------------------------------*/
 void MONITOR_EnterCS(void)
 {
@@ -944,7 +1010,7 @@ void MONITOR_EnterCS(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Enter ciritical section                                                  */
+/* Exit critical section                                                    */
 /*--------------------------------------------------------------------------*/
 void MONITOR_ExitCS(void)
 {

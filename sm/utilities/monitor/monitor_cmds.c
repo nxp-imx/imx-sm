@@ -40,8 +40,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
-#include <errno.h>
 #include <inttypes.h>
 #include "sm.h"
 #include "monitor.h"
@@ -1694,16 +1692,12 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
                 /* Set performance level */
                 if (status == SM_ERR_SUCCESS)
                 {
-                    errno = 0;
-                    uint32_t perfLevel = strtoul(argv[1], NULL, 0);
-                    if (errno == 0)
+                    uint32_t perfLevel;
+                    status = MONITOR_ConvU32(argv[1], &perfLevel);
+                    if (status == SM_ERR_SUCCESS)
                     {
                         status = LMM_PerfLevelSet(s_lm, domain, perfLevel,
                             false);
-                    }
-                    else
-                    {
-                        status = SM_ERR_INVALID_PARAMETERS;
                     }
                 }
             }
@@ -1932,15 +1926,14 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                         /* ext */
                         case 3:
                             {
-                                errno = 0;
                                 uint32_t ext = 0x80U;
                                 if (newArgc > 1)
                                 {
-                                    ext = strtoul(argv[firstArgv + 1U],
-                                        NULL, 0);
+                                    status = MONITOR_ConvU32(argv[firstArgv + 1U],
+                                        &ext);
                                 }
 
-                                if (errno == 0)
+                                if (status == SM_ERR_SUCCESS)
                                 {
                                     for (uint32_t clockId = startClk;
                                         clockId <= stopClk; clockId++)
@@ -1965,10 +1958,6 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                         }
                                     }
                                     status = SM_ERR_SUCCESS;
-                                }
-                                else
-                                {
-                                    status = SM_ERR_INVALID_PARAMETERS;
                                 }
                             }
                             break;
@@ -2089,29 +2078,21 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                         case 4:
                             if (argc == 4)
                             {
-                                errno = 0;
-                                uint32_t ext = strtoul(argv[2], NULL, 0);
+                                uint32_t ext = 0x80U;
+                                status = MONITOR_ConvU32(argv[2], &ext);
 
-                                if (errno == 0)
+                                if (status == SM_ERR_SUCCESS)
                                 {
-                                    uint32_t extConfigValue = strtoul(argv[3],
-                                        NULL, 0);
+                                    uint32_t extConfigValue = 0U;
+                                    status = MONITOR_ConvU32(argv[3],
+                                        &extConfigValue);
 
-                                    if (errno == 0)
+                                    if (status == SM_ERR_SUCCESS)
                                     {
                                         status = LMM_ClockExtendedSet(s_lm,
                                             clockId, ext, extConfigValue);
                                     }
-                                    else
-                                    {
-                                        status = SM_ERR_INVALID_PARAMETERS;
-                                    }
                                 }
-                                else
-                                {
-                                    status = SM_ERR_INVALID_PARAMETERS;
-                                }
-
                             }
                             else
                             {
@@ -3220,16 +3201,20 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
     /* Parse first argument */
     if (argc != 0)
     {
-        errno = 0;
-        uintptr_t addr = strtoul(argv[0], NULL, 0);
-        if (errno == 0)
+        uint32_t temp = 0U;
+
+        status = MONITOR_ConvU32(argv[0], &temp);
+
+        if (status == SM_ERR_SUCCESS)
         {
+            uintptr_t addr = (uintptr_t) temp;
+
             /* Parse second argument */
             if (argc > 1)
             {
-                errno = 0;
-                count = strtoul(argv[1], NULL, 0);
-                if (errno != 0)
+                status = MONITOR_ConvU32(argv[1], &count);
+
+                if (status != SM_ERR_SUCCESS)
                 {
                     count = 64U / (uint32_t) len;
                 }
@@ -3370,19 +3355,24 @@ static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
     /* Parse arguments */
     if (argc >= 2)
     {
-        errno = 0;
-        uint32_t addr = strtoul(argv[0], NULL, 0);
+        uint32_t addr = 0U;
 
-        if (errno == 0)
+        status = MONITOR_ConvU32(argv[0], &addr);
+
+        if (status == SM_ERR_SUCCESS)
         {
-            uint32_t data = strtoul(argv[1], NULL, 0);
-            if (errno == 0)
+            uint32_t data = 0U;
+
+            status = MONITOR_ConvU32(argv[1], &data);
+
+            if (status == SM_ERR_SUCCESS)
             {
                 switch (len)
                 {
                     case BYTE:
                         {
                             uint8_t v = 0U;
+
                             if (SystemMemoryProbe((void *) addr, &v, 8U)
                                 == 0U)
                             {
@@ -3397,6 +3387,7 @@ static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
                     case WORD:
                         {
                             uint16_t v = 0U;
+
                             if (SystemMemoryProbe((void *) addr, &v, 16U)
                                 == 0U)
                             {
@@ -3411,6 +3402,7 @@ static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
                     default:  /* LONG */
                         {
                             uint32_t v = 0U;
+
                             if (SystemMemoryProbe((void *) addr, &v, 32U)
                                 == 0U)
                             {
@@ -3580,42 +3572,40 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
             }
             else
             {
-                errno = 0;
-                uint8_t dev = (uint8_t) strtoul(argv[0], NULL, 0);
-                if (errno != 0)
-                {
-                    dev = 0U;
-                }
-
+                uint8_t dev = 0U;
                 uint8_t reg = 0U;
                 uint8_t val = 0U;
 
-                if (argc < 2)
+                /* Get device address */
+                status = MONITOR_ConvU8(argv[0], &dev);
+
+                if (argc > 1)
+                {
+                    /* Get register address */
+                    status = MONITOR_ConvU8(argv[1], &reg);
+                }
+
+                /* Read first value */
+                if (status == SM_ERR_SUCCESS)
                 {
                     status = BRD_SM_PmicRead(dev, reg, &val);
-                    while (status == SM_ERR_SUCCESS)
-                    {
-                        printf("   REG[0x%02x] = 0x%02x\n", reg, val);
-                        reg++;
-                        if (BRD_SM_PmicRead(dev, reg, &val) != SM_ERR_SUCCESS)
-                        {
-                            break;
-                        }
-                    }
                 }
-                else
+
+                /* Loop over registers */
+                while (status == SM_ERR_SUCCESS)
                 {
-                    errno = 0;
-                    reg = (uint8_t) strtoul(argv[1], NULL, 0);
-                    if (errno != 0)
+                    printf("   REG[0x%02x] = 0x%02x\n", reg, val);
+                    reg++;
+
+                    if (argc > 1)
                     {
-                        reg = 0U;
+                        break;
                     }
 
-                    status = BRD_SM_PmicRead(dev, reg, &val);
-                    if (status == SM_ERR_SUCCESS)
+                    if (BRD_SM_PmicRead(dev, reg, &val)
+                        != SM_ERR_SUCCESS)
                     {
-                        printf("   REG[0x%02x] = 0x%02x\n", reg, val);
+                        break;
                     }
                 }
             }
@@ -3627,26 +3617,33 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
             }
             else
             {
-                uint32_t addr = strtoul(argv[0], NULL, 0);
-                uint32_t reg  = strtoul(argv[1], NULL, 0);
-                uint32_t data = strtoul(argv[2], NULL, 0);
-                /* Check variables fit within uint8_t range */
-                if (CHECK_U32_FIT_U8(addr) &&
-                    CHECK_U32_FIT_U8(reg) &&
-                    CHECK_U32_FIT_U8(data))
+                uint8_t dev = 0U;
+                uint8_t reg = 0U;
+                uint8_t val = 0U;
+
+                /* Get device address */
+                status = MONITOR_ConvU8(argv[0], &dev);
+
+                if (status == SM_ERR_SUCCESS)
                 {
-                    status = BRD_SM_PmicWrite(U32_U8(addr),
-                        U32_U8(reg), U32_U8(data), 0xFFU);
+                    /* Get register address */
+                    status = MONITOR_ConvU8(argv[1], &reg);
+                }
+
+                if (status == SM_ERR_SUCCESS)
+                {
+                    /* Get data value */
+                    status = MONITOR_ConvU8(argv[2], &val);
+                }
+
+                if (status == SM_ERR_SUCCESS)
+                {
+                    status = BRD_SM_PmicWrite(dev, reg, val, 0xFFU);
                     if (status == SM_ERR_SUCCESS)
                     {
                         printf("PMIC 0x%02x write register 0x%02x: 0x%02x\n",
-                            addr, reg, data);
+                            dev, reg, val);
                     }
-                }
-                else
-                {
-                    /* Set the status if variables are out of range */
-                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
             break;
