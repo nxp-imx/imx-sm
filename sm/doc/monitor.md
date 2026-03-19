@@ -175,6 +175,7 @@ Board Commands
 
 | Command                     | Description                                                  |
 |-----------------------------|--------------------------------------------------------------|
-| pmic.r *i2c_id reg*         | read pmic register (i.e. pmic.r 0x8 0x1)                     |
+| pmic.r *i2c_id [reg]*       | read pmic register(s) (i.e. pmic.r 0x8 0x1)                  |
+| pmic.w *i2c_id reg value*   | write pmic register (i.e. pmic.w 0x8 0x1 0)                  |
 | custom                      | call BRD_SM_Custom()                                         |
 
