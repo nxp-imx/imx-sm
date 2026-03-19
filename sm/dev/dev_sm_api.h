@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -638,6 +638,11 @@
 #ifndef SM_SYSLOGDUMP
 /*! Redirector (device/board) to dump the syslog */
 #define SM_SYSLOGDUMP           DEV_SM_SyslogDump
+#endif
+
+#ifndef SM_FUSEINIT
+/*! Redirector (device/board) for the fuse init */
+#define SM_FUSEINIT             DEV_SM_FuseInit
 #endif
 
 /** @} */

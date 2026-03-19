@@ -41,6 +41,7 @@
 #include "sm.h"
 #include "brd_sm.h"
 #include "lmm.h"
+#include "dev_sm.h"
 #ifdef RUN_TEST
 #include "test.h"
 #endif
@@ -101,6 +102,9 @@ int main(int argc, const char * const argv[])
     (void) setvbuf(stdin, NULL, _IONBF, 0);
     (void) setvbuf(stdout, NULL, _IONBF, 0);
 #endif
+
+    /* Init the fuses */
+    SM_FUSEINIT();
 
     /* Init the system hardware */
     status = BRD_SM_Init(argc, argv, &mSel);

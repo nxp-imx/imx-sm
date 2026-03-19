@@ -57,14 +57,9 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     int32_t status;
     const rom_passover_t *romPassover = NULL;
 
-    /* Init the fuses */
-    status = DEV_SM_FuseInit();
 
     /* Init the system */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = DEV_SM_SystemInit();
-    }
+    status = DEV_SM_SystemInit();
 
     /* Init fault handling */
     if (status == SM_ERR_SUCCESS)

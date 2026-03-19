@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -59,12 +59,8 @@
 
 /*!
  * Initialize the Fuse array.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
  */
-int32_t DEV_SM_FuseInit(void);
+void DEV_SM_FuseInit(void);
 
 /*!
  * Get fuse info.

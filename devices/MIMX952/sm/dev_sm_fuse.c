@@ -94,10 +94,8 @@ static uint32_t s_fuseValue[DEV_SM_NUM_FUSE];
 /*--------------------------------------------------------------------------*/
 /* Init fuses                                                               */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_FuseInit(void)
+void DEV_SM_FuseInit(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
     for (uint32_t fuseId = 0U; fuseId < DEV_SM_NUM_FUSE; fuseId++)
     {
         uint32_t fuse;
@@ -120,9 +118,6 @@ int32_t DEV_SM_FuseInit(void)
         /* Save result */
         s_fuseValue[fuseId] = (fuse >> shift) & mask;
     }
-
-    /* Return status */
-    return status;
 }
 
 /*--------------------------------------------------------------------------*/
