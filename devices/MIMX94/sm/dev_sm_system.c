@@ -130,6 +130,14 @@ int32_t DEV_SM_SystemInit(void)
     /* Enable bypass for clock sources */
     DEV_SM_ClockSourceBypass(true, false);
 
+#if (defined(FSL_FEATURE_MTR_ERRATA_053228) && FSL_FEATURE_MTR_ERRATA_053228)
+    /*
+     * Workaround for ERR053228
+     * Delay trigger of MTR sequence during MIX power up phase
+     */
+    SRC_GEN->CDC_RDC_CLKOFF_DURATION_CFG = 16U;
+#endif
+
     /* Return status */
     return status;
 }

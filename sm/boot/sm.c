@@ -104,6 +104,7 @@ int main(int argc, const char * const argv[])
 #endif
 
     /* Init the fuses */
+    /* coverity[misra_c_2012_rule_2_2_violation] */
     SM_FUSEINIT();
 
     /* Init the system hardware */

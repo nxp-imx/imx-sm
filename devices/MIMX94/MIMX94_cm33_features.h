@@ -831,5 +831,8 @@
 /* @brief Is affected by errata with ID 052682 (V2X clocking requirements during WAKEUPMIX power cycle) */
 #define FSL_FEATURE_V2X_HAS_ERRATA_052682 (1)
 
+/*@brief CortexAMIX power up is effected by errata with ID 053228 */
+#define FSL_FEATURE_MTR_ERRATA_053228   (1)
+
 #endif /* _MIMX9494_cm33_core0_FEATURES_H_ */
 
