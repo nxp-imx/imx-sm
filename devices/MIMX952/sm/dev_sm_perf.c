@@ -1289,7 +1289,7 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     (void) DEV_SM_PerfBusFreqSet(false);
 
     /* NETCMIX configured separately (does not support frequency scaling) */
-    (void) CCM_RootSetDiv(CLOCK_ROOT_ENET, 1U);
+    (void) CCM_RootSetDiv(CLOCK_ROOT_ENET, 3U);
     (void) CCM_RootSetParent(CLOCK_ROOT_ENET, CLOCK_SRC_SYSPLL1_PFD1);
 
     /* Configure SYSPLL for software control (ROM sets hardware control) */
