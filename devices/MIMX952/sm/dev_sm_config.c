@@ -528,6 +528,13 @@ int32_t DEV_SM_NocConfigLoad(void)
 {
     int32_t status;
     static const uint32_t s_configData[] = SM_NOC_CONFIG;
+    /* Initialize the NIU timeout registers to maximum value. */
+    static const uint32_t s_timeoutData[] =
+    {
+        SM_CFG_FN(0x000000c0U, 12U), 0x7U,
+        SM_CFG_FN(0x000000c0U, 12U), 0x8007U,
+        SM_CFG_END
+    };
 
     /* Load TRDC N config */
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_N);
@@ -542,6 +549,13 @@ int32_t DEV_SM_NocConfigLoad(void)
 
         /* Load device config */
         status = CONFIG_Load(NULL, s_configData);
+    }
+
+    /* Initialize the NIU timeout registers to maximum value. */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = CONFIG_Load((const uint32_t*) NOC__BLK_CTRL_NOCMIX,
+            s_timeoutData);
     }
 
 #ifdef SM_NOC_CONFIG_FUNC
@@ -644,6 +658,12 @@ int32_t DEV_SM_WkupConfigLoad(void)
     int32_t status;
     static const uint32_t s_configData[] = SM_WKUP_CONFIG;
     static const uint32_t s_blkData[] = SM_BCTRL_W_CONFIG;
+    static const uint32_t s_timeoutData[] =
+    {
+        SM_CFG_FN(0x00000090U, 13U), 0x7U,
+        SM_CFG_FN(0x00000090U, 13U), 0x8007U,
+        SM_CFG_END
+    };
 
     /* Load TRDC W config */
     status = DEV_SM_RdcLoad(DEV_SM_TRDC_W);
@@ -686,6 +706,13 @@ int32_t DEV_SM_WkupConfigLoad(void)
     if (status == SM_ERR_SUCCESS)
     {
         status = CONFIG_Load(NULL, s_configData);
+    }
+
+    /* Initialize the NIU timeout registers to maximum value. */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = CONFIG_Load((const uint32_t*) BLK_CTRL_WAKEUPMIX_BASE,
+            s_timeoutData);
     }
 
 #ifdef SM_WKUP_CONFIG_FUNC
