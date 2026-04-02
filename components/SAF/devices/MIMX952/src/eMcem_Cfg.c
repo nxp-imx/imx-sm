@@ -199,7 +199,7 @@ const eMcem_CVfccuInstanceCfgType CVfccuCfg =
         /* -------------------- */
         { /*!< Faults Enabled */
             (uint32)0xFFFC000BUL,
-            (uint32)0x74000003UL,
+            (uint32)0x60000003UL,
             (uint32)0x0000003FUL,
             (uint32)0x00000000UL
         },
