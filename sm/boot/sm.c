@@ -118,8 +118,7 @@ int main(int argc, const char * const argv[])
         SM_BUILD, SM_COMMIT, SM_DATE, SM_TIME);
 
 #if MONITOR_MODE == 2
-    printf("Press key to enter monitor mode.\n\n",
-        SM_BUILD, SM_COMMIT, SM_DATE, SM_TIME);
+    printf("Press key to enter monitor mode.\n\n");
 #endif
 
     /* Add to subtract time */
