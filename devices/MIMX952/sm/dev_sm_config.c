@@ -554,7 +554,7 @@ int32_t DEV_SM_NocConfigLoad(void)
     /* Initialize the NIU timeout registers to maximum value. */
     if (status == SM_ERR_SUCCESS)
     {
-        status = CONFIG_Load((const uint32_t*) NOC__BLK_CTRL_NOCMIX,
+        status = CONFIG_Load((const uint32_t*) NOC__BLK_CTRL_NOCMIX_BASE,
             s_timeoutData);
     }
 
