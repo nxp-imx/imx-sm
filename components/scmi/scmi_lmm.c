@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -115,6 +115,8 @@ int32_t SCMI_LmmAttributes(uint32_t channel, uint32_t *lmId,
             uint32_t header;
             uint32_t lmId;
         } msg_tlmmd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd3_t *msgTx = (msg_tlmmd3_t*) msg;
 
         /* Fill in parameters */
@@ -134,6 +136,8 @@ int32_t SCMI_LmmAttributes(uint32_t channel, uint32_t *lmId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rlmmd3_t *msgRx = (const msg_rlmmd3_t*) msg;
 
         /* Extract lmId */
@@ -195,6 +199,8 @@ int32_t SCMI_LmmBoot(uint32_t channel, uint32_t lmId)
             uint32_t header;
             uint32_t lmId;
         } msg_tlmmd4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd4_t *msgTx = (msg_tlmmd4_t*) msg;
 
         /* Fill in parameters */
@@ -243,6 +249,8 @@ int32_t SCMI_LmmReset(uint32_t channel, uint32_t lmId, uint32_t flags)
             uint32_t lmId;
             uint32_t flags;
         } msg_tlmmd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd5_t *msgTx = (msg_tlmmd5_t*) msg;
 
         /* Fill in parameters */
@@ -292,6 +300,8 @@ int32_t SCMI_LmmShutdown(uint32_t channel, uint32_t lmId, uint32_t flags)
             uint32_t lmId;
             uint32_t flags;
         } msg_tlmmd6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd6_t *msgTx = (msg_tlmmd6_t*) msg;
 
         /* Fill in parameters */
@@ -340,6 +350,8 @@ int32_t SCMI_LmmWake(uint32_t channel, uint32_t lmId)
             uint32_t header;
             uint32_t lmId;
         } msg_tlmmd7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd7_t *msgTx = (msg_tlmmd7_t*) msg;
 
         /* Fill in parameters */
@@ -387,6 +399,8 @@ int32_t SCMI_LmmSuspend(uint32_t channel, uint32_t lmId)
             uint32_t header;
             uint32_t lmId;
         } msg_tlmmd8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd8_t *msgTx = (msg_tlmmd8_t*) msg;
 
         /* Fill in parameters */
@@ -435,6 +449,8 @@ int32_t SCMI_LmmNotify(uint32_t channel, uint32_t lmId, uint32_t flags)
             uint32_t lmId;
             uint32_t flags;
         } msg_tlmmd9_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd9_t *msgTx = (msg_tlmmd9_t*) msg;
 
         /* Fill in parameters */
@@ -494,6 +510,8 @@ int32_t SCMI_LmmResetReason(uint32_t channel, uint32_t lmId,
             uint32_t header;
             uint32_t lmId;
         } msg_tlmmd10_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd10_t *msgTx = (msg_tlmmd10_t*) msg;
 
         /* Fill in parameters */
@@ -514,6 +532,8 @@ int32_t SCMI_LmmResetReason(uint32_t channel, uint32_t lmId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rlmmd10_t *msgRx = (const msg_rlmmd10_t*) msg;
 
         /* Extract bootFlags */
@@ -567,6 +587,8 @@ int32_t SCMI_LmmPowerOn(uint32_t channel, uint32_t lmId)
             uint32_t header;
             uint32_t lmId;
         } msg_tlmmd11_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd11_t *msgTx = (msg_tlmmd11_t*) msg;
 
         /* Fill in parameters */
@@ -620,6 +642,8 @@ int32_t SCMI_LmmResetVectorSet(uint32_t channel, uint32_t lmId,
             uint32_t resetVectorLow;
             uint32_t resetVectorHigh;
         } msg_tlmmd12_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tlmmd12_t *msgTx = (msg_tlmmd12_t*) msg;
 
         /* Fill in parameters */
@@ -683,6 +707,8 @@ int32_t SCMI_LmmEvent(uint32_t channel, uint32_t *lmId, uint32_t *eventLm,
             uint32_t eventLm;
             uint32_t flags;
         } msg_rlmmed32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rlmmed32_t *msgRx = (const msg_rlmmed32_t*) msg;
 
         /* Receive message */

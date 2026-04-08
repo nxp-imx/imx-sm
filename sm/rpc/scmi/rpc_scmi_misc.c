@@ -553,96 +553,162 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tmisc0_t);
             status = MiscProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tmisc0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tmisc1_t);
             status = MiscProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tmisc1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tmisc2_t);
             status = MiscProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rmisc2_t*) in, (msg_tmisc2_t*) out);
             break;
         case COMMAND_MISC_CONTROL_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscControlSet(caller, (const msg_rmisc3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_MISC_CONTROL_GET:
             lenOut = sizeof(msg_tmisc4_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscControlGet(caller, (const msg_rmisc4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc4_t*) out, &lenOut);
             break;
         case COMMAND_MISC_CONTROL_ACTION:
             lenOut = sizeof(msg_tmisc5_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscControlAction(caller, (const msg_rmisc5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc5_t*) out, &lenOut);
             break;
         case COMMAND_MISC_DISCOVER_BUILD_INFO:
             lenOut = sizeof(msg_tmisc6_t);
             status = MiscDiscoverBuildInfo(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tmisc6_t*) out);
             break;
         case COMMAND_MISC_ROM_PASSOVER_GET:
             lenOut = sizeof(msg_tmisc7_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscRomPassoverGet(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc7_t*) out, &lenOut);
             break;
         case COMMAND_MISC_CONTROL_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscControlNotify(caller, (const msg_rmisc8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_MISC_REASON_ATTRIBUTES:
             lenOut = sizeof(msg_tmisc9_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscReasonAttributes(caller, (const msg_rmisc9_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc9_t*) out);
             break;
         case COMMAND_MISC_RESET_REASON:
             lenOut = sizeof(msg_tmisc10_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscResetReason(caller, (const msg_rmisc10_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc10_t*) out, &lenOut);
             break;
         case COMMAND_MISC_SI_INFO:
             lenOut = sizeof(msg_tmisc11_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscSiInfo(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc11_t*) out);
             break;
         case COMMAND_MISC_CFG_INFO:
             lenOut = sizeof(msg_tmisc12_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscCfgInfo(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc12_t*) out);
             break;
         case COMMAND_MISC_SYSLOG:
             lenOut = sizeof(msg_tmisc13_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscSyslog(caller, (const msg_rmisc13_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc13_t*) out, &lenOut);
             break;
         case COMMAND_MISC_BOARD_INFO:
             lenOut = sizeof(msg_tmisc14_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscBoardInfo(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc14_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = MiscNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rmisc16_t*) in, (const scmi_msg_status_t*) out);
             break;
         case COMMAND_MISC_CONTROL_EXT_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscControlExtSet(caller, (const msg_rmisc32_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_MISC_CONTROL_EXT_GET:
             lenOut = sizeof(msg_tmisc33_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscControlExtGet(caller, (const msg_rmisc33_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc33_t*) out, &lenOut);
             break;
         case COMMAND_MISC_DDR_INFO_GET:
             lenOut = sizeof(msg_tmisc34_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = MiscDdrInfoGet(caller, (const msg_rmisc34_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc34_t*) out);
             break;
         default:
@@ -1365,6 +1431,7 @@ static int32_t MiscReasonAttributes(const scmi_caller_t *caller,
     const msg_rmisc9_t *in, msg_tmisc9_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
 
     /* Check request length */
@@ -1383,6 +1450,8 @@ static int32_t MiscReasonAttributes(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = LMM_SystemReasonNameGet(caller->lmId, in->reasonId,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 
@@ -1557,6 +1626,7 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
     const scmi_msg_header_t *in, msg_tmisc11_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
     uint32_t deviceId = 0U;
     uint32_t siRev = 0U;
@@ -1572,6 +1642,8 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = SM_SIINFOGET(&deviceId, &siRev, &partNum,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 
@@ -1683,6 +1755,8 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         /* Call device */
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_3_violation] */
         status = SM_SYSLOGGET(in->flags, (const dev_sm_syslog_t**) &syslog,
             &words);
 
@@ -1770,6 +1844,7 @@ static int32_t MiscBoardInfo(const scmi_caller_t *caller,
 
         /* Copy out board name */
         RPC_SCMI_StrCpy(out->brdName,
+            /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
             (const uint8_t *) BRD_SM_NAME, MISC_MAX_BRDNAME);
     }
 
@@ -2169,6 +2244,8 @@ static int32_t MiscControlEvent(scmi_msg_id_t msgId,
             out.flags = flags;
 
             /* Queue notification */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                 sizeof(out), SCMI_NOTIFY_Q);
         }

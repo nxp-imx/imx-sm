@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -79,6 +79,15 @@
 /* Types */
 
 /* Functions */
+
+/*!
+ * Initialize sensors.
+ *
+ * This function initializes the sensors.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_SensorInit(void);
 
 /*!
  * Sensor timer tick.

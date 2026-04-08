@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -56,28 +56,6 @@
 /* Types */
 
 /* Functions */
-
-/*!
- * Initialize the BBM. Does not clear the status flags.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the BBM was initialized successfully.
- */
-int32_t DEV_SM_BbmInit(void);
-
-/*!
- * Clear the BBM status flags.
- *
- * @param[in]  disableAlarm    disable alarm
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the BBM was cleared successfully.
- */
-int32_t DEV_SM_BbmClear(bool disableAlarm);
 
 /*!
  * Read BBM boot status flags.

@@ -69,6 +69,8 @@ static void DEV_SM_RxReplicaReinit(void);
 /* Externs */
 
 /*! External pointer to the DDR info */
+/* Defined in asm */
+/* coverity[misra_c_2012_rule_8_6_violation] */
 extern uint32_t *__DdrInfo;
 
 /*--------------------------------------------------------------------------*/
@@ -89,6 +91,8 @@ int32_t DEV_SM_MemInit(void)
     /* gcov_excl_ntbr_nextline - cannot fail with known good clock */
     if ((status == SM_ERR_SUCCESS) && enabled)
     {
+        /* Pointer coversion from OEI buffer */
+        /* coverity[misra_c_2012_rule_11_3_violation] */
         const struct ddr_info *ddr = (struct ddr_info*) &__DdrInfo;
 
 #ifdef USES_RX_REPLICA
@@ -161,6 +165,8 @@ int32_t DEV_SM_MemDdrInfoGet(uint32_t ddrRgdId, uint32_t *numRgd,
 int32_t DEV_SM_MemDdrRetentionEnter(void)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Pointer coversion from OEI buffer */
+    /* coverity[misra_c_2012_rule_11_3_violation] */
     const struct ddr_info* ddr = (struct ddr_info*) &__DdrInfo;
     uint8_t powerState = DEV_SM_POWER_STATE_OFF;
 
@@ -232,6 +238,8 @@ int32_t DEV_SM_MemDdrRetentionEnter(void)
 int32_t DEV_SM_MemDdrRetentionExit(void)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Pointer coversion from OEI buffer */
+    /* coverity[misra_c_2012_rule_11_3_violation] */
     const struct ddr_info* ddr = (struct ddr_info*) &__DdrInfo;
     uint8_t powerState = DEV_SM_POWER_STATE_OFF;
 

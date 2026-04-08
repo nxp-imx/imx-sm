@@ -442,71 +442,117 @@ int32_t RPC_SCMI_ClockDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tclock0_t);
             status = ClockProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tclock0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tclock1_t);
             status = ClockProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tclock1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tclock2_t);
             status = ClockProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rclock2_t*) in, (msg_tclock2_t*) out);
             break;
         case COMMAND_CLOCK_ATTRIBUTES:
             lenOut = sizeof(msg_tclock3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockAttributes(caller, (const msg_rclock3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tclock3_t*) out);
             break;
         case COMMAND_CLOCK_DESCRIBE_RATES:
             lenOut = sizeof(msg_tclock4_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockDescribeRates(caller, (const msg_rclock4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tclock4_t*) out, &lenOut);
             break;
         case COMMAND_CLOCK_RATE_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockRateSet(caller, (const msg_rclock5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_CLOCK_RATE_GET:
             lenOut = sizeof(msg_tclock6_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockRateGet(caller, (const msg_rclock6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tclock6_t*) out);
             break;
         case COMMAND_CLOCK_CONFIG_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockConfigSet(caller, (const msg_rclock7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_CLOCK_CONFIG_GET:
             lenOut = sizeof(msg_tclock11_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockConfigGet(caller, (const msg_rclock11_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tclock11_t*) out);
             break;
         case COMMAND_CLOCK_POSSIBLE_PARENTS_GET:
             lenOut = sizeof(msg_tclock12_t);
             status = ClockPossibleParentsGet(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rclock12_t*) in, (msg_tclock12_t*) out, &lenOut);
             break;
         case COMMAND_CLOCK_PARENT_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockParentSet(caller, (const msg_rclock13_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_CLOCK_PARENT_GET:
             lenOut = sizeof(msg_tclock14_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockParentGet(caller, (const msg_rclock14_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tclock14_t*) out);
             break;
         case COMMAND_CLOCK_GET_PERMISSIONS:
             lenOut = sizeof(msg_tclock15_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ClockGetPermissions(caller, (const msg_rclock15_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tclock15_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = ClockNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rclock16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -758,6 +804,7 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
     const msg_rclock3_t *in, msg_tclock3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
     bool enabled;
 
@@ -782,6 +829,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
     /* Get the clock name */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_3_violation] */
         status = LMM_ClockNameGet(caller->lmId, in->clockId, (string*)
             &nameAddr, NULL);
     }

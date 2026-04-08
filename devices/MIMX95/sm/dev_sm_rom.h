@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2024, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -164,6 +164,11 @@ typedef struct
 } rom_passover_t;
 
 /* Functions */
+
+/*!
+ * Initialize the ROM data interface.
+ */
+void DEV_SM_RomInit(void);
 
 /** @} */
 

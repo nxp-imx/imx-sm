@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -59,10 +59,14 @@ static uint32_t s_cpuLm[SM_NUM_CPU];
 /* Global variables */
 
 const lmm_rst_rec_t g_swReason = DEV_SM_RST_REC_SW;
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 static const lmm_startstop_t s_lmmStart[SM_LM_NUM_START] =
 {
     SM_LM_START_DATA
 };
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 static const lmm_startstop_t s_lmmStop[SM_LM_NUM_STOP] =
 {
     SM_LM_STOP_DATA
@@ -165,6 +169,8 @@ int32_t LMM_SystemShutdown(uint32_t lmId, uint32_t agentId,
     bool graceful, const lmm_rst_rec_t *shutdownRec)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     lmm_rpc_trigger_t trigger =
     {
         .rpcInst = 0U,
@@ -223,6 +229,8 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
     const lmm_rst_rec_t *resetRec)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     lmm_rpc_trigger_t trigger =
     {
         .rpcInst = 0U,
@@ -281,6 +289,8 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
 int32_t LMM_SystemSuspend(uint32_t lmId, uint32_t agentId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     lmm_rpc_trigger_t trigger =
     {
         .rpcInst = 0U,
@@ -309,6 +319,8 @@ int32_t LMM_SystemSuspend(uint32_t lmId, uint32_t agentId)
 int32_t LMM_SystemWake(uint32_t lmId, uint32_t agentId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     lmm_rpc_trigger_t trigger =
     {
         .rpcInst = 0U,
@@ -567,6 +579,8 @@ int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
     const lmm_rst_rec_t *bootRec)
 {
     int32_t status;
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     lmm_rpc_trigger_t trigger =
     {
         .event = LMM_TRIGGER_SYSTEM,
@@ -614,6 +628,8 @@ int32_t LMM_SystemLmShutdown(uint32_t lmId, uint32_t agentId,
     if ((status == SM_ERR_SUCCESS)
         && (s_lmState[shutdownLm] != LMM_STATE_LM_OFF))
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .event = LMM_TRIGGER_SYSTEM,
@@ -661,6 +677,8 @@ int32_t LMM_SystemLmReset(uint32_t lmId, uint32_t agentId, uint32_t resetLm,
 
     if (status == SM_ERR_SUCCESS)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .rpcInst = 0U,
@@ -722,6 +740,8 @@ int32_t LMM_SystemLmSuspend(uint32_t lmId, uint32_t agentId,
 
     if (status == SM_ERR_SUCCESS)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .rpcInst = 0U,
@@ -757,6 +777,8 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm)
 
     if (status == SM_ERR_SUCCESS)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .event = LMM_TRIGGER_SYSTEM,
@@ -817,6 +839,8 @@ void LMM_SystemCpuModeChanged(uint32_t cpuId)
     {
         uint32_t lmId = s_cpuLm[cpuId];
         bool activeCpus = false;
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .event = LMM_TRIGGER_LM,

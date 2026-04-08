@@ -372,31 +372,49 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tsensor0_t);
             status = SensorProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tsensor0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tsensor1_t);
             status = SensorProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tsensor1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tsensor2_t);
             status = SensorProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rsensor2_t*) in, (msg_tsensor2_t*) out);
             break;
         case COMMAND_SENSOR_DESCRIPTION_GET:
             lenOut = sizeof(msg_tsensor3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorDescriptionGet(caller, (const msg_rsensor3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tsensor3_t*) out, &lenOut);
             break;
         case COMMAND_SENSOR_TRIP_POINT_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorTripPointNotify(caller, (const msg_rsensor4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_SENSOR_TRIP_POINT_CONFIG:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorTripPointConfig(caller, (const msg_rsensor5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_SENSOR_READING_GET:
@@ -410,7 +428,11 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
              */
             /* coverity[cert_arr30_c_violation:FALSE] */
             /* coverity[cert_str31_c_violation:FALSE] */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorReadingGet(caller, (const msg_rsensor6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tsensor6_t*) out, &lenOut);
             break;
         case COMMAND_SENSOR_CONFIG_GET:
@@ -424,17 +446,27 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
              */
             /* coverity[cert_arr30_c_violation:FALSE] */
             /* coverity[cert_str31_c_violation:FALSE] */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorConfigGet(caller, (const msg_rsensor9_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tsensor9_t*) out);
             break;
         case COMMAND_SENSOR_CONFIG_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorConfigSet(caller, (const msg_rsensor10_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = SensorNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rsensor16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -713,6 +745,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
         for (sensor = 0U; sensor < SENSOR_MAX_DESC; sensor++)
         {
             dev_sm_sensor_desc_t lmmDesc;
+            /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
             const uint8_t *nameAddr = (const uint8_t*) "";
 
             /* Break out if done */
@@ -734,6 +767,8 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                 /* coverity[cert_arr30_c_violation:FALSE] */
                 /* coverity[cert_str31_c_violation:FALSE] */
                 status = LMM_SensorNameGet(caller->lmId, sensor
+                    /* Pointer coversion required from comm buffer */
+                    /* coverity[misra_c_2012_rule_11_3_violation] */
                     + in->descIndex, (string*) &nameAddr, NULL);
             }
 
@@ -1394,6 +1429,8 @@ static int32_t SensorTripPointEvent(scmi_msg_id_t msgId,
             out.tripPointDesc = tripPointDesc;
 
             /* Queue notification */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                 sizeof(out), SCMI_NOTIFY_Q);
         }

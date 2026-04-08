@@ -234,36 +234,56 @@ int32_t RPC_SCMI_PowerDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tpower0_t);
             status = PowerProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tpower0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tpower1_t);
             status = PowerProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tpower1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tpower2_t);
             status = PowerProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rpower2_t*) in, (msg_tpower2_t*) out);
             break;
         case COMMAND_POWER_DOMAIN_ATTRIBUTES:
             lenOut = sizeof(msg_tpower3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PowerDomainAttributes(caller, (const msg_rpower3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tpower3_t*) out);
             break;
         case COMMAND_POWER_STATE_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PowerStateSet(caller, (const msg_rpower4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_POWER_STATE_GET:
             lenOut = sizeof(msg_tpower5_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PowerStateGet(caller, (const msg_rpower5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tpower5_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = PowerNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rpower16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -498,6 +518,7 @@ static int32_t PowerDomainAttributes(const scmi_caller_t *caller,
     const msg_rpower3_t *in, msg_tpower3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
 
     /* Check request length */
@@ -516,6 +537,8 @@ static int32_t PowerDomainAttributes(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = LMM_PowerDomainNameGet(caller->lmId, in->domainId,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 

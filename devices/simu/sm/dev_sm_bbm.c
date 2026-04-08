@@ -56,17 +56,6 @@ static bool s_rolloverEnable = false;
 static bool s_button = false;
 
 /*--------------------------------------------------------------------------*/
-/* Init BBM                                                                 */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_BbmInit(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Return BBM status found at boot                                          */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_BbmGetBootStatus(uint32_t *flags)

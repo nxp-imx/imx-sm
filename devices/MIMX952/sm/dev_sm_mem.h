@@ -57,6 +57,42 @@
 
 /* Functions */
 
+/*!
+ * Initialize the device memory functions.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_MemInit(void);
+
+/*!
+ * Place the DDR into retention.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_MemDdrRetentionEnter(void);
+
+/*!
+ * Exit the DDR from retention.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_MemDdrRetentionExit(void);
+
+/*!
+ * Memory timer tick.
+ *
+ * @param[in]     msec          Period in milliseconds
+ *
+ * This function is called periodically by a timer.
+ */
+void DEV_SM_MemTick(uint32_t msec);
+
 /** @} */
 
 /* Include SM device API */

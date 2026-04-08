@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -56,11 +56,6 @@
 /* Types */
 
 /* Functions */
-
-/*!
- * Initialize the ROM data interface.
- */
-void DEV_SM_RomInit(void);
 
 /*!
  * Get handover data from ROM.

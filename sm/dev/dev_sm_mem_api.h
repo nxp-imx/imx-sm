@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -68,15 +68,6 @@
 /* Functions */
 
 /*!
- * Initialize the device memory functions.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_MemInit(void);
-
-/*!
  * Get device DDR memory region info.
  *
  * @param[in]     ddrRgdId  Region call is for
@@ -100,33 +91,6 @@ int32_t DEV_SM_MemInit(void);
 int32_t DEV_SM_MemDdrInfoGet(uint32_t ddrRgdId, uint32_t *numRgd,
     uint32_t *ddrType, uint32_t *ddrWidth, bool *eccEnb, uint32_t *mts,
     uint64_t *startAddr, uint64_t *endAddr);
-
-/*!
- * Place the DDR into retention.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_MemDdrRetentionEnter(void);
-
-/*!
- * Exit the DDR from retention.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_MemDdrRetentionExit(void);
-
-/*!
- * Memory timer tick.
- *
- * @param[in]     msec          Period in milliseconds
- *
- * This function is called periodically by a timer.
- */
-void DEV_SM_MemTick(uint32_t msec);
 
 #endif /* DEV_SM_MEM_API_H */
 

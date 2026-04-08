@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -96,6 +96,8 @@ int32_t SCMI_BbmGprSet(uint32_t channel, uint32_t index, uint32_t value)
             uint32_t index;
             uint32_t value;
         } msg_tbbmd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd3_t *msgTx = (msg_tbbmd3_t*) msg;
 
         /* Fill in parameters */
@@ -152,6 +154,8 @@ int32_t SCMI_BbmGprGet(uint32_t channel, uint32_t index, uint32_t *value)
             uint32_t header;
             uint32_t index;
         } msg_tbbmd4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd4_t *msgTx = (msg_tbbmd4_t*) msg;
 
         /* Fill in parameters */
@@ -171,6 +175,8 @@ int32_t SCMI_BbmGprGet(uint32_t channel, uint32_t index, uint32_t *value)
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmd4_t *msgRx = (const msg_rbbmd4_t*) msg;
 
         /* Extract value */
@@ -221,6 +227,8 @@ int32_t SCMI_BbmRtcAttributes(uint32_t channel, uint32_t rtcId,
             uint32_t header;
             uint32_t rtcId;
         } msg_tbbmd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd5_t *msgTx = (msg_tbbmd5_t*) msg;
 
         /* Fill in parameters */
@@ -240,6 +248,8 @@ int32_t SCMI_BbmRtcAttributes(uint32_t channel, uint32_t rtcId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmd5_t *msgRx = (const msg_rbbmd5_t*) msg;
 
         /* Extract attributes */
@@ -289,6 +299,8 @@ int32_t SCMI_BbmRtcTimeSet(uint32_t channel, uint32_t rtcId, uint32_t flags,
             uint32_t flags;
             scmi_rtc_time_t val;
         } msg_tbbmd6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd6_t *msgTx = (msg_tbbmd6_t*) msg;
 
         /* Fill in parameters */
@@ -348,6 +360,8 @@ int32_t SCMI_BbmRtcTimeGet(uint32_t channel, uint32_t rtcId, uint32_t flags,
             uint32_t rtcId;
             uint32_t flags;
         } msg_tbbmd7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd7_t *msgTx = (msg_tbbmd7_t*) msg;
 
         /* Fill in parameters */
@@ -368,6 +382,8 @@ int32_t SCMI_BbmRtcTimeGet(uint32_t channel, uint32_t rtcId, uint32_t flags,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmd7_t *msgRx = (const msg_rbbmd7_t*) msg;
 
         /* Extract val */
@@ -411,6 +427,8 @@ int32_t SCMI_BbmRtcAlarmSet(uint32_t channel, uint32_t rtcId,
             uint32_t flags;
             scmi_rtc_time_t val;
         } msg_tbbmd8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd8_t *msgTx = (msg_tbbmd8_t*) msg;
 
         /* Fill in parameters */
@@ -475,6 +493,8 @@ int32_t SCMI_BbmButtonGet(uint32_t channel, uint32_t *buttonState)
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmd9_t *msgRx = (const msg_rbbmd9_t*) msg;
 
         /* Extract buttonState */
@@ -516,6 +536,8 @@ int32_t SCMI_BbmRtcNotify(uint32_t channel, uint32_t rtcId, uint32_t flags)
             uint32_t rtcId;
             uint32_t flags;
         } msg_tbbmd10_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd10_t *msgTx = (msg_tbbmd10_t*) msg;
 
         /* Fill in parameters */
@@ -564,6 +586,8 @@ int32_t SCMI_BbmButtonNotify(uint32_t channel, uint32_t flags)
             uint32_t header;
             uint32_t flags;
         } msg_tbbmd11_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd11_t *msgTx = (msg_tbbmd11_t*) msg;
 
         /* Fill in parameters */
@@ -619,6 +643,8 @@ int32_t SCMI_BbmRtcState(uint32_t channel, uint32_t rtcId, uint32_t *state)
             uint32_t header;
             uint32_t rtcId;
         } msg_tbbmd12_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbbmd12_t *msgTx = (msg_tbbmd12_t*) msg;
 
         /* Fill in parameters */
@@ -638,6 +664,8 @@ int32_t SCMI_BbmRtcState(uint32_t channel, uint32_t rtcId, uint32_t *state)
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmd12_t *msgRx = (const msg_rbbmd12_t*) msg;
 
         /* Extract state */
@@ -687,6 +715,8 @@ int32_t SCMI_BbmRtcEvent(uint32_t channel, uint32_t *flags)
             uint32_t header;
             uint32_t flags;
         } msg_rbbmed32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmed32_t *msgRx = (const msg_rbbmed32_t*) msg;
 
         /* Receive message */
@@ -740,6 +770,8 @@ int32_t SCMI_BbmButtonEvent(uint32_t channel, uint32_t *flags)
             uint32_t header;
             uint32_t flags;
         } msg_rbbmed33_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbbmed33_t *msgRx = (const msg_rbbmed33_t*) msg;
 
         /* Receive message */

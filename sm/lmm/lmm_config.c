@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,6 +45,8 @@
 
 /* Global constant data */
 
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const lmm_config_t g_lmmConfig[SM_NUM_LM] =
 {
     SM_LM_CONFIG_DATA

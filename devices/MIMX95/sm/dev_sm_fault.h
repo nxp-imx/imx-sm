@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -149,6 +149,15 @@
 /* Types */
 
 /* Functions */
+
+/*!
+ * Initialize the device fault handling.
+ *
+ * This function initializes the HW like the FCCU.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_FaultInit(void);
 
 /** @} */
 

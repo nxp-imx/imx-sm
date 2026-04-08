@@ -165,6 +165,11 @@ typedef struct
 
 /* Functions */
 
+/*!
+ * Initialize the ROM data interface.
+ */
+void DEV_SM_RomInit(void);
+
 /** @} */
 
 /* Include SM device API */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -106,6 +106,8 @@ int32_t SCMI_VoltageDomainAttributes(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tvoltaged3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tvoltaged3_t *msgTx = (msg_tvoltaged3_t*) msg;
 
         /* Fill in parameters */
@@ -126,6 +128,8 @@ int32_t SCMI_VoltageDomainAttributes(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rvoltaged3_t *msgRx = (const msg_rvoltaged3_t*) msg;
 
         /* Extract attributes */
@@ -183,6 +187,8 @@ int32_t SCMI_VoltageDescribeLevels(uint32_t channel, uint32_t domainId,
             uint32_t domainId;
             uint32_t levelIndex;
         } msg_tvoltaged4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tvoltaged4_t *msgTx = (msg_tvoltaged4_t*) msg;
 
         /* Fill in parameters */
@@ -205,6 +211,8 @@ int32_t SCMI_VoltageDescribeLevels(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rvoltaged4_t *msgRx = (const msg_rvoltaged4_t*) msg;
 
         /* Extract flags */
@@ -254,6 +262,8 @@ int32_t SCMI_VoltageConfigSet(uint32_t channel, uint32_t domainId,
             uint32_t domainId;
             uint32_t config;
         } msg_tvoltaged5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tvoltaged5_t *msgTx = (msg_tvoltaged5_t*) msg;
 
         /* Fill in parameters */
@@ -312,6 +322,8 @@ int32_t SCMI_VoltageConfigGet(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tvoltaged6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tvoltaged6_t *msgTx = (msg_tvoltaged6_t*) msg;
 
         /* Fill in parameters */
@@ -332,6 +344,8 @@ int32_t SCMI_VoltageConfigGet(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rvoltaged6_t *msgRx = (const msg_rvoltaged6_t*) msg;
 
         /* Extract config */
@@ -375,6 +389,8 @@ int32_t SCMI_VoltageLevelSet(uint32_t channel, uint32_t domainId,
             uint32_t flags;
             int32_t voltageLevel;
         } msg_tvoltaged7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tvoltaged7_t *msgTx = (msg_tvoltaged7_t*) msg;
 
         /* Fill in parameters */
@@ -433,6 +449,8 @@ int32_t SCMI_VoltageLevelGet(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tvoltaged8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tvoltaged8_t *msgTx = (msg_tvoltaged8_t*) msg;
 
         /* Fill in parameters */
@@ -452,6 +470,8 @@ int32_t SCMI_VoltageLevelGet(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rvoltaged8_t *msgRx = (const msg_rvoltaged8_t*) msg;
 
         /* Extract voltageLevel */

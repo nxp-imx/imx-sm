@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -98,6 +98,8 @@ int32_t MB_LOOPBACK_DoorbellRing(uint8_t inst, uint8_t db)
     /* Directly call service */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         static const mb_lb_config_t s_mbLbConfig[SM_NUM_MB_LOOPBACK] =
         {
             SM_MB_LOOPBACK_CONFIG_DATA

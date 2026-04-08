@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -49,17 +49,6 @@
 /* Local variables */
 
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
-
-/*--------------------------------------------------------------------------*/
-/* Initialize system functions                                              */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemInit(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Return status */
-    return status;
-}
 
 /*--------------------------------------------------------------------------*/
 /* Save sleep mode                                                          */
@@ -241,7 +230,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 /* Report SM error to log and reset                                         */
 /*--------------------------------------------------------------------------*/
 /* coverity[misra_c_2012_rule_17_11_violation] */
-void DEV_SM_SystemError(int32_t status, uint32_t pc)
+void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
 {
     /*
      * Intentional: errId is a generic variable to return both signed and
@@ -251,7 +240,7 @@ void DEV_SM_SystemError(int32_t status, uint32_t pc)
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
-        .errId = (uint32_t) status,
+        .errId = (uint32_t) errStatus,
         .validErr = true,
         .valid = true
     };

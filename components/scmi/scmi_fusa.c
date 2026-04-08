@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -91,6 +91,8 @@ int32_t SCMI_FusaProtocolAttributes(uint32_t channel, uint32_t *attributes1,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusad1_t *msgRx = (const msg_rfusad1_t*) msg;
 
         /* Extract attributes1 */
@@ -165,6 +167,8 @@ int32_t SCMI_FusaFeenvStateGet(uint32_t channel, uint32_t *feenvState,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusad3_t *msgRx = (const msg_rfusad3_t*) msg;
 
         /* Extract feenvState */
@@ -211,6 +215,8 @@ int32_t SCMI_FusaFeenvStateNotify(uint32_t channel, uint32_t notifyEnable)
             uint32_t header;
             uint32_t notifyEnable;
         } msg_tfusad5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad5_t *msgTx = (msg_tfusad5_t*) msg;
 
         /* Fill in parameters */
@@ -276,6 +282,8 @@ int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvId,
             uint32_t header;
             uint32_t seenvId;
         } msg_tfusad6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad6_t *msgTx = (msg_tfusad6_t*) msg;
 
         /* Fill in parameters */
@@ -295,6 +303,8 @@ int32_t SCMI_FusaSeenvStateGet(uint32_t channel, uint32_t *seenvId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusad6_t *msgRx = (const msg_rfusad6_t*) msg;
 
         /* Extract seenvId */
@@ -346,6 +356,8 @@ int32_t SCMI_FusaSeenvStateSet(uint32_t channel, uint32_t seenvState,
             uint32_t seenvState;
             uint32_t pingCookie;
         } msg_tfusad7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad7_t *msgTx = (msg_tfusad7_t*) msg;
 
         /* Fill in parameters */
@@ -403,6 +415,8 @@ int32_t SCMI_FusaFaultGet(uint32_t channel, uint32_t faultId,
             uint32_t header;
             uint32_t faultId;
         } msg_tfusad8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad8_t *msgTx = (msg_tfusad8_t*) msg;
 
         /* Fill in parameters */
@@ -422,6 +436,8 @@ int32_t SCMI_FusaFaultGet(uint32_t channel, uint32_t faultId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusad8_t *msgRx = (const msg_rfusad8_t*) msg;
 
         /* Extract flags */
@@ -464,6 +480,8 @@ int32_t SCMI_FusaFaultSet(uint32_t channel, uint32_t faultId,
             uint32_t faultId;
             uint32_t flags;
         } msg_tfusad9_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad9_t *msgTx = (msg_tfusad9_t*) msg;
 
         /* Fill in parameters */
@@ -525,6 +543,8 @@ int32_t SCMI_FusaFaultGroupNotify(uint32_t channel, uint32_t faultIdFirst,
             uint32_t faultMask;
             uint32_t notifyEnable;
         } msg_tfusad10_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad10_t *msgTx = (msg_tfusad10_t*) msg;
 
         /* Fill in parameters */
@@ -547,6 +567,8 @@ int32_t SCMI_FusaFaultGroupNotify(uint32_t channel, uint32_t faultIdFirst,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusad10_t *msgRx = (const msg_rfusad10_t*) msg;
 
         /* Extract faultIdFirstGet */
@@ -628,6 +650,8 @@ int32_t SCMI_FusaScheckTestExec(uint32_t channel, uint32_t targetTestId)
             uint32_t header;
             uint32_t targetTestId;
         } msg_tfusad14_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tfusad14_t *msgTx = (msg_tfusad14_t*) msg;
 
         /* Fill in parameters */
@@ -687,6 +711,8 @@ int32_t SCMI_FusaFeenvStateEvent(uint32_t channel, uint32_t *feenvState,
             uint32_t feenvState;
             uint32_t mselMode;
         } msg_rfusaed32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusaed32_t *msgRx = (const msg_rfusaed32_t*) msg;
 
         /* Receive message */
@@ -747,6 +773,8 @@ int32_t SCMI_FusaSeenvStateReqEvent(uint32_t channel, uint32_t *pingCookie)
             uint32_t header;
             uint32_t pingCookie;
         } msg_rfusaed33_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusaed33_t *msgRx = (const msg_rfusaed33_t*) msg;
 
         /* Receive message */
@@ -803,6 +831,8 @@ int32_t SCMI_FusaFaultEvent(uint32_t channel, uint32_t *faultId,
             uint32_t faultId;
             uint32_t flags;
         } msg_rfusaed34_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rfusaed34_t *msgRx = (const msg_rfusaed34_t*) msg;
 
         /* Receive message */

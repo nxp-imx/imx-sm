@@ -366,66 +366,110 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tfusa0_t);
             status = FusaProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tfusa0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tfusa1_t);
             status = FusaProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tfusa1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tfusa2_t);
             status = FusaProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rfusa2_t*) in, (msg_tfusa2_t*) out);
             break;
         case COMMAND_FUSA_FEENV_STATE_GET:
             lenOut = sizeof(msg_tfusa3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaFeenvStateGet(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tfusa3_t*) out);
             break;
         case COMMAND_FUSA_FEENV_STATE_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaFeenvStateNotify(caller, (const msg_rfusa5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_FUSA_SEENV_STATE_GET:
             lenOut = sizeof(msg_tfusa6_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaSeenvStateGet(caller, (const msg_rfusa6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tfusa6_t*) out);
             break;
         case COMMAND_FUSA_SEENV_STATE_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaSeenvStateSet(caller, (const msg_rfusa7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_FUSA_FAULT_GET:
             lenOut = sizeof(msg_tfusa8_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaFaultGet(caller, (const msg_rfusa8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tfusa8_t*) out);
             break;
         case COMMAND_FUSA_FAULT_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaFaultSet(caller, (const msg_rfusa9_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_FUSA_FAULT_GROUP_NOTIFY:
             lenOut = sizeof(msg_tfusa10_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaFaultGroupNotify(caller, (const msg_rfusa10_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tfusa10_t*) out);
             break;
         case COMMAND_FUSA_SCHECK_EVNTRIG:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaScheckEvntrig(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_FUSA_SCHECK_TEST_EXEC:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = FusaScheckTestExec(caller, (const msg_rfusa14_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = FusaNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rfusa16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -1426,6 +1470,8 @@ static int32_t FusaFeenvStateEvent(scmi_msg_id_t msgId,
                 SCMI_PRIORITY_Q))
             {
                 /* Queue notification */
+                /* Pointer coversion from OEI buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_PRIORITY_Q);
             }
@@ -1469,6 +1515,8 @@ static int32_t FusaSeenvStateReqEvent(scmi_msg_id_t msgId,
                 SCMI_PRIORITY_Q))
             {
                 /* Queue notification */
+                /* Pointer coversion from OEI buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_PRIORITY_Q);
             }
@@ -1516,6 +1564,8 @@ static int32_t FusaFaultEvent(scmi_msg_id_t msgId,
                 SCMI_PRIORITY_Q))
             {
                 /* Queue notification */
+                /* Pointer coversion from OEI buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_PRIORITY_Q);
             }

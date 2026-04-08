@@ -395,27 +395,43 @@ int32_t RPC_SCMI_BbmDispatchCommand(scmi_caller_t *caller,
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tbbm0_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmProtocolVersion(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbbm0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tbbm1_t);
             status = BbmProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tbbm1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tbbm2_t);
             status = BbmProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbbm2_t*) in, (msg_tbbm2_t*) out);
             break;
         case COMMAND_BBM_GPR_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmGprSet(caller, (const msg_rbbm3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_BBM_GPR_GET:
             lenOut = sizeof(msg_tbbm4_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmGprGet(caller, (const msg_rbbm4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbbm4_t*) out);
             break;
         case COMMAND_BBM_RTC_ATTRIBUTES:
@@ -426,49 +442,83 @@ int32_t RPC_SCMI_BbmDispatchCommand(scmi_caller_t *caller,
              * As a result, there is no actual buffer underrun or unsafe
              * memory access in this implementation.
              */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             /* coverity[cert_arr30_c_violation:FALSE] */
             /* coverity[cert_str31_c_violation:FALSE] */
             status = BbmRtcAttributes(caller, (const msg_rbbm5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbbm5_t*) out);
             break;
         case COMMAND_BBM_RTC_TIME_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmRtcTimeSet(caller, (const msg_rbbm6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_BBM_RTC_TIME_GET:
             lenOut = sizeof(msg_tbbm7_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmRtcTimeGet(caller, (const msg_rbbm7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbbm7_t*) out);
             break;
         case COMMAND_BBM_RTC_ALARM_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmRtcAlarmSet(caller, (const msg_rbbm8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_BBM_BUTTON_GET:
             lenOut = sizeof(msg_tbbm9_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmButtonGet(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbbm9_t*) out);
             break;
         case COMMAND_BBM_RTC_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmRtcNotify(caller, (const msg_rbbm10_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_BBM_BUTTON_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmButtonNotify(caller, (const msg_rbbm11_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_BBM_RTC_STATE:
             lenOut = sizeof(msg_tbbm12_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BbmRtcState(caller, (const msg_rbbm12_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbbm12_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = BbmNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbbm16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -812,6 +862,7 @@ static int32_t BbmRtcAttributes(const scmi_caller_t *caller,
     const msg_rbbm5_t *in, msg_tbbm5_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
     uint32_t secWidth;
     uint32_t tickWidth;
@@ -841,6 +892,8 @@ static int32_t BbmRtcAttributes(const scmi_caller_t *caller,
         /* coverity[cert_arr30_c_violation:FALSE] */
         /* coverity[cert_str31_c_violation:FALSE] */
         status = LMM_BbmRtcNameGet(caller->lmId, in->rtcId,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 
@@ -1386,6 +1439,8 @@ static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
                     | BBM_EVENT_RTC_ID(rtcId);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
@@ -1398,6 +1453,8 @@ static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
                     | BBM_EVENT_RTC_ID(rtcId);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
@@ -1410,6 +1467,8 @@ static int32_t BbmRtcEvent(scmi_msg_id_t msgId,
                     | BBM_EVENT_RTC_ID(rtcId);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
@@ -1445,6 +1504,8 @@ static int32_t BbmButtonEvent(scmi_msg_id_t msgId,
             out.flags = BBM_EVENT_BUTTON_DETECTED(1U);
 
             /* Queue notification */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                 sizeof(out), SCMI_NOTIFY_Q);
         }

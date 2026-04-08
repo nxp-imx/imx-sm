@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -333,6 +333,8 @@ int32_t SMT_Rx(uint32_t smtChannel, uint32_t *len, bool callee)
         switch (impStatus)
         {
             case SMT_CRC_XOR:
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_5_violation] */
                 if (buf->impCrc != CRC_Xor((const uint32_t*) msgRx,
                     *len / 4U))
                 {
@@ -340,12 +342,16 @@ int32_t SMT_Rx(uint32_t smtChannel, uint32_t *len, bool callee)
                 }
                 break;
             case SMT_CRC_CRC32:
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_5_violation] */
                 if (buf->impCrc != CRC_Crc32((const uint8_t*) msgRx, *len))
                 {
                     status = SMT_ERR_CRC_ERROR;
                 }
                 break;
             case SMT_CRC_J1850:
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_5_violation] */
                 if (buf->impCrc != CRC_J1850((const uint8_t*) msgRx, *len))
                 {
                     status = SMT_ERR_CRC_ERROR;
@@ -392,6 +398,8 @@ static smt_buf_t *SMT_SmaGet(uint32_t smtChannel)
         rtn = (smt_buf_t*) sma;
 #else
         /* Set return */
+        /* Pointer coversion from OEI buffer */
+        /* coverity[misra_c_2012_rule_11_3_violation] */
         rtn = (smt_buf_t*) MB_LOOPBACK_SmaGet(inst, db);
 #endif
     }

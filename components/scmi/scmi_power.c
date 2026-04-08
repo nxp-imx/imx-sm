@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -94,6 +94,8 @@ int32_t SCMI_PowerProtocolAttributes(uint32_t channel, uint32_t *attributes,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rpowerd1_t *msgRx = (const msg_rpowerd1_t*) msg;
 
         /* Extract attributes */
@@ -173,6 +175,8 @@ int32_t SCMI_PowerDomainAttributes(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tpowerd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpowerd3_t *msgTx = (msg_tpowerd3_t*) msg;
 
         /* Fill in parameters */
@@ -193,6 +197,8 @@ int32_t SCMI_PowerDomainAttributes(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rpowerd3_t *msgRx = (const msg_rpowerd3_t*) msg;
 
         /* Extract attributes */
@@ -242,6 +248,8 @@ int32_t SCMI_PowerStateSet(uint32_t channel, uint32_t domainId,
             uint32_t domainId;
             uint32_t powerState;
         } msg_tpowerd4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpowerd4_t *msgTx = (msg_tpowerd4_t*) msg;
 
         /* Fill in parameters */
@@ -300,6 +308,8 @@ int32_t SCMI_PowerStateGet(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tpowerd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpowerd5_t *msgTx = (msg_tpowerd5_t*) msg;
 
         /* Fill in parameters */
@@ -319,6 +329,8 @@ int32_t SCMI_PowerStateGet(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rpowerd5_t *msgRx = (const msg_rpowerd5_t*) msg;
 
         /* Extract powerState */

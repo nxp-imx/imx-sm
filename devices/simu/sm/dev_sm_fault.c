@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2024, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -47,17 +47,6 @@
 /* Local types */
 
 /* Local variables */
-
-/*--------------------------------------------------------------------------*/
-/* Initialize fault handling                                                */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_FaultInit(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Return status */
-    return status;
-}
 
 /*--------------------------------------------------------------------------*/
 /* Complete fault processing                                                */

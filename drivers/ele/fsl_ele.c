@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 NXP
+ * Copyright 2023-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -677,6 +677,8 @@ bool ELE_IsAborted(void)
 void ELE_RespParse(uint32_t resp, ele_msg_status_t *status,
     ele_msg_ind_t *ind, uint16_t *abortCode)
 {
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_3_violation] */
     const ele_msg_resp_t *r = (ele_msg_resp_t*) &resp;
 
     *status = r->status;
@@ -849,6 +851,8 @@ static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size,
 /* coverity[misra_c_2012_rule_19_2_violation] */
 static bool ELE_MuTx(ele_mu_msg_t *msg, bool timeout)
 {
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_3_violation] */
     const uint32_t *buf = (const uint32_t*) msg;
     uint32_t size;
     uint32_t pos = 1U;
@@ -910,6 +914,8 @@ static bool ELE_MuTx(ele_mu_msg_t *msg, bool timeout)
 static bool ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
     ele_cmd_type_t cmd, bool timeout)
 {
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_3_violation] */
     uint32_t *buf = (uint32_t*) msg;
     bool tdo = false;
 

@@ -77,6 +77,8 @@ static uint32_t wkupGpioCtrl1 = 0U;
 
 /* Global constant data */
 
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const dev_config_t g_devConfig = SM_DEV_CONFIG_DATA;
 
 /* Local functions */

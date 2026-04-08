@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -97,6 +97,8 @@ int32_t SCMI_SystemPowerStateSet(uint32_t channel, uint32_t flags,
             uint32_t flags;
             uint32_t systemState;
         } msg_tsysd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsysd3_t *msgTx = (msg_tsysd3_t*) msg;
 
         /* Fill in parameters */
@@ -147,6 +149,8 @@ int32_t SCMI_SystemPowerStateNotify(uint32_t channel,
             uint32_t header;
             uint32_t notifyEnable;
         } msg_tsysd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsysd5_t *msgTx = (msg_tsysd5_t*) msg;
 
         /* Fill in parameters */
@@ -208,6 +212,8 @@ int32_t SCMI_SystemPowerStateNotifier(uint32_t channel, uint32_t *agentId,
             uint32_t systemState;
             uint32_t timeout;
         } msg_rsysed32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rsysed32_t *msgRx = (const msg_rsysed32_t*) msg;
 
         /* Receive message */

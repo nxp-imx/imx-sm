@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2024, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -64,6 +64,8 @@
 /* Local variables */
 
 static uint32_t s_imageIdx = 0U;
+static uint32_t s_stage = 0U;
+static uint32_t s_container;
 
 /* Global variables */
 
@@ -82,6 +84,8 @@ int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Storage for fake handover data */
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     static const rom_handover_t s_romHandover =
     {
         .barker = HANDOVER_BARKER,
@@ -238,10 +242,22 @@ int32_t DEV_SM_RomStageSet(uint32_t stage)
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /* Save stage */
+    s_stage = stage;
+
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get boot stage                                                           */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_RomStageGet(void)
+{
+    /* Return the current stage */
+    return s_stage;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -251,7 +267,19 @@ int32_t DEV_SM_RomContainerSet(uint32_t container)
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /* Save container */
+    s_container = container;
+
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get boot container                                                       */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_RomContainerGet(void)
+{
+    /* Return the current container value */
+    return s_container;
 }
 

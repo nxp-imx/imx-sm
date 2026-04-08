@@ -209,31 +209,47 @@ int32_t RPC_SCMI_ResetDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_treset0_t);
             status = ResetProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_treset0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_treset1_t);
             status = ResetProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_treset1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_treset2_t);
             status = ResetProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rreset2_t*) in, (msg_treset2_t*) out);
             break;
         case COMMAND_RESET_DOMAIN_ATTRIBUTES:
             lenOut = sizeof(msg_treset3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = ResetDomainAttributes(caller, (const msg_rreset3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_treset3_t*) out);
             break;
         case COMMAND_RESET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = Reset(caller, (const msg_rreset4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = ResetNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rreset16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -436,6 +452,7 @@ static int32_t ResetDomainAttributes(const scmi_caller_t *caller,
     const msg_rreset3_t *in, msg_treset3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
 
     /* Check request length */
@@ -454,6 +471,8 @@ static int32_t ResetDomainAttributes(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = LMM_ResetDomainNameGet(caller->lmId, in->domainId,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 

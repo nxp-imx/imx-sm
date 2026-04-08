@@ -138,6 +138,8 @@ static const uint8_t s_clockSourceParent[CLOCK_NUM_SRC] =
     [CLOCK_SRC_LDBPLL] = CLOCK_SRC_LDBPLL_VCO
 };
 
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const uint8_t g_clockRootMux[CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
 {
     [CLOCK_ROOT_ADC][0] = CLOCK_SRC_OSC24M,
@@ -784,6 +786,8 @@ const uint8_t g_clockRootMux[CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
 /* CCM GPR-selected clocks may be sources/roots.  Encode selections
  * that map to roots as offset from CLOCK_NUM_SRC for unique mapping.
  */
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL] =
 {
     [CLOCK_GPR_SEL_EXT]

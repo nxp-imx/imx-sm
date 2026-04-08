@@ -60,17 +60,6 @@ static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
     int64_t value, uint8_t eventControl);
 
 /*--------------------------------------------------------------------------*/
-/* Initialize sensors                                                       */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SensorInit(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Power up sensor                                                          */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)

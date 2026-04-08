@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -111,6 +111,8 @@ int32_t SCMI_BaseDiscoverVendor(uint32_t channel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbased3_t *msgRx = (const msg_rbased3_t*) msg;
 
         /* Extract vendorIdentifier */
@@ -168,6 +170,8 @@ int32_t SCMI_BaseDiscoverSubVendor(uint32_t channel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbased4_t *msgRx = (const msg_rbased4_t*) msg;
 
         /* Extract vendorIdentifier */
@@ -226,6 +230,8 @@ int32_t SCMI_BaseDiscoverImplementationVersion(uint32_t channel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbased5_t *msgRx = (const msg_rbased5_t*) msg;
 
         /* Extract implementationVersion */
@@ -276,6 +282,8 @@ int32_t SCMI_BaseDiscoverListProtocols(uint32_t channel, uint32_t skip,
             uint32_t header;
             uint32_t skip;
         } msg_tbased6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbased6_t *msgTx = (msg_tbased6_t*) msg;
 
         /* Fill in parameters */
@@ -297,6 +305,8 @@ int32_t SCMI_BaseDiscoverListProtocols(uint32_t channel, uint32_t skip,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbased6_t *msgRx = (const msg_rbased6_t*) msg;
 
         /* Extract numProtocols */
@@ -360,6 +370,8 @@ int32_t SCMI_BaseDiscoverAgent(uint32_t channel, uint32_t *agentId,
             uint32_t header;
             uint32_t agentId;
         } msg_tbased7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbased7_t *msgTx = (msg_tbased7_t*) msg;
 
         /* Fill in parameters */
@@ -379,6 +391,8 @@ int32_t SCMI_BaseDiscoverAgent(uint32_t channel, uint32_t *agentId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rbased7_t *msgRx = (const msg_rbased7_t*) msg;
 
         /* Extract agentId */
@@ -425,6 +439,8 @@ int32_t SCMI_BaseSetDevicePermissions(uint32_t channel, uint32_t agentId,
             uint32_t deviceId;
             uint32_t flags;
         } msg_tbased9_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbased9_t *msgTx = (msg_tbased9_t*) msg;
 
         /* Fill in parameters */
@@ -477,6 +493,8 @@ int32_t SCMI_BaseResetAgentConfiguration(uint32_t channel, uint32_t agentId,
             uint32_t agentId;
             uint32_t flags;
         } msg_tbased11_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tbased11_t *msgTx = (msg_tbased11_t*) msg;
 
         /* Fill in parameters */

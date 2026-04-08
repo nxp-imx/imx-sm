@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -98,6 +98,8 @@ int32_t SCMI_MiscControlSet(uint32_t channel, uint32_t ctrlId,
             uint32_t numVal;
             uint32_t val[SCMI_MISC_MAX_VAL_T];
         } msg_tmiscd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd3_t *msgTx = (msg_tmiscd3_t*) msg;
 
         /* Fill in parameters */
@@ -159,6 +161,8 @@ int32_t SCMI_MiscControlGet(uint32_t channel, uint32_t ctrlId,
             uint32_t header;
             uint32_t ctrlId;
         } msg_tmiscd4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd4_t *msgTx = (msg_tmiscd4_t*) msg;
 
         /* Fill in parameters */
@@ -179,6 +183,8 @@ int32_t SCMI_MiscControlGet(uint32_t channel, uint32_t ctrlId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd4_t *msgRx = (const msg_rmiscd4_t*) msg;
 
         /* Extract numVal */
@@ -240,6 +246,8 @@ int32_t SCMI_MiscControlAction(uint32_t channel, uint32_t ctrlId,
             uint32_t numArg;
             uint32_t arg[SCMI_MISC_MAX_ARG_T];
         } msg_tmiscd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd5_t *msgTx = (msg_tmiscd5_t*) msg;
 
         /* Fill in parameters */
@@ -265,6 +273,8 @@ int32_t SCMI_MiscControlAction(uint32_t channel, uint32_t ctrlId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd5_t *msgRx = (const msg_rmiscd5_t*) msg;
 
         /* Extract numRtn */
@@ -331,6 +341,8 @@ int32_t SCMI_MiscDiscoverBuildInfo(uint32_t channel, uint32_t *buildNum,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd6_t *msgRx = (const msg_rmiscd6_t*) msg;
 
         /* Extract buildNum */
@@ -407,6 +419,8 @@ int32_t SCMI_MiscRomPassoverGet(uint32_t channel, uint32_t *numPassover,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd7_t *msgRx = (const msg_rmiscd7_t*) msg;
 
         /* Extract numPassover */
@@ -456,6 +470,8 @@ int32_t SCMI_MiscControlNotify(uint32_t channel, uint32_t ctrlId,
             uint32_t ctrlId;
             uint32_t flags;
         } msg_tmiscd8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd8_t *msgTx = (msg_tmiscd8_t*) msg;
 
         /* Fill in parameters */
@@ -514,6 +530,8 @@ int32_t SCMI_MiscReasonAttributes(uint32_t channel, uint32_t reasonId,
             uint32_t header;
             uint32_t reasonId;
         } msg_tmiscd9_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd9_t *msgTx = (msg_tmiscd9_t*) msg;
 
         /* Fill in parameters */
@@ -534,6 +552,8 @@ int32_t SCMI_MiscReasonAttributes(uint32_t channel, uint32_t reasonId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd9_t *msgRx = (const msg_rmiscd9_t*) msg;
 
         /* Extract attributes */
@@ -591,6 +611,8 @@ int32_t SCMI_MiscResetReason(uint32_t channel, uint32_t flags,
             uint32_t header;
             uint32_t flags;
         } msg_tmiscd10_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd10_t *msgTx = (msg_tmiscd10_t*) msg;
 
         /* Fill in parameters */
@@ -611,6 +633,8 @@ int32_t SCMI_MiscResetReason(uint32_t channel, uint32_t flags,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd10_t *msgRx = (const msg_rmiscd10_t*) msg;
 
         /* Extract bootFlags */
@@ -683,6 +707,8 @@ int32_t SCMI_MiscSiInfo(uint32_t channel, uint32_t *deviceId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd11_t *msgRx = (const msg_rmiscd11_t*) msg;
 
         /* Extract deviceId */
@@ -758,6 +784,8 @@ int32_t SCMI_MiscCfgInfo(uint32_t channel, uint32_t *mSel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd12_t *msgRx = (const msg_rmiscd12_t*) msg;
 
         /* Extract mSel */
@@ -815,6 +843,8 @@ int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
             uint32_t flags;
             uint32_t logIndex;
         } msg_tmiscd13_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd13_t *msgTx = (msg_tmiscd13_t*) msg;
 
         /* Fill in parameters */
@@ -836,6 +866,8 @@ int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd13_t *msgRx = (const msg_rmiscd13_t*) msg;
 
         /* Extract numLogFlags */
@@ -900,6 +932,8 @@ int32_t SCMI_MiscBoardInfo(uint32_t channel, uint32_t *attributes,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd14_t *msgRx = (const msg_rmiscd14_t*) msg;
 
         /* Extract attributes */
@@ -961,6 +995,8 @@ int32_t SCMI_MiscControlExtSet(uint32_t channel, uint32_t ctrlId,
             uint32_t numVal;
             uint32_t extVal[SCMI_MISC_MAX_EXTVAL_T];
         } msg_tmiscd32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd32_t *msgTx = (msg_tmiscd32_t*) msg;
 
         /* Fill in parameters */
@@ -1027,6 +1063,8 @@ int32_t SCMI_MiscControlExtGet(uint32_t channel, uint32_t ctrlId,
             uint32_t addr;
             uint32_t len;
         } msg_tmiscd33_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd33_t *msgTx = (msg_tmiscd33_t*) msg;
 
         /* Fill in parameters */
@@ -1050,6 +1088,8 @@ int32_t SCMI_MiscControlExtGet(uint32_t channel, uint32_t ctrlId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd33_t *msgRx = (const msg_rmiscd33_t*) msg;
 
         /* Extract numVal */
@@ -1112,6 +1152,8 @@ int32_t SCMI_MiscDdrInfoGet(uint32_t channel, uint32_t ddrRgdId,
             uint32_t header;
             uint32_t ddrRgdId;
         } msg_tmiscd34_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tmiscd34_t *msgTx = (msg_tmiscd34_t*) msg;
 
         /* Fill in parameters */
@@ -1131,6 +1173,8 @@ int32_t SCMI_MiscDdrInfoGet(uint32_t channel, uint32_t ddrRgdId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmiscd34_t *msgRx = (const msg_rmiscd34_t*) msg;
 
         /* Extract attributes */
@@ -1202,6 +1246,8 @@ int32_t SCMI_MiscControlEvent(uint32_t channel, uint32_t *ctrlId,
             uint32_t ctrlId;
             uint32_t flags;
         } msg_rmisced32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rmisced32_t *msgRx = (const msg_rmisced32_t*) msg;
 
         /* Receive message */

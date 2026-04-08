@@ -103,6 +103,15 @@
 
 /* Functions */
 
+/*!
+ * Initialize the device power function.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_PowerInit(void);
+
 /** @} */
 
 /* Include SM device API */

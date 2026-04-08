@@ -81,6 +81,15 @@
 /* Functions */
 
 /*!
+ * Initialize sensors.
+ *
+ * This function initializes the sensors.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_SensorInit(void);
+
+/*!
  * Sensor timer tick.
  *
  * @param[in]     msec          Period in milliseconds

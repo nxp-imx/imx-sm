@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2024, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -56,15 +56,6 @@
 /* Types */
 
 /* Functions */
-
-/*!
- * Initialize the device power function.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_PowerInit(void);
 
 /*!
  * Get a power domain name.

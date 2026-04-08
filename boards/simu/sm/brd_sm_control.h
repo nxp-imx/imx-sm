@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -188,14 +188,6 @@ int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
  */
 int32_t BRD_SM_ControlAction(uint32_t ctrlId, uint32_t action,
     uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn);
-
-/*!
- * Control handler.
- *
- * @param[in]     status   Interrupt status
- * @param[in]     val      Signal state
- */
-void BRD_SM_ControlHandler(uint8_t status, uint8_t val);
 
 /** @} */
 

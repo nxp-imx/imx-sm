@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -63,7 +63,6 @@ static void DEV_SM_Tick(union sigval timer_data);
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_Init(void)
 {
-    int32_t status;
     struct sigevent signalEvent = { 0 };
     timer_t timer = NULL;
     struct itimerspec timerPeriod = { 0 };
@@ -96,23 +95,8 @@ int32_t DEV_SM_Init(void)
     (void) mmap((void*) 0x80000000U, 0x10000, (int) prot, (int) flags,
         -1, 0);
 
-    /* Init fault handling */
-    status = DEV_SM_FaultInit();
-
-    /* Initialize sensors */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = DEV_SM_SensorInit();
-    }
-
-    /* Configure BBM */
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = DEV_SM_BbmInit();
-    }
-
     /* Return status */
-    return status;
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/

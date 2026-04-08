@@ -110,12 +110,6 @@ void TEST_DevSmSystem(void)
         CHECK(DEV_SM_SystemShutdown());
     }
 
-    /* System Init Coverage */
-    {
-        printf("DEV_SM_SystemInit()\n");
-        CHECK(DEV_SM_SystemInit());
-    }
-
     /* SystemShutdownRecSet Coverage */
     {
         dev_sm_rst_rec_t shutdownRec = { 0 };

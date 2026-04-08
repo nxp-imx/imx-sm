@@ -107,6 +107,28 @@
 
 /* Functions */
 
+/*!
+ * Initialize the BBM. Does not clear the status flags.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the BBM was initialized successfully.
+ */
+int32_t DEV_SM_BbmInit(void);
+
+/*!
+ * Clear the BBM status flags.
+ *
+ * @param[in]  disableAlarm    disable alarm
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the BBM was cleared successfully.
+ */
+int32_t DEV_SM_BbmClear(bool disableAlarm);
+
 /** @} */
 
 /* Include SM device API */

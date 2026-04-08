@@ -106,6 +106,8 @@ void TEST_BrdSm(void)
 
     /* Save/Load BRD_SM_ShutdownRecord */
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         dev_sm_rst_rec_t shutdownRec =
         {
             .reason = DEV_SM_REASON_SW,

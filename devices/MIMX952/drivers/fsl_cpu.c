@@ -325,6 +325,7 @@ static uint32_t s_cpuLpComputeList = 0U;
 
 /* Global Variables */
 
+/* coverity[misra_c_2012_rule_8_5_violation] */
 extern void GPC_SM_REQ_IRQHandler(void);
 
 /*--------------------------------------------------------------------------*/

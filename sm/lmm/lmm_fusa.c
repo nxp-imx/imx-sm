@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -193,6 +193,8 @@ int32_t LMM_FusaFaultSet(const lmm_fusa_id_t *caller, uint32_t faultId,
         /* Send FuSa fault clear notification */
         for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
         {
+            /* Partial init suported for this array */
+            /* coverity[misra_c_2012_rule_9_3_violation] */
             lmm_rpc_trigger_t trigger =
             {
                 .event = LMM_TRIGGER_FUSA_FAULT,
@@ -246,6 +248,8 @@ int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
     /* Send FuSa fault set notification */
     for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .event = LMM_TRIGGER_FUSA_FAULT,
@@ -270,6 +274,8 @@ void LMM_FusaFaultCleared(uint32_t faultId)
     /* Send FuSa fault clear notification */
     for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .event = LMM_TRIGGER_FUSA_FAULT,

@@ -150,6 +150,8 @@ int32_t SCMI_A2pTx(uint32_t channel, uint32_t protocolId,
     drv_scmi_msg_status_t *msg;
 
     /* Get transport buffer address */
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_5_violation] */
     msg = (drv_scmi_msg_status_t*) SCMI_HdrAddrGet(channel);
 
     /* Valid channel and buffer? */
@@ -192,6 +194,8 @@ int32_t SCMI_A2pRx(uint32_t channel, uint32_t minLen, uint32_t header)
     uint32_t len;
 
     /* Get transport buffer address */
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_5_violation] */
     msg = (drv_scmi_msg_status_t*) SCMI_HdrAddrGet(channel);
 
     /* Valid channel and buffer? */
@@ -244,6 +248,8 @@ int32_t SCMI_P2aPending(uint32_t channel, uint32_t *protocolId,
         const drv_scmi_msg_status_t *msg;
 
         /* Get transport buffer address */
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg = (const drv_scmi_msg_status_t*) SCMI_HdrAddrGet(channel);
 
         if (msg != NULL)
@@ -282,6 +288,8 @@ int32_t SCMI_P2aRx(uint32_t channel, uint32_t protocolId,
     const drv_scmi_msg_status_t *msg;
     uint32_t len = 0U;
 
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_5_violation] */
     msg = (const drv_scmi_msg_status_t*) SCMI_HdrAddrGet(channel);
     if (msg == NULL)
     {
@@ -356,6 +364,8 @@ int32_t SCMI_P2aTx(uint32_t channel, uint32_t len, uint32_t header)
     drv_scmi_msg_status_t *msg;
 
     /* Get transport buffer address */
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_5_violation] */
     msg = (drv_scmi_msg_status_t*) SCMI_HdrAddrGet(channel);
 
     if (msg != NULL)
@@ -443,6 +453,8 @@ int32_t SCMI_ProtocolVersion(uint32_t channel, uint32_t protocolId,
             int32_t status;
             uint32_t version;
         } msg_rd0_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rd0_t *msgRx = (const msg_rd0_t*) msg;
 
         /* Receive message */
@@ -499,6 +511,8 @@ int32_t SCMI_ProtocolAttributes(uint32_t channel, uint32_t protocolId,
             int32_t status;
             uint32_t attributes;
         } msg_rd1_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rd1_t *msgRx = (const msg_rd1_t*) msg;
 
         /* Receive message */
@@ -547,6 +561,8 @@ int32_t SCMI_ProtocolMessageAttributes(uint32_t channel,
             uint32_t header;
             uint32_t messageId;
         } msg_td2_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_td2_t *msgTx = (msg_td2_t*) msg;
 
         /* Fill in parameters */
@@ -571,6 +587,8 @@ int32_t SCMI_ProtocolMessageAttributes(uint32_t channel,
             int32_t status;
             uint32_t attributes;
         } msg_rd2_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rd2_t *msgRx = (const msg_rd2_t*) msg;
 
         /* Receive message */
@@ -619,6 +637,8 @@ int32_t SCMI_NegotiateProtocolVersion(uint32_t channel, uint32_t protocolId,
             uint32_t header;
             uint32_t version;
         } msg_td16_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_td16_t *msgTx = (msg_td16_t*) msg;
 
         /* Fill in parameters */

@@ -218,32 +218,50 @@ int32_t RPC_SCMI_SysDispatchCommand(scmi_caller_t *caller,
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tsys0_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SysProtocolVersion(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tsys0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tsys1_t);
             status = SysProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tsys1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tsys2_t);
             status = SysProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rsys2_t*) in, (msg_tsys2_t*) out);
             break;
         case COMMAND_SYSTEM_POWER_STATE_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SystemPowerStateSet(caller, (const msg_rsys3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out, &lenOut);
             break;
         case COMMAND_SYSTEM_POWER_STATE_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SystemPowerStateNotify(caller, (const msg_rsys5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = SysNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rsys16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -732,6 +750,8 @@ static int32_t SystemPowerStateNotifier(scmi_msg_id_t msgId,
             out.timeout = 0U;
 
             /* Queue notification */
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                 sizeof(out), SCMI_NOTIFY_Q);
         }

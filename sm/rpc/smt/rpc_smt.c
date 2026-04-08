@@ -142,6 +142,8 @@ int32_t RPC_SMT_Init(uint32_t smtChannel, bool noIrq, uint32_t initCount)
         /* Clear buffer + ECC */
         for (uint32_t word = 0U; word < (SMT_BUFFER_SIZE / 4U); word++)
         {
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             uint32_t *sma = (uint32_t*) buf;
             sma[word] = 0U;
         }
@@ -495,6 +497,8 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
             switch (impStatus)
             {
                 case SM_SMT_CRC_XOR:
+                    /* Pointer coversion required from comm buffer */
+                    /* coverity[misra_c_2012_rule_11_5_violation] */
                     if (buf->impCrc != CRC_Xor((const uint32_t*) msgRx,
                         *len / 4U))
                     {
@@ -502,6 +506,8 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
                     }
                     break;
                 case SM_SMT_CRC_CRC32:
+                    /* Pointer coversion required from comm buffer */
+                    /* coverity[misra_c_2012_rule_11_5_violation] */
                     if (buf->impCrc != CRC_Crc32((const uint8_t*) msgRx,
                         *len))
                     {
@@ -509,6 +515,8 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
                     }
                     break;
                 case SM_SMT_CRC_J1850:
+                    /* Pointer coversion required from comm buffer */
+                    /* coverity[misra_c_2012_rule_11_5_violation] */
                     if (buf->impCrc != CRC_J1850((const uint8_t*) msgRx,
                         *len))
                     {
@@ -543,6 +551,8 @@ static rpc_smt_buf_t *RPC_SMT_SmaGet(uint32_t smtChannel)
         {
 #ifdef USES_MB_LOOPBACK
             case SM_MB_LOOPBACK:
+                /* Pointer coversion from OEI buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 buf = (rpc_smt_buf_t*) MB_LOOPBACK_SmaGet(
                     s_smtConfig[smtChannel].mbInst,
                     s_smtConfig[smtChannel].mbDoorbell);
@@ -550,6 +560,8 @@ static rpc_smt_buf_t *RPC_SMT_SmaGet(uint32_t smtChannel)
 #endif
 #ifdef USES_MB_MU
             case SM_MB_MU:
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 buf = (rpc_smt_buf_t*) MB_MU_SmaGet(
                     s_smtConfig[smtChannel].mbInst,
                     s_smtConfig[smtChannel].mbDoorbell);

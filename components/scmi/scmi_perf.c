@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -94,6 +94,8 @@ int32_t SCMI_PerfProtocolAttributes(uint32_t channel, uint32_t *attributes,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rperfd1_t *msgRx = (const msg_rperfd1_t*) msg;
 
         /* Extract attributes */
@@ -177,6 +179,8 @@ int32_t SCMI_PerformanceDomainAttributes(uint32_t channel,
             uint32_t header;
             uint32_t domainId;
         } msg_tperfd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tperfd3_t *msgTx = (msg_tperfd3_t*) msg;
 
         /* Fill in parameters */
@@ -197,6 +201,8 @@ int32_t SCMI_PerformanceDomainAttributes(uint32_t channel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rperfd3_t *msgRx = (const msg_rperfd3_t*) msg;
 
         /* Extract attributes */
@@ -272,6 +278,8 @@ int32_t SCMI_PerformanceDescribeLevels(uint32_t channel, uint32_t domainId,
             uint32_t domainId;
             uint32_t skipIndex;
         } msg_tperfd4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tperfd4_t *msgTx = (msg_tperfd4_t*) msg;
 
         /* Fill in parameters */
@@ -294,6 +302,8 @@ int32_t SCMI_PerformanceDescribeLevels(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rperfd4_t *msgRx = (const msg_rperfd4_t*) msg;
 
         /* Extract numLevels */
@@ -345,6 +355,8 @@ int32_t SCMI_PerformanceLimitsSet(uint32_t channel, uint32_t domainId,
             uint32_t rangeMax;
             uint32_t rangeMin;
         } msg_tperfd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tperfd5_t *msgTx = (msg_tperfd5_t*) msg;
 
         /* Fill in parameters */
@@ -405,6 +417,8 @@ int32_t SCMI_PerformanceLimitsGet(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tperfd6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tperfd6_t *msgTx = (msg_tperfd6_t*) msg;
 
         /* Fill in parameters */
@@ -425,6 +439,8 @@ int32_t SCMI_PerformanceLimitsGet(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rperfd6_t *msgRx = (const msg_rperfd6_t*) msg;
 
         /* Extract rangeMax */
@@ -473,6 +489,8 @@ int32_t SCMI_PerformanceLevelSet(uint32_t channel, uint32_t domainId,
             uint32_t domainId;
             uint32_t performanceLevel;
         } msg_tperfd7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tperfd7_t *msgTx = (msg_tperfd7_t*) msg;
 
         /* Fill in parameters */
@@ -531,6 +549,8 @@ int32_t SCMI_PerformanceLevelGet(uint32_t channel, uint32_t domainId,
             uint32_t header;
             uint32_t domainId;
         } msg_tperfd8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tperfd8_t *msgTx = (msg_tperfd8_t*) msg;
 
         /* Fill in parameters */
@@ -551,6 +571,8 @@ int32_t SCMI_PerformanceLevelGet(uint32_t channel, uint32_t domainId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rperfd8_t *msgRx = (const msg_rperfd8_t*) msg;
 
         /* Extract performanceLevel */

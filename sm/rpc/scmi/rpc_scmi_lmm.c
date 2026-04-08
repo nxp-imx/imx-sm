@@ -379,72 +379,122 @@ int32_t RPC_SCMI_LmmDispatchCommand(scmi_caller_t *caller,
     {
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tlmm0_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmProtocolVersion(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tlmm0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tlmm1_t);
             status = LmmProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tlmm1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tlmm2_t);
             status = LmmProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rlmm2_t*) in, (msg_tlmm2_t*) out);
             break;
         case COMMAND_LMM_ATTRIBUTES:
             lenOut = sizeof(msg_tlmm3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmAttributes(caller, (const msg_rlmm3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tlmm3_t*) out);
             break;
         case COMMAND_LMM_BOOT:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmBoot(caller, (const msg_rlmm4_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_RESET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmReset(caller, (const msg_rlmm5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_SHUTDOWN:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmShutdown(caller, (const msg_rlmm6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_WAKE:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmWake(caller, (const msg_rlmm7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_SUSPEND:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmSuspend(caller, (const msg_rlmm8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_NOTIFY:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmNotify(caller, (const msg_rlmm9_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_RESET_REASON:
             lenOut = sizeof(msg_tlmm10_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmResetReason(caller, (const msg_rlmm10_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tlmm10_t*) out, &lenOut);
             break;
         case COMMAND_LMM_POWER_ON:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmPowerOn(caller, (const msg_rlmm11_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_LMM_RESET_VECTOR_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = LmmResetVectorSet(caller, (const msg_rlmm12_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = LmmNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rlmm16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -675,6 +725,7 @@ static int32_t LmmAttributes(const scmi_caller_t *caller,
     const msg_rlmm3_t *in, msg_tlmm3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
 
     /* Check request length */
@@ -720,6 +771,8 @@ static int32_t LmmAttributes(const scmi_caller_t *caller,
     /* Get the LM name */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_3_violation] */
         status = LMM_LmNameGet(out->lmId, out->lmId, (string*) &nameAddr,
             NULL);
     }
@@ -1522,6 +1575,8 @@ static int32_t LmmEvent(scmi_msg_id_t msgId,
                 out.flags = LMM_EVENT_BOOT(1U);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
@@ -1534,6 +1589,8 @@ static int32_t LmmEvent(scmi_msg_id_t msgId,
                 out.flags = LMM_EVENT_SHUTDOWN(1U);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
@@ -1546,6 +1603,8 @@ static int32_t LmmEvent(scmi_msg_id_t msgId,
                 out.flags = LMM_EVENT_SUSPEND(1U);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
@@ -1558,6 +1617,8 @@ static int32_t LmmEvent(scmi_msg_id_t msgId,
                 out.flags = LMM_EVENT_WAKE(1U);
 
                 /* Queue notification */
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }

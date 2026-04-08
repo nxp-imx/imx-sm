@@ -284,57 +284,83 @@ int32_t RPC_SCMI_BaseDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tbase0_t);
             status = BaseProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tbase0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tbase1_t);
             status = BaseProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tbase1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tbase2_t);
             status = BaseProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbase2_t*) in, (msg_tbase2_t*) out);
             break;
         case COMMAND_BASE_DISCOVER_VENDOR:
             lenOut = sizeof(msg_tbase3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BaseDiscoverVendor(caller, (const scmi_msg_header_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbase3_t*) out);
             break;
         case COMMAND_BASE_DISCOVER_SUB_VENDOR:
             lenOut = sizeof(msg_tbase4_t);
             status = BaseDiscoverSubVendor(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tbase4_t*) out);
             break;
         case COMMAND_BASE_DISCOVER_IMPLEMENTATION_VERSION:
             lenOut = sizeof(msg_tbase5_t);
             status = BaseDiscoverImplementationVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tbase5_t*) out);
             break;
         case COMMAND_BASE_DISCOVER_LIST_PROTOCOLS:
             lenOut = sizeof(msg_tbase6_t);
             status = BaseDiscoverListProtocols(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbase6_t*) in, (msg_tbase6_t*) out, &lenOut);
             break;
         case COMMAND_BASE_DISCOVER_AGENT:
             lenOut = sizeof(msg_tbase7_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = BaseDiscoverAgent(caller, (const msg_rbase7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tbase7_t*) out);
             break;
         case COMMAND_BASE_SET_DEVICE_PERMISSIONS:
             lenOut = sizeof(const scmi_msg_status_t);
             status = BaseSetDevicePermissions(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbase9_t*) in, (const scmi_msg_status_t*) out);
             break;
         case COMMAND_BASE_RESET_AGENT_CONFIGURATION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = BaseResetAgentConfiguration(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbase11_t*) in, (const scmi_msg_status_t*) out,
                 &lenOut);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = BaseNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rbase16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -532,6 +558,7 @@ static int32_t BaseDiscoverVendor(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         /* Copy out vendor identifier */
+        /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
         RPC_SCMI_StrCpy(out->vendorIdentifier, (const uint8_t *)
             SCMI_VENDOR, BASE_MAX_VENDORIDENTIFIER);
     }
@@ -570,6 +597,7 @@ static int32_t BaseDiscoverSubVendor(const scmi_caller_t *caller,
     {
         /* Copy out sub vendor identifier */
         RPC_SCMI_StrCpy(out->vendorIdentifier,
+            /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
             (const uint8_t *) SCMI_SUB_VENDOR, BASE_MAX_VENDORIDENTIFIER);
     }
 
@@ -738,6 +766,7 @@ static int32_t BaseDiscoverAgent(const scmi_caller_t *caller,
     {
         if (out->agentId == 0U)
         {
+            /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
             RPC_SCMI_StrCpy(out->name, (const uint8_t*)
                 "platform", BASE_MAX_NAME);
         }

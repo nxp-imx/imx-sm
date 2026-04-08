@@ -52,6 +52,8 @@
 
 /* Local variables */
 
+/* Partial init suported for this array */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 static const mb_mu_config_t s_mbMuConfig[SM_NUM_MB_MU] =
 {
     SM_MB_MU_CONFIG_DATA

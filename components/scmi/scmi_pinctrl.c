@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -91,6 +91,8 @@ int32_t SCMI_PinctrlProtocolAttributes(uint32_t channel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rpinctrld1_t *msgRx = (const msg_rpinctrld1_t*) msg;
 
         /* Extract attributesLow */
@@ -159,6 +161,8 @@ int32_t SCMI_PinctrlAttributes(uint32_t channel, uint32_t identifier,
             uint32_t identifier;
             uint32_t flags;
         } msg_tpinctrld3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpinctrld3_t *msgTx = (msg_tpinctrld3_t*) msg;
 
         /* Fill in parameters */
@@ -180,6 +184,8 @@ int32_t SCMI_PinctrlAttributes(uint32_t channel, uint32_t identifier,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rpinctrld3_t *msgRx = (const msg_rpinctrld3_t*) msg;
 
         /* Extract attributes */
@@ -239,6 +245,8 @@ int32_t SCMI_PinctrlSettingsGet(uint32_t channel, uint32_t identifier,
             uint32_t identifier;
             uint32_t attributes;
         } msg_tpinctrld5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpinctrld5_t *msgTx = (msg_tpinctrld5_t*) msg;
 
         /* Fill in parameters */
@@ -261,6 +269,8 @@ int32_t SCMI_PinctrlSettingsGet(uint32_t channel, uint32_t identifier,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rpinctrld5_t *msgRx = (const msg_rpinctrld5_t*) msg;
 
         /* Extract functionSelected */
@@ -320,6 +330,8 @@ int32_t SCMI_PinctrlSettingsConfigure(uint32_t channel, uint32_t identifier,
             uint32_t attributes;
             scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS_T];
         } msg_tpinctrld6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpinctrld6_t *msgTx = (msg_tpinctrld6_t*) msg;
 
         /* Fill in parameters */
@@ -376,6 +388,8 @@ int32_t SCMI_PinctrlRequest(uint32_t channel, uint32_t identifier,
             uint32_t identifier;
             uint32_t flags;
         } msg_tpinctrld7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpinctrld7_t *msgTx = (msg_tpinctrld7_t*) msg;
 
         /* Fill in parameters */
@@ -426,6 +440,8 @@ int32_t SCMI_PinctrlRelease(uint32_t channel, uint32_t identifier,
             uint32_t identifier;
             uint32_t flags;
         } msg_tpinctrld8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tpinctrld8_t *msgTx = (msg_tpinctrld8_t*) msg;
 
         /* Fill in parameters */

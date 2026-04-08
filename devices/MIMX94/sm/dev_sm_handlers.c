@@ -1088,7 +1088,9 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
+    /* Partial init suported for this array */
     /* coverity[cert_int31_c_violation] */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_CM33_EXC,
@@ -1122,6 +1124,8 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
 static void FaultHandler(uint32_t faultId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* Partial init suported for this array */
+    /* coverity[misra_c_2012_rule_9_3_violation] */
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_FCCU,

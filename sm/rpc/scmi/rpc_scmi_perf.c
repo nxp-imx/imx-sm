@@ -336,51 +336,79 @@ int32_t RPC_SCMI_PerfDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tperf0_t);
             status = PerfProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tperf0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tperf1_t);
             status = PerfProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tperf1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tperf2_t);
             status = PerfProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rperf2_t*) in, (msg_tperf2_t*) out);
             break;
         case COMMAND_PERFORMANCE_DOMAIN_ATTRIBUTES:
             lenOut = sizeof(msg_tperf3_t);
             status = PerformanceDomainAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rperf3_t*) in, (msg_tperf3_t*) out);
             break;
         case COMMAND_PERFORMANCE_DESCRIBE_LEVELS:
             lenOut = sizeof(msg_tperf4_t);
             status = PerformanceDescribeLevels(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rperf4_t*) in, (msg_tperf4_t*) out, &lenOut);
             break;
         case COMMAND_PERFORMANCE_LIMITS_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PerformanceLimitsSet(caller, (const msg_rperf5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_PERFORMANCE_LIMITS_GET:
             lenOut = sizeof(msg_tperf6_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PerformanceLimitsGet(caller, (const msg_rperf6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tperf6_t*) out);
             break;
         case COMMAND_PERFORMANCE_LEVEL_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PerformanceLevelSet(caller, (const msg_rperf7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_PERFORMANCE_LEVEL_GET:
             lenOut = sizeof(msg_tperf8_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PerformanceLevelGet(caller, (const msg_rperf8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tperf8_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = PerfNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rperf16_t*) in, (const scmi_msg_status_t*) out);
             break;
         default:
@@ -664,6 +692,7 @@ static int32_t PerformanceDomainAttributes(const scmi_caller_t *caller,
     const msg_rperf3_t *in, msg_tperf3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
     dev_sm_perf_info_t info;
 
@@ -689,6 +718,8 @@ static int32_t PerformanceDomainAttributes(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = LMM_PerfNameGet(caller->lmId, in->domainId,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 

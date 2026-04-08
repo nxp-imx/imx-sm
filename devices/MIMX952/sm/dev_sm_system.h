@@ -194,6 +194,30 @@ typedef struct
 
 /* Functions */
 
+/*!
+ * Initialize the device system functions.
+ *
+ * A copy of the shutdown record is loaded at boot using
+ * BRD_SM_ShutdownRecordLoad(). If the device has a non-POR reset
+ * reason that will replace the one stored in persistent storage.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_SystemInit(void);
+
+/*!
+ * Transition the system to sleep mode.
+ *
+ * @param[in]     sleepMode   system sleep mode
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ */
+int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
+
 /** @} */
 
 /* Include SM device API */

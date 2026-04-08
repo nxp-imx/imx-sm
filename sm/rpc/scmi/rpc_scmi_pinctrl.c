@@ -313,47 +313,75 @@ int32_t RPC_SCMI_PinctrlDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tpinctrl0_t);
             status = PinctrlProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tpinctrl0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tpinctrl1_t);
             status = PinctrlProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tpinctrl1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tpinctrl2_t);
             status = PinctrlProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rpinctrl2_t*) in, (msg_tpinctrl2_t*) out);
             break;
         case COMMAND_PINCTRL_ATTRIBUTES:
             lenOut = sizeof(msg_tpinctrl3_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PinctrlAttributes(caller, (const msg_rpinctrl3_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tpinctrl3_t*) out);
             break;
         case COMMAND_PINCTRL_SETTINGS_GET:
             lenOut = sizeof(msg_tpinctrl5_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PinctrlSettingsGet(caller, (const msg_rpinctrl5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tpinctrl5_t*) out, &lenOut);
             break;
         case COMMAND_PINCTRL_SETTINGS_CONFIGURE:
             lenOut = sizeof(const scmi_msg_status_t);
             status = PinctrlSettingsConfigure(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rpinctrl6_t*) in, (const scmi_msg_status_t*) out);
             break;
         case COMMAND_PINCTRL_REQUEST:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PinctrlRequest(caller, (const msg_rpinctrl7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_PINCTRL_RELEASE:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = PinctrlRelease(caller, (const msg_rpinctrl8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = PinctrlNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rpinctrl16_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         default:
@@ -600,6 +628,7 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
     const msg_rpinctrl3_t *in, msg_tpinctrl3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
     uint32_t sel = PINCTRL_FLAGS_SELECTOR(in->flags);
 
@@ -624,6 +653,8 @@ static int32_t PinctrlAttributes(const scmi_caller_t *caller,
     /* Get the pin name */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_3_violation] */
         status = SM_PINNAMEGET(in->identifier, (string*) &nameAddr, NULL);
     }
 

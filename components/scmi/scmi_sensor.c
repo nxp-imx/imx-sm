@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -94,6 +94,8 @@ int32_t SCMI_SensorProtocolAttributes(uint32_t channel,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rsensord1_t *msgRx = (const msg_rsensord1_t*) msg;
 
         /* Extract attributes */
@@ -173,6 +175,8 @@ int32_t SCMI_SensorDescriptionGet(uint32_t channel, uint32_t descIndex,
             uint32_t header;
             uint32_t descIndex;
         } msg_tsensord3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsensord3_t *msgTx = (msg_tsensord3_t*) msg;
 
         /* Fill in parameters */
@@ -194,6 +198,8 @@ int32_t SCMI_SensorDescriptionGet(uint32_t channel, uint32_t descIndex,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rsensord3_t *msgRx = (const msg_rsensord3_t*) msg;
 
         /* Extract numSensorFlags */
@@ -243,6 +249,8 @@ int32_t SCMI_SensorTripPointNotify(uint32_t channel, uint32_t sensorId,
             uint32_t sensorId;
             uint32_t sensorEventControl;
         } msg_tsensord4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsensord4_t *msgTx = (msg_tsensord4_t*) msg;
 
         /* Fill in parameters */
@@ -297,6 +305,8 @@ int32_t SCMI_SensorTripPointConfig(uint32_t channel, uint32_t sensorId,
             int32_t tripPointValLow;
             int32_t tripPointValHigh;
         } msg_tsensord5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsensord5_t *msgTx = (msg_tsensord5_t*) msg;
 
         /* Fill in parameters */
@@ -358,6 +368,8 @@ int32_t SCMI_SensorReadingGet(uint32_t channel, uint32_t sensorId,
             uint32_t sensorId;
             uint32_t flags;
         } msg_tsensord6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsensord6_t *msgTx = (msg_tsensord6_t*) msg;
 
         /* Fill in parameters */
@@ -379,6 +391,8 @@ int32_t SCMI_SensorReadingGet(uint32_t channel, uint32_t sensorId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rsensord6_t *msgRx = (const msg_rsensord6_t*) msg;
 
         /* Extract readings */
@@ -430,6 +444,8 @@ int32_t SCMI_SensorConfigGet(uint32_t channel, uint32_t sensorId,
             uint32_t header;
             uint32_t sensorId;
         } msg_tsensord9_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsensord9_t *msgTx = (msg_tsensord9_t*) msg;
 
         /* Fill in parameters */
@@ -449,6 +465,8 @@ int32_t SCMI_SensorConfigGet(uint32_t channel, uint32_t sensorId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rsensord9_t *msgRx = (const msg_rsensord9_t*) msg;
 
         /* Extract sensorConfig */
@@ -491,6 +509,8 @@ int32_t SCMI_SensorConfigSet(uint32_t channel, uint32_t sensorId,
             uint32_t sensorId;
             uint32_t sensorConfig;
         } msg_tsensord10_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tsensord10_t *msgTx = (msg_tsensord10_t*) msg;
 
         /* Fill in parameters */
@@ -551,6 +571,8 @@ int32_t SCMI_SensorTripPointEvent(uint32_t channel, uint32_t *agentId,
             uint32_t sensorId;
             uint32_t tripPointDesc;
         } msg_rsensored32_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rsensored32_t *msgRx = (const msg_rsensored32_t*) msg;
 
         /* Receive message */

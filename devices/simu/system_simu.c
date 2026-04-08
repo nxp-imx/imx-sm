@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2025 NXP
+** Copyright 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -61,12 +61,18 @@ uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
         switch (width)
         {
             default:
+                /* Pointer coversion required for generic memory access */
+                /* coverity[misra_c_2012_rule_11_5_violation] */
                 *((uint8_t *) val) = *((const uint8_t *) addr);
                 break;
             case 16:
+                /* Pointer coversion required for generic memory access */
+                /* coverity[misra_c_2012_rule_11_5_violation] */
                 *((uint16_t *) val) = *((const uint16_t *) addr);
                 break;
             case 32:
+                /* Pointer coversion required for generic memory access */
+                /* coverity[misra_c_2012_rule_11_5_violation] */
                 *((uint32_t *) val) = *((const uint32_t *) addr);
                 break;
         }

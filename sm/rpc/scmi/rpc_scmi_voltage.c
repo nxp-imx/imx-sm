@@ -301,16 +301,22 @@ int32_t RPC_SCMI_VoltageDispatchCommand(scmi_caller_t *caller,
         case COMMAND_PROTOCOL_VERSION:
             lenOut = sizeof(msg_tvoltage0_t);
             status = VoltageProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tvoltage0_t*) out);
             break;
         case COMMAND_PROTOCOL_ATTRIBUTES:
             lenOut = sizeof(msg_tvoltage1_t);
             status = VoltageProtocolAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_header_t*) in, (msg_tvoltage1_t*) out);
             break;
         case COMMAND_PROTOCOL_MESSAGE_ATTRIBUTES:
             lenOut = sizeof(msg_tvoltage2_t);
             status = VoltageProtocolMessageAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rvoltage2_t*) in, (msg_tvoltage2_t*) out);
             break;
         case COMMAND_VOLTAGE_DOMAIN_ATTRIBUTES:
@@ -323,38 +329,62 @@ int32_t RPC_SCMI_VoltageDispatchCommand(scmi_caller_t *caller,
             /* coverity[cert_arr30_c_violation:FALSE] */
             /* coverity[cert_str31_c_violation:FALSE] */
             status = VoltageDomainAttributes(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rvoltage3_t*) in, (msg_tvoltage3_t*) out);
             break;
         case COMMAND_VOLTAGE_DESCRIBE_LEVELS:
             lenOut = sizeof(msg_tvoltage4_t);
             status = VoltageDescribeLevels(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rvoltage4_t*) in, (msg_tvoltage4_t*) out,
                 &lenOut);
             break;
         case COMMAND_VOLTAGE_CONFIG_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = VoltageConfigSet(caller, (const msg_rvoltage5_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_VOLTAGE_CONFIG_GET:
             lenOut = sizeof(msg_tvoltage6_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = VoltageConfigGet(caller, (const msg_rvoltage6_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tvoltage6_t*) out);
             break;
         case COMMAND_VOLTAGE_LEVEL_SET:
             lenOut = sizeof(const scmi_msg_status_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = VoltageLevelSet(caller, (const msg_rvoltage7_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_VOLTAGE_LEVEL_GET:
             lenOut = sizeof(msg_tvoltage8_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             status = VoltageLevelGet(caller, (const msg_rvoltage8_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tvoltage8_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
             lenOut = sizeof(const scmi_msg_status_t);
             status = VoltageNegotiateProtocolVersion(caller,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const msg_rvoltage16_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
                 (const scmi_msg_status_t*) out);
             break;
         default:
@@ -563,6 +593,7 @@ static int32_t VoltageDomainAttributes(const scmi_caller_t *caller,
     const msg_rvoltage3_t *in, msg_tvoltage3_t *out)
 {
     int32_t status = SM_ERR_SUCCESS;
+    /* coverity[misra_c_2012_rule_7_4_violation:FALSE] */
     const uint8_t *nameAddr = (const uint8_t*) "";
 
     /* Check request length */
@@ -588,6 +619,8 @@ static int32_t VoltageDomainAttributes(const scmi_caller_t *caller,
         /* coverity[cert_arr30_c_violation:FALSE] */
         /* coverity[cert_str31_c_violation:FALSE] */
         status = LMM_VoltageNameGet(caller->lmId, in->domainId,
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
             (string*) &nameAddr, NULL);
     }
 

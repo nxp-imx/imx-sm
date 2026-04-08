@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,19 +45,25 @@
 
 /* Global constant data */
 
+/* Partial init suported for this array */
 /* coverity[misra_c_2012_rule_9_2_violation] */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const scmi_chn_config_t g_scmiChannelConfig[SM_SCMI_NUM_CHN] =
 {
     SM_SCMI_CHN_CONFIG_DATA
 };
 
+/* Partial init suported for this array */
 /* coverity[misra_c_2012_rule_9_2_violation] */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const scmi_agnt_config_t g_scmiAgentConfig[SM_SCMI_NUM_AGNT] =
 {
     SM_SCMI_AGNT_CONFIG_DATA
 };
 
+/* Partial init suported for this array */
 /* coverity[misra_c_2012_rule_9_2_violation] */
+/* coverity[misra_c_2012_rule_9_3_violation] */
 const scmi_config_t g_scmiConfig[SM_NUM_SCMI] =
 {
     SM_SCMI_CONFIG_DATA

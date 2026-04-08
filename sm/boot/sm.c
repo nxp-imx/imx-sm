@@ -285,9 +285,10 @@ void SM_TestModeSet(uint32_t mode)
 /*--------------------------------------------------------------------------*/
 /* Exit function for no clib                                                */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_directive_4_6_violation] */
+/* coverity[misra_c_2012_rule_8_3_violation] */
 /* coverity[misra_c_2012_rule_21_2_violation] */
 /* coverity[misra_c_2012_rule_21_8_violation] */
-/* coverity[misra_c_2012_directive_4_6_violation] */
 void exit(int status)
 {
     if (s_lmmInited)

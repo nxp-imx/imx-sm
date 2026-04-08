@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -105,6 +105,8 @@ int32_t SCMI_CpuAttributes(uint32_t channel, uint32_t cpuId,
             uint32_t header;
             uint32_t cpuId;
         } msg_tcpud3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud3_t *msgTx = (msg_tcpud3_t*) msg;
 
         /* Fill in parameters */
@@ -124,6 +126,8 @@ int32_t SCMI_CpuAttributes(uint32_t channel, uint32_t cpuId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rcpud3_t *msgRx = (const msg_rcpud3_t*) msg;
 
         /* Extract attributes */
@@ -170,6 +174,8 @@ int32_t SCMI_CpuStart(uint32_t channel, uint32_t cpuId)
             uint32_t header;
             uint32_t cpuId;
         } msg_tcpud4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud4_t *msgTx = (msg_tcpud4_t*) msg;
 
         /* Fill in parameters */
@@ -217,6 +223,8 @@ int32_t SCMI_CpuStop(uint32_t channel, uint32_t cpuId)
             uint32_t header;
             uint32_t cpuId;
         } msg_tcpud5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud5_t *msgTx = (msg_tcpud5_t*) msg;
 
         /* Fill in parameters */
@@ -268,6 +276,8 @@ int32_t SCMI_CpuResetVectorSet(uint32_t channel, uint32_t cpuId,
             uint32_t resetVectorLow;
             uint32_t resetVectorHigh;
         } msg_tcpud6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud6_t *msgTx = (msg_tcpud6_t*) msg;
 
         /* Fill in parameters */
@@ -321,6 +331,8 @@ int32_t SCMI_CpuSleepModeSet(uint32_t channel, uint32_t cpuId,
             uint32_t flags;
             uint32_t sleepMode;
         } msg_tcpud7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud7_t *msgTx = (msg_tcpud7_t*) msg;
 
         /* Fill in parameters */
@@ -374,6 +386,8 @@ int32_t SCMI_CpuIrqWakeSet(uint32_t channel, uint32_t cpuId,
             uint32_t numMask;
             uint32_t mask[SCMI_CPU_MAX_MASK_T];
         } msg_tcpud8_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud8_t *msgTx = (msg_tcpud8_t*) msg;
 
         /* Fill in parameters */
@@ -430,6 +444,8 @@ int32_t SCMI_CpuNonIrqWakeSet(uint32_t channel, uint32_t cpuId,
             uint32_t numMask;
             uint32_t mask[SCMI_CPU_MAX_MASK_T];
         } msg_tcpud9_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud9_t *msgTx = (msg_tcpud9_t*) msg;
 
         /* Fill in parameters */
@@ -485,6 +501,8 @@ int32_t SCMI_CpuPdLpmConfigSet(uint32_t channel, uint32_t cpuId,
             uint32_t numConfigs;
             scmi_pd_lpm_config_t pdConfigs[SCMI_CPU_MAX_PDCONFIGS_T];
         } msg_tcpud10_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud10_t *msgTx = (msg_tcpud10_t*) msg;
 
         /* Fill in parameters */
@@ -541,6 +559,8 @@ int32_t SCMI_CpuPerLpmConfigSet(uint32_t channel, uint32_t cpuId,
             uint32_t numConfigs;
             scmi_per_lpm_config_t perConfigs[SCMI_CPU_MAX_PERCONFIGS_T];
         } msg_tcpud11_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud11_t *msgTx = (msg_tcpud11_t*) msg;
 
         /* Fill in parameters */
@@ -607,6 +627,8 @@ int32_t SCMI_CpuInfoGet(uint32_t channel, uint32_t cpuId, uint32_t *runMode,
             uint32_t header;
             uint32_t cpuId;
         } msg_tcpud12_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tcpud12_t *msgTx = (msg_tcpud12_t*) msg;
 
         /* Fill in parameters */
@@ -626,6 +648,8 @@ int32_t SCMI_CpuInfoGet(uint32_t channel, uint32_t cpuId, uint32_t *runMode,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rcpud12_t *msgRx = (const msg_rcpud12_t*) msg;
 
         /* Extract runMode */

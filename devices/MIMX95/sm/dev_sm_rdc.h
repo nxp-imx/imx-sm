@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -75,6 +75,31 @@
 /* Types */
 
 /* Functions */
+
+/*!
+ * Initialize the RDC.
+ *
+ * This function initializes the RDC (e.g. TRDC, XRDC). This include asking
+ * for control of these from the ELE.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_RdcInit(void);
+
+/*!
+ * Load an RDC configuration.
+ *
+ * @param[in]     rdcId        Identifier for the RDC
+ *
+ * This function will load an RDC after it is powered on.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if \a rdcId is invalid.
+ * - others returned by CONFIG_Load().
+ */
+int32_t DEV_SM_RdcLoad(uint32_t rdcId);
 
 /*!
  * Block DDR memory access.

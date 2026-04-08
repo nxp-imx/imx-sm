@@ -167,6 +167,15 @@
 
 /* Functions */
 
+/*!
+ * Initialize the device fault handling.
+ *
+ * This function initializes the HW like the FCCU.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_FaultInit(void);
+
 /** @} */
 
 /* Include SM device API */

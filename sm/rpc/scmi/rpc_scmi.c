@@ -267,6 +267,8 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
     scmi_msg_status_t *msg;
 
     /* Get transport buffer address */
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_5_violation] */
     msg = (scmi_msg_status_t*) RPC_SCMI_HdrAddrGet(scmiChannel);
 
     /* Check address */
@@ -696,6 +698,8 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
         - g_scmiConfig[caller.scmiInst].firstAgent;
 
     /* Get the message buffer address */
+    /* Pointer coversion required from comm buffer */
+    /* coverity[misra_c_2012_rule_11_5_violation] */
     caller.msg = (scmi_msg_status_t*) RPC_SCMI_HdrAddrGet(scmiChannel);
     caller.lenMsg = sizeof(scmi_msg_status_t);
 
@@ -894,6 +898,8 @@ static void RPC_SCMI_P2aDispatch(uint32_t scmiChannel)
     /* Get message buffer address */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg = (uint32_t*) RPC_SCMI_HdrAddrGet(scmiChannel);
         if (msg == NULL)
         {

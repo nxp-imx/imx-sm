@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -304,6 +304,8 @@ void LMM_SensorEvent(uint32_t sensorId, uint8_t tripPoint, uint8_t dir)
     /* Dispatch for all LM */
     for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
     {
+        /* Partial init suported for this array */
+        /* coverity[misra_c_2012_rule_9_3_violation] */
         lmm_rpc_trigger_t trigger =
         {
             .event = LMM_TRIGGER_SENSOR,

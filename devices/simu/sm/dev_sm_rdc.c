@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023, 2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -46,6 +46,18 @@
 /* Local types */
 
 /* Local variables */
+
+/*--------------------------------------------------------------------------*/
+/* Return RDC name and address                                              */
+/*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_8_13_violation] */
+int32_t DEV_SM_RdcInfoGet(uint32_t rdcId, string *rdcNameAddr,
+    /* coverity[misra_c_2012_rule_8_13_violation] */
+    char *rdcLabel, uint32_t *rdcBase)
+{
+    /* Return status */
+    return SM_ERR_NOT_FOUND;
+}
 
 /*--------------------------------------------------------------------------*/
 /* Set RDC device access rights                                             */

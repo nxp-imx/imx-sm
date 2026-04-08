@@ -107,6 +107,8 @@ int32_t SCMI_ClockAttributes(uint32_t channel, uint32_t clockId,
             uint32_t header;
             uint32_t clockId;
         } msg_tclockd3_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd3_t *msgTx = (msg_tclockd3_t*) msg;
 
         /* Fill in parameters */
@@ -126,6 +128,8 @@ int32_t SCMI_ClockAttributes(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd3_t *msgRx = (const msg_rclockd3_t*) msg;
 
         /* Extract attributes */
@@ -189,6 +193,8 @@ int32_t SCMI_ClockDescribeRates(uint32_t channel, uint32_t clockId,
             uint32_t clockId;
             uint32_t rateIndex;
         } msg_tclockd4_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd4_t *msgTx = (msg_tclockd4_t*) msg;
 
         /* Fill in parameters */
@@ -211,6 +217,8 @@ int32_t SCMI_ClockDescribeRates(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd4_t *msgRx = (const msg_rclockd4_t*) msg;
 
         /* Extract numRatesFlags */
@@ -261,6 +269,8 @@ int32_t SCMI_ClockRateSet(uint32_t channel, uint32_t clockId,
             uint32_t clockId;
             scmi_clock_rate_t rate;
         } msg_tclockd5_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd5_t *msgTx = (msg_tclockd5_t*) msg;
 
         /* Fill in parameters */
@@ -319,6 +329,8 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
             uint32_t header;
             uint32_t clockId;
         } msg_tclockd6_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd6_t *msgTx = (msg_tclockd6_t*) msg;
 
         /* Fill in parameters */
@@ -338,6 +350,8 @@ int32_t SCMI_ClockRateGet(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd6_t *msgRx = (const msg_rclockd6_t*) msg;
 
         /* Extract rate */
@@ -381,6 +395,8 @@ int32_t SCMI_ClockConfigSet(uint32_t channel, uint32_t clockId,
             uint32_t attributes;
             uint32_t extendedConfigVal;
         } msg_tclockd7_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd7_t *msgTx = (msg_tclockd7_t*) msg;
 
         /* Fill in parameters */
@@ -443,6 +459,8 @@ int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
             uint32_t clockId;
             uint32_t flags;
         } msg_tclockd11_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd11_t *msgTx = (msg_tclockd11_t*) msg;
 
         /* Fill in parameters */
@@ -463,6 +481,8 @@ int32_t SCMI_ClockConfigGet(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd11_t *msgRx = (const msg_rclockd11_t*) msg;
 
         /* Extract attributes */
@@ -526,6 +546,8 @@ int32_t SCMI_ClockPossibleParentsGet(uint32_t channel, uint32_t clockId,
             uint32_t clockId;
             uint32_t skipParents;
         } msg_tclockd12_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd12_t *msgTx = (msg_tclockd12_t*) msg;
 
         /* Fill in parameters */
@@ -548,6 +570,8 @@ int32_t SCMI_ClockPossibleParentsGet(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd12_t *msgRx = (const msg_rclockd12_t*) msg;
 
         /* Extract numParentsFlags */
@@ -597,6 +621,8 @@ int32_t SCMI_ClockParentSet(uint32_t channel, uint32_t clockId,
             uint32_t clockId;
             uint32_t parentId;
         } msg_tclockd13_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd13_t *msgTx = (msg_tclockd13_t*) msg;
 
         /* Fill in parameters */
@@ -654,6 +680,8 @@ int32_t SCMI_ClockParentGet(uint32_t channel, uint32_t clockId,
             uint32_t header;
             uint32_t clockId;
         } msg_tclockd14_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd14_t *msgTx = (msg_tclockd14_t*) msg;
 
         /* Fill in parameters */
@@ -673,6 +701,8 @@ int32_t SCMI_ClockParentGet(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd14_t *msgRx = (const msg_rclockd14_t*) msg;
 
         /* Extract parentId */
@@ -722,6 +752,8 @@ int32_t SCMI_ClockGetPermissions(uint32_t channel, uint32_t clockId,
             uint32_t header;
             uint32_t clockId;
         } msg_tclockd15_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         msg_tclockd15_t *msgTx = (msg_tclockd15_t*) msg;
 
         /* Fill in parameters */
@@ -742,6 +774,8 @@ int32_t SCMI_ClockGetPermissions(uint32_t channel, uint32_t clockId,
     /* Copy out if no error */
     if (status == SCMI_ERR_SUCCESS)
     {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
         const msg_rclockd15_t *msgRx = (const msg_rclockd15_t*) msg;
 
         /* Extract permissions */
