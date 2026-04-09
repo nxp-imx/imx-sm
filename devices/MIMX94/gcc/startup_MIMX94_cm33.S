@@ -456,7 +456,9 @@ __isr_vector:
 #endif
 #endif
 /* Reset Handler */
-    .equ _AON_BLK_CTRL_BASE, 0x444F0000
+    .equ _AON_BLK_CTRL_NS_BASE, 0x44210000
+    .equ _IPG_DEBUG_CM33, 0x8
+    .equ _AON_BLK_CTRL_S_BASE, 0x444F0000
     .equ _WDOGANY,  0x1B8
     .equ _WDOG_UNLOCK_KEY, 0xD928C520
     .equ _WDOGBASE, 0x442E0000
@@ -470,8 +472,12 @@ __isr_vector:
     .weak    Reset_Handler
     .type    Reset_Handler, %function
 Reset_Handler:
+    /* Configure WDOGs to halt on debug */
+    ldr r0, =_AON_BLK_CTRL_NS_BASE
+    ldr r1, =0x1800U
+    str r1, [r0, #_IPG_DEBUG_CM33]
     /* Configure WDOG to drive WDOG_ANY */
-    ldr r0, =_AON_BLK_CTRL_BASE
+    ldr r0, =_AON_BLK_CTRL_S_BASE
     ldr r1, =0xFD
     str r1, [r0, #_WDOGANY]
     ldr r0, =_WDOGBASE
