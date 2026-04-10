@@ -515,19 +515,23 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
 {
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[idx].idx];
 
-    /* Workaround ERR052128 */
-    SystemTimeDelay(1U);
-
-    /* Clear interrupt */
-    TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
-            << threshold);
-
-    /* Check trip point will not underflow */
-    if (threshold >= s_tmpsns[idx].firstThreshold)
+    /* Check if PD is on */
+    if (SRC_MixIsPwrReady(s_tmpsns[idx].pd))
     {
-        /* Send sensor event */
-        LMM_SensorEvent(idx, threshold - s_tmpsns[idx].firstThreshold,
-            s_tmpsnsDir[idx]);
+        /* Workaround ERR052128 */
+        SystemTimeDelay(1U);
+
+        /* Clear interrupt */
+        TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
+                << threshold);
+
+        /* Check trip point will not underflow */
+        if (threshold >= s_tmpsns[idx].firstThreshold)
+        {
+            /* Send sensor event */
+            LMM_SensorEvent(idx, threshold - s_tmpsns[idx].firstThreshold,
+                s_tmpsnsDir[idx]);
+        }
     }
 }
 
