@@ -33,7 +33,6 @@
 GEN_CONFIG_VER ?= 2U
 BOARD ?= mcimx952evk
 USES_FUSA ?= 1
-NO_RX_REPLICA ?= 1
 
 include ./devices/MIMX952/sm/Makefile
 include ./boards/$(BOARD)/sm/Makefile
