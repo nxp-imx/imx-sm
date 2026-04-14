@@ -49,7 +49,7 @@
 #ifdef USES_MB_MU
 #include "mb_mu.h"
 #endif
-#include "crc.h"
+#include "sm_crc.h"
 
 /* Local defines */
 

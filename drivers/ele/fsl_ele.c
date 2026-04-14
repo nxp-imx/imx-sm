@@ -32,7 +32,7 @@
 #include "sm.h"
 #include "fsl_ele.h"
 #include "fsl_mu.h"
-#include "crc.h"
+#include "sm_crc.h"
 #include "board.h"
 
 /* Local Defines */

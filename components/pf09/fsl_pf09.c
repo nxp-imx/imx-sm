@@ -30,7 +30,7 @@
 /* Includes */
 
 #include "sm.h"
-#include "crc.h"
+#include "sm_crc.h"
 #include "fsl_pf09.h"
 
 /* Local Defines */

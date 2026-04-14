@@ -45,7 +45,7 @@
 #else
 #include "mb_loopback.h"
 #endif
-#include "crc.h"
+#include "sm_crc.h"
 
 /* Local defines */
 

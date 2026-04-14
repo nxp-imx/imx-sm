@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2025 NXP
+## Copyright 2025-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -118,7 +118,7 @@ SDK_OBJS = \
 	$(OUT)/fsl_wdog32.o \
 	$(OUT)/fsl_cache.o \
 	$(OUT)/fsl_ddr.o \
-	$(OUT)/crc.o
+	$(OUT)/sm_crc.o
 
 SM_OBJS = \
 	$(OUT)/dev_sm.o  \

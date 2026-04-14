@@ -116,7 +116,7 @@ SDK_OBJS = \
 	$(OUT)/fsl_wdog32.o \
 	$(OUT)/fsl_cache.o \
 	$(OUT)/fsl_ddr.o \
-	$(OUT)/crc.o
+	$(OUT)/sm_crc.o
 
 SM_OBJS = \
 	$(OUT)/dev_sm.o  \

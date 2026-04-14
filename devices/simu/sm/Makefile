@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2025 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -72,7 +72,7 @@ SM_OBJS = \
 	$(OUT)/dev_sm_rdc.o \
 	$(OUT)/dev_sm_fault.o  \
 	$(OUT)/dev_sm_fuse.o  \
-	$(OUT)/crc.o
+	$(OUT)/sm_crc.o
 
 TEST_INCLUDE += \
 	-I$(COMPONENTS_DIR)/scmi  \
