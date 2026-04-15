@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -44,6 +44,8 @@
 #include "lmm.h"
 
 /* Local defines */
+
+#define INVALID_POWER_STATE 5U
 
 /* Local types */
 
@@ -293,11 +295,11 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
             BCHECK(powerState == SCMI_POWER_DOMAIN_STATE_ON);
         }
 
-#ifdef SIMU
         /* Reset */
         printf("LMM_SystemLmBoot(%u, %u)\n", 0U, lmId);
-        CHECK(LMM_SystemLmBoot(0U, 0U, lmId, &g_swReason));
-#endif
+        SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
+        NCHECK(LMM_SystemLmBoot(0U, 0U, lmId, &g_swReason));
+        SM_TestModeSet(SM_TEST_MODE_OFF);
 
         /* Run over Default Case */
         printf("SCMI_PowerStateSet(%u, %u, 0, 5U)\n",
@@ -305,12 +307,11 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
         NCHECK(SCMI_PowerStateSet(channel, domainId,
             0U, 6U));
 
-#ifdef SIMU
         /* Run over Default Case */
         printf("SCMI_PowerStateSet(%u, %u, 0, 5U)\n",
             channel, domainId);
-        CHECK(SCMI_PowerStateSet(channel, domainId,
-            0U, 2U));
+        NECHECK(SCMI_PowerStateSet(channel, domainId,
+            0U, INVALID_POWER_STATE), SM_ERR_INVALID_PARAMETERS);
 
         /* Get Power State DEFAULT */
         {
@@ -320,16 +321,19 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
             CHECK(SCMI_PowerStateGet(channel, domainId,
                 &powerState));
             printf("  powerState=0x%08x\n", powerState);
-
-            BCHECK(powerState == 2U);
         }
 
         /* Reset */
         printf("LMM_SystemLmShutdown(%u, %u)\n", 0U, lmId);
         CHECK(LMM_SystemLmShutdown(0U, 0U, lmId, false, &g_swReason));
+
         /* Ensure correctness */
         {
-            uint32_t powerState = 0U;
+            uint32_t powerState = SCMI_POWER_DOMAIN_STATE_OFF;
+
+            printf("SCMI_PowerStateSet(%u, %u)\n", channel, domainId);
+            CHECK(SCMI_PowerStateSet(channel, domainId, 0U,
+                powerState));
 
             printf("SCMI_PowerStateGet(%u, %u)\n", channel, domainId);
             CHECK(SCMI_PowerStateGet(channel, domainId,
@@ -338,7 +342,6 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
 
             BCHECK(powerState == SCMI_POWER_DOMAIN_STATE_OFF);
         }
-#endif
     }
     /* ACCESS DENIED */
     else

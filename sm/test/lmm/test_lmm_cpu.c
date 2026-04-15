@@ -63,23 +63,26 @@ void TEST_LmmCpu(void)
     /* LM tests */
     printf("**** LMM CPU API Tests ***\n\n");
 
-#ifdef SIMU
-    uint32_t LmId = 0U, CpuId = 0U;
+    uint32_t LmId = 0U, CpuId = DEV_SM_CPU_TEST;
 
     /* CPU Reset Vector set */
     {
-        uint64_t resetvector = 0x123456789U;
+        uint64_t resetvector = TEST_RESET_VECTOR_VAL;
         CHECK(LMM_CpuResetVectorSet(LmId, CpuId, resetvector, \
             false, true, false, true))
 
+#if (DEV_SM_CPU_TEST == 0U)
         /* CPU Hold */
         CHECK(LMM_CpuHold(LmId, CpuId));
+#endif
 
         /* CPU Vector Reset */
         CHECK(LMM_CpuResetVectorReset(LmId, CpuId, false));
 
+#if (DEV_SM_CPU_TEST == 0U)
         /* CPU Stop */
         CHECK(LMM_CpuStop(LmId, CpuId));
+#endif
     }
 
     /* Test API bounds */
@@ -98,7 +101,7 @@ void TEST_LmmCpu(void)
 
     /* CPU Start CPU Start flag not valid */
     {
-        NECHECK(LMM_CpuStart(LmId, (CpuId - 1U)), SM_ERR_MISSING_PARAMETERS);
+        NECHECK(LMM_CpuStart(LmId, (DEV_SM_PLAT_TEST)), SM_ERR_MISSING_PARAMETERS);
     }
 
     /* CPU Hold test CPU start flag not set */
@@ -115,34 +118,41 @@ void TEST_LmmCpu(void)
 
     /* CPU Stop: Invalid CPU NUM */
     {
-        CpuId = 0U;
         NECHECK(LMM_CpuHold(LmId, DEV_SM_NUM_CPU), SM_ERR_NOT_FOUND);
     }
 
     /* Reset Vector Reset: Invalid CPU NUM */
     {
-        CpuId = 0U;
         NECHECK(LMM_CpuResetVectorReset(LmId, DEV_SM_NUM_CPU, false),
             SM_ERR_NOT_FOUND);
     }
 
     /* pdLPMConfigSet: Invalid CPU NUM */
     {
-        CpuId = 0U;
         NECHECK(LMM_CpuPdLpmConfigSet(LmId, DEV_SM_NUM_CPU, 0U, 0U, 0U),
             SM_ERR_INVALID_PARAMETERS);
     }
 
     /* LMM_CpuBootCheck: Invalid */
     {
-        CpuId = 0U;
+#if (DEV_SM_CPU_TEST != 0U)
+        CpuId = DEV_SM_CPU_TEST + 1U;
+#else
+        CpuId = DEV_SM_CPU_3;
+#endif
         NECHECK(LMM_CpuBootCheck(LmId, CpuId), SM_ERR_MISSING_PARAMETERS);
     }
 
     /* pdLPMConfigSet: Valid NUM */
     {
-        CpuId = 3U;
-        CHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1UL << CpuId)));
+#if (DEV_SM_CPU_TEST != 0U)
+        CpuId = DEV_SM_CPU_TEST;
+#else
+        CpuId = DEV_SM_CPU_3;
+#endif
+        uint32_t DomainId = DEV_SM_TEST_SRC_MIX;
+        CHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, DomainId, 0U,
+            (1UL << CpuId)));
     }
 
     /* pdLPMConfigSet: InValid NUM */
@@ -152,11 +162,13 @@ void TEST_LmmCpu(void)
             SM_ERR_INVALID_PARAMETERS);
     }
 
+#if (DEV_SM_CPU_TEST == 0U)
     /* CPU Stop: valid CPU NUM */
     {
         CpuId = 3U;
         CHECK(LMM_CpuStop(LmId, CpuId));
     }
+#endif
 
     /* CPU Stop: Invalid CPU NUM */
     {
@@ -165,6 +177,5 @@ void TEST_LmmCpu(void)
     }
 
     printf("\n");
-#endif
 }
 

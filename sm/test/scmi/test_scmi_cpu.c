@@ -256,15 +256,11 @@ void TEST_ScmiCpu(void)
         scmi_per_lpm_config_t per_lpm_config = { 0U };
         per_lpm_config.lpmSetting = 0U;
 
-#ifndef SIMU
-        per_lpm_config.perId = 0U;
-#else
-        per_lpm_config.perId = 1U;
+        per_lpm_config.perId = CPU_TEST_PERCONFIGS_VAL;
         printf("SCMI_CpuPerLpmConfigSet (%u, %u) Invalid perID\n",
             SM_TEST_DEFAULT_CHN, numCpu);
-        NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, 1U, numConfigs,
-            &per_lpm_config), SM_ERR_NOT_FOUND);
-#endif
+        NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, TEST_CPU_ID,
+            numConfigs, &per_lpm_config), SM_ERR_NOT_FOUND);
 
         printf("SCMI_CpuPerLpmConfigSet:(%u, %u)\n",
             SM_TEST_DEFAULT_CHN, numCpu);
@@ -382,13 +378,11 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
             CHECK(SCMI_CpuResetVectorSet(channel, domainId, flags,
                 resetVectorLow, resetVectorHigh));
 
-#ifdef SIMU
             /* Reset Config */
             uint32_t sysManager = 0U;
             printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
             CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, \
                 &g_swReason));
-#endif
         }
 
         /* RPC_00310 - CPU Sleep mode set */

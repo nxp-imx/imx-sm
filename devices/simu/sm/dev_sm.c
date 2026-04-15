@@ -155,6 +155,31 @@ int32_t DEV_SM_PowerUpPost(uint32_t domainId)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Power domain postamble for power-up ACK sent to GPC/SRC                  */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (domainId)
+    {
+        case DEV_SM_PD_6:
+            break;
+
+        default:
+            /* Only return error if domain out of range */
+            if (domainId >= DEV_SM_NUM_POWER)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+            break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Power domain preamble for power-down                                     */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_PowerDownPre(uint32_t domainId)

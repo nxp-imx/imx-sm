@@ -49,8 +49,7 @@
 
 /* Local variables */
 
-static uint32_t s_brdCtrl = 0U;
-static uint32_t s_brdExtCtrl[MAX_EXTCTRL_WORDS] = { 0 };
+static uint32_t s_extCtrl[SM_NUM_CTRL][MAX_EXTCTRL_WORDS];
 
 /*--------------------------------------------------------------------------*/
 /* Get control attributes                                                   */
@@ -123,17 +122,6 @@ int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
         {
             status = DEV_SM_ControlSet(ctrlId, numVal, val);
         }
-        else if (ctrlId == BRD_SM_CTRL_0)
-        {
-            if (numVal == 1U)
-            {
-                s_brdCtrl = *val;
-            }
-            else
-            {
-                status = SM_ERR_INVALID_PARAMETERS;
-            }
-        }
         else
         {
             status = SM_ERR_NOT_SUPPORTED;
@@ -163,10 +151,10 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
         {
             status = DEV_SM_ControlGet(ctrlId, numRtn, rtn);
         }
-        else if (ctrlId == BRD_SM_CTRL_0)
+        else if (ctrlId < BRD_SM_CTRL_TEST)
         {
             *numRtn = 1U;
-            *rtn = s_brdCtrl;
+            rtn[0] = 0U;
         }
         else
         {
@@ -192,7 +180,7 @@ int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if ctrlId is within bounds*/
+    /* Check to see if ctrlId is within bounds */
     if (ctrlId < SM_NUM_CTRL)
     {
         /* Check if device or board */
@@ -209,7 +197,7 @@ int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
                 {
                     for (uint32_t idx = 0U; idx < numVal; idx++)
                     {
-                        s_brdExtCtrl[addr + idx] = val[idx];
+                        s_extCtrl[ctrlId][addr + idx] = val[idx];
                     }
                 }
                 else
@@ -262,7 +250,7 @@ int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
                 {
                     for (uint32_t idx = 0U; idx < numRtn; idx++)
                     {
-                        rtn[idx] = s_brdExtCtrl[addr + idx];
+                        rtn[idx] = s_extCtrl[ctrlId][addr + idx];
                     }
                 }
                 else
@@ -332,6 +320,30 @@ int32_t BRD_SM_ControlAction(uint32_t ctrlId, uint32_t action,
     else
     {
         status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Configure notification flags                                             */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check if device or board */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = DEV_SM_ControlFlagsSet(ctrlId, flags);
+    }
+    else
+    {
+        if (ctrlId >= BRD_SM_CTRL_TEST)
+        {
+            status = SM_ERR_NOT_SUPPORTED;
+        }
     }
 
     /* Return status */

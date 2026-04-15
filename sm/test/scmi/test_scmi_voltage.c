@@ -369,7 +369,6 @@ static void TEST_ScmiVoltageSet(bool pass, uint32_t channel,
         NECHECK(SCMI_VoltageConfigSet(channel, domainId, 6U),
             SCMI_ERR_INVALID_PARAMETERS);
 
-#ifdef SIMU
         /* Reset */
         printf("LMM_SystemLmBoot(%u, %u)\n", 0U, lmId);
         CHECK(LMM_SystemLmBoot(0U, 0U, lmId, &g_swReason));
@@ -388,7 +387,6 @@ static void TEST_ScmiVoltageSet(bool pass, uint32_t channel,
         CHECK(SCMI_VoltageConfigGet(channel, domainId, &config));
         BCHECK(config == SCMI_VOLTAGE_DOMAIN_MODES_OFF);
 
-#endif
         /* Current Issue :: No direct access to call this function */
     }
     /* Access denied */

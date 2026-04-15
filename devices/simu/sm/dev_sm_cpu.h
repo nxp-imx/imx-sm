@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -59,6 +59,12 @@
 /*! Number of device peripheral LPIs */
 #define DEV_SM_NUM_PERLPI   1U
 
+/*! DEV_SM_CPU disabled */
+#define DEV_SM_CPU_FUSED_DISABLED   1U
+
+/*! Number of device CPU sleep modes */
+#define DEV_SM_CPU_NUM_SLEEP_MODE      4U
+
 /*!
  * @name Device CPU indexes
  */
@@ -100,6 +106,13 @@
 #define DEV_SM_CPU_SLEEP_MODE_STOP     2U
 /*! Suspend mode */
 #define DEV_SM_CPU_SLEEP_MODE_SUSPEND  3U
+
+/*! Select between GPC or GIC for wakeup */
+#define DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX    0x1U
+/*! Wake A55 CPU during A55 platform wakeup */
+#define DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE  0x2U
+/*! Enable LP compute during system sleep */
+#define DEV_SM_CPU_SLEEP_FLAG_LP_COMPUTE 0x4U
 /** @} */
 
 /*!

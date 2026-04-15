@@ -416,8 +416,7 @@ static void TEST_ScmiPerfPriv(bool pass, uint32_t channel,
         CHECK(SCMI_PerformanceLevelGet(channel, domainId, NULL));
     }
 
-/* Reset Config */
-#ifdef SIMU
+    /* Reset Config */
     if (pass)
     {
         /* Reset */
@@ -425,6 +424,5 @@ static void TEST_ScmiPerfPriv(bool pass, uint32_t channel,
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
         CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
     }
-#endif
 }
 

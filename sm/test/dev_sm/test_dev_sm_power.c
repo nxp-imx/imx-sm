@@ -87,13 +87,13 @@ void TEST_DevSmPower(void)
             printf("  powerState=%u\n", powerState);
 
             CHECK(DEV_SM_PowerStateSet(domainId, powerState));
-#ifdef SIMU
-            CHECK(DEV_SM_PowerRetModeSet(domainId, retMask));
-#endif
 
             /* Ret Mask Get */
             CHECK(DEV_SM_PowerRetMaskGet(domainId, &retMask));
             printf("   retMask=%u\n", retMask);
+
+            /* Ret Mask Set */
+            CHECK(DEV_SM_PowerRetModeSet(domainId, retMask));
         }
     }
 

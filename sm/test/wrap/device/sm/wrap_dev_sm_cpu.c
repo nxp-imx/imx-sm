@@ -40,6 +40,21 @@
 extern int32_t __real_DEV_SM_CpuNameGet(uint32_t cpuId, string *cpuNameAddr,
     int32_t *len);
 extern bool __real_DEV_SM_CpuIsActive(uint32_t cpuId);
+extern int32_t __real_DEV_SM_CpuStart(uint32_t cpuId);
+extern int32_t __real_DEV_SM_CpuHold(uint32_t cpuId);
+extern int32_t __real_DEV_SM_CpuStop(uint32_t cpuId);
+extern int32_t __real_DEV_SM_CpuResetVectorSet(uint32_t cpuId,
+    uint64_t resetVector);
+extern int32_t __real_DEV_SM_CpuSleepModeSet(uint32_t cpuId,
+    uint32_t sleepMode, uint32_t sleepFlags);
+extern int32_t __real_DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
+    uint32_t maskVal);
+extern int32_t __real_DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
+    uint32_t maskVal);
+extern int32_t __real_DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId,
+    uint32_t domainId, uint32_t lpmSetting, uint32_t retMask);
+extern int32_t __real_DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
+    uint32_t lpmSetting);
 
 /*--------------------------------------------------------------------------*/
 /* Return CPU name                                                          */
@@ -71,5 +86,155 @@ bool __wrap_DEV_SM_CpuIsActive(uint32_t cpuId)
 
     /* Return state */
     return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Star a CPU                                                               */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuStart(uint32_t cpuId)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuStart(cpuId);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Hold a CPU                                                               */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuHold(uint32_t cpuId)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuHold(cpuId);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Stop a CPU                                                               */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuStop(uint32_t cpuId)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuStop(cpuId);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set reset vector                                                         */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuResetVectorSet(cpuId, resetVector);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CPU sleep mode                                                       */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
+    uint32_t sleepFlags)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuSleepModeSet(cpuId, sleepMode, sleepFlags);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CPU IRQ wake mask                                                    */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
+    uint32_t maskVal)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuIrqWakeSet(cpuId, maskIdx, maskVal);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CPU non-IRQ wake mask                                                */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
+    uint32_t maskVal)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuNonIrqWakeSet(cpuId, maskIdx, maskVal);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CPU power domain LPM config                                          */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
+    uint32_t lpmSetting, uint32_t retMask)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuPdLpmConfigSet(cpuId, domainId, lpmSetting,
+        retMask);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CPU peripheral LPM config                                            */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
+    uint32_t lpmSetting)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_DEV_SM_CpuPerLpmConfigSet(cpuId, perId, lpmSetting);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_EXEC_LVL1, SM_ERR_NOT_FOUND)
+
+    /* Return status */
+    return status;
 }
 

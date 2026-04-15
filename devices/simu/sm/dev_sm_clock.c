@@ -47,10 +47,31 @@
 
 /* Local variables */
 
-static bool s_clockState[DEV_SM_NUM_CLOCK];
 static uint64_t s_clockFreq[DEV_SM_NUM_CLOCK];
 static uint32_t s_clockParent[DEV_SM_NUM_CLOCK];
 static uint32_t s_clockSscConfig[DEV_SM_NUM_CLOCK];
+static bool s_clockState[DEV_SM_NUM_CLOCK] =
+{
+    [CLOCK_SRC_0]  = true,
+    [CLOCK_SRC_1]  = true,
+    [CLOCK_SRC_2]  = true,
+    [CLOCK_SRC_3]  = true,
+    [CLOCK_SRC_4]  = true,
+    [CLOCK_SRC_5]  = true,
+    [CLOCK_ROOT_0] = true,
+    [CLOCK_ROOT_1] = true,
+    [CLOCK_ROOT_2] = true,
+    [CLOCK_ROOT_3] = true,
+    [CLOCK_ROOT_4] = true,
+    [CLOCK_ROOT_5] = true,
+    [CLOCK_ROOT_6] = true,
+    [CLOCK_ROOT_7] = true,
+    [CLOCK_ROOT_8] = true,
+    [CLOCK_ROOT_9] = true,
+    [CLOCK_GPR_0]  = true,
+    [CLOCK_GPR_1]  = true,
+    [CLOCK_CGM_0]  = true
+};
 
 /*--------------------------------------------------------------------------*/
 /* Return clock name                                                        */
@@ -63,11 +84,25 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
 
     static string const s_name[DEV_SM_NUM_CLOCK] =
     {
-        [DEV_SM_CLK_0] = "clk0",
-        [DEV_SM_CLK_1] = "clk1",
-        [DEV_SM_CLK_2] = "clk2",
-        [DEV_SM_CLK_3] = "clk3",
-        [DEV_SM_CLK_5] = "clk5"
+        [CLOCK_SRC_0]  = "clk0",
+        [CLOCK_SRC_1]  = "clk1",
+        [CLOCK_SRC_2]  = "clk2",
+        [CLOCK_SRC_3]  = "clk3",
+        [CLOCK_SRC_4]  = "clk4",
+        [CLOCK_SRC_5]  = "clk5",
+        [CLOCK_ROOT_0] = "clk_root0",
+        [CLOCK_ROOT_1] = "clk_root1",
+        [CLOCK_ROOT_2] = "clk_root2",
+        [CLOCK_ROOT_3] = "clk_root3",
+        [CLOCK_ROOT_4] = "clk_root4",
+        [CLOCK_ROOT_5] = "clk_root5",
+        [CLOCK_ROOT_6] = "clk_root6",
+        [CLOCK_ROOT_7] = "clk_root7",
+        [CLOCK_ROOT_8] = "clk_root8",
+        [CLOCK_ROOT_9] = "clk_root9",
+        [CLOCK_GPR_0]  = "clk_gpr0",
+        [CLOCK_GPR_1]  = "clk_gpr1",
+        [CLOCK_CGM_0]  = "clk_cgm0"
     };
 
     /* Get max string width */
@@ -121,50 +156,132 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    static const uint8_t s_clockGprSel
+    [CLOCK_NUM_GPR_SEL][CLOCK_NUM_GPR_MUX_SEL] =
+    {
+        [DEV_SM_GPR_SEL_0] = { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1 },
+        [DEV_SM_GPR_SEL_1] = { DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_3 }
+    };
+
+    static const uint8_t s_clockSourceNumInputs[CLOCK_NUM_SRC] =
+    {
+        [DEV_SM_CLK_SRC_0] = 1U,
+        [DEV_SM_CLK_SRC_2] = 1U,
+        [DEV_SM_CLK_SRC_3] = 1U,
+        [DEV_SM_CLK_SRC_5] = 1U
+    };
+
+    static const uint8_t s_clockRootMux
+    [CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
+    {
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_4 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_3 },
+
+        { DEV_SM_CLK_SRC_0, DEV_SM_CLK_SRC_1,
+          DEV_SM_CLK_SRC_2, DEV_SM_CLK_SRC_5 }
+    };
+
     /* Check clock */
     if (DEV_SM_ClockIsReserved(clockId))
     {
         status = SM_ERR_NOT_FOUND;
     }
-    else if (clockId == DEV_SM_CLK_0)
+    else if (clockId < CLOCK_NUM_SRC)
     {
-        /* Return mux input and max number */
-        status = SM_ERR_NOT_SUPPORTED;
-        *numParents = 0U;
-    }
-    else if (clockId == DEV_SM_CLK_2)
-    {
-        if (sel == 0U)
+        /* Query if clock source has a parent */
+        if (s_clockSourceNumInputs[clockId] != 0U)
         {
-            /* Return mux input and max number */
-            *parentId = DEV_SM_CLK_0;
-            *numParents = 2U;
-        }
-        else if (sel == 1U)
-        {
-            /* Return mux input and max number */
-            *parentId = DEV_SM_CLK_1;
-            *numParents = 2U;
+            *parentId = s_clockSourceNumInputs[clockId];
+
+            /* Clock sources have at most a single parent */
+            if (sel >= 1U)
+            {
+                status = SM_ERR_OUT_OF_RANGE;
+            }
+            else
+            {
+                *numParents = 1U;
+            }
         }
         else
         {
-            /* Return mux input and max number */
-            status = SM_ERR_OUT_OF_RANGE;
-            *numParents = 2U;
+            status = SM_ERR_NOT_SUPPORTED;
         }
     }
     else
     {
-        /* Return mux input and max number */
-        if (sel == 0U)
+        uint32_t clockIndex = clockId - CLOCK_NUM_SRC;
+        if (clockIndex < CLOCK_NUM_ROOT)
         {
-            *parentId = DEV_SM_CLK_0;
-            *numParents = 1U;
+            *numParents = CLOCK_NUM_ROOT_MUX_SEL;
+            if (sel >= *numParents)
+            {
+                status = SM_ERR_OUT_OF_RANGE;
+            }
+            else
+            {
+                *parentId = s_clockRootMux[clockIndex][sel];
+            }
         }
         else
         {
-            status = SM_ERR_OUT_OF_RANGE;
-            *numParents = 1U;
+            clockIndex = clockIndex - CLOCK_NUM_ROOT;
+            if (clockIndex < CLOCK_NUM_GPR_SEL)
+            {
+                *numParents = CLOCK_NUM_GPR_MUX_SEL;
+                if (sel >= *numParents)
+                {
+                    status = SM_ERR_OUT_OF_RANGE;
+                }
+                else
+                {
+                    *parentId = s_clockGprSel[clockIndex][sel];
+                }
+            }
+            else
+            {
+                clockIndex = clockIndex - CLOCK_NUM_GPR_SEL;
+                if (clockIndex < CLOCK_NUM_CGC)
+                {
+                    if (sel >= 1U)
+                    {
+                        status = SM_ERR_OUT_OF_RANGE;
+                    }
+                    else
+                    {
+                        *parentId = 1U;
+                        *numParents = 1U;
+                    }
+                }
+                else
+                {
+                    status = SM_ERR_NOT_FOUND;
+                }
+            }
         }
     }
 
@@ -354,8 +471,15 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
         switch (extId)
         {
             case DEV_SM_CLOCK_EXT_SSC:
-                /* Latch SSC configuration */
-                s_clockSscConfig[clockId] = extConfigValue;
+                if (clockId < CLOCK_NUM_SRC)
+                {
+                    /* Latch SSC configuration */
+                    s_clockSscConfig[clockId] = extConfigValue;
+                }
+                else
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
+                }
                 break;
 
             default:

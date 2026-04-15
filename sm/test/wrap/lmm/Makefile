@@ -63,7 +63,8 @@ LFLAGS += \
 	-Wl,--wrap=LMM_SystemWake \
 	-Wl,--wrap=LMM_VoltageModeSet \
 	-Wl,--wrap=LM_SystemLmReason \
-	-Wl,--wrap=LM_SystemLmStatus
+	-Wl,--wrap=LM_SystemLmStatus \
+	-Wl,--wrap=LMM_SystemRstComp
 
 VPATH += \
 	$(WRAP_DIR)/lmm

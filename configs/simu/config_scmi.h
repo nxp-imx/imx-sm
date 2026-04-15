@@ -135,6 +135,7 @@
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_0] = SM_SCMI_PERM_GET, \
         .clkPerms[DEV_SM_CLK_1] = SM_SCMI_PERM_ALL, \
+        .clkPerms[DEV_SM_CLK_SRC_5] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_2] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_TEST_E] = SM_SCMI_PERM_ALL, \
@@ -188,6 +189,7 @@
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_2] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[BRD_SM_CTRL_TEST] = SM_SCMI_PERM_NOTIFY, \
         .daisyPerms[DEV_SM_DAISY_0] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_2] = SM_SCMI_PERM_ALL, \
         .lmmPerms[1] = SM_SCMI_PERM_NOTIFY, \

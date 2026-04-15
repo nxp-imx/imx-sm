@@ -55,8 +55,54 @@ int32_t DEV_SM_RdcInfoGet(uint32_t rdcId, string *rdcNameAddr,
     /* coverity[misra_c_2012_rule_8_13_violation] */
     char *rdcLabel, uint32_t *rdcBase)
 {
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Dummy RDC info for simulation */
+    static const string s_simuRdcNames[] =
+    {
+        "simu_rdc0",
+        "simu_rdc1",
+        "simu_rdc2"
+    };
+
+    static const char s_simuRdcLabels[] = {'S', 'I', 'M'};
+    static const uint32_t s_simuRdcBases[] =
+    {
+        0x40000000U,
+        0x40010000U,
+        0x40020000U
+    };
+
+    /* Check if invalid - assuming 3 RDCs for simu */
+    if (rdcId >= DEV_SM_NUM_RDC)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return results */
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (rdcNameAddr != NULL)
+        {
+            /* Return pointer to name */
+            *rdcNameAddr = s_simuRdcNames[rdcId];
+        }
+
+        if (rdcBase != NULL)
+        {
+            /* Return address of RDC */
+            *rdcBase = s_simuRdcBases[rdcId];
+        }
+
+        if (rdcLabel != NULL)
+        {
+            /* Return label */
+            *rdcLabel = s_simuRdcLabels[rdcId];
+        }
+    }
+
     /* Return status */
-    return SM_ERR_NOT_FOUND;
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

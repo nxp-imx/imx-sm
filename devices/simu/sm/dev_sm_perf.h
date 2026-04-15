@@ -69,6 +69,43 @@
 
 /* Functions */
 
+/*!
+ * Set frequency of a performance domain.
+ *
+ * @param[in]  domainId   Identifier for the domain
+ * @param[in]  perfLevel  Performance level to set
+ *
+ * This function allows the caller to set the frequency setpoint of a
+ * performance domain to a setpoint associated with the specified
+ * performance level.  The voltage level required for the specified
+ * setpoint must be set before/after calling this function based
+ * on directionality.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the domain level was set successfully.
+ * - ::SM_ERR_NOT_FOUND if \a domainId out of range
+ */
+int32_t DEV_SM_PerfFreqSet(uint32_t domainId, uint32_t perfLevel);
+
+/*!
+ * Configure performance level for system sleep.
+ *
+ * @param[in]   perfLevelSleep  Level for system sleep performance domains
+ *
+ * This function configures the level for system sleep performance
+ * domains.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the domain level was returned successfully.
+ * - ::SM_ERR_OUT_OF_RANGE: if \a perfLevelSleep is invalid.
+ */
+
+int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep);
+
 /** @} */
 
 /* Include SM device API */

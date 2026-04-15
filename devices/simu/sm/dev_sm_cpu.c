@@ -53,6 +53,12 @@ static bool cpuRunning[DEV_SM_NUM_CPU] =
 {
     [DEV_SM_CPU_0] = true
 };
+/* coverity[misra_c_2012_rule_8_9_violation] */
+static uint32_t s_cpuSleepMode[DEV_SM_NUM_CPU] = { 0 };
+/* coverity[misra_c_2012_rule_8_9_violation] */
+static bool s_cpuWakeMux[DEV_SM_NUM_CPU] = { false };
+/* coverity[misra_c_2012_rule_8_9_violation] */
+static bool s_cpuLpCompute[DEV_SM_NUM_CPU] = { false };
 
 /*--------------------------------------------------------------------------*/
 /* Return CPU name                                                          */
@@ -235,17 +241,60 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
     uint32_t sleepFlags)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
-    /* Check CPU */
-    if (DEV_SM_CpuIsReserved(cpuId))
+    /* Check fuse state */
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
-
-    /* Check sleep mode */
-    if ((status == SM_ERR_SUCCESS) && (sleepMode > 4U))
+    else
     {
-        status = SM_ERR_INVALID_PARAMETERS;
+        bool irqMuxGic = (sleepFlags & DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX)
+            != 0U;
+
+        /* GIC wakeup is disallowed with SUSPEND sleep mode */
+        if ((sleepMode == DEV_SM_CPU_SLEEP_MODE_SUSPEND) && (irqMuxGic))
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
+        else
+        {
+            if (sleepMode >= DEV_SM_CPU_NUM_SLEEP_MODE)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+            else
+            {
+                /* Set CPU target sleep mode on next WFI entry */
+                s_cpuSleepMode[modCpuId] = sleepMode;
+
+                /* Set wake mux to GPC/GIC */
+                s_cpuWakeMux[modCpuId] = irqMuxGic;
+
+                if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
+                {
+                    s_cpuWakeListA55 |= (1UL << modCpuId);
+                }
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            bool enableLpCompute = (sleepFlags &
+                DEV_SM_CPU_SLEEP_FLAG_LP_COMPUTE) != 0U;
+
+            /* LP compute only allowed in RUN sleep mode */
+            if ((sleepMode != DEV_SM_CPU_SLEEP_MODE_RUN) && (enableLpCompute))
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+            else
+            {
+                /* Set LP compute mode enable */
+                s_cpuLpCompute[modCpuId] = enableLpCompute;
+            }
+        }
     }
 
     /* Return status */

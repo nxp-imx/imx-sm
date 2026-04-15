@@ -71,6 +71,7 @@ extern int32_t __real_LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
 extern int32_t __real_LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId,
     bool graceful, const lmm_rst_rec_t *resetRec, uint8_t group,
     bool *noReturn);
+extern int32_t __real_LMM_SystemRstComp(const lmm_rst_rec_t *resetRec);
 
 /*--------------------------------------------------------------------------*/
 /* Full system shutdown                                                     */
@@ -344,6 +345,22 @@ int32_t __wrap_LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId,
     /* Call original function */
     status = __real_LMM_SystemGrpReset(lmId, agentId, graceful, resetRec,
         group, noReturn);
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Complete system reset handling                                           */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_LMM_SystemRstComp(const lmm_rst_rec_t *resetRec)
+{
+    int32_t status;
+
+    /* Call original function */
+    status = __real_LMM_SystemRstComp(resetRec);
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 

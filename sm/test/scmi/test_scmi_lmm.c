@@ -516,13 +516,11 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
             }
         }
 
-#ifdef SIMU
         /* LM_00020 Reset Config */
         uint32_t sysManager = 0U;
 
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
         CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
-#endif
     }
 
     /* Access denied */

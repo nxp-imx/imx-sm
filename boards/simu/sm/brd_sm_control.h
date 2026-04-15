@@ -64,6 +64,7 @@
 #define SM_CONTROLEXTSET       BRD_SM_ControlExtSet       /*!< Extended control set */
 #define SM_CONTROLEXTGET       BRD_SM_ControlExtGet       /*!< Extended control get */
 #define SM_CONTROLACTION       BRD_SM_ControlAction       /*!< Control action */
+#define SM_CONTROLFLAGSSET     BRD_SM_ControlFlagsSet     /*!< Control flags */
 /** @} */
 
 /*! Number of board controls */
@@ -210,6 +211,21 @@ int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
  */
 int32_t BRD_SM_ControlAction(uint32_t ctrlId, uint32_t action,
     uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn);
+
+/*!
+ * Configure notification flags for a control.
+ *
+ * @param[in]     ctrlId   Control identifier
+ * @param[in]     flags    Notification flags to configure
+ *
+ * This function configures notification flags for the specified control..
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if \a ctrlId is not valid.
+ */
+int32_t BRD_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags);
 
 /** @} */
 

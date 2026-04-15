@@ -46,6 +46,9 @@
 
 /* Local defines */
 
+#define NEG_TRIP_POINT -2525
+#define POS_TRIP_POINT 8525
+
 /* Local types */
 
 /* Local variables */
@@ -531,18 +534,20 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         uint32_t tripPointEvCtrl
             = SCMI_SENSOR_TP_EV_CTRL(SCMI_SENSOR_TP_POS)
             | SCMI_SENSOR_TP_EV_CTRL_TRIP_ID(0U);
-        int64_t tp = 2525;
+        int64_t tp = NEG_TRIP_POINT;
 
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
 
         /* Intentional: Test code */
         /* coverity[misra_c_2012_rule_10_8_violation] */
+        /* coverity[cert_int31_c_violation] */
         XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
             tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));
 
         /* Intentional: Test code */
         /* coverity[misra_c_2012_rule_10_8_violation] */
+        /* coverity[cert_int31_c_violation] */
         NECHECK(SCMI_SensorTripPointConfig(SM_SCMI_NUM_CHN, sensorId,
             tripPointEvCtrl, INT64_L(tp), INT64_H(tp)),
             SCMI_ERR_INVALID_PARAMETERS);
@@ -559,15 +564,17 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
 
-#ifdef SIMU
         uint32_t agent = 0U;
         uint32_t sensorIdNotify = 0U;
         uint32_t tripPointDesc = 0U;
 
         /* Trip point event*/
-        printf("SCMI_SensorTripPointEvent(%u)\n", channel + 1U);
-        CHECK(SCMI_SensorTripPointEvent(channel + 1U, &agent,
-            &sensorIdNotify, &tripPointDesc));
+        if (channel < UINT32_MAX)
+        {
+            printf("SCMI_SensorTripPointEvent(%u)\n", (channel + 1U));
+            CHECK(SCMI_SensorTripPointEvent((channel + 1U), &agent,
+                &sensorIdNotify, &tripPointDesc));
+        }
 
         BCHECK(agent == 0U);
         BCHECK(sensorIdNotify == sensorId);
@@ -577,7 +584,21 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
             == 0U);
         NECHECK(SCMI_SensorTripPointEvent(SM_SCMI_NUM_CHN, &agent,
             &sensorIdNotify, &tripPointDesc), SCMI_ERR_INVALID_PARAMETERS);
-#endif
+
+        /* Test sensor config pos */
+        uint32_t tripPointEvCtrl
+            = SCMI_SENSOR_TP_EV_CTRL(SCMI_SENSOR_TP_POS)
+            | SCMI_SENSOR_TP_EV_CTRL_TRIP_ID(0U);
+        int64_t tp = NEG_TRIP_POINT;
+
+        printf("SCMI_SensorTripPointConfig(%u, %u)\n",
+            channel, sensorId);
+
+        /* Intentional: Test code */
+        /* coverity[misra_c_2012_rule_10_8_violation] */
+        /* coverity[cert_int31_c_violation] */
+        XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
+            tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));
 
         /* Testing passing in NULL for parameters for TripPointEvent */
         /* Enable notify */
@@ -587,13 +608,14 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
 
-#ifdef SIMU
-
+        /* Worka around for board 952. Need to be fixed*/
         /* Trip point event*/
-        printf("SCMI_SensorTripPointEvent(%u)\n", channel + 1U);
-        CHECK(SCMI_SensorTripPointEvent(channel + 1U, NULL,
-            NULL, NULL));
-#endif
+        if (channel < UINT32_MAX)
+        {
+            printf("SCMI_SensorTripPointEvent(%u)\n", (channel + 1U));
+            CHECK(SCMI_SensorTripPointEvent((channel + 1U), NULL,
+                NULL, NULL));
+        }
     }
 
     /* Test sensor config neg */
@@ -601,7 +623,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         uint32_t tripPointEvCtrl
             = SCMI_SENSOR_TP_EV_CTRL(SCMI_SENSOR_TP_NEG)
             | SCMI_SENSOR_TP_EV_CTRL_TRIP_ID(0U);
-        int64_t tp = -2525;
+        int64_t tp = POS_TRIP_POINT;
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
         /* Intentional: Test code */
@@ -613,6 +635,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
 
     if (pass)
     {
+
         /* Enable notify */
         uint32_t sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(1U);
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n", channel,
@@ -620,21 +643,23 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
 
-#ifdef SIMU
         uint32_t agent = 0U;
         uint32_t sensorIdNotify = 0U;
         uint32_t tripPointDesc = 0U;
 
         /* Trip point event*/
-        printf("SCMI_SensorTripPointEvent(%u)\n", channel + 1U);
-        CHECK(SCMI_SensorTripPointEvent(channel + 1U, &agent,
-            &sensorIdNotify, &tripPointDesc));
+        if (channel < UINT32_MAX)
+        {
+            printf("SCMI_SensorTripPointEvent(%u)\n", (channel + 1U));
+            CHECK(SCMI_SensorTripPointEvent((channel + 1U), &agent,
+                &sensorIdNotify, &tripPointDesc));
+        }
 
         BCHECK(agent == 0U);
         BCHECK(sensorIdNotify == sensorId);
         BCHECK(SCMI_SENSOR_EVENT_TP_ID(tripPointDesc)
             == 0U);
-#endif
+
         /* Disable notifications after previous notifications */
         sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(0U);
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
@@ -642,7 +667,6 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
     }
 
     /* Reset Config */
-#ifdef SIMU
     if (pass)
     {
         /* Reset */
@@ -650,6 +674,5 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
         CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
     }
-#endif
 }
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -43,7 +43,7 @@
 
 #include "test.h"
 
-#ifdef SIMU
+#ifdef BRD_SM_NUM_CTRL
 #include "brd_sm_control.h"
 #endif
 
@@ -60,19 +60,40 @@
 /*--------------------------------------------------------------------------*/
 void TEST_BrdSmControl(void)
 {
-#ifdef SIMU
+#ifdef BRD_SM_NUM_CTRL
     printf("**** Board SM Control API Tests ***\n\n");
     {
         uint32_t numRtn = 0U;
         uint32_t rtn[1] = { 1 };
 
-        printf("BRD_SM_ControlGet(BRD_SM_CTRL_0)\n");
-        CHECK(BRD_SM_ControlGet(BRD_SM_CTRL_0, &numRtn, rtn));
+        printf("BRD_SM_ControlGet(BRD_SM_CONTROL_COMMON)\n");
+        CHECK(BRD_SM_ControlGet(BRD_SM_CONTROL_COMMON, &numRtn, rtn));
         printf("numRtn: %u rtn: %u\n", numRtn, rtn[0]);
 
-        numRtn = 1U;
-        printf("BRD_SM_ControlSet(BRD_SM_CTRL_0)\n");
-        CHECK(BRD_SM_ControlSet(BRD_SM_CTRL_0, numRtn, rtn));
+        bool get = false;
+        bool set = false;
+        bool extGet = false;
+        bool extSet = false;
+        bool action = false;
+        bool notify = false;
+
+        printf("BRD_SM_ControlAttributes(BRD_SM_CONTROL_COMMON)\n");
+        CHECK(BRD_SM_ControlAttributes(BRD_SM_CONTROL_COMMON, &get, &set,
+            &extGet, &extSet, &action, &notify));
+        printf("get: %u set: %u extGet: %u extSet: %u action: %u notify: %u\n",
+            get, set, extGet, extSet, action, notify);
+
+        printf("BRD_SM_ControlAttributes(BRD_SM_CTRL_EXT_TEST)\n");
+        CHECK(BRD_SM_ControlAttributes(BRD_SM_CTRL_EXT_TEST, &get, &set,
+            &extGet, &extSet, &action, &notify));
+        printf("get: %u set: %u extGet: %u extSet: %u action: %u notify: %u\n",
+            get, set, extGet, extSet, action, notify);
+
+        printf("BRD_SM_ControlAttributes(BRD_SM_CTRL_TEST)\n");
+        CHECK(BRD_SM_ControlAttributes(BRD_SM_CTRL_TEST, &get, &set,
+            &extGet, &extSet, &action, &notify));
+        printf("get: %u set: %u extGet: %u extSet: %u action: %u notify: %u\n",
+            get, set, extGet, extSet, action, notify);
     }
 
     /* Test API bounds */
@@ -92,13 +113,24 @@ void TEST_BrdSmControl(void)
             SM_ERR_NOT_SUPPORTED);
 
         numRtn = 0U;
-        printf("BRD_SM_ControlSet(BRD_SM_CTRL_0)\n");
-        NECHECK(BRD_SM_ControlSet(BRD_SM_CTRL_0, numRtn, rtn),
-            SM_ERR_INVALID_PARAMETERS);
+        printf("BRD_SM_ControlSet(BRD_SM_CONTROL_COMMON)\n");
+        NECHECK(BRD_SM_ControlSet(BRD_SM_CONTROL_COMMON, numRtn, rtn),
+            SM_ERR_NOT_SUPPORTED);
 
         printf("BRD_SM_ControlSet(SM_NUM_CTRL)\n");
         NECHECK(BRD_SM_ControlSet(SM_NUM_CTRL, numRtn, rtn),
             SM_ERR_NOT_FOUND);
+
+        bool get = false;
+        bool set = false;
+        bool extGet = false;
+        bool extSet = false;
+        bool action = false;
+        bool notify = false;
+
+        printf("BRD_SM_ControlAttributes(SM_NUM_CTRL)\n");
+        NECHECK(BRD_SM_ControlAttributes(SM_NUM_CTRL, &get, &set,
+            &extGet, &extSet, &action, &notify), SM_ERR_NOT_FOUND);
     }
 
     printf("\n");

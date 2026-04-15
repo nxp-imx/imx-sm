@@ -79,9 +79,7 @@ void TEST_DevSmPerf(void)
             printf("DEV_SM_PerfLevelGet(dom: %u: level: %u\n",
                 domainId, perfLevel);
 
-#ifndef SIMU
             CHECK(DEV_SM_PerfFreqSet(domainId, perfLevel));
-#endif
         }
         else
         {
@@ -136,7 +134,7 @@ void TEST_DevSmPerf(void)
 
         printf("DEV_SM_PerfNumLevelsGet(%u)\n", 0U);
         CHECK(DEV_SM_PerfNumLevelsGet(0U, &numLevels));
-        printf("   numLevels=%u", numLevels);
+        printf("    numLevels=%u\n", numLevels);
 
         dev_sm_perf_desc_t desc = { 0 };
 
@@ -144,7 +142,6 @@ void TEST_DevSmPerf(void)
         NECHECK(DEV_SM_PerfDescribe(0U, numLevels, &desc),
             SM_ERR_OUT_OF_RANGE);
 
-#ifndef SIMU
         uint32_t perfLevel = 4U;
         NECHECK(DEV_SM_PerfFreqSet(0U, perfLevel),
             SM_ERR_OUT_OF_RANGE);
@@ -153,7 +150,7 @@ void TEST_DevSmPerf(void)
         NECHECK(DEV_SM_PerfSystemSleep(DEV_SM_NUM_PERF),
             SM_ERR_OUT_OF_RANGE);
 
-        CHECK(DEV_SM_PerfSystemSleep(DEV_SM_PERF_LVL_PRK));
+        CHECK(DEV_SM_PerfSystemSleep(DEV_SM_PERF_DEFAULT));
 
 #ifdef DEV_SM_PERF_WAKEUP
         CHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_WAKEUP, &numLevels));
@@ -205,7 +202,6 @@ void TEST_DevSmPerf(void)
         printf("DEV_SM_PerfLevelSet(%u)\n", DEV_SM_NUM_PERF);
         NECHECK(DEV_SM_PerfLevelSet(0U /*DEV_SM_PERF_M33*/, DEV_SM_NUM_PERF),
             SM_ERR_OUT_OF_RANGE);
-#endif
     }
 
     printf("\n");

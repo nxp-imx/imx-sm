@@ -63,14 +63,14 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (fuseWord != 50U)
+    if (fuseWord < 50U)
     {
         uint32_t val = 0x80008000U + (fuseWord * 4U);
         *addr = val;
     }
     else
     {
-        status = SM_ERR_INVALID_PARAMETERS;
+        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return result */
@@ -124,9 +124,21 @@ bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
 {
     bool cpuDisabled = false;
 
+    static const uint32_t s_CpuId[DEV_SM_NUM_CPU] =
+    {
+        [DEV_SM_CPU_8] = DEV_SM_CPU_FUSED_DISABLED
+    };
+
     if (cpuId >= DEV_SM_NUM_POWER)
     {
         cpuDisabled = true;
+    }
+    else
+    {
+        if (s_CpuId[cpuId] == DEV_SM_CPU_FUSED_DISABLED)
+        {
+            cpuDisabled = true;
+        }
     }
 
     /* Return state */

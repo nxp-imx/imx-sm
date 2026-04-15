@@ -165,7 +165,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  40U
+#define SM_SCMI_NUM_TEST  42U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
@@ -173,12 +173,14 @@
     {.testId = TEST_BUTTON, .channel = 0U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_BUTTON, .channel = 5U, .rsrc = DEV_SM_BUTTON_0}, \
     {.testId = TEST_CLK, .channel = 3U, .rsrc = DEV_SM_CLK_0}, \
+    {.testId = TEST_CLK, .channel = 3U, .rsrc = DEV_SM_CLK_SRC_5}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_2}, \
     {.testId = TEST_CPU, .channel = 0U, .rsrc = DEV_SM_CPU_1}, \
     {.testId = TEST_CPU, .channel = 3U, .rsrc = DEV_SM_CPU_2}, \
     {.testId = TEST_CPU, .channel = 7U, .rsrc = DEV_SM_CPU_2}, \
     {.testId = TEST_CTRL, .channel = 3U, .rsrc = DEV_SM_CTRL_TEST}, \
     {.testId = TEST_CTRL, .channel = 3U, .rsrc = DEV_SM_CTRL_TEST_E}, \
+    {.testId = TEST_CTRL, .channel = 5U, .rsrc = BRD_SM_CTRL_TEST}, \
     {.testId = TEST_CTRL, .channel = 5U, .rsrc = BRD_SM_CTRL_TEST_A}, \
     {.testId = TEST_CTRL, .channel = 5U, .rsrc = DEV_SM_CTRL_TEST}, \
     {.testId = TEST_GPR, .channel = 5U, .rsrc = DEV_SM_GPR_2}, \

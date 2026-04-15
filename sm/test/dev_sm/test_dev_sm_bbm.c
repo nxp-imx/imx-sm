@@ -64,16 +64,15 @@ void TEST_DevSmBbm(void)
     printf("**** Device SM BBM API Tests ***\n\n");
 
     /* Test API correct calls per domain */
-    for (uint32_t domainId = 0U; domainId < DEV_SM_NUM_BUTTON; domainId++)
+    for (uint32_t domainId = 0U; domainId < DEV_SM_NUM_RTC; domainId++)
     {
         printf("DEV_SM_BbmRtcNameGet(%u)\n", domainId);
         CHECK(DEV_SM_BbmRtcNameGet(domainId, &name, &len));
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
-#ifdef SIMU
+
         CHECK(DEV_SM_BbmRtcRollover(domainId));
         DEV_SM_BbmHandler();
-#endif
     }
 
     /* Check Boot Status */

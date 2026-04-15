@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -61,12 +61,11 @@ void TEST_LmmFault(void)
     /* LMM tests */
     printf("**** LMM Fault API Tests ***\n\n");
 
-#ifdef SIMU
     /* FaultReactionGet */
     {
         dev_sm_rst_rec_t resetRec = { 0 };
 
-        resetRec.errId = DEV_SM_FAULT_0;
+        resetRec.errId = FAULT_0;
         uint32_t reaction = 0;
         uint32_t lm = 0;
 
@@ -74,42 +73,41 @@ void TEST_LmmFault(void)
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_1;
+        resetRec.errId = FAULT_1;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_2;
+        resetRec.errId = FAULT_2;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_3;
+        resetRec.errId = FAULT_3;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_4;
+        resetRec.errId = FAULT_4;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_5;
+        resetRec.errId = FAULT_5;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_6;
+        resetRec.errId = FAULT_6;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
 
-        resetRec.errId = DEV_SM_FAULT_7;
+        resetRec.errId = FAULT_7;
 
         CHECK(LMM_FaultReactionGet(resetRec, &reaction, &lm));
         printf("reaction: %u lm: %u\n", reaction, lm);
     }
-#endif
 
     printf("\n");
 }

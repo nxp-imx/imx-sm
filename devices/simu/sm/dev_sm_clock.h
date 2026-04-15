@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,18 +54,95 @@
 /* Defines */
 
 /*! Number of device clocks */
-#define DEV_SM_NUM_CLOCK  6UL
+#define DEV_SM_NUM_CLOCK  (CLOCK_NUM_SRC + CLOCK_NUM_ROOT + \
+    CLOCK_NUM_GPR_SEL + CLOCK_NUM_CGC)
 
 /*!
  * @name Device clock domain indexes
  */
 /** @{ */
-#define DEV_SM_CLK_0            0U  /*!< Clock 0 */
-#define DEV_SM_CLK_1            1U  /*!< Clock 1 */
-#define DEV_SM_CLK_2            2U  /*!< Clock 2 */
-#define DEV_SM_CLK_3            3U  /*!< Clock 3 */
-#define DEV_SM_CLK_4            4U  /*!< Clock 4 */
-#define DEV_SM_CLK_5            5U  /*!< Clock 5 */
+#define CLOCK_NUM_SRC           6U /*!< Number of clock sources */
+
+#define DEV_SM_CLK_SRC_0        0U /*!< Clock Source 0 */
+#define DEV_SM_CLK_SRC_1        1U /*!< Clock Source 1 */
+#define DEV_SM_CLK_SRC_2        2U /*!< Clock Source 2 */
+#define DEV_SM_CLK_SRC_3        3U /*!< Clock Source 3 */
+#define DEV_SM_CLK_SRC_4        4U /*!< Clock Source 4 */
+#define DEV_SM_CLK_SRC_5        5U /*!< Clock Source 5 */
+
+#define CLOCK_NUM_ROOT          10U /*!< Number of clock roots */
+#define CLOCK_NUM_ROOT_MUX_SEL  4U /*!< Number of root mux selections */
+
+#define DEV_SM_CLK_0            0U /*!< Clock 0 */
+#define DEV_SM_CLK_1            1U /*!< Clock 1 */
+#define DEV_SM_CLK_2            2U /*!< Clock 2 */
+#define DEV_SM_CLK_3            3U /*!< Clock 3 */
+#define DEV_SM_CLK_4            4U /*!< Clock 4 */
+#define DEV_SM_CLK_5            5U /*!< Clock 5 */
+#define DEV_SM_CLK_6            6U /*!< Clock 6 */
+#define DEV_SM_CLK_7            7U /*!< Clock 7 */
+#define DEV_SM_CLK_8            8U /*!< Clock 8 */
+#define DEV_SM_CLK_9            9U /*!< Clock 9 */
+
+#define CLOCK_NUM_GPR_SEL       2U /*!< Number of GPR selections */
+#define CLOCK_NUM_GPR_MUX_SEL   2U /*!< Number of GPR mux selections */
+
+#define DEV_SM_GPR_SEL_0        0U /*!< GPR 0 */
+#define DEV_SM_GPR_SEL_1        1U /*!< GPR 1 */
+
+#define CLOCK_NUM_CGC           1U /*!< Number of CGC */
+
+#define DEV_SM_CGM_0            0U /*!< CGM 0 */
+
+/* Clock source identifiers */
+#define CLOCK_SRC_0             DEV_SM_CLK_SRC_0 /*!< Clock Source 0 */
+#define CLOCK_SRC_1             DEV_SM_CLK_SRC_1 /*!< Clock Source 1 */
+#define CLOCK_SRC_2             DEV_SM_CLK_SRC_2 /*!< Clock Source 2 */
+#define CLOCK_SRC_3             DEV_SM_CLK_SRC_3 /*!< Clock Source 3 */
+#define CLOCK_SRC_4             DEV_SM_CLK_SRC_4 /*!< Clock Source 4 */
+#define CLOCK_SRC_5             DEV_SM_CLK_SRC_5 /*!< Clock Source 5 */
+
+/* Clock root identifiers */
+/*! Clock Root 0 */
+#define CLOCK_ROOT_0            CLOCK_NUM_SRC + DEV_SM_CLK_0
+
+/*! Clock Root 1 */
+#define CLOCK_ROOT_1            CLOCK_NUM_SRC + DEV_SM_CLK_1
+
+/*! Clock Root 2 */
+#define CLOCK_ROOT_2            CLOCK_NUM_SRC + DEV_SM_CLK_2
+
+/*! Clock Root 3 */
+#define CLOCK_ROOT_3            CLOCK_NUM_SRC + DEV_SM_CLK_3
+
+/*! Clock Root 4 */
+#define CLOCK_ROOT_4            CLOCK_NUM_SRC + DEV_SM_CLK_4
+
+/*! Clock Root 5 */
+#define CLOCK_ROOT_5            CLOCK_NUM_SRC + DEV_SM_CLK_5
+
+/*! Clock Root 6 */
+#define CLOCK_ROOT_6            CLOCK_NUM_SRC + DEV_SM_CLK_6
+
+/*! Clock Root 7 */
+#define CLOCK_ROOT_7            CLOCK_NUM_SRC + DEV_SM_CLK_7
+
+/*! Clock Root 8 */
+#define CLOCK_ROOT_8            CLOCK_NUM_SRC + DEV_SM_CLK_8
+
+/*! Clock Root 9 */
+#define CLOCK_ROOT_9            CLOCK_NUM_SRC + DEV_SM_CLK_9
+
+/* GPR clock selections */
+#define CLOCK_GPR_0  \
+    ((CLOCK_NUM_SRC + CLOCK_NUM_ROOT) + DEV_SM_GPR_SEL_0) /*!< Clock GPR 0 */
+
+#define CLOCK_GPR_1  \
+    ((CLOCK_NUM_SRC + CLOCK_NUM_ROOT) + DEV_SM_GPR_SEL_1) /*!< Clock GPR 1 */
+
+/*! CGM clock identifiers */
+#define CLOCK_CGM_0  \
+    ((CLOCK_NUM_SRC + CLOCK_NUM_ROOT + CLOCK_NUM_GPR_SEL) + DEV_SM_CGM_0)
 /** @} */
 
 /*!

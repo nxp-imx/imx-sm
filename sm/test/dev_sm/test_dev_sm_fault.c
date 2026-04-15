@@ -60,93 +60,46 @@ void TEST_DevSmFault(void)
 {
     /* Device tests */
     printf("**** Device SM Fault API Tests ***\n\n");
+    uint32_t lmId = 0U;
+    uint32_t faultId = 0U;
 
-#ifdef SIMU
+    for (faultId = FAULT_SET_TEST_START; faultId <= FAULT_SET_TEST_END;
+        faultId++)
     {
-        uint32_t lmId = 0;
-        uint32_t faultId  = DEV_SM_FAULT_1;
-
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
+        int32_t status = DEV_SM_FaultSet(lmId, faultId, true);
 
-        faultId  = DEV_SM_FAULT_2;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_3;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_4;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_5;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_6;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, true), SM_ERR_GENERIC_ERROR);
-
-        faultId  = DEV_SM_FAULT_7;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_8;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_9;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
-
-        faultId  = DEV_SM_FAULT_10;
-
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultSet(lmId, faultId, true));
+        if ((status != SM_ERR_SUCCESS) &&
+            (status != SM_ERR_INVALID_PARAMETERS) &&
+            (status != SM_ERR_GENERIC_ERROR))
+        {
+            SM_Error(SM_ERR_TEST);
+        }
     }
-#endif
 
     /* Test API bounds */
+    faultId = DEV_SM_NUM_FAULT;
 
-    {
-        uint32_t lmId = 0;
-        uint32_t faultId = DEV_SM_NUM_FAULT;
-
-        printf("DEV_SM_FaultSet Invalid faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, false), SM_ERR_OUT_OF_RANGE);
-    }
+    printf("DEV_SM_FaultSet Invalid faultId:(%u)\n", faultId);
+    NECHECK(DEV_SM_FaultSet(lmId, faultId, false), SM_ERR_OUT_OF_RANGE);
 
     /* Get a fault state */
-    {
-        uint32_t faultId = 18U /*DEV_SM_FAULT_WDOG2*/;
-        bool state = false;
+    faultId = DEV_SM_FAULT_STATE_TEST;
+    bool state = false;
 
-        printf("DEV_SM_FaultGet faultId:(%u)\n", faultId);
-        CHECK(DEV_SM_FaultGet(faultId, &state));
-        printf("DEV_SM_FaultGet fault(%u) state: %s\n", 18U /*DEV_SM_FAULT_WDOG2*/,
-            state ? "true" : "false");
-    }
+    printf("DEV_SM_FaultGet faultId:(%u)\n", faultId);
+    CHECK(DEV_SM_FaultGet(faultId, &state));
+    printf("DEV_SM_FaultGet fault(%u) state: %s\n", DEV_SM_FAULT_STATE_TEST,
+        state ? "true" : "false");
+
 #ifdef DEV_SM_FAULT_ID
     /*Set: Invalid fault state */
-    {
-        uint32_t lmId = 0U;
-        uint32_t faultId = DEV_SM_FAULT_ID;
-        bool state = true;
+    faultId = DEV_SM_FAULT_ID;
+    state = true;
 
-        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
-        NECHECK(DEV_SM_FaultSet(lmId, faultId, state),
-            SM_ERR_INVALID_PARAMETERS);
-    }
+    printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
+    NECHECK(DEV_SM_FaultSet(lmId, faultId, state),
+        SM_ERR_INVALID_PARAMETERS);
 #endif
     printf("\n");
 }

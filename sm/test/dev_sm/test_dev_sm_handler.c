@@ -59,12 +59,11 @@
 /* coverity[misra_c_2012_rule_17_11_violation] */
 void TEST_DevSmHandler(void)
 {
-#ifndef SIMU
+#ifdef HANDLER_TEST
     const uint32_t fakeStack[10] = { 0 };
-#endif
 
     printf("TEST_DevSmHandler\n");
-#ifndef SIMU
+
     SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
 
     NVIC_EnableIRQ(NMI_INT_TRIGGER);
@@ -291,6 +290,8 @@ void TEST_DevSmHandler(void)
     (void) DEV_SM_IrqPrioCntrGet(NotAvail_IRQn, &irqCntr);
 
     SM_TestModeSet(SM_TEST_MODE_OFF);
+#else
+    printf("Skipped\n");
 #endif
 }
 

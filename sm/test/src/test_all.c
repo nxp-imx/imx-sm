@@ -78,8 +78,8 @@ void TEST_All(void)
     TEST_DevSmPin();
     TEST_DevSmFault();
     TEST_DevSm();
-#ifndef SIMU
     TEST_DevSmFuse();
+#ifdef HANDLER_TEST
     TEST_DevSmHandler();
 #endif
 
@@ -88,7 +88,7 @@ void TEST_All(void)
     /* Intentional: BrdSmSensor Test code */
     /* coverity[misra_c_2012_rule_2_2_violation] */
     TEST_BrdSmSensor();
-#ifdef SIMU
+#ifdef BRD_SM_NUM_CTRL
     TEST_BrdSmControl();
 #endif
     TEST_BrdSm();
@@ -101,17 +101,15 @@ void TEST_All(void)
     TEST_LmmClock();
     TEST_LmmPerf();
     TEST_LmmSys();
-#ifdef SIMU
     TEST_LmmCpu();
     TEST_LmmSensor();
     TEST_LmmMisc();
-    TEST_LmmFuSa();
+#ifdef USES_FUSA
+    TEST_LmmFusa();
 #endif
     TEST_LmmVoltage();
     TEST_LmmPower();
-#ifdef SIMU
     TEST_LmmFault();
-#endif
 
     /* Run SCMI tests */
     TEST_Scmi();
@@ -129,8 +127,12 @@ void TEST_All(void)
     TEST_ScmiBbmRtc();
     TEST_ScmiBbmButton();
     TEST_ScmiCpu();
+#ifdef USES_FUSA
     TEST_ScmiFusa();
+#endif
+#ifdef BRD_SM_NUM_CTRL
     TEST_ScmiMisc();
+#endif
 
     /* Test SMT */
     TEST_Smt();

@@ -48,12 +48,19 @@ int32_t __wrap_BRD_SM_SystemReset(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL2, SM_ERR_TEST)
 
     /* Call original function */
     if (status == SM_ERR_SUCCESS)
     {
         status = __real_BRD_SM_SystemReset();
     }
+
+    /* For SM_TEST_MODE_LMM_LVL2, skip invoking the actual reset function to
+     * avoid a system reset, while returning a success status to simulate a
+     * successful reset operation.
+     */
+    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL2, SM_ERR_SUCCESS)
 
     /* Return status */
     return status;

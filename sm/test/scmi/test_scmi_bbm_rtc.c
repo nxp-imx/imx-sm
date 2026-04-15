@@ -438,7 +438,6 @@ static void TEST_ScmiRtcExclusive(bool pass, uint32_t channel,
         CHECK(SCMI_BbmRtcEvent(channel + 1U, NULL));
     }
 
-#ifdef SIMU
     /* Reset Config */
     if (pass)
     {
@@ -461,6 +460,5 @@ static void TEST_ScmiRtcExclusive(bool pass, uint32_t channel,
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
         CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false, &g_swReason));
     }
-#endif
 }
 

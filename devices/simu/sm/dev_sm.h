@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -99,6 +99,15 @@ void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_PowerUpPost(uint32_t domainId);
+
+/*!
+ * Power domain postamble for power-up ACK sent to GPC/SRC.
+ *
+ * @param[in]  domainId    power domain
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId);
 
 /*!
  * Configure power domain hardware before power down.

@@ -64,7 +64,6 @@ void TEST_LmmSensor(void)
     /* Test API bounds */
     printf("\n**** LMM Sensor API Err Tests ***\n\n");
 
-#ifdef SIMU
     /* Enable/disable sensor Invalid LmId */
     uint32_t lmId = SM_NUM_LM, sensorId = 0U;
     bool enable = true, timestampReporting = false;
@@ -76,7 +75,6 @@ void TEST_LmmSensor(void)
     sensorId = SM_NUM_SENSOR;
     NECHECK(LMM_SensorEnable(lmId, sensorId, enable, timestampReporting),
         SM_ERR_NOT_FOUND);
-#endif
 
     printf("\n");
 }

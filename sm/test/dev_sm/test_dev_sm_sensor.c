@@ -94,14 +94,24 @@ void TEST_DevSmSensor(void)
         printf("  timestampExponent=%d\n",
             sensor.timestampExponent);
 
-#ifdef SIMU
         /* Enable sensor */
         printf("DEV_SM_SensorEnable(%u)\n", sensorId);
-        CHECK(DEV_SM_SensorEnable(sensorId, enable, timestampReporting));
+        int32_t status = DEV_SM_SensorEnable(sensorId, enable,
+            timestampReporting);
 
-        /* Sensor config start */
+        /* Check the return type */
+        if ((status != SM_ERR_SUCCESS) && (status != SM_ERR_POWER))
+        {
+            SM_Error(SM_ERR_TEST);
+        }
+
         printf("DEV_SM_SensorConfigStart(%u)\n", sensorId);
+
+#if defined(DEV_SM_SENSOR_0) || defined(DEV_SM_SENSOR_1) \
+        || defined(DEV_SM_SENSOR_2)
+        /* Sensor config start */
         CHECK(DEV_SM_SensorConfigStart(sensorId, true));
+#endif
 
         /* Sensor power down */
         printf("DEV_SM_SensorPowerDown(%u)\n", sensorId);
@@ -115,25 +125,28 @@ void TEST_DevSmSensor(void)
         printf("DEV_SM_SensorIsEnabled(%u)\n", sensorId);
         CHECK(DEV_SM_SensorIsEnabled(sensorId, &enabled,
             &timestampReporting));
+
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
 
-        /* Sensor reading get */
-        printf("DEV_SM_SensorReadingGet(%u)\n", sensorId);
-        CHECK(DEV_SM_SensorReadingGet(sensorId, &sensorValue,
-            &sensorTimestamp));
+        if (enabled)
+        {
+            /* Sensor reading get */
+            printf("DEV_SM_SensorReadingGet(%u)\n", sensorId);
+            CHECK(DEV_SM_SensorReadingGet(sensorId, &sensorValue,
+                &sensorTimestamp));
 
-        /* Turn off sensor */
-        printf("DEV_SM_SensorEnable(%u)\n", sensorId);
-        CHECK(DEV_SM_SensorEnable(sensorId, !enable, timestampReporting));
+            /* Turn off sensor */
+            printf("DEV_SM_SensorEnable(%u)\n", sensorId);
+            CHECK(DEV_SM_SensorEnable(sensorId, !enable, timestampReporting));
 
-        /* Check to see if sensor is off */
-        printf("DEV_SM_SensorIsEnabled(%u)\n", sensorId);
-        CHECK(DEV_SM_SensorIsEnabled(sensorId, &enabled,
-            &timestampReporting));
-        printf("  enable=%u\n",  enabled);
-        printf("  timestampReporting=%u\n",  timestampReporting);
-#endif
+            /* Check to see if sensor is off */
+            printf("DEV_SM_SensorIsEnabled(%u)\n", sensorId);
+            CHECK(DEV_SM_SensorIsEnabled(sensorId, &enabled,
+                &timestampReporting));
+            printf("  enable=%u\n",  enabled);
+            printf("  timestampReporting=%u\n",  timestampReporting);
+        }
 
         /* Run ReadingGet with sensor disabled to make sure
            it returns error */

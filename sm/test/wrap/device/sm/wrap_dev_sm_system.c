@@ -41,6 +41,8 @@
 
 extern void __real_DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec);
 extern void __real_DEV_SM_SystemHalt(void);
+extern int32_t __real_DEV_SM_SystemIdle(void);
+extern int32_t __real_DEV_SM_SystemShutdown(void);
 
 /*--------------------------------------------------------------------------*/
 /* Save shutdown reason                                                     */
@@ -72,4 +74,42 @@ void __wrap_DEV_SM_SystemHalt(void)
         __real_DEV_SM_SystemHalt();
     }
 
+}
+
+/*--------------------------------------------------------------------------*/
+/* Idle the system                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_SystemIdle(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Call original function */
+        status = __real_DEV_SM_SystemIdle();
+    }
+
+    /* Return Status*/
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Shutdown device                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t __wrap_DEV_SM_SystemShutdown(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Call Original function */
+        status =  __real_DEV_SM_SystemShutdown();
+    }
+
+    /* Return Status */
+    return status;
 }

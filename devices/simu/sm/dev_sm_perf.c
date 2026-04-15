@@ -42,6 +42,7 @@
 #include "dev_sm.h"
 
 /* Local defines */
+#define DEV_SM_NUM_PERF_LVL     4U
 
 /* Local types */
 
@@ -49,7 +50,10 @@
 
 static uint32_t s_perfLevel[DEV_SM_NUM_PERF];
 
-static const dev_sm_perf_desc_t s_perfLevels[4] =
+/* coverity[misra_c_2012_rule_8_9_violation] */
+static uint32_t s_perfFreqLevel[DEV_SM_NUM_PERF];
+
+static const dev_sm_perf_desc_t s_perfLevels[DEV_SM_NUM_PERF_LVL] =
 {
     {
         .value = 1000000U,  /* KHz */
@@ -193,9 +197,18 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
     {
         status = SM_ERR_NOT_FOUND;
     }
-    else
+
+    /* Perf Level check for out of range value */
+    if (status == SM_ERR_SUCCESS)
     {
-        s_perfLevel[domainId] = perfLevel;
+        if (perfLevel >= DEV_SM_NUM_PERF)
+        {
+            status = SM_ERR_OUT_OF_RANGE;
+        }
+        else
+        {
+            s_perfLevel[domainId] = perfLevel;
+        }
     }
 
     /* Return status */
@@ -216,6 +229,59 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
     else
     {
         *perfLevel = s_perfLevel[domainId];
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set frequency of performance domain                                      */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PerfFreqSet(uint32_t domainId, uint32_t perfLevel)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check for valid domainId */
+    if (DEV_SM_PerfIsReserved(domainId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Perf Level check for out of range value */
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (perfLevel >= DEV_SM_NUM_PERF)
+        {
+            status = SM_ERR_OUT_OF_RANGE;
+        }
+        else
+        {
+            /* Update the freq based on the perf level */
+            s_perfFreqLevel[domainId] = perfLevel;
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Configure performance level for system sleep                             */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check the Sleep perf level */
+    if (perfLevelSleep >= DEV_SM_NUM_PERF)
+    {
+        status = SM_ERR_OUT_OF_RANGE;
+    }
+    else
+    {
+        /* Set the status */
+        status = SM_ERR_SUCCESS;
     }
 
     /* Return status */

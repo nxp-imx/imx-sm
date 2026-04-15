@@ -70,10 +70,8 @@ void TEST_DevSmFuse(void)
     DEV_SM_FuseSet(DEV_SM_FUSE_SPEED_GRADING, val);
 #endif
 
-#ifndef SIMU
     /* Max number of fuses */
     NECHECK(DEV_SM_FuseInfoGet(DEV_SM_NUM_OTP, NULL), SM_ERR_NOT_FOUND);
-#endif
 
 #ifdef DEV_SM_PD_A55C0
     (void) DEV_SM_FusePdDisabled(DEV_SM_PD_A55C0);

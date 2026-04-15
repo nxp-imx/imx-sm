@@ -60,15 +60,10 @@ void TEST_DevSmRdc(void)
         SM_ERR_NOT_SUPPORTED);
 
     printf("DEV_SM_RdcInfoGet(%u)\n", 0U);
-#ifndef SIMU
     CHECK(DEV_SM_RdcInfoGet(0U, &rdcNameAddr, &rdcLabel, &rdcBase));
 
     printf("rdc: %u rdcname: %s label: %c baseaddr: %x\n",
         0U, rdcNameAddr, rdcLabel, rdcBase);
-#else
-    NECHECK(DEV_SM_RdcInfoGet(0U, &rdcNameAddr, &rdcLabel, &rdcBase),
-        SM_ERR_NOT_FOUND);
-#endif
 
     printf("\n");
 }

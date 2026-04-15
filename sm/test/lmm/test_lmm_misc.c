@@ -64,7 +64,6 @@ void TEST_LmmMisc(void)
     /* Test API bounds */
     printf("\n**** LMM Misc API Err Tests ***\n\n");
 
-#ifdef SIMU
     /* Update control notification flags: Invalid LmId */
     uint32_t lmId = SM_NUM_LM, ctrlId = 0U, flags = 0U;
 
@@ -76,7 +75,6 @@ void TEST_LmmMisc(void)
     ctrlId = SM_NUM_CTRL;
     NECHECK(LMM_MiscControlFlagsSet(lmId, ctrlId, flags),
         SM_ERR_NOT_FOUND);
-#endif
 
     printf("\n");
 }

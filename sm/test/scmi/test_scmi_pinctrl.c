@@ -535,11 +535,10 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         NECHECK(SCMI_PinctrlSettingsConfigure(SM_SCMI_NUM_CHN, identifier,
             0U, attributes, configs), SCMI_ERR_INVALID_PARAMETERS);
 
-#ifdef SIMU
         num += 2U;
 
         configs[num - 2U].type = SCMI_PINCTRL_TYPE_DAISY_ID;
-        configs[num - 2U].value = 0U;
+        configs[num - 2U].value = DEV_SM_DAISY_TEST;
 
         configs[num - 1U].type = SCMI_PINCTRL_TYPE_DAISY_CFG;
         configs[num - 1U].value = 0U;
@@ -551,7 +550,6 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
             identifier, attributes);
         CHECK(SCMI_PinctrlSettingsConfigure(channel, identifier, 0U,
             attributes, configs));
-#endif
     }
     /* ACCESS DENIED */
     else

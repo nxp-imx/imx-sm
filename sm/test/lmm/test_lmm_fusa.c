@@ -61,21 +61,27 @@
 /* Test device SM CPU                                                       */
 /*--------------------------------------------------------------------------*/
 /* coverity[misra_c_2012_rule_17_11_violation] */
-void TEST_LmmFuSa(void)
+void TEST_LmmFusa(void)
 {
     /* LM tests */
-    printf("**** LMM FuSa API Tests ***\n\n");
+    printf("**** LMM Fusa API Tests ***\n\n");
 
-#ifdef SIMU
     int32_t status = 0;
+
     /* Recover from global error */
     {
+        SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
         LMM_FusaGlobalRecovery(status);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
     }
+
     /* Report assertion error */
     {
+        SM_TestModeSet(SM_TEST_MODE_LMM_LVL2);
         LMM_FuSaAssertionFailure(status);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
     }
+
     /* Report exception */
     {
         dev_sm_rst_rec_t rst_rec = { 0 };
@@ -105,7 +111,6 @@ void TEST_LmmFuSa(void)
         NECHECK(LMM_FusaSeenvStateSet(&caller, seenvState, pingCookie),
             SM_ERR_NOT_FOUND);
     }
-#endif
 
     /* Test API bounds */
     printf("\n**** LMM FuSa API Err Tests ***\n\n");

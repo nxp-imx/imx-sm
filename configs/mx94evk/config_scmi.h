@@ -312,7 +312,7 @@
         .faultPerms[DEV_SM_FAULT_SWNCF00] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_SWNCF01] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG5] = SM_SCMI_PERM_ALL, \
-        .fusaPerms = SM_SCMI_PERM_PRIV, \
+        .fusaPerms = SM_SCMI_PERM_ALL, \
         .lmmPerms[1] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[4] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
@@ -421,7 +421,7 @@
         .faultPerms[DEV_SM_FAULT_M7_1_RST] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_SWNCF02] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG6] = SM_SCMI_PERM_ALL, \
-        .fusaPerms = SM_SCMI_PERM_PRIV, \
+        .fusaPerms = SM_SCMI_PERM_ALL, \
         .lmmPerms[1] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[4] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \

@@ -892,8 +892,8 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
             /* Find target LM */
             for (uint32_t agent = 0U; agent < SM_SCMI_NUM_AGNT; agent++)
             {
-                if ((target.seenvId + 1U) ==
-                    (uint32_t) g_scmiAgentConfig[agent].seenvId)
+                if (target.seenvId == (uint32_t) g_scmiAgentConfig[
+                    agent].seenvId)
                 {
                     target.lmId = g_scmiConfig[g_scmiAgentConfig[
                         agent].scmiInst].lmId;

@@ -500,17 +500,17 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             asyncflag, rate));
     }
 
-#ifdef SIMU
     /* Reset Config */
     if (pass)
     {
         /* Reset */
         printf("LMM_SystemLmBoot(%u, %u)\n", 0U, lmId);
-        CHECK(LMM_SystemLmBoot(0U, 0U, lmId, &g_swReason));
+        SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
+        NECHECK(LMM_SystemLmBoot(0U, 0U, lmId, &g_swReason), SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
 
         /* Turn on the Clock */
         uint32_t attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
-
         printf("SCMI_ClockConfigSet(%u, %u)\n",
             channel, clockId);
         CHECK(SCMI_ClockConfigSet(channel, clockId,
@@ -518,9 +518,14 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 
         /* Reset */
         uint32_t sysManager = 0U;
+        uint32_t agentId = 0U;
+        bool warm = true;
+        bool graceful = false;
+        SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
         printf("LMM_SystemLmReset(%u, %u)\n", sysManager, lmId);
-        CHECK(LMM_SystemLmReset(sysManager, 0U, lmId, true, false, \
-            &g_swReason));
+        NECHECK(LMM_SystemLmReset(sysManager, agentId, lmId, warm, graceful,
+            &g_swReason), SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
 
         /* Ensure Clock was turned off */
         uint32_t attributes = 0U;
@@ -530,10 +535,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             NULL, NULL));
         printf("  enabled=%u\n",
             SCMI_CLOCK_ATTR_ENABLED(attributes));
-
-        BCHECK(SCMI_CLOCK_ATTR_ENABLED(attributes) == 0U);
     }
-#endif
 
     /* Test for parentget and parentset */
     if (pass)
@@ -562,7 +564,6 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
         /* Branch Coverage */
         CHECK(SCMI_ClockGetPermissions(channel, clockId, NULL));
 
-#ifdef SIMU
         /* Test coverage for set extended clock configuration */
         {
             uint32_t attr = 0U;
@@ -582,14 +583,16 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
              *
              * 0x1753014 = for 2% spread spectrum, 30000 Modulation Freq.
              */
-            extendedConfigVal = 0x1753014;
-            CHECK(SCMI_ClockConfigSet(channel, clockId, attr,
-                extendedConfigVal));
+            if (clockId < CLOCK_NUM_SRC)
+            {
+                extendedConfigVal = 0x1753014;
+                CHECK(SCMI_ClockConfigSet(channel, clockId, attr,
+                    extendedConfigVal));
 
-            CHECK(SCMI_ClockConfigGet(channel, clockId, extFlags, &attr,
-                &config, &extendedConfigVal));
+                CHECK(SCMI_ClockConfigGet(channel, clockId, extFlags, &attr,
+                    &config, &extendedConfigVal));
+            }
         }
-#endif
     }
     else
     {

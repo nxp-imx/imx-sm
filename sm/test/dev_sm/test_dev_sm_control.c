@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2024, 2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -76,6 +76,17 @@ void TEST_DevSmControl(void)
         printf("DEV_SM_ControlSet(DEV_SM_NUM_CTRL)\n");
         NECHECK(DEV_SM_ControlSet(DEV_SM_NUM_CTRL, numRtn, rtn),
             SM_ERR_NOT_FOUND);
+
+        bool get = false;
+        bool set = false;
+        bool extGet = false;
+        bool extSet = false;
+        bool action = false;
+        bool notify = false;
+
+        printf("DEV_SM_ControlAttributes(DEV_SM_NUM_CTRL)\n");
+        NECHECK(DEV_SM_ControlAttributes(DEV_SM_NUM_CTRL, &get, &set,
+            &extGet, &extSet, &action, &notify), SM_ERR_NOT_FOUND);
     }
 
     /* Test Invalid Parameters */

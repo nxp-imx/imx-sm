@@ -158,7 +158,7 @@
      .numArg = 2, .arg[0] = 1U, .arg[1] = 500U, }, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_2}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_0, \
-     .numArg = 1, .arg[0] = 3U, }, \
+     .numArg = 1, .arg[0] = 2U, }, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_2}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CTRL, .rsrc = DEV_SM_CTRL_TEST, \
      .numArg = 1, .arg[0] = 1U, }, \

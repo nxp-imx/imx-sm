@@ -126,7 +126,7 @@ void TEST_LmmSys(void)
     /* Check the LM CPU state */
     {
         uint32_t lmId = SM_LM_DEFAULT;
-        uint32_t cpuId = DEV_SM_CPU_TEST;
+        uint32_t cpuId = DEV_SM_CPU_SYS_TEST;
 
         printf("LM_CpuCheck(%u %u)\n", lmId, cpuId);
         bool rc = LM_CpuCheck(lmId, cpuId);
@@ -142,19 +142,18 @@ void TEST_LmmSys(void)
         LMM_SystemCpuModeChanged(1U);
     }
 
-#ifdef SIMU
+    SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
     /* SystemRstComp */
     {
         lmm_rst_rec_t rst_rec_t = { 0 };
         printf("LMM_SystemRstComp\n");
-        CHECK(LMM_SystemRstComp(&rst_rec_t));
+        NECHECK(LMM_SystemRstComp(&rst_rec_t), SM_ERR_TEST);
     }
+    SM_TestModeSet(SM_TEST_MODE_OFF);
 
     /* SystemLmCheck */
     {
         printf("LMM_SystemLmCheck\n");
-        CHECK(LMM_SystemLmCheck(1));
-
         SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
         NECHECK(LMM_SystemLmCheck(1), SM_ERR_TEST);
         SM_TestModeSet(SM_TEST_MODE_OFF);
@@ -198,7 +197,6 @@ void TEST_LmmSys(void)
         NECHECK(LM_SystemLmReason(0U, SM_NUM_LM, NULL, NULL),
             SM_ERR_NOT_FOUND);
     }
-#endif
 
     printf("\n");
 }

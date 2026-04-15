@@ -124,7 +124,6 @@ void TEST_ScmiFusa(void)
             CHECK(SCMI_FusaFeenvStateGet(SM_TEST_DEFAULT_CHN, &feenvState,
                 &mselMode));
 
-#ifdef SIMU
             printf("SCMI_FusaFeenvStateGet: feenvState=%u mselMode=%u\n",
                 feenvState, mselMode);
 
@@ -132,10 +131,12 @@ void TEST_ScmiFusa(void)
             NECHECK(SCMI_FusaFeenvStateGet(FUSA_LM_SAFE_TYPE_ERROR,
                 &feenvState, &mselMode), SM_ERR_NOT_SUPPORTED);
 
+#ifdef FUSA_LM_ACCESS_DENIED
             /* permission denied */
-            NECHECK(SCMI_FusaFeenvStateGet(FUSA_LM_ACCESS_DENIED, &feenvState,
-                &mselMode), SM_ERR_DENIED);
+            NECHECK(SCMI_FusaFeenvStateGet(FUSA_LM_ACCESS_DENIED,
+                &feenvState, &mselMode), SM_ERR_DENIED);
 #endif
+
             /* Branch coverage */
             {
                 NECHECK(SCMI_FusaFeenvStateGet(SM_NUM_TEST_CHN, &feenvState,
@@ -147,7 +148,6 @@ void TEST_ScmiFusa(void)
 
         }
 
-#ifdef SIMU
         /* Fusaseenv State Get */
         {
             uint32_t seenvId = 0U, lmId = 0U, seenvState = 0U;
@@ -212,7 +212,7 @@ void TEST_ScmiFusa(void)
 
         /* Fusa fault Get */
         {
-            uint32_t faultId = 3U, flag = 0U;
+            uint32_t faultId = DEV_SM_FAULT_TEST_0, flag = 0U;
 
             printf("SCMI_FusaFaultGet(%u)\n", SM_TEST_DEFAULT_CHN);
             CHECK(SCMI_FusaFaultGet(SM_TEST_DEFAULT_CHN, faultId,
@@ -225,9 +225,11 @@ void TEST_ScmiFusa(void)
             NECHECK(SCMI_FusaFaultGet(FUSA_LM_SAFE_TYPE_ERROR, faultId,
                 &flag), SM_ERR_NOT_SUPPORTED);
 
+#ifdef FUSA_LM_ACCESS_DENIED
             /* No Permission */
             NECHECK(SCMI_FusaFaultGet(FUSA_LM_ACCESS_DENIED, faultId,
                 &flag), SM_ERR_DENIED);
+#endif
 
             /* Invalid FaultId */
             NECHECK(SCMI_FusaFaultGet(SM_TEST_DEFAULT_CHN, DEV_SM_NUM_FAULT,
@@ -243,8 +245,8 @@ void TEST_ScmiFusa(void)
 
         /* Fusa fault Group Notify */
         {
-            uint32_t faultIdFirst = 0U, faultmask = 0xffU,
-                NotifyEnable = 0xFFU;
+            uint32_t faultIdFirst = 0U, faultmask = 0xfffffffU,
+                NotifyEnable = 0xFFFFFFFU;
             uint32_t FaultIdFirstGet = 0U, NotifyEnabled = 0U;
 
             printf("SCMI_FusaFaultGroupNotify(%u)\n", SM_TEST_DEFAULT_CHN);
@@ -284,9 +286,11 @@ void TEST_ScmiFusa(void)
             NECHECK(SCMI_FusaScheckEvntrig(FUSA_LM_SAFE_TYPE_ERROR),
                 SM_ERR_NOT_SUPPORTED);
 
+#ifdef FUSA_LM_ACCESS_DENIED
             /* No Permission */
             NECHECK(SCMI_FusaScheckEvntrig(FUSA_LM_ACCESS_DENIED),
                 SM_ERR_DENIED);
+#endif
 
             /* Branch coverage */
             NECHECK(SCMI_FusaScheckEvntrig(SM_NUM_TEST_CHN),
@@ -300,16 +304,16 @@ void TEST_ScmiFusa(void)
             printf("SCMI_FusaScheckEvntrig(%u)\n", SM_TEST_DEFAULT_CHN);
             CHECK(SCMI_FusaScheckTestExec(SM_TEST_DEFAULT_CHN,
                 targetTestId));
-#ifdef SIMU
+
             /* safeType != LMM_SAFE_TYPE_SEENV */
             NECHECK(SCMI_FusaScheckTestExec(FUSA_LM_SAFE_TYPE_ERROR,
                 targetTestId), SM_ERR_NOT_SUPPORTED);
 
+#ifdef FUSA_LM_ACCESS_DENIED
             /* No Permission */
             NECHECK(SCMI_FusaScheckTestExec(FUSA_LM_ACCESS_DENIED,
                 targetTestId), SM_ERR_DENIED);
 #endif
-
 
             /* Branch Coverage */
             NECHECK(SCMI_FusaScheckTestExec(SM_NUM_TEST_CHN, targetTestId),
@@ -362,7 +366,8 @@ void TEST_ScmiFusa(void)
         {
             uint32_t feenvState = 0U, mSelMode = 0U;
             printf("SCMI_FusaFeenvStateEvent(%u)\n", SCMI_PRIORITY_Q);
-            CHECK(SCMI_FusaFeenvStateEvent(2, &feenvState, &mSelMode));
+            CHECK(SCMI_FusaFeenvStateEvent(SM_TEST_DEFAULT_CHN + 2U,
+                &feenvState, &mSelMode));
             printf("SCMI_FusaFeenvStateEvent: FeenvState: %u, mSelMode: %u\n",
                 feenvState, mSelMode);
         }
@@ -371,7 +376,8 @@ void TEST_ScmiFusa(void)
         {
             uint32_t pingcookie = 0U;
             printf("SCMI_FusaSeenvStateReqEvent(%u)\n", SCMI_PRIORITY_Q);
-            CHECK(SCMI_FusaSeenvStateReqEvent(2, &pingcookie));
+            CHECK(SCMI_FusaSeenvStateReqEvent(SM_TEST_DEFAULT_CHN + 2U,
+                &pingcookie));
             printf(":SCMI_FusaSeenvStateReqEvent pingcookie: %u\n",
                 pingcookie);
         }
@@ -396,7 +402,8 @@ void TEST_ScmiFusa(void)
 
             uint32_t mSelMode = 0U, feenvState = 0U;
 
-            CHECK(SCMI_FusaFeenvStateEvent(2, NULL, &mSelMode));
+            CHECK(SCMI_FusaFeenvStateEvent(SM_TEST_DEFAULT_CHN + 2U, NULL,
+                &mSelMode));
 
             for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
             {
@@ -414,7 +421,8 @@ void TEST_ScmiFusa(void)
                 (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
             }
 
-            CHECK(SCMI_FusaFeenvStateEvent(2, &feenvState, NULL));
+            CHECK(SCMI_FusaFeenvStateEvent(SM_TEST_DEFAULT_CHN + 2U,
+                &feenvState, NULL));
 
             /* Invalid channel number */
             NECHECK(SCMI_FusaFeenvStateEvent(SM_NUM_TEST_CHN, &feenvState,
@@ -435,7 +443,7 @@ void TEST_ScmiFusa(void)
                 (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
             }
 
-            CHECK(SCMI_FusaSeenvStateReqEvent(2, NULL));
+            CHECK(SCMI_FusaSeenvStateReqEvent(SM_TEST_DEFAULT_CHN + 2U, NULL));
 
             /* Invalid channel number */
             NECHECK(SCMI_FusaSeenvStateReqEvent(SM_NUM_TEST_CHN, NULL),
@@ -448,42 +456,41 @@ void TEST_ScmiFusa(void)
             CHECK(SCMI_FusaFeenvStateNotify(SM_TEST_DEFAULT_CHN,
                 0U /*notifyenable*/));
 
-#ifdef SIMU
             /* LM is non secure */
             NECHECK(SCMI_FusaFeenvStateNotify(FUSA_LM_SAFE_TYPE_ERROR,
                 0U /*notifyenable*/), SM_ERR_NOT_SUPPORTED);
 
+#ifdef FUSA_LM_ACCESS_DENIED
             /* Agent don't have permission */
             NECHECK(SCMI_FusaFeenvStateNotify(FUSA_LM_ACCESS_DENIED,
                 0U /*notifyenable*/), SM_ERR_DENIED);
 #endif
-
         }
 
         /* Fusa fault Set */
         {
-            uint32_t faultId = 3U, flag = 0xffU;
+            uint32_t faultId = DEV_SM_FAULT_TEST_0, flag = 0xffU;
 
             printf("SCMI_FusaFaultSet(%u)\n", SM_TEST_DEFAULT_CHN);
             CHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, faultId,
                 flag));
-#ifdef SIMU
             /* safeType != LMM_SAFE_TYPE_SEENV */
             NECHECK(SCMI_FusaFaultSet(FUSA_LM_SAFE_TYPE_ERROR, faultId,
                 flag), SM_ERR_NOT_SUPPORTED);
 
+#ifdef FUSA_LM_ACCESS_DENIED
             /* No Permission */
             NECHECK(SCMI_FusaFaultSet(FUSA_LM_ACCESS_DENIED, faultId,
                 flag), SM_ERR_DENIED);
+#endif
 
             /* Invalid FaultId */
             NECHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, DEV_SM_NUM_FAULT,
                 flag), SM_ERR_NOT_FOUND);
-#endif
         }
         /* Fusa fault Set:  clear the fault */
         {
-            uint32_t faultId = 3U, flag = 0x0U;
+            uint32_t faultId = DEV_SM_FAULT_TEST_0, flag = 0x0U;
 
             printf("SCMI_FusaFaultSet(%u)\n", SM_TEST_DEFAULT_CHN);
             CHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, faultId,
@@ -499,35 +506,34 @@ void TEST_ScmiFusa(void)
             uint32_t faultId = 0U, flag = 0U;
 
             printf("SCMI_FusaFaultEvent(SCMI_PRIORITY_Q)\n");
-            CHECK(SCMI_FusaFaultEvent(2 /*SCMI_PRIORITY_Q*/, &faultId,
-                &flag));
+            CHECK(SCMI_FusaFaultEvent(
+                SM_TEST_DEFAULT_CHN + 2U /*SCMI_PRIORITY_Q*/, &faultId, &flag));
             printf("SCMI_FusaFaultEvent: faultId: %u flag: %x\n",
                 faultId, flag);
         }
 
         /* Branch coverage */
         {
-            uint32_t faultId = 3U, flag = 0U;
+            uint32_t faultId = DEV_SM_FAULT_TEST_0, flag = 0U;
 
             CHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, faultId,
                 flag));
 
             /* Branch coverage: faultId == NULL */
-            CHECK(SCMI_FusaFaultEvent(2 /*SCMI_PRIORITY_Q*/, NULL,
-                &flag));
+            CHECK(SCMI_FusaFaultEvent(
+                SM_TEST_DEFAULT_CHN + 2U /*SCMI_PRIORITY_Q*/, NULL, &flag));
 
-            faultId = 3U;
+            faultId = DEV_SM_FAULT_TEST_0;
             CHECK(SCMI_FusaFaultSet(SM_TEST_DEFAULT_CHN, faultId,
                 flag));
 
             /* Branch coverage: flag == NULL */
-            CHECK(SCMI_FusaFaultEvent(2 /*SCMI_PRIORITY_Q*/, &faultId,
-                NULL));
+            CHECK(SCMI_FusaFaultEvent(
+                SM_TEST_DEFAULT_CHN + 2U /*SCMI_PRIORITY_Q*/, &faultId, NULL));
 
             NECHECK(SCMI_FusaFaultEvent(SM_NUM_TEST_CHN, &faultId,
                 NULL), SCMI_ERR_INVALID_PARAMETERS);
         }
-#endif
     }
     else
     {
