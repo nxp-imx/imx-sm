@@ -143,7 +143,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  44U
+#define SM_SCMI_NUM_TEST  45U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
@@ -172,6 +172,7 @@
     {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_NETC_TMR_1588_TRIG1}, \
     {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_NETC_TMR_1588_TRIG2}, \
     {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_SAI1_MCLK}, \
+    {.testId = TEST_DAISY, .channel = 5U, .rsrc = DEV_SM_DAISY_USB1_OVERCURRENT}, \
     {.testId = TEST_GPR, .channel = 5U, .rsrc = DEV_SM_GPR_4}, \
     {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_A55P}, \
     {.testId = TEST_PD, .channel = 0U, .rsrc = DEV_SM_PD_M7}, \
