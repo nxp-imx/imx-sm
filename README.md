@@ -27,6 +27,10 @@ git clone https://github.com/nxp-imx/imx-sm
 Building the Documentation
 ==========================
 
+A comprehensive *SM Reference Manual* can be built from the source. This manual contains an architecture
+description, developer's guide, porting guide, configuration guide, protocol description, debugging info,
+and implementation details. The preferred output is HTML.
+
 To build the full documentation, install the required tools:
 
     sudo apt -y install make doxygen texlive texlive-latex-extra
