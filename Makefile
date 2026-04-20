@@ -177,7 +177,9 @@ endif
 
 img : tc.check cfg.exists $(TARGETS)
 
-all: clean img
+all:
+	$(AT)$(MAKE) --no-print-directory clean
+	$(AT)$(MAKE) --no-print-directory img
 
 .SUFFIXES :
 
