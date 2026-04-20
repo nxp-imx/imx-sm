@@ -191,7 +191,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
 /* gcov_excl_start - calling will lose gcov data */
-_Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
+void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
 #if defined(MONITOR) || defined(RUN_TEST)
     printf("exit %d, 0x%08X\n", status, pc);
@@ -205,11 +205,7 @@ _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 #endif
 
     /* Hang */
-    /* coverity[infinite_loop] */
-    while (true)
-    {
-        ; /* Intentional empty while */
-    }
+    DEV_SM_SystemHalt();
 }
 /* gcov_excl_stop */
 
@@ -454,6 +450,7 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 /* Reset board                                                              */
 /*--------------------------------------------------------------------------*/
 /* gcov_excl_start - calling will lose gcov data */
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t BRD_SM_SystemReset(void)
 {
     int32_t status = SM_ERR_SUCCESS;

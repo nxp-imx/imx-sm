@@ -154,9 +154,9 @@ void TEST_All(void)
 #endif
 
 #ifdef SIMU
-    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+    SM_LmmInitedSet(false);
     SM_Error(SM_ERR_SUCCESS);
-    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL2);
+    SM_LmmInitedSet(true);
     SM_Error(SM_ERR_SUCCESS);
 #else
     /* Exit */

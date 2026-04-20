@@ -56,7 +56,6 @@
 #include <stdio.h>
 #include "fsl_def.h"
 #include "build_info.h"
-#include "sm_test_mode.h"
 
 /* Defines */
 
@@ -264,16 +263,14 @@ int main(int argc, const char * const argv[]);
  */
 void SM_Error(int32_t status);
 
-#ifdef HAS_SM_TEST_MODE
 /*!
- * Set test mode.
+ * Set flag indicating if the LMM has been initialized.
  *
- * @param[in]     mode        New test mode
+ * @param[in]     inited      Init status
  *
- * Sets the global test mode.
+ * Used only to insert test conditions.
  */
-void SM_TestModeSet(uint32_t mode);
-#endif
+void SM_LmmInitedSet(bool inited);
 
 #if !defined(SIMU) && !defined(INC_LIBC)
 /*!

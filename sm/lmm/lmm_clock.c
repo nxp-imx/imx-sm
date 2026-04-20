@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -203,8 +203,6 @@ int32_t LMM_ClockEnable(uint32_t lmId, uint32_t clockId, bool enable)
         status = SM_CLOCKENABLE(clockId, newEnable);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -266,8 +264,6 @@ int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
         status = SM_CLOCKEXTENDEDSET(clockId, extId, extConfigValue);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -291,8 +287,6 @@ int32_t LMM_ClockExtendedGet(uint32_t lmId, uint32_t clockId, uint32_t extId,
         /* Get extended clock value */
         status = SM_CLOCKEXTENDEDGET(clockId, extId, extConfigValue);
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

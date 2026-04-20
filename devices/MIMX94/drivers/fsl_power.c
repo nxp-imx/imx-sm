@@ -33,7 +33,6 @@
 #include "fsl_power.h"
 #include "fsl_src.h"
 #include "fsl_clock.h"
-#include "sm_test_mode.h"
 
 /* Local Defines */
 #define WHITELIST_MASK(cpuId)   (1UL << (CPU2GPC(cpuId)))
@@ -421,9 +420,6 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
             idx++;
         }
     }
-
-    /* Added to improve the test coverage */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, anyChildPowered = true);
 
     return anyChildPowered;
 }

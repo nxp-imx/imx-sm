@@ -261,8 +261,6 @@ static void IrqPrioUpdate(irq_prio_info_t *pInfo);
 /*--------------------------------------------------------------------------*/
 void NMI_Handler(const uint32_t *sp)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_FCCU,
@@ -277,23 +275,14 @@ void NMI_Handler(const uint32_t *sp)
     /* Save reset reason info */
     DEV_SM_SystemShutdownRecSet(resetRec);
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Wait for delayed FCCU reaction (PMIC reset) */
-        /* coverity[infinite_loop] */
-        while (true)
-        {
-            ;  /* Intentional empty while */
-        }
-    }
+    /* Wait for delayed FCCU reaction (PMIC reset) */
+    DEV_SM_SystemHalt();
 }
 
 /*--------------------------------------------------------------------------*/
 /* Hard fault exception handler                                             */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void HardFault_Handler(const uint32_t *sp)
 {
     ExceptionHandler(HardFault_IRQn, sp, SCB->HFSR, 0U);
@@ -302,6 +291,7 @@ void HardFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 /* Memory manager fault exception handler                                   */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void MemManage_Handler(const uint32_t *sp)
 {
     uint32_t cfsr = SCB->CFSR;
@@ -319,6 +309,7 @@ void MemManage_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 /* Bus fault exception handler                                              */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void BusFault_Handler(const uint32_t *sp)
 {
     uint32_t cfsr = SCB->CFSR;
@@ -337,6 +328,7 @@ void BusFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 /* Usage fault exception handler                                            */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void UsageFault_Handler(const uint32_t *sp)
 {
     /* Call common handler */
@@ -373,6 +365,7 @@ void SysTick_Handler(void)
 /*--------------------------------------------------------------------------*/
 /* WDOG1 handler                                                            */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void WDOG1_IRQHandler(const uint32_t *sp)
 {
     ExceptionHandler(WDOG1_IRQn, sp, 0U, 0U);
@@ -381,6 +374,7 @@ void WDOG1_IRQHandler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 /* WDOG2 handler                                                            */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void WDOG2_IRQHandler(const uint32_t *sp)
 {
     ExceptionHandler(WDOG2_IRQn, sp, 0U, 0U);
@@ -446,16 +440,8 @@ void TMPSNS_ANA_2_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 void TMPSNS_CORTEXA_1_IRQHandler(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    if (status == SM_ERR_SUCCESS)
-    {
-        DEV_SM_SensorHandler(1U, 1U);
-        IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1]);
-    }
+    DEV_SM_SensorHandler(1U, 1U);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -463,16 +449,8 @@ void TMPSNS_CORTEXA_1_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 void TMPSNS_CORTEXA_2_IRQHandler(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    if (status == SM_ERR_SUCCESS)
-    {
-        DEV_SM_SensorHandler(1U, 2U);
-        IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2]);
-    }
+    DEV_SM_SensorHandler(1U, 2U);
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -487,6 +465,7 @@ void Reserved110_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 /* ELE Group #1 IRQ exception handler                                       */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void ELE_Group1_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
@@ -496,6 +475,7 @@ void ELE_Group1_IRQHandler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 /* ELE Group #2 IRQ exception handler                                       */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void ELE_Group2_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
@@ -505,6 +485,7 @@ void ELE_Group2_IRQHandler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 /* ELE Group #3 IRQ exception handler                                       */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void ELE_Group3_IRQHandler(const uint32_t *sp)
 {
     /* Call common handler */
@@ -863,11 +844,10 @@ int32_t DEV_SM_IrqPrioUpdate(void)
 /*--------------------------------------------------------------------------*/
 /* Common exception handler                                                 */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     uint32_t faultStatus, uint32_t faultAddr)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
     /*
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
@@ -892,14 +872,8 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     LMM_FuSaExceptionHandler(&resetRec);
 #endif
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Finalize system reset flow */
-        (void) DEV_SM_SystemRstComp(&resetRec);
-    }
+    /* Finalize system reset flow */
+    (void) DEV_SM_SystemRstComp(&resetRec);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -918,14 +892,8 @@ static void FaultHandler(uint32_t faultId)
         .valid = true
     };
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Finalize fault flow */
-        status = DEV_SM_FaultComplete(resetRec);
-    }
+    /* Finalize fault flow */
+    status = DEV_SM_FaultComplete(resetRec);
 
     /* Reset if fault handling failed */
     if (status != SM_ERR_SUCCESS)
@@ -938,6 +906,7 @@ static void FaultHandler(uint32_t faultId)
 /*--------------------------------------------------------------------------*/
 /* Common ELE handler                                                       */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 static void ELEHandler(IRQn_Type excId, const uint32_t *sp)
 {
     /* Call common handler */

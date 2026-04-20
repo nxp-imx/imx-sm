@@ -610,7 +610,8 @@ bool RST_ResetLineRestricted(uint32_t lineIdx)
 /*--------------------------------------------------------------------------*/
 /* Request system reset                                                     */
 /*--------------------------------------------------------------------------*/
-_Noreturn void RST_SystemRequestReset(void)
+/* coverity[misra_c_2012_rule_17_11_violation] */
+void RST_SystemRequestReset(void)
 {
     /* Assert CM33 SYSRESETREQ */
     NVIC_SystemReset();

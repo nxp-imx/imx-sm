@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -108,6 +108,15 @@
 /* Types */
 
 /* Functions */
+
+/*!
+ * Set fuse state (cached).
+ *
+ * @param[in]     fuseId      Id of fuse to read
+ * @param[in]     fuseVal     Value to set
+ *
+ */
+void DEV_SM_FuseSet(uint32_t fuseId, uint32_t fuseVal);
 
 /*!
  * Get speed grade frequency.

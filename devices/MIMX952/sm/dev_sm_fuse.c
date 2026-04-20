@@ -141,6 +141,15 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Write a cached fuse field                                                */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_FuseSet(uint32_t fuseId, uint32_t fuseVal)
+{
+    /* Store fuse value */
+    s_fuseValue[fuseId] = fuseVal;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Read a fuse field                                                        */
 /*--------------------------------------------------------------------------*/
 uint32_t DEV_SM_FuseGet(uint32_t fuseId)
@@ -159,9 +168,6 @@ uint32_t DEV_SM_FuseSpeedGet(void)
 
     /* Get speed */
     speed = DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING) & 0xFU;
-
-    /* Added to improve the test coverage */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, speed = 1U);
 
     if (speed != 0U)
     {

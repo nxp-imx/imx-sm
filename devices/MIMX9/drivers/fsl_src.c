@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 NXP
+ * Copyright 2023-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -36,7 +36,6 @@
 #include "fsl_reset.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
-#include "sm_test_mode.h"
 
 /* Local Defines */
 
@@ -698,10 +697,6 @@ bool SRC_MixIsPwrSwitchOn(uint32_t srcMixIdx)
 {
     bool isPwrSwitchOn = false;
     uint32_t modSrcMixIdx = srcMixIdx;
-
-    /* Added to impove the test coverage for negative case */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-        modSrcMixIdx = PWR_NUM_MIX_SLICE)
 
     if (modSrcMixIdx < PWR_NUM_MIX_SLICE)
     {

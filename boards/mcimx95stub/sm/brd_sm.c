@@ -218,7 +218,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
 /* gcov_excl_start - calling will lose gcov data */
-_Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
+void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
 #if defined(MONITOR) || defined(RUN_TEST)
     printf("exit %d, 0x%08X\n", status, pc);
@@ -232,11 +232,7 @@ _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 #endif
 
     /* Hang */
-    /* coverity[infinite_loop] */
-    while (true)
-    {
-        ; /* Intentional empty while */
-    }
+    DEV_SM_SystemHalt();
 }
 /* gcov_excl_stop */
 
@@ -476,11 +472,10 @@ int32_t BRD_SM_SystemReset(void)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    /* coverity[infinite_loop] */
-    while (true)
-    {
-        ; /* Intentional empty while */
-    }
+    DEV_SM_SystemHalt();
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
 }
 /* gcov_excl_stop */
 
@@ -496,11 +491,10 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    /* coverity[infinite_loop] */
-    while (true)
-    {
-        ; /* Intentional empty while */
-    }
+    DEV_SM_SystemHalt();
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -514,11 +508,10 @@ int32_t BRD_SM_SystemShutdown(void)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    /* coverity[infinite_loop] */
-    while (true)
-    {
-        ; /* Intentional empty while */
-    }
+    DEV_SM_SystemHalt();
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/

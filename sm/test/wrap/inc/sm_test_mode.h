@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024-2025 NXP
+** Copyright 2024-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -34,7 +34,7 @@
 
 /*==========================================================================*/
 /*!
- * @addtogroup BOOT
+ * @addtogroup TEST
  * @{
  *
  * @file
@@ -47,20 +47,19 @@
 #ifndef SM_TEST_MODE_H
 #define SM_TEST_MODE_H
 
-#if defined(RUN_TEST) || defined(MONITOR)
+#ifdef TEST_MODE
 
 /* Includes */
 
 /* Defines */
-
-/*! Indicator test mode support is included */
-#define HAS_SM_TEST_MODE
 
 /*!
  * @name SM test modes
  */
 /** @{ */
 #define SM_TEST_MODE_OFF        0U    /*!< None */
+#define SM_TEST_MODE_DRV_LVL1   50U   /*!< Driver first level error response */
+#define SM_TEST_MODE_DRV_LVL2   51U   /*!< Driver second level error response */
 #define SM_TEST_MODE_DEV_LVL1   100U  /*!< Device first level error response */
 #define SM_TEST_MODE_DEV_LVL2   101U  /*!< Device second level error response */
 #define SM_TEST_MODE_DEV_ALT1   120U  /*!< Device alt response 1 */
@@ -96,11 +95,23 @@
 /*! Current test mode */
 extern uint32_t g_testMode;
 
+/*!
+ * Set test mode.
+ *
+ * @param[in]     mode        New test mode
+ *
+ * Sets the global test mode.
+ */
+void SM_TestModeSet(uint32_t mode);
+
 #else
 
 /* Defines */
 
+/*! Set status on mode */
 #define SM_TEST_MODE_ERR(testMode, testErr)
+
+/*! Execute code on mode */
 #define SM_TEST_MODE_EXEC(testMode, CODE)
 
 #endif

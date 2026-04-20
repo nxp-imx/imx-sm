@@ -33,7 +33,6 @@
 #include "fsl_power.h"
 #include "fsl_src.h"
 #include "fsl_clock.h"
-#include "sm_test_mode.h"
 
 /* Local Defines */
 
@@ -427,9 +426,6 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
             idx++;
         }
     }
-
-    /* To Impove the test coverage for the negative case */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, anyChildPowered = true);
 
     return anyChildPowered;
 }

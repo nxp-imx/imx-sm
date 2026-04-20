@@ -190,6 +190,13 @@ void TEST_DevSmSystem(void)
             SM_ERR_NOT_FOUND);
         SM_TestModeSet(SM_TEST_MODE_OFF);
     }
+
+    /* Function coverage: DEV_SM_SystemHalt (simu only) */
+    {
+        /* Intentional: Test code */
+        /* coverity[misra_c_2012_rule_2_2_violation] */
+        DEV_SM_SystemHalt();
+    }
 #endif
 
     /* Dump the error log */
@@ -219,27 +226,33 @@ void TEST_DevSmSystem(void)
         SM_TestModeSet(SM_TEST_MODE_OFF);
     }
 
-#ifndef SIMU
     /* dev_sm stage reset coverage */
     {
+#ifdef SIMU
+        (void) DEV_SM_RomStageGet();
+        (void) DEV_SM_RomContainerGet();
+#else
         uint32_t curr_stage = DEV_SM_RomStageGet();
         uint32_t current_container = DEV_SM_RomContainerGet();
 
         printf("current stage: %u current container: %u\n", curr_stage, current_container);
 
         /* Set the test mode */
-        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL2);
 
-        /* container 0 */
+        /* Container 0 */
         NECHECK(DEV_SM_SystemStageReset(curr_stage, 0U), SM_ERR_TEST);
 
-        /* container 1 */
+        /* Set the test mode */
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+
+        /* Container 1 */
         NECHECK(DEV_SM_SystemStageReset(curr_stage, 1U), SM_ERR_TEST);
 
-        /* container Invalid container */
+        /* Container Invalid container */
         NECHECK(DEV_SM_SystemStageReset(curr_stage, 3U), SM_ERR_TEST);
 
-        /* restore to original*/
+        /* Restore to original*/
         if (current_container == ROM_CONTAINER_1)
         {
             NECHECK(DEV_SM_SystemStageReset(curr_stage, 0U), SM_ERR_TEST);
@@ -254,20 +267,21 @@ void TEST_DevSmSystem(void)
             SRC_GEN->GPR15 = current_container;
         }
 
+        /* Set the test mode */
+        SM_TestModeSet(SM_TEST_MODE_DRV_LVL1);
+
+        /* System stage coverage */
+        (void) DEV_SM_SystemStageReset(curr_stage, 0U);
+
         /* Reset the test mode */
         SM_TestModeSet(SM_TEST_MODE_OFF);
-
+#endif
     }
 
+#ifndef SIMU
     {
         /* Set the test mode */
         SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
-
-        /* System reset coverage */
-        NECHECK(DEV_SM_SystemReset(), SM_ERR_TEST);
-
-        /* DEV_SM_SystemShutdown coverage */
-        NECHECK(DEV_SM_SystemShutdown(), SM_ERR_TEST);
 
         dev_sm_rst_rec_t shutdownRec = { 0 };
         /* DEV_SM_SystemShutdownRecSet coverage */
@@ -281,6 +295,15 @@ void TEST_DevSmSystem(void)
 
         /* DEV_SM_SystemError coverage */
         DEV_SM_SystemError(0, 4U);
+
+        /* Set the test mode */
+        SM_TestModeSet(SM_TEST_MODE_DRV_LVL1);
+
+        /* DEV_SM_SystemShutdown coverage */
+        (void) DEV_SM_SystemShutdown();
+
+        /* System reset coverage */
+        (void) DEV_SM_SystemReset();
 
         /* Reset the test mode */
         SM_TestModeSet(SM_TEST_MODE_OFF);

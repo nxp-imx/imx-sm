@@ -153,7 +153,8 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /*--------------------------------------------------------------------------*/
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
-_Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
+/* coverity[misra_c_2012_rule_17_11_violation] */
+void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
     printf("exit %d, 0x%08X\n", status, pc);
     /* coverity[misra_c_2012_rule_21_8_violation] */

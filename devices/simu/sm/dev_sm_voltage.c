@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023, 2025 NXP
+**     Copyright 2023, 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -77,8 +77,6 @@ int32_t DEV_SM_VoltageNameGet(uint32_t domainId, string *voltNameAddr,
         /* Return pointer to name */
         *voltNameAddr = s_name[domainId];
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

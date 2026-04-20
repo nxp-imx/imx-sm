@@ -250,8 +250,6 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
         }
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }

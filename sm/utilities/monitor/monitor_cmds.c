@@ -55,6 +55,9 @@
 #if defined(GCOV) && !defined(SIMU)
 #include "gcov_dump.h"
 #endif
+#ifdef TEST_MODE
+#include "sm_test_mode.h"
+#endif
 
 /* Defines */
 
@@ -3876,6 +3879,7 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
 {
     int32_t status = SM_ERR_SUCCESS;
 
+#ifdef TEST_MODE
     if (argc < 1)
     {
         status = SM_ERR_MISSING_PARAMETERS;
@@ -3893,6 +3897,7 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
             SM_TestModeSet(testMode);
         }
     }
+#endif
 
     /* Return status */
     return status;

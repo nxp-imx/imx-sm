@@ -55,6 +55,7 @@ else
 	FLAGS += -DLMM_INIT_FLAGS=0 -DRUN_TEST
 	DEBUG ?= 1
 	INC_LIBC ?= 1
+	TEST_MODE ?= 1
 endif
 ifeq ($(T),all)
 	FLAGS += -DTEST_ALL
@@ -71,6 +72,7 @@ M ?= 1
 ifneq ($(M),0)
 	FLAGS += -DMONITOR
 	INC_LIBC ?= 1
+	TEST_MODE ?= 1
 endif
 INC_LIBC ?= 0
 DEBUG ?= 0
@@ -153,6 +155,12 @@ endif
 # Include tests
 ifneq ($(T),NONE)
 	include $(ROOT_DIR)/sm/test/Makefile
+endif
+
+# Include test wrappers
+ifeq ($(TEST_MODE),1)
+	FLAGS += -DTEST_MODE
+    include $(ROOT_DIR)/sm/test/wrap/Makefile
 endif
 
 ifneq ($(SOC),simu)

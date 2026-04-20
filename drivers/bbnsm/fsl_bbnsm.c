@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2025 NXP
+ * Copyright 2021, 2025-2026 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -163,7 +163,7 @@ uint32_t BBNSM_RTC_GetSeconds(BBNSM_Type *base)
 void BBNSM_RTC_SetSeconds(BBNSM_Type *base, uint32_t seconds)
 {
     uint32_t origCtrl = base->BBNSM_CTRL;
-    uint32_t clrCtrl = origCtrl & ~BBNSM_BBNSM_CTRL_RTC_EN(0x3); 
+    uint32_t clrCtrl = origCtrl & ~BBNSM_BBNSM_CTRL_RTC_EN(0x3);
 
     /* Disable RTC */
     base->BBNSM_CTRL = clrCtrl | BBNSM_BBNSM_CTRL_RTC_EN(0x1);
@@ -217,8 +217,8 @@ status_t BBNSM_RTC_SetAlarm(BBNSM_Type *base, uint32_t alarmSeconds)
 
     /* Disable RTC alarm interrupt */
     tmp = base->BBNSM_INT_EN &
-          ~BBNSM_BBNSM_INT_EN_TA_INT_EN(
-              0x3); /* Clear TA_INT_EN field to avoid writing an invalid value(0b00/0b11) to the TA_INT_EN field */
+        ~BBNSM_BBNSM_INT_EN_TA_INT_EN(
+        0x3);       /* Clear TA_INT_EN field to avoid writing an invalid value(0b00/0b11) to the TA_INT_EN field */
 
     base->BBNSM_INT_EN = tmp | BBNSM_BBNSM_INT_EN_TA_INT_EN(0x1);
     while ((base->BBNSM_INT_EN & BBNSM_BBNSM_INT_EN_TA_INT_EN(0x1)) == 0U)
@@ -309,13 +309,13 @@ uint64_t BBNSM_RTC_GetTicks(BBNSM_Type * base)
     uint64_t ticks = ms;
     ticks = (ticks << 32U) | ls;
 
-   return ticks;
+    return ticks;
 }
 
 void BBNSM_RTC_SetTicks(BBNSM_Type *base, uint64_t ticks)
 {
     uint32_t origCtrl = base->BBNSM_CTRL;
-    uint32_t clrCtrl = origCtrl & ~BBNSM_BBNSM_CTRL_RTC_EN(0x3); 
+    uint32_t clrCtrl = origCtrl & ~BBNSM_BBNSM_CTRL_RTC_EN(0x3);
 
     /* Disable RTC */
     base->BBNSM_CTRL = clrCtrl | BBNSM_BBNSM_CTRL_RTC_EN(0x1);
@@ -380,12 +380,18 @@ void BBNSM_ButtonSetConfig(BBNSM_Type *base, bbnsm_button_config_t *btnConfig)
     uint32_t ctrl = base->BBNSM_CTRL;
 
     ctrl &= (~(BBNSM_BBNSM_CTRL_TURN_ON_TIME_MASK |
-               BBNSM_BBNSM_CTRL_BTN_TIMEOUT_MASK |
-               BBNSM_BBNSM_CTRL_DEBOUNCE_MASK));
+        BBNSM_BBNSM_CTRL_BTN_TIMEOUT_MASK |
+        BBNSM_BBNSM_CTRL_DEBOUNCE_MASK));
 
     ctrl |= (BBNSM_BBNSM_CTRL_TURN_ON_TIME(btnConfig->turnOnTime) |
-             BBNSM_BBNSM_CTRL_BTN_TIMEOUT(btnConfig->turnOffTime) |
-             BBNSM_BBNSM_CTRL_DEBOUNCE(btnConfig->debounceTime));
+        BBNSM_BBNSM_CTRL_BTN_TIMEOUT(btnConfig->turnOffTime) |
+        BBNSM_BBNSM_CTRL_DEBOUNCE(btnConfig->debounceTime));
 
     base->BBNSM_CTRL = ctrl;
 }
+
+void BBNSM_SystemPowerOff(BBNSM_Type *base)
+{
+    base->BBNSM_CTRL |= BBNSM_BBNSM_CTRL_TOSP(0x1U);
+}
+

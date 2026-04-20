@@ -216,8 +216,6 @@ int32_t LMM_SystemShutdown(uint32_t lmId, uint32_t agentId,
         status = SM_SYSTEMSHUTDOWN();
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -277,8 +275,6 @@ int32_t LMM_SystemReset(uint32_t lmId, uint32_t agentId, bool graceful,
         status = SM_SYSTEMRESET();
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -307,8 +303,6 @@ int32_t LMM_SystemSuspend(uint32_t lmId, uint32_t agentId)
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -336,8 +330,6 @@ int32_t LMM_SystemWake(uint32_t lmId, uint32_t agentId)
     {
         (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -375,10 +367,6 @@ void LM_SystemReason(uint32_t lmId, lmm_rst_rec_t *bootRec,
     /* Update boot record */
     if (status == SM_ERR_SUCCESS)
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-            flags = DEV_SM_BBM_BOOT_BUTTON);
-
         if ((flags & (DEV_SM_BBM_BOOT_BUTTON | DEV_SM_BBM_BOOT_ALARM
             | DEV_SM_BBM_BOOT_ROLLOVER)) != 0U)
         {
@@ -426,8 +414,6 @@ int32_t LMM_SystemSleepModeSet(uint32_t lmId, uint32_t sleepMode,
         SM_SYSTEMSLEEPMODESET(newMode, newFlags);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -451,10 +437,6 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
         *state = (uint32_t) s_lmState[stateLm];
         *errStatus = s_lmError[stateLm];
     }
-
-    // cppcheck-suppress unknownMacro
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, *errStatus = SM_ERR_TEST)
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -496,8 +478,6 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
         /* Next entry */
         idx++;
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -566,8 +546,6 @@ int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm)
         s_lmError[pwrLm] = status;
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -602,8 +580,6 @@ int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
     {
         s_lmError[bootLm] = status;
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -654,8 +630,6 @@ int32_t LMM_SystemLmShutdown(uint32_t lmId, uint32_t agentId,
             status = LMM_DoShutdown(&trigger, shutdownRec);
         }
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -718,8 +692,6 @@ int32_t LMM_SystemLmReset(uint32_t lmId, uint32_t agentId, uint32_t resetLm,
         }
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -756,8 +728,6 @@ int32_t LMM_SystemLmSuspend(uint32_t lmId, uint32_t agentId,
         (void) LMM_RpcNotificationTrigger(suspendLm, &trigger);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -791,8 +761,6 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm)
         (void) LMM_RpcNotificationTrigger(wakeLm, &trigger);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -816,14 +784,6 @@ int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
         *bootRec = s_lmBootReason[reasonLm];
         *shutdownRec = s_lmShutdownReason[reasonLm];
     }
-
-    /*
-     * Intentional: Test code
-     */
-    /* coverity[cert_int30_c_violation] */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, shutdownRec->errId = \
-        bootRec->errId + 1U)
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -950,8 +910,6 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
         }
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -994,8 +952,6 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
         }
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -1024,8 +980,6 @@ int32_t LMM_SystemGrpReset(uint32_t lmId, uint32_t agentId, bool graceful,
     {
         status = SM_ERR_NOT_SUPPORTED;
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

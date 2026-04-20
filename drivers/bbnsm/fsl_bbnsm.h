@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2024-2025 NXP
+ * Copyright 2021, 2024-2026 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -388,11 +388,7 @@ void BBNSM_ButtonSetConfig(BBNSM_Type *base, bbnsm_button_config_t *btnConfig);
  *
  * @param base BBNSM peripheral base address
  */
-static inline void BBNSM_SystemPowerOff(BBNSM_Type *base)
-{
-    base->BBNSM_CTRL |= BBNSM_BBNSM_CTRL_TOSP(0x1U);
-}
-
+void BBNSM_SystemPowerOff(BBNSM_Type *base);
 
 #if defined(__cplusplus)
 }

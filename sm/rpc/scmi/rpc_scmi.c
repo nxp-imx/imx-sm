@@ -564,9 +564,6 @@ void RPC_SCMI_ErrorDump(uint8_t scmiInst)
         {
             channel_err_t *err = &s_channelErr[scmiChannel];
 
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, err->status =
-                SM_ERR_INVALID_PARAMETERS);
-
             if (err->status != SM_ERR_SUCCESS)
             {
                 uint32_t header = err->header;

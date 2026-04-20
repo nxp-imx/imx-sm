@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023, 2025 NXP
+** Copyright 2023, 2025-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -48,6 +48,10 @@
 /*--------------------------------------------------------------------------*/
 void TEST_DevSmRdc(void)
 {
+    string rdcNameAddr;
+    char rdcLabel;
+    uint32_t rdcBase;
+
     /* RDC tests */
     printf("**** Device SM RDC API Tests ***\n\n");
 
@@ -55,16 +59,15 @@ void TEST_DevSmRdc(void)
     NECHECK(DEV_SM_RdcAccessSet(0U, false, 0U, false),
         SM_ERR_NOT_SUPPORTED);
 
-#ifndef SIMU
-    string rdcNameAddr;
-    char rdcLabel;
-    uint32_t rdcBase;
-
     printf("DEV_SM_RdcInfoGet(%u)\n", 0U);
+#ifndef SIMU
     CHECK(DEV_SM_RdcInfoGet(0U, &rdcNameAddr, &rdcLabel, &rdcBase));
 
     printf("rdc: %u rdcname: %s label: %c baseaddr: %x\n",
         0U, rdcNameAddr, rdcLabel, rdcBase);
+#else
+    NECHECK(DEV_SM_RdcInfoGet(0U, &rdcNameAddr, &rdcLabel, &rdcBase),
+        SM_ERR_NOT_FOUND);
 #endif
 
     printf("\n");

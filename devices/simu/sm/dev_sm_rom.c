@@ -112,8 +112,6 @@ int32_t DEV_SM_RomHandoverGet(const rom_handover_t **handover)
     /* Return pointer to data */
     *handover = &s_romHandover;
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -127,8 +125,6 @@ int32_t DEV_SM_RomPassoverGet(const rom_passover_t **passover)
 
     /* Return pointer to data */
     *passover = &g_romPassover;
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;
@@ -244,8 +240,6 @@ int32_t DEV_SM_RomStageSet(uint32_t stage)
 
     /* Save stage */
     s_stage = stage;
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

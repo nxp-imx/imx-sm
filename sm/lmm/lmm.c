@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -255,8 +255,6 @@ int32_t LMM_LmNameGet(uint32_t lmId, uint32_t lm, string *lmNameAddr,
     /* Return pointer to name */
     *lmNameAddr = g_lmmConfig[lm].name;
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL2, SM_ERR_TEST)
-
     /* Return status */
     return status;
 }
@@ -379,8 +377,7 @@ void LMM_Handler(void)
 /*--------------------------------------------------------------------------*/
 uint64_t LMM_BootTimeGet(uint32_t lmId)
 {
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, s_lmStartTime[lmId] = 0ULL)
-
+    /* Return time */
     return s_lmStartTime[lmId];
 }
 

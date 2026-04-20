@@ -121,9 +121,6 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
         status = SM_ERR_INVALID_PARAMETERS;
     }
 
-    /* Added to improve the test coverage */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, status = SM_ERR_SUCCESS);
-
     /* Get sleep mode */
     if (status == SM_ERR_SUCCESS)
     {
@@ -170,9 +167,6 @@ int32_t DEV_SM_CpuStart(uint32_t cpuId)
     }
     else
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
         /* Set CPU run mode to START */
         if (!CPU_RunModeSet(modCpuId, CPU_RUN_MODE_START))
         {
@@ -199,9 +193,6 @@ int32_t DEV_SM_CpuHold(uint32_t cpuId)
     }
     else
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
         /* Set CPU run mode to HOLD */
         if (!CPU_RunModeSet(modCpuId, CPU_RUN_MODE_HOLD))
         {
@@ -244,9 +235,6 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
             true);
         (void) CCM_LpcgDirectCtrlSetEnable(CLOCK_LPCG_VPUJPEGDEC,
             true);
-
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
         /* Set CPU run mode to STOP */
         if (!CPU_RunModeSet(modCpuId, CPU_RUN_MODE_STOP))
@@ -300,9 +288,6 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
     }
     else
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
         if (!CPU_ResetVectorSet(modCpuId, resetVector))
         {
             status = SM_ERR_NOT_FOUND;
@@ -339,10 +324,6 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
         }
         else
         {
-            /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-                modCpuId = DEV_SM_NUM_CPU);
-
             /* Set CPU target sleep mode on next WFI entry */
             if (!(CPU_SleepModeSet(modCpuId, sleepMode)))
             {
@@ -424,9 +405,6 @@ int32_t DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
         }
         else
         {
-            /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
             if (!CPU_IrqWakeSet(modCpuId, maskIdx, maskVal))
             {
                 status = SM_ERR_NOT_FOUND;
@@ -460,9 +438,6 @@ int32_t DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
         }
         else
         {
-            /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
             if (!CPU_NonIrqWakeSet(modCpuId, maskVal))
             {
                 status = SM_ERR_NOT_FOUND;
@@ -492,9 +467,6 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
     }
     else
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
         /* Configure CPU LPM response for specified power domain */
         if (!CPU_LpmConfigSet(modCpuId, domainId, lpmSetting, retMask))
         {
@@ -530,9 +502,6 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
 
         if (status == SM_ERR_SUCCESS)
         {
-            /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
             /* Configure CPU LPM response for the peripheral low-power
                interface */
             if (!CPU_PerLpiConfigSet(modCpuId, perId, lpmSetting))

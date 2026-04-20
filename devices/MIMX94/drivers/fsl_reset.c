@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 NXP
+ * Copyright 2025-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -674,7 +674,8 @@ bool RST_ResetLineRestricted(uint32_t lineIdx)
 /*--------------------------------------------------------------------------*/
 /* Request system reset                                                     */
 /*--------------------------------------------------------------------------*/
-_Noreturn void RST_SystemRequestReset(void)
+/* coverity[misra_c_2012_rule_17_11_violation] */
+void RST_SystemRequestReset(void)
 {
     /* Assert CM33 SYSRESETREQ */
     NVIC_SystemReset();

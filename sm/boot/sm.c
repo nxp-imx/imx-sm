@@ -79,10 +79,6 @@ static bool s_lmmInited = false;
 /* coverity[misra_c_2012_rule_8_9_violation] */
 uint64_t g_bootTime[SM_BT_BRD + 1U];
 
-#ifdef HAS_SM_TEST_MODE
-uint32_t g_testMode = SM_TEST_MODE_OFF;
-#endif
-
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
@@ -240,9 +236,6 @@ int main(int argc, const char * const argv[])
 /* coverity[misra_c_2012_rule_17_11_violation] */
 void SM_Error(int32_t status)
 {
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, s_lmmInited = false);
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL2, s_lmmInited = true);
-
     if (s_lmmInited)
     {
         uint32_t pc;
@@ -271,15 +264,13 @@ void SM_Error(int32_t status)
     }
 }
 
-#ifdef HAS_SM_TEST_MODE
 /*--------------------------------------------------------------------------*/
-/* Set test mode                                                            */
+/* Set LMM inited flag                                                      */
 /*--------------------------------------------------------------------------*/
-void SM_TestModeSet(uint32_t mode)
+void SM_LmmInitedSet(bool inited)
 {
-    g_testMode = mode;
+    s_lmmInited = inited;
 }
-#endif
 
 #if !defined(SIMU) && !defined(INC_LIBC)
 /*--------------------------------------------------------------------------*/
@@ -310,7 +301,6 @@ void exit(int status)
         (void) SM_SYSTEMRESET();
     }
 
-    /* Hang */
     /* coverity[infinite_loop] */
     while (true)
     {

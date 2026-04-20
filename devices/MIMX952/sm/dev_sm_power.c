@@ -278,10 +278,6 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
     }
     else
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-            modDomainId = PWR_NUM_MIX_SLICE);
-
         /* Check domain */
         if (!(SRC_MemRetentionModeSet(modDomainId, memRetMask)))
         {

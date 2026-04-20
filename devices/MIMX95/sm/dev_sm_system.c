@@ -168,28 +168,14 @@ void DEV_SM_SystemSleepModeSet(uint32_t sleepMode, uint32_t sleepFlags)
 /*--------------------------------------------------------------------------*/
 /* Reset device                                                             */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t DEV_SM_SystemReset(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-    /*
-     * Calling this function will reset the entire system,
-     * resulting in the loss of all gcov coverage data.
-     * Therefore, it cannot be invoked for test coverage purposes.
-     * As a result, both line and branch coverage for this function
-     * are excluded from the gcov report.
-     */
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    /* gcov_excl_multiline 5 */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Request warm reset */
-        RST_SystemRequestReset();
-    }
+    /* Request warm reset */
+    RST_SystemRequestReset();
 
     /* Return status */
-    return status;
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -208,16 +194,6 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
         status = DEV_SM_RomContainerSet(container);
     }
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /*
-     * Calling this function will reset the entire system,
-     * resulting in the loss of all gcov coverage data.
-     * Therefore, it cannot be invoked for test coverage purposes.
-     * As a result, both line and branch coverage for this function
-     * are excluded from the gcov report.
-     */
-    /* gcov_excl_multiline 5 */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -233,47 +209,38 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemShutdown(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    /* Inform ELE */
+    ELE_StartDvfsChange(ELE_DVFS_FLAG_BBSM, 0U, 0U, 0U);
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /*
-     * Calling this function will shutdown the entire system,
-     * resulting in the loss of all gcov coverage data.
-     * Therefore, it cannot be invoked for test coverage purposes.
-     * As a result, both line and branch coverage for this function
-     * are excluded from the gcov report.
-     */
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    /* gcov_excl_multiline 9 */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Inform ELE */
-        ELE_StartDvfsChange(ELE_DVFS_FLAG_BBSM, 0U, 0U, 0U);
-
-        /* Request shutdown */
-        BBNSM_SystemPowerOff(BBNSM);
-    }
+    /* Request shutdown */
+    BBNSM_SystemPowerOff(BBNSM);
 
     /* Return status */
-    return status;
+    return SM_ERR_SUCCESS;
 }
+
+/*--------------------------------------------------------------------------*/
+/* Halt device                                                              */
+/*--------------------------------------------------------------------------*/
+/* gcov_excl_start - calling will lose gcov data */
+/* coverity[misra_c_2012_rule_17_11_violation] */
+void DEV_SM_SystemHalt(void)
+{
+    /* coverity[infinite_loop] */
+    while (true)
+    {
+        ;  /* Intentional empty while */
+    }
+}
+/* gcov_excl_stop */
 
 /*--------------------------------------------------------------------------*/
 /* Save shutdown reason                                                     */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Store shutdown record */
-        BRD_SM_ShutdownRecordSave(shutdownRec);
-    }
+    /* Store shutdown record */
+    BRD_SM_ShutdownRecordSave(shutdownRec);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -381,26 +348,13 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 /* Complete system reset processing                                         */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
 
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
-
-    /*
-     * Calling this function will reset the entire system,
-     * resulting in the loss of all gcov coverage data.
-     * Therefore, it cannot be invoked for test coverage purposes.
-     * As a result, both line and branch coverage for this function
-     * are excluded from the gcov report.
-     */
-    /* coverity[misra_c_2012_rule_14_3_violation] */
-    /*  gcov_excl_multiline 5 */
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Request shutdown */
-        status = SM_SYSTEMRSTCOMP(resetRec);
-    }
+    /* Request shutdown */
+    status = SM_SYSTEMRSTCOMP(resetRec);
 
     /* Return status */
     return status;
@@ -409,6 +363,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 /*--------------------------------------------------------------------------*/
 /* Report SM error to log and reset                                         */
 /*--------------------------------------------------------------------------*/
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
 {
     /*

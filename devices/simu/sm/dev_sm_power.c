@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -82,8 +82,6 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
         /* Return pointer to name */
         *domainNameAddr = s_name[domainId];
     }
-
-    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     /* Return status */
     return status;

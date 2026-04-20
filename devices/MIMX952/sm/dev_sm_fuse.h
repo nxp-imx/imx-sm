@@ -138,6 +138,15 @@
 /* Functions */
 
 /*!
+ * Set fuse state (cached).
+ *
+ * @param[in]     fuseId      Id of fuse to read
+ * @param[in]     fuseVal     Value to set
+ *
+ */
+void DEV_SM_FuseSet(uint32_t fuseId, uint32_t fuseVal);
+
+/*!
  * Get speed grade frequency.
  *
  * @return Returns the speed grade frequency in Hz.

@@ -127,6 +127,11 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container);
 int32_t DEV_SM_SystemShutdown(void);
 
 /*!
+ * Halt (hang) the system.
+ */
+void DEV_SM_SystemHalt(void);
+
+/*!
  * Store shutdown record.
  *
  * @param[in]     shutdownRec  Record to store

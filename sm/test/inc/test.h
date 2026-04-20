@@ -55,6 +55,7 @@
 #include "sm.h"
 #include "brd_sm.h"
 #include "test_dev.h"
+#include "sm_test_mode.h"
 
 /* Defines */
 
