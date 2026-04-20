@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2024 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -38,6 +38,7 @@ CPPCHECK_IGNORE += -i$(ROOT_DIR)/drivers/rgpio
 CPPCHECK_DEFINE += -USIMU -DTRDC_LOAD -DCPPCHECK
 CPPCHECK_DEFINE += -DCPU_MIMX95_cm33
 CPPCHECK_DEFINE += -DCPU_MIMX94_cm33
+CPPCHECK_DEFINE += -DCPU_MIMX952_cm33
 CPPCHECK_DEFINE += -UDOX -UDOXYGEN
 CPPCHECK_DEFINE += -U__cplusplus
 CPPCHECK_RULES += --enable=warning,performance,style
@@ -51,5 +52,5 @@ CPPCHECK_RULES += --suppress=preprocessorErrorDirective
 
 cppcheck :
 	@echo "Checking ...."
-	$(AT)cppcheck --error-exitcode=1 -q -j 4 --std=c99 $(CPPCHECK_DEFINE) $(CPPCHECK_IGNORE) $(CPPCHECK_RULES) ${INCLUDE} --template='{file}:{line}: ({id}) {message}' .
+	$(AT)cppcheck --error-exitcode=1 -q -j 4 --std=c99 $(CPPCHECK_DEFINE) $(CPPCHECK_IGNORE) $(CPPCHECK_RULES) ${INCLUDE} --template='{file}:{line}:{id}:{message}' .
 
