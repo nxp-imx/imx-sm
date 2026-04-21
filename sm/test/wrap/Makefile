@@ -41,7 +41,7 @@ INCLUDE += \
 include $(WRAP_DIR)/boot/Makefile
 
 # Include device wrap functions
-include $(SOC_WRAP_DIR)/Makefile
+-include $(SOC_WRAP_DIR)/Makefile
 
 # Include LMM wrap functions
 include $(WRAP_DIR)/lmm/Makefile
