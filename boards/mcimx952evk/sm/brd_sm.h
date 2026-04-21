@@ -37,7 +37,7 @@
 
 /*==========================================================================*/
 /*!
- * @addtogroup BRD_SM_MX95EVK
+ * @addtogroup BRD_SM_MX952EVK
  * @{
  *
  * @file
@@ -51,6 +51,7 @@
 
 #include "sm.h"
 #include "brd_sm_handlers.h"
+#include "brd_sm_clock.h"
 #include "brd_sm_control.h"
 #include "brd_sm_sensor.h"
 #include "brd_sm_voltage.h"

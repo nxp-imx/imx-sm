@@ -47,6 +47,9 @@
 
 /* Local variables */
 
+/* Extended clock attribute info */
+static uint32_t s_extConfigValueLdbPll = 0U;
+
 /*--------------------------------------------------------------------------*/
 /* Return clock name                                                        */
 /*--------------------------------------------------------------------------*/
@@ -1334,13 +1337,21 @@ int32_t DEV_SM_ClockExtendedInfo(uint32_t clockId, bool *supported)
     }
     else
     {
-        uint32_t spreadPercent = 0U;
-        uint32_t modFreq = 0U;
-        uint32_t enable = 0U;
+        if (clockId == DEV_SM_CLK_LDBPLL)
+        {
+            /* DISP1PIX supports SRCPRE clock attribute */
+            *supported = true;
+        }
+        else
+        {
+            uint32_t spreadPercent = 0U;
+            uint32_t modFreq = 0U;
+            uint32_t enable = 0U;
 
-        /* Check if SCC is supported */
-        *supported = CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
-            &enable);
+            /* Check if SCC is supported */
+            *supported = CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
+                &enable);
+        }
     }
 
     /* Return status */
@@ -1399,6 +1410,18 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
                 }
                 break;
 
+            /* Clock source prepare */
+            case DEV_SM_CLOCK_EXT_SRCPRE:
+                if (clockId == DEV_SM_CLK_LDBPLL)
+                {
+                    s_extConfigValueLdbPll = extConfigValue;
+                }
+                else
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
+                }
+                break;
+
             default:
                 status = SM_ERR_NOT_FOUND;
                 break;
@@ -1445,6 +1468,18 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
                             | DEV_SM_CLOCK_EXT_SSC_MOD_FREQ(modFreq)
                             | DEV_SM_CLOCK_EXT_SSC_ENABLE(enable);
                     }
+                }
+                break;
+
+            /* Clock source prepare */
+            case DEV_SM_CLOCK_EXT_SRCPRE:
+                if (clockId == DEV_SM_CLK_LDBPLL)
+                {
+                    *extConfigValue = s_extConfigValueLdbPll;
+                }
+                else
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
                 break;
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -283,7 +283,8 @@
  * @name Device extended clock configuration type
  */
 /** @{ */
-#define DEV_SM_CLOCK_EXT_SSC  0x80U   /*!< Spread spectrum extended clock type */
+#define DEV_SM_CLOCK_EXT_SSC     0x80U   /*!< Spread spectrum extended clock type */
+#define DEV_SM_CLOCK_EXT_SRCPRE  0x81U   /*!< Clock source prepare extended attribute */
 /** @} */
 
 /*!

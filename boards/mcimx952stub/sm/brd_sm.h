@@ -50,6 +50,7 @@
 /* Includes */
 
 #include "sm.h"
+#include "brd_sm_clock.h"
 #include "board.h"
 #include "brd_sm_api.h"
 

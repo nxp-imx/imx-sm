@@ -54,5 +54,6 @@ VPATH += \
 
 OBJS += \
 	$(OUT)/board.o  \
-	$(OUT)/brd_sm.o
-
+	$(OUT)/brd_sm.o  \
+	$(OUT)/brd_sm_clock.o
+	

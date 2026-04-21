@@ -128,7 +128,7 @@ function shown):
     #endif
 
 The EVK port adds support for the PMIC sensor by implementing most of the same functions in the DEV_SM file
-in a board-spefic [brd_sm_sensor.h](@ref mcimx95evk/sm/brd_sm_sensor.h) file included in the build for that
+in a board-specific [brd_sm_sensor.h](@ref mcimx95evk/sm/brd_sm_sensor.h) file included in the build for that
 board. That header redirects the LMM function calls to the board implementation as follows:
 
     #define SM_SENSORNAMEGET       BRD_SM_SensorNameGet       /* Sensor name */
@@ -156,6 +156,55 @@ function, else they handle the board resources. The implemented functions are th
 | BRD_SM_SensorEnable()       | brd_sm_sensor.h/c | Enable/disable a board sensor                    |
 | BRD_SM_SensorIsEnabled()    | brd_sm_sensor.h/c | Get enable/disable state of a board sensor       |
 | BRD_SM_SensorHandler()      | brd_sm_sensor.h/c | Sensor interrupt handler                         |
+
+Most NXP board ports also support overriding clock settings to the device layer. This is because some
+operating systems, such as Linux, do not support automatically setting the parent rate of SCMI-based
+clocks, such as DISP1PIX for the i.MX95 SoC. This means only a single PLL frequency is supported at
+runtime, and any set rate calls must request a rate that is divisible from this initial PLL frequency.
+Alternatively, the device driver can also be modified to make multiple set rate calls, but this may be
+prohibited if the code is shared or upstream will not allow such a change. This code redirects an
+incoming clock set rate call from the operating system and will automatically set the parent clock's
+rate based on a table of known working frequency combinations. This is called **clock source preparation**
+and at present only the DISP1PIX and LDBPLL clocks are supported.
+
+The sm/dev/dev_sm_clock_api.h file supports clocks in the SoC. By default, in dev_sm_api.h these are
+directed to the [DEV_SM](@ref DEV_SM) layer as follows (only one example function shown):
+
+    #ifndef SM_CLOCKRATESET
+    /*! Redirector (device/board) to set a clock rate */
+    #define SM_CLOCKRATESET         DEV_SM_ClockRateSet
+    #endif
+
+The EVK overrides clocks settings by implementing one of the same functions in the DEV_SM file
+in a board-specific [brd_sm_clock.h](@ref mcimx95evk/sm/brd_sm_clock.h) file included in the build for that
+board. That header redirects the LMM function calls to the board implementation as follows:
+
+    #define SM_CLOCKRATESET       BRD_SM_ClockRateSet   /*!< Clock rate set */
+
+The function in that file is:
+
+| Function                    | File              | Purpose                                          |
+|-----------------------------|-------------------|--------------------------------------------------|
+| BRD_SM_ClockRateSet()       | brd_sm_clock.h/c  | Set clock rate                                   |
+
+The device layer maintains a state variable (SRCPRE) to indicate if clock source preparation should occur.
+This variable can be changed with the clock extended function using the DEV_SM_CLOCK_EXT_SRCPRE value.
+**By default it is enabled.** An agent can call SCMI_ClockConfigSet() to disable it. The two clocks
+supported are DEV_SM_CLK_LDBPLL and DEV_SM_CLK_DISP1PIX. This attribute allows clock clients (typically
+board init code) to:
+
+- Enable or disable clock source preparation
+- Signal that board level PLL programming should occur
+
+When SRCPRE is enabled and a display clock rate is requested, the appropriate board code may:
+
+- Detect known pixel clock rates (e.g. 297?MHz, 148.5?MHz, etc.)
+- Compute PLL parameters (mfi, mfn, odiv)
+- Program the appropriate PLL directly via: FRACTPLL_UpdateRate()
+- Force rounding mode to CLK_ROUND_AUTO
+
+Customers may want to duplicate this functionality in their board ports and fine tune it for their
+display use-case.
 
 This same concept can be used to add voltages, controls, resets, clocks, perf domains, RTCs, etc.
 
@@ -207,7 +256,7 @@ GPIO module in the AON domain. If other wakeups are required, in order to be abl
 WAKEUP MIX, those need to also come in via GPIO1. That usually means a bus expander **on the same
 AON I2C as the PMIC(s)**. The PMIC interrupts (and other wakeups) are then usually run to the bus
 expander and the interrupt from the bus expander run to GPIO1. See the design of the NXP EVK below.
-Customers should follow this design to minimize board porting work and to ensure the the SM can
+Customers should follow this design to minimize board porting work and to ensure the SM can
 get interrupts for PMIC temp and safety events.
 
 NXP Reference Board Ports  {#PORT_NXP}
@@ -232,7 +281,7 @@ NXP i.MX95 EVK  {#PORT_MX95_EVK}
 This port supports i.MX95 on both the LPDDR4X and LPDDR5 EVKs. This board consists of a base board and CPU
 daughter card. The board design allocates LPI2C1, GPIO1, and LPUART2 as modules to be managed exclusively
 by the SM running on the CM33. Connected to LPI2C1 is a PF09 PMIC, 2x PF53 PMICs, and a PCAL6408A I2C bus
-expander. On the 15x15 EVK there is also a PCA2131 RTC. The interrupts from these go to the bus exapnder
+expander. On the 15x15 EVK there is also a PCA2131 RTC. The interrupts from these go to the bus expander
 (along with other wakeup signals) and the interrupt from the bus expander goes to GPIO1-10. This means the
 CM33 must be the exclusive owner of LPI2C1 and GPIO1. Because it owns GPIO1, no other pads can be routed to
 GPIO1 and directly used by any of the other CPUs. Other CPUs must use I/O that can be routed to GPIO2-5.
@@ -295,7 +344,7 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 | 1           | Boot LM1 (M7), error if no image in container                                           |
 | 2           | Boot nothing                                                                            |
 
-An aternative configuration for this board is [mx95alt](@ref CONFIG_MX95ALT). It defines the following boot
+An alternative configuration for this board is [mx95alt](@ref CONFIG_MX95ALT). It defines the following boot
 mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
 
 | mSel        | Description (mx95alt)                                                                   |
@@ -331,7 +380,7 @@ NXP i.MX94 EVK  {#PORT_MX94_EVK}
 This port supports i.MX94 on both the LPDDR4 and LPDDR5 EVKs. This board consists of a base board and CPU
 daughter card. The board design allocates LPI2C1, GPIO1, and LPUART2 as modules to be managed exclusively
 by the SM running on the CM33. Connected to LPI2C1 is a PF09 PMIC, a PF53 PMIC, a PCAL6416A I2C bus
-expander, and a PCA2131 RTC. The interrupts from these go to the bus exapnder
+expander, and a PCA2131 RTC. The interrupts from these go to the bus expander
 (along with other wakeup signals) and the interrupt from the bus expander goes to GPIO1-15. This means the
 CM33 must be the exclusive owner of LPI2C1 and GPIO1. Because it owns GPIO1, no other pads can be routed to
 GPIO1 and directly used by any of the other CPUs. Other CPUs must use I/O that can be routed to GPIO2-7.
@@ -389,7 +438,7 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 | 1           | Boot M33S if image found, boot LM2 (M70), error if no image in container                |
 | 2           | Boot nothing                                                                            |
 
-An aternative configuration for this board is [mx94alt](@ref CONFIG_MX94ALT). It defines the following boot
+An alternative configuration for this board is [mx94alt](@ref CONFIG_MX94ALT). It defines the following boot
 mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
 
 | mSel        | Description (mx94alt)                                                                   |
@@ -424,7 +473,7 @@ NXP i.MX952 EVK  {#PORT_MX952_EVK}
 This port supports i.MX952 on both the LPDDR4X and LPDDR5 EVKs. This board consists of a base board and CPU
 daughter card. The board design allocates LPI2C1, GPIO1, and LPUART2 as modules to be managed exclusively
 by the SM running on the CM33. Connected to LPI2C1 is a PF09 PMIC, a PF53 PMIC, a PCAL6408A I2C bus
-expander, and a PCA2131 RTC. The interrupts from these go to the bus exapnder
+expander, and a PCA2131 RTC. The interrupts from these go to the bus expander
 (along with other wakeup signals) and the interrupt from the bus expander goes to GPIO1-10. This means the
 CM33 must be the exclusive owner of LPI2C1 and GPIO1. Because it owns GPIO1, no other pads can be routed to
 GPIO1 and directly used by any of the other CPUs. Other CPUs must use I/O that can be routed to GPIO2-5.
@@ -480,7 +529,7 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 | 1           | Boot LM1 (M7), error if no image in container                                           |
 | 2           | Boot nothing                                                                            |
 
-An aternative configuration for this board is [mx952alt](@ref CONFIG_MX952ALT). It defines the following boot
+An alternative configuration for this board is [mx952alt](@ref CONFIG_MX952ALT). It defines the following boot
 mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
 
 | mSel        | Description (mx952alt)                                                                  |
@@ -525,8 +574,8 @@ record content, see the @ref DEBUG_RESET section.
 Creating a New Port  {#PORT_CREATE}
 ===================
 
-Board porting usually invovles copying a port from one of the existing NXP ports and then modifying
-for a cusotmer board. Usually this starts from the associated EVK port but if a more simple starting
+Board porting usually involves copying a port from one of the existing NXP ports and then modifying
+for a customer board. Usually this starts from the associated EVK port but if a more simple starting
 point is desired a customer can start from the stub port. The stub port is a minimal port with no
 code related to PMIC, I2C, bus expanders, etc.
 

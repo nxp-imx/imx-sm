@@ -583,10 +583,16 @@ int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
 /*--------------------------------------------------------------------------*/
 static int32_t BRD_SM_InitComplete(uint32_t mSel)
 {
+    int32_t status;
+
     /* Safe to call DEV_SM functions to init hardware. For example, to
        enabled a power domain, configure a clock SSC, clock rate, or pin.
        Not safe to call LMM functions! */
 
-    return SM_ERR_SUCCESS;
+    /* Init clock override */
+    status = BRD_SM_ClockInit();
+
+    /* Return status */
+    return status;
 }
 

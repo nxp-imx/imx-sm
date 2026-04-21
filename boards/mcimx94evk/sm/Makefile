@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2025 NXP
+## Copyright 2025-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -59,6 +59,7 @@ OBJS += \
 	$(OUT)/board.o  \
 	$(OUT)/brd_sm.o  \
 	$(OUT)/brd_sm_handlers.o  \
+	$(OUT)/brd_sm_clock.o  \
 	$(OUT)/brd_sm_control.o  \
 	$(OUT)/brd_sm_sensor.o  \
 	$(OUT)/brd_sm_voltage.o  \
