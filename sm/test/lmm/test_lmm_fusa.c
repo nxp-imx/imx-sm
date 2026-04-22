@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024-2025 NXP
+** Copyright 2024-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -87,8 +87,8 @@ void TEST_LmmFuSa(void)
         lmm_fusa_id_t target = { 0U }, caller = { 0U };
         uint32_t seenvState = 0U;
 
-        caller.seenvId = SM_LM_NUM_SEENV;
-        caller.lmId = 0U;
+        target.seenvId = SM_LM_NUM_SEENV;
+        target.lmId = 0U;
 
         NECHECK(LMM_FusaSeenvStateGet(&caller, &target, &seenvState),
             SM_ERR_NOT_FOUND);

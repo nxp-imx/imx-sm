@@ -129,14 +129,14 @@ int32_t LMM_FusaSeenvStateGet(const lmm_fusa_id_t *caller,
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check S-EENV ID */
-    if (caller->seenvId >= SM_LM_NUM_SEENV)
+    if (target->seenvId >= SM_LM_NUM_SEENV)
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
         /* Get state */
-        *seenvState = s_seenvInfo[caller->seenvId].state;
+        *seenvState = s_seenvInfo[target->seenvId].state;
     }
 
     /* Return status */
@@ -159,7 +159,7 @@ int32_t LMM_FusaSeenvStateSet(const lmm_fusa_id_t *caller,
     else
     {
         /* Save state */
-        s_seenvInfo[caller->seenvId].state = LMM_FUSA_SEENV_STATE_INIT;
+        s_seenvInfo[caller->seenvId].state = seenvState;
     }
 
     /* Return status */

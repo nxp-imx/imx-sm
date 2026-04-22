@@ -910,7 +910,7 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
     {
         lmm_fusa_id_t fusaCaller =
         {
-            .seenvId = caller->seenvId,
+            .seenvId = caller->seenvId - 1U,
             .lmId = caller->lmId
         };
 
@@ -971,7 +971,7 @@ static int32_t FusaSeenvStateSet(const scmi_caller_t *caller,
     {
         lmm_fusa_id_t fusaCaller =
         {
-            .seenvId = caller->seenvId,
+            .seenvId = caller->seenvId - 1U,
             .lmId = caller->lmId
         };
 
