@@ -113,6 +113,8 @@ The CONFIG option specifies what configuration directory to use. See the
 | mx94alt            | MX94 EVK, AP or M7, for BSP testing and DDR test tool  |
 | mx952evk           | MX952 EVK, Linux and M7                                |
 | mx952alt           | MX952 EVK, AP or M7, for BSP testing and DDR test tool |
+| mx937frdm          | MX937 FRDM, Linux and M7                               |
+| mx937alt           | MX937 FRDM, AP or M7, for BSP testing and DDR test tool|
 | simu               | Simulation build, uses a simulated device and board.   |
 
 Look in the configs directory to see the complete list of options. If a new configuration

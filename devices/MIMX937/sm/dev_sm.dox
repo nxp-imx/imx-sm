@@ -1,0 +1,169 @@
+/*
+** ###################################################################
+**
+** Copyright 2026 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*!
+ * @addtogroup DEV_SM
+ * @{
+ */
+
+/*!
+
+@defgroup DEV_SM_MX937 DEVICE_MX937: SM i.MX937 Device Implementation
+
+@brief Module for the i.MX937 device for the SM.
+
+Device Module
+=============
+
+Lots of detail here.
+
+*/
+
+/*!
+ * @addtogroup DEV_SM_MX937
+ * @{
+ */
+
+/*!
+@defgroup DEV_SM_MX937_CONFIG DEVICE_MX937_CONFIG: SM i.MX937 Device (CONFIG)
+
+@brief Module for the i.MX937 device configuration functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_HANDLERS DEVICE_MX937_HANDLERS: SM i.MX937 Device (HANDLERS)
+
+@brief Module for the i.MX937 device IRQ handlers.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_ROM DEVICE_MX937_ROM: SM i.MX937 Device (ROM)
+
+@brief Module for the i.MX937 device ROM functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_FUSE DEVICE_MX937_FUSE: SM i.MX937 Device (FUSE)
+
+@brief Module for the i.MX937 device fuse functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_RDC DEVICE_MX937_RDC: SM i.MX937 Device (RDC)
+
+@brief Module for the i.MX937 device RDC functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_POWER DEVICE_MX937_POWER: SM i.MX937 Device (POWER)
+
+@brief Module for the i.MX937 device power functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_SYS DEVICE_MX937_SYS: SM i.MX937 Device (SYS)
+
+@brief Module for the i.MX937 device system functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_MEM DEVICE_MX937_MEM: SM i.MX937 Device (MEM)
+
+@brief Module for the i.MX937 device memory functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_PERF DEVICE_MX937_PERF: SM i.MX937 Device (PERF)
+
+@brief Module for the i.MX937 device performance functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_CLOCK DEVICE_MX937_CLOCK: SM i.MX937 Device (CLOCK)
+
+@brief Module for the i.MX937 device clock functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_SENSOR DEVICE_MX937_SENSOR: SM i.MX937 Device (SENSOR)
+
+@brief Module for the i.MX937 device sensor functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_RESET DEVICE_MX937_RESET: SM i.MX937 Device (RESET)
+
+@brief Module for the i.MX937 device reset functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_VOLTAGE DEVICE_MX937_VOLTAGE: SM i.MX937 Device (VOLTAGE)
+
+@brief Module for the i.MX937 device voltage functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_PIN DEVICE_MX937_PIN: SM i.MX937 Device (PIN)
+
+@brief Module for the i.MX937 device pin functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_BBM DEVICE_MX937_BBM: SM i.MX937 Device (BBM)
+
+@brief Module for the i.MX937 device BBM functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_CPU DEVICE_MX937_CPU: SM i.MX937 Device (CPU)
+
+@brief Module for the i.MX937 device CPU functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_CTRL DEVICE_MX937_CTRL: SM i.MX937 Device (CTRL)
+
+@brief Module for the i.MX937 device control functions.
+*/
+
+/*!
+@defgroup DEV_SM_MX937_FAULT DEVICE_MX937_FAULT: SM i.MX937 Device (FAULT)
+
+@brief Module for the i.MX937 device fault functions.
+*/
+
+/** @} */
+
+/** @} */
+

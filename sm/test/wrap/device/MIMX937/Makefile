@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2026 NXP
+## Copyright 2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -30,28 +30,36 @@
 ##
 ## ###################################################################
 
-CPPCHECK_IGNORE += -iCMSIS
-CPPCHECK_IGNORE += -i$(ROOT_DIR)/drivers/lpuart
-CPPCHECK_IGNORE += -i$(ROOT_DIR)/drivers/lpi2c
-CPPCHECK_IGNORE += -i$(ROOT_DIR)/drivers/mu1
-CPPCHECK_IGNORE += -i$(ROOT_DIR)/drivers/rgpio
-CPPCHECK_DEFINE += -USIMU -DTRDC_LOAD -DCPPCHECK
-CPPCHECK_DEFINE += -DCPU_MIMX95_cm33
-CPPCHECK_DEFINE += -DCPU_MIMX94_cm33
-CPPCHECK_DEFINE += -DCPU_MIMX952_cm33
-CPPCHECK_DEFINE += -DCPU_MIMX9375_cm33
-CPPCHECK_DEFINE += -UDOX -UDOXYGEN
-CPPCHECK_DEFINE += -U__cplusplus
-CPPCHECK_RULES += --enable=warning,performance,style
-CPPCHECK_RULES += --inline-suppr
-CPPCHECK_RULES += --suppress=unreadVariable
-CPPCHECK_RULES += --suppress=unusedStructMember
-CPPCHECK_RULES += --suppress=redundantAssignment
-CPPCHECK_RULES += --suppress=nullPointerRedundantCheck
-CPPCHECK_RULES += --suppress=knownConditionTrueFalse
-CPPCHECK_RULES += --suppress=preprocessorErrorDirective
+# Include common device API wrappers
 
-cppcheck :
-	@echo "Checking ...."
-	$(AT)cppcheck --error-exitcode=1 -q -j 4 --std=c99 $(CPPCHECK_DEFINE) $(CPPCHECK_IGNORE) $(CPPCHECK_RULES) ${INCLUDE} --template='{file}:{line}:{id}:{message}' .
+include $(WRAP_DIR)/device/sm/Makefile
+
+LFLAGS += \
+	-Wl,--wrap=BBNSM_SystemPowerOff \
+	-Wl,--wrap=CPU_IrqWakeSet \
+	-Wl,--wrap=CPU_LpmConfigSet \
+ 	-Wl,--wrap=CPU_NonIrqWakeSet \
+ 	-Wl,--wrap=CPU_PerLpiConfigSet \
+	-Wl,--wrap=CPU_ResetVectorSet \
+	-Wl,--wrap=CPU_RunModeGet \
+	-Wl,--wrap=CPU_RunModeSet \
+	-Wl,--wrap=CPU_SleepModeSet \
+	-Wl,--wrap=ELE_StartDvfsChange \
+	-Wl,--wrap=PWR_AnyChildPowered \
+	-Wl,--wrap=RST_SystemRequestReset \
+    -Wl,--wrap=SRC_MemRetentionModeSet \
+	-Wl,--wrap=SRC_MixIsPwrSwitchOn
+
+VPATH += \
+	$(WRAP_DIR)/drivers \
+	$(WRAP_DIR)/device/MIMX9/drivers \
+	$(SOC_WRAP_DIR)/drivers
+
+OBJS += \
+	$(OUT)/wrap_fsl_bbnsm.o \
+	$(OUT)/wrap_fsl_cpu.o \
+	$(OUT)/wrap_fsl_ele.o \
+	$(OUT)/wrap_fsl_power.o \
+	$(OUT)/wrap_fsl_reset.o \
+	$(OUT)/wrap_fsl_src.o
 
