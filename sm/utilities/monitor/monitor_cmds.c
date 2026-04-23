@@ -141,7 +141,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
 static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
     int32_t len);
 static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
-    int32_t rw);
+    int32_t rw, bool shadow);
 #ifdef BOARD_HAS_PMIC
 static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
     int32_t rw);
@@ -236,7 +236,9 @@ int32_t MONITOR_Dispatch(char *line)
         "test",
         "delay",
         "ddr",
-        "gcov"
+        "gcov",
+        "sfuse.r",
+        "sfuse.w"
     };
 
     /* Parse Line */
@@ -403,10 +405,10 @@ int32_t MONITOR_Dispatch(char *line)
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
             case 49:  /* fuse.r */
-                status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
+                status = MONITOR_CmdFuse(argc - 1, &argv[1], READ, false);
                 break;
             case 50:  /* fuse.w */
-                status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
+                status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE, false);
                 break;
 #ifdef BOARD_HAS_PMIC
             case 51:  /* pmic.r */
@@ -448,6 +450,12 @@ int32_t MONITOR_Dispatch(char *line)
                 GCOV_InfoDump();
                 break;
 #endif
+            case 63:  /* sfuse.r */
+                status = MONITOR_CmdFuse(argc - 1, &argv[1], READ, true);
+                break;
+            case 64:  /* sfuse.w */
+                status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE, true);
+                break;
             default:
                 status = SM_ERR_NOT_FOUND;
                 break;
@@ -3442,7 +3450,7 @@ static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
 /* Fuse command                                                             */
 /*--------------------------------------------------------------------------*/
 static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
-    int32_t rw)
+    int32_t rw, bool shadow)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -3482,19 +3490,31 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
                                 /* Service wdog */
                                 BOARD_WdogRefresh();
 #endif
-                                /* Read fuse word directly */
-                                if (SystemMemoryProbe((const void *) addr,
-                                    &data, 32U) != 0U)
+                                if (shadow == true)
                                 {
 #ifdef DEVICE_HAS_ELE
-                                    /* Read fuse word via ELE */
-                                    ELE_FuseRead(word, &data);
+                                    /* Read shadow fuse word via ELE */
+                                    ELE_FuseShadowRead(word, &data);
                                     status = g_eleStatus;
 #else
                                     status = SM_ERR_INVALID_PARAMETERS;
 #endif
                                 }
-
+                                else
+                                {
+                                    /* Read fuse word directly */
+                                    if (SystemMemoryProbe((const void *)
+                                        addr, &data, 32U) != 0U)
+                                    {
+#ifdef DEVICE_HAS_ELE
+                                        /* Read fuse word via ELE */
+                                        ELE_FuseRead(word, &data);
+                                        status = g_eleStatus;
+#else
+                                        status = SM_ERR_INVALID_PARAMETERS;
+#endif
+                                    }
+                                }
                                 if (status == SM_ERR_SUCCESS)
                                 {
                                     printf("Fuse[%02u] = 0x%08x\n", word,
@@ -3531,9 +3551,33 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
                             status = DEV_SM_FuseInfoGet(word, &addr);
                             if (status == SM_ERR_SUCCESS)
                             {
-                                /* Write fuse */
-                                ELE_FuseWrite(word, data, false);
-                                status = g_eleStatus;
+                                if (shadow == true)
+                                {
+                                    /* Write shadow fuse */
+                                    ELE_FuseShadowWrite(word, data);
+
+                                    status = g_eleStatus;
+                                }
+                                else
+                                {
+                                    uint8_t noecc = 0U;
+
+                                    /* Get data value */
+                                    if (argc >= 3)
+                                    {
+                                        status = MONITOR_ConvU8(argv[2],
+                                            &noecc);
+                                    }
+
+                                    /* Write fuse */
+                                    if (status == SM_ERR_SUCCESS)
+                                    {
+                                        ELE_FuseWrite(word, data, false,
+                                            (noecc == 1U));
+
+                                        status = g_eleStatus;
+                                    }
+                                }
                             }
                         }
                         else

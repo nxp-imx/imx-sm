@@ -92,6 +92,8 @@ typedef enum
     ELE_ATTEST_REQ              = 0xDB,
     ELE_RELEASE_PATCH_REQ       = 0xDC,
     ELE_OTP_SEQ_SWITH_REQ       = 0xDD,
+    ELE_WRITE_SHADOW_FUSE_REQ   = 0xF2,
+    ELE_READ_SHADOW_FUSE_REQ    = 0xF3,
     ELE_ABORT                   = 0xFF
 } ele_cmd_type_t;
 
@@ -614,10 +616,35 @@ void ELE_FuseRead(uint32_t fuseId, uint32_t *fuseVal)
 #endif
 }
 
+
+/*--------------------------------------------------------------------------*/
+/* Read Shadow fuse                                                         */
+/*--------------------------------------------------------------------------*/
+void ELE_FuseShadowRead(uint32_t fuseId, uint32_t *fuseVal)
+{
+    /* Fill in parameters */
+    s_msgMax.word[1] = fuseId;
+
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_READ_SHADOW_FUSE_REQ, 2U, false);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+    /* Extract data */
+    if (g_eleStatus == SM_ERR_SUCCESS)
+    {
+        *fuseVal = s_msgMax.word[2];
+    }
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
 /*--------------------------------------------------------------------------*/
 /* Write fuse                                                               */
 /*--------------------------------------------------------------------------*/
-void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock)
+void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock, bool noecc)
 {
     /* Check the expression values doesn't wrap */
     if (fuseId <= (UINT32_MAX / 32UL))
@@ -628,6 +655,10 @@ void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock)
         if (lock)
         {
             s_msgMax.word[1] |= BIT32(31U);
+        }
+        if (noecc)
+        {
+            s_msgMax.word[1] |= BIT32(30U);
         }
         s_msgMax.word[2] = fuseVal;
 
@@ -641,6 +672,26 @@ void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock)
         ELE_DebugDump();
 #endif
     }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Write Shadow fuse                                                        */
+/*--------------------------------------------------------------------------*/
+void ELE_FuseShadowWrite(uint32_t fuseId, uint32_t fuseVal)
+{
+    /* Fill in parameters */
+    s_msgMax.word[1] = fuseId;
+    s_msgMax.word[2] = fuseVal;
+
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_WRITE_SHADOW_FUSE_REQ, 3U, false);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
 }
 
 /*--------------------------------------------------------------------------*/

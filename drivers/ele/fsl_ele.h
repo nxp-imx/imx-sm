@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 NXP
+ * Copyright 2023-2026 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -355,16 +355,39 @@ void ELE_StopDvfsChange(void);
 void ELE_FuseRead(uint32_t fuseId, uint32_t *fuseVal);
 
 /*!
+ * Read Shadow fuse.
+ *
+ * @param[in]     fuseId         Word index of fuse
+ * @param[out]    fuseVal        Pointer to return fuse value
+ *
+ * Allows reading shadow fuses.
+ * See the ELE API Reference Guide for more info.
+ */
+void ELE_FuseShadowRead(uint32_t fuseId, uint32_t *fuseVal);
+
+/*!
  * Write non-secure fuse.
  *
  * @param[in]     fuseId         Word index of fuse
  * @param[in]     fuseVal        Value to program
  * @param[in]     lock           True to lock fuse word
+ * @param[in]     noecc          True to not finalize word ecc
  *
  * Allows writing some fuses. See the ELE API Reference Guide for more
  * info.
  */
-void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock);
+void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock, bool noecc);
+
+/*!
+ * Write Shadow non-secure fuse.
+ *
+ * @param[in]     fuseId         Word index of fuse
+ * @param[in]     fuseVal        Value to program
+ *
+ * Allows writing shadow fuses.
+ * See the ELE API Reference Guide for more info.
+ */
+void ELE_FuseShadowWrite(uint32_t fuseId, uint32_t fuseVal);
 
 /*!
  * Return ELE error number.

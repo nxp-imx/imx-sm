@@ -168,7 +168,9 @@ Fuse Commands
 | Command                     | Description                                                  |
 |-----------------------------|--------------------------------------------------------------|
 | fuse.r *wordIdx* [*count*]  | display *count* number of fuse words starting at *wordIdx*   |
-| fuse.w *wordIdx* *value*    | write *value* to fuse *wordIdx* (if possible)                |
+| fuse.w *wordIdx* *value* [*noecc*]   | write *value* to fuse *wordIdx* (try) *noecc* update|
+| sfuse.r *wordIdx* [*count*] | display *count* no of words starting at *wordIdx* frm shadows|
+| sfuse.w *wordIdx* *value*   | write *value* to fuse shadows *wordIdx* (if possible)        |
 
 Board Commands
 --------------
