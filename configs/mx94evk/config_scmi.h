@@ -849,7 +849,6 @@
         .pinPerms[DEV_SM_PIN_ETH4_TXD3] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_ETH4_TX_CLK] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_ETH4_TX_CTL] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_FCCU_ERR0] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_GPIO_IO00] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_GPIO_IO01] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_GPIO_IO02] = SM_SCMI_PERM_ALL, \
@@ -902,12 +901,9 @@
         .pinPerms[DEV_SM_PIN_GPIO_IO55] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_GPIO_IO56] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_GPIO_IO57] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_I2C1_SCL] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_I2C1_SDA] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_I2C2_SCL] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_I2C2_SDA] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_PDM_BIT_STREAM0] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_PDM_BIT_STREAM1] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_PDM_CLK] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_SAI1_RXD0] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_SAI1_TXC] = SM_SCMI_PERM_ALL, \
@@ -939,9 +935,6 @@
         .pinPerms[DEV_SM_PIN_SD2_VSELECT] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_UART1_RXD] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_UART1_TXD] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_UART2_RXD] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_UART2_TXD] = SM_SCMI_PERM_ALL, \
-        .pinPerms[DEV_SM_PIN_WDOG_ANY] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_XSPI1_DATA0] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_XSPI1_DATA1] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_XSPI1_DATA2] = SM_SCMI_PERM_ALL, \
