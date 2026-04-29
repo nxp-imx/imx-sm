@@ -1,8 +1,6 @@
 Introduction {#mainpage}
 ============
 
-**Note this is an engineering release. It is not suitable for production!**
-
 This document contains release notes for the i.MX9 System Manager (SM). This includes:
 
 - [Highlights](@ref RN_HIGH)
@@ -35,10 +33,7 @@ Highlights {#RN_HIGH}
 
 Added:
 
-- **Support for i.MX952 A0**
-- **Support for the i.MX952 EVK**
-- Support for the i.MX95 Freedom Pro board
-- Support for configuring the video PLL when setting the display pixel clock
+- **Support for i.MX94 A1**
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.
