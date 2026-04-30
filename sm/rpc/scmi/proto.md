@@ -112,15 +112,15 @@ supported, the message will be supported. In some cases, an entire protocol migh
 | Lmm | 0x80 | [PROTOCOL_ATTRIBUTES](@ref SCMI_PROTO_LMM_PROTOCOL_ATTRIBUTES) | 0x1 |  | Mandatory |
 | Lmm | 0x80 | [PROTOCOL_MESSAGE_ATTRIBUTES](@ref SCMI_PROTO_LMM_PROTOCOL_MESSAGE_ATTRIBUTES) | 0x2 |  | Mandatory |
 | Lmm | 0x80 | [LMM_ATTRIBUTES](@ref SCMI_PROTO_LMM_LMM_ATTRIBUTES) | 0x3 | NONE<BR>GET | Mandatory |
-| Lmm | 0x80 | [LMM_BOOT](@ref SCMI_PROTO_LMM_LMM_BOOT) | 0x4 | PRIV | Mandatory |
-| Lmm | 0x80 | [LMM_RESET](@ref SCMI_PROTO_LMM_LMM_RESET) | 0x5 | PRIV | Mandatory |
-| Lmm | 0x80 | [LMM_SHUTDOWN](@ref SCMI_PROTO_LMM_LMM_SHUTDOWN) | 0x6 | PRIV | Mandatory |
+| Lmm | 0x80 | [LMM_BOOT](@ref SCMI_PROTO_LMM_LMM_BOOT) | 0x4 | PRIV<BR>EXCLUSIVE | Mandatory |
+| Lmm | 0x80 | [LMM_RESET](@ref SCMI_PROTO_LMM_LMM_RESET) | 0x5 | PRIV<BR>EXCLUSIVE | Mandatory |
+| Lmm | 0x80 | [LMM_SHUTDOWN](@ref SCMI_PROTO_LMM_LMM_SHUTDOWN) | 0x6 | PRIV<BR>EXCLUSIVE | Mandatory |
 | Lmm | 0x80 | [LMM_WAKE](@ref SCMI_PROTO_LMM_LMM_WAKE) | 0x7 | SET | Mandatory |
-| Lmm | 0x80 | [LMM_SUSPEND](@ref SCMI_PROTO_LMM_LMM_SUSPEND) | 0x8 | PRIV | Mandatory |
+| Lmm | 0x80 | [LMM_SUSPEND](@ref SCMI_PROTO_LMM_LMM_SUSPEND) | 0x8 | PRIV<BR>EXCLUSIVE | Mandatory |
 | Lmm | 0x80 | [LMM_NOTIFY](@ref SCMI_PROTO_LMM_LMM_NOTIFY) | 0x9 | NOTIFY | Mandatory |
 | Lmm | 0x80 | [LMM_RESET_REASON](@ref SCMI_PROTO_LMM_LMM_RESET_REASON) | 0xA | GET | Mandatory |
-| Lmm | 0x80 | [LMM_POWER_ON](@ref SCMI_PROTO_LMM_LMM_POWER_ON) | 0xB | PRIV | Mandatory |
-| Lmm | 0x80 | [LMM_RESET_VECTOR_SET](@ref SCMI_PROTO_LMM_LMM_RESET_VECTOR_SET) | 0xC | PRIV | Mandatory |
+| Lmm | 0x80 | [LMM_POWER_ON](@ref SCMI_PROTO_LMM_LMM_POWER_ON) | 0xB | PRIV<BR>EXCLUSIVE | Mandatory |
+| Lmm | 0x80 | [LMM_RESET_VECTOR_SET](@ref SCMI_PROTO_LMM_LMM_RESET_VECTOR_SET) | 0xC | PRIV<BR>EXCLUSIVE | Mandatory |
 | Lmm | 0x80 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_LMM_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  | Mandatory |
 | Lmm\n(notification) | 0x80 | [LMM_EVENT](@ref SCMI_PROTO_LMM_LMM_EVENT) | 0x0 |  | Mandatory |
 | Bbm | 0x81 | [PROTOCOL_VERSION](@ref SCMI_PROTO_BBM_PROTOCOL_VERSION) | 0x0 |  | Mandatory |

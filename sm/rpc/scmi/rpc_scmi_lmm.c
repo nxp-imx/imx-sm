@@ -800,7 +800,7 @@ static int32_t LmmAttributes(const scmi_caller_t *caller,
 /* - in->lmId: Identifier for the logical machine                           */
 /*                                                                          */
 /* Process the LMM_BOOT message. Platform handler for SCMI_LmmBoot().       */
-/* Requires access greater than or equal to PRIV.                           */
+/* Requires access greater than or equal to PRIV/EXCLUSIVE.                 */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the LM successfully booted.                         */
@@ -828,11 +828,20 @@ static int32_t LmmBoot(const scmi_caller_t *caller, const msg_rlmm4_t *in,
     }
 
     /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-        < SM_SCMI_PERM_PRIV))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_DENIED;
+        uint8_t reqPerm = SM_SCMI_PERM_PRIV;
+
+        if (caller->lmId != in->lmId)
+        {
+            /* Require EXCLUSIVE when accessing foreign LM */
+            reqPerm = SM_SCMI_PERM_EXCLUSIVE;
+        }
+
+        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId] < reqPerm)
+        {
+            status = SM_ERR_DENIED;
+        }
     }
 
     /* Check not self */
@@ -865,7 +874,7 @@ static int32_t LmmBoot(const scmi_caller_t *caller, const msg_rlmm4_t *in,
 /*   Set to 0 if the request is a forceful request                          */
 /*                                                                          */
 /* Process the LMM_RESET message. Platform handler for SCMI_LmmReset().     */
-/* Requires access greater than or equal to PRIV.                           */
+/* Requires access greater than or equal to PRIV/EXCLUSIVE.                 */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - LMM_FLAGS_GRACEFUL() - Graceful request                                */
@@ -897,11 +906,20 @@ static int32_t LmmReset(const scmi_caller_t *caller, const msg_rlmm5_t *in,
     }
 
     /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-        < SM_SCMI_PERM_PRIV))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_DENIED;
+        uint8_t reqPerm = SM_SCMI_PERM_PRIV;
+
+        if (caller->lmId != in->lmId)
+        {
+            /* Require EXCLUSIVE when accessing foreign LM */
+            reqPerm = SM_SCMI_PERM_EXCLUSIVE;
+        }
+
+        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId] < reqPerm)
+        {
+            status = SM_ERR_DENIED;
+        }
     }
 
     /* Check not self */
@@ -934,7 +952,8 @@ static int32_t LmmReset(const scmi_caller_t *caller, const msg_rlmm5_t *in,
 /*   Set to 0 if the request is a forceful request                          */
 /*                                                                          */
 /* Process the LMM_SHUTDOWN message. Platform handler for                   */
-/* SCMI_LmmShutdown(). Requires access greater than or equal to PRIV.       */
+/* SCMI_LmmShutdown(). Requires access greater than or equal to             */
+/* PRIV/EXCLUSIVE.                                                          */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - LMM_FLAGS_GRACEFUL() - Graceful request                                */
@@ -966,11 +985,20 @@ static int32_t LmmShutdown(const scmi_caller_t *caller, const msg_rlmm6_t *in,
     }
 
     /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-        < SM_SCMI_PERM_PRIV))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_DENIED;
+        uint8_t reqPerm = SM_SCMI_PERM_PRIV;
+
+        if (caller->lmId != in->lmId)
+        {
+            /* Require EXCLUSIVE when accessing foreign LM */
+            reqPerm = SM_SCMI_PERM_EXCLUSIVE;
+        }
+
+        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId] < reqPerm)
+        {
+            status = SM_ERR_DENIED;
+        }
     }
 
     /* Check not self */
@@ -1058,7 +1086,8 @@ static int32_t LmmWake(const scmi_caller_t *caller, const msg_rlmm7_t *in,
 /* - in->lmId: Identifier for the logical machine                           */
 /*                                                                          */
 /* Process the LMM_SUSPEND message. Platform handler for                    */
-/* SCMI_LmmSuspend(). Requires access greater than or equal to PRIV.        */
+/* SCMI_LmmSuspend(). Requires access greater than or equal to              */
+/* PRIV/EXCLUSIVE.                                                          */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the LM successfully booted.                         */
@@ -1086,11 +1115,20 @@ static int32_t LmmSuspend(const scmi_caller_t *caller, const msg_rlmm8_t *in,
     }
 
     /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-        < SM_SCMI_PERM_PRIV))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_DENIED;
+        uint8_t reqPerm = SM_SCMI_PERM_PRIV;
+
+        if (caller->lmId != in->lmId)
+        {
+            /* Require EXCLUSIVE when accessing foreign LM */
+            reqPerm = SM_SCMI_PERM_EXCLUSIVE;
+        }
+
+        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId] < reqPerm)
+        {
+            status = SM_ERR_DENIED;
+        }
     }
 
     /* Check not self */
@@ -1348,7 +1386,8 @@ static int32_t LmmResetReason(const scmi_caller_t *caller,
 /* - in->lmId: Identifier for the logical machine                           */
 /*                                                                          */
 /* Process the LMM_POWER_ON message. Platform handler for                   */
-/* SCMI_LmmPowerOn(). Requires access greater than or equal to PRIV.        */
+/* SCMI_LmmPowerOn(). Requires access greater than or equal to              */
+/* PRIV/EXCLUSIVE.                                                          */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the LM successfully powered on.                     */
@@ -1376,11 +1415,20 @@ static int32_t LmmPowerOn(const scmi_caller_t *caller, const msg_rlmm11_t *in,
     }
 
     /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-        < SM_SCMI_PERM_PRIV))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_DENIED;
+        uint8_t reqPerm = SM_SCMI_PERM_PRIV;
+
+        if (caller->lmId != in->lmId)
+        {
+            /* Require EXCLUSIVE when accessing foreign LM */
+            reqPerm = SM_SCMI_PERM_EXCLUSIVE;
+        }
+
+        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId] < reqPerm)
+        {
+            status = SM_ERR_DENIED;
+        }
     }
 
     /* Check not self */
@@ -1424,7 +1472,7 @@ static int32_t LmmPowerOn(const scmi_caller_t *caller, const msg_rlmm11_t *in,
 /*                                                                          */
 /* Process the LMM_RESET_VECTOR_SET message. Platform handler for           */
 /* SCMI_LmmResetVectorSet(). Requires access greater than or equal to       */
-/* PRIV.                                                                    */
+/* PRIV/EXCLUSIVE.                                                          */
 /*                                                                          */
 /*  Access macros:                                                          */
 /* - LMM_VEC_FLAGS_TABLE() - Table flag                                     */
@@ -1464,11 +1512,20 @@ static int32_t LmmResetVectorSet(const scmi_caller_t *caller,
     }
 
     /* Check permissions */
-    if ((status == SM_ERR_SUCCESS)
-        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
-        < SM_SCMI_PERM_PRIV))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = SM_ERR_DENIED;
+        uint8_t reqPerm = SM_SCMI_PERM_PRIV;
+
+        if (caller->lmId != in->lmId)
+        {
+            /* Require EXCLUSIVE when accessing foreign LM */
+            reqPerm = SM_SCMI_PERM_EXCLUSIVE;
+        }
+
+        if (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId] < reqPerm)
+        {
+            status = SM_ERR_DENIED;
+        }
     }
 
     /* Check if the CPU is part of this LM */
