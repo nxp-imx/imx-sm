@@ -107,6 +107,17 @@
 #define DEV_SM_PIN_GPIO_IO35         39U   /*!< GPIO IO35 pin */
 #define DEV_SM_PIN_GPIO_IO36         40U   /*!< GPIO IO36 pin */
 #define DEV_SM_PIN_GPIO_IO37         41U   /*!< GPIO IO37 pin */
+#define DEV_SM_PIN_GPIO_IO38         42U   /*!< GPIO IO38 pin */
+#define DEV_SM_PIN_GPIO_IO39         43U   /*!< GPIO IO39 pin */
+#define DEV_SM_PIN_GPIO_IO40         44U   /*!< GPIO IO40 pin */
+#define DEV_SM_PIN_LD_SPI_CS0        45U   /*!< LD SPI CS0 pin */
+#define DEV_SM_PIN_LD_SPI_SCK        46U   /*!< LD SPI SCK pin */
+#define DEV_SM_PIN_LD_SPI_DI         47U   /*!< LD SPI DI pin */
+#define DEV_SM_PIN_LD_SPI_DO         48U   /*!< LD SPI DO pin */
+#define DEV_SM_PIN_LD_HSYNC          49U   /*!< LD HSYNC pin */
+#define DEV_SM_PIN_LD_VSYNC          50U   /*!< LD VSYNC pin */
+#define DEV_SM_PIN_LD_GPIO0          51U   /*!< LD GPIO0 pin */
+#define DEV_SM_PIN_LD_GPIO1          52U   /*!< LD GPIO1 pin */
 #define DEV_SM_PIN_CCM_CLKO1         53U   /*!< CCM CLKO1 pin */
 #define DEV_SM_PIN_CCM_CLKO2         54U   /*!< CCM CLKO2 pin */
 #define DEV_SM_PIN_CCM_CLKO3         55U   /*!< CCM CLKO3 pin */
