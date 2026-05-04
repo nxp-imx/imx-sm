@@ -852,6 +852,8 @@ static int32_t RPC_SCMI_A2pSubDispatch(scmi_caller_t *caller,
             break;
 #ifdef USES_FUSA
         case SCMI_PROTOCOL_FUSA:
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = RPC_SCMI_FusaDispatchCommand(caller, messageId);
             break;
 #endif

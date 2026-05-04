@@ -406,6 +406,8 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(msg_tfusa6_t);
             /* Pointer coversion required from comm buffer */
             /* coverity[misra_c_2012_rule_11_3_violation] */
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = FusaSeenvStateGet(caller, (const msg_rfusa6_t*) in,
                 /* Pointer coversion required from comm buffer */
                 /* coverity[misra_c_2012_rule_11_3_violation] */
@@ -415,6 +417,8 @@ int32_t RPC_SCMI_FusaDispatchCommand(scmi_caller_t *caller,
             lenOut = sizeof(const scmi_msg_status_t);
             /* Pointer coversion required from comm buffer */
             /* coverity[misra_c_2012_rule_11_3_violation] */
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = FusaSeenvStateSet(caller, (const msg_rfusa7_t*) in,
                 /* Pointer coversion required from comm buffer */
                 /* coverity[misra_c_2012_rule_11_3_violation] */
