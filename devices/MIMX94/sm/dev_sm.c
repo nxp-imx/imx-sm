@@ -142,23 +142,19 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     }
 
     /* Init RDC */
-    if ((status == SM_ERR_SUCCESS)
-        && (romPassover->bootDevType != DEV_SM_ROM_BD_PRELOAD))
+    if (status == SM_ERR_SUCCESS)
     {
-        status = DEV_SM_RdcInit();
-    }
-    else
-    {
-        /* Check for emulation case (no ROM) */
-        if (status == SM_ERR_NOT_SUPPORTED)
+        /* Check if loaded by ROM, not ROM shim */
+        if (romPassover->bootDevType != DEV_SM_ROM_BD_PRELOAD)
         {
-            /* Allow boot to continue */
-            status = SM_ERR_SUCCESS;
+            status = DEV_SM_RdcInit();
         }
-
 #ifdef DEVICE_HAS_ELE
-        /* No FW loaded, assume ELE is in an aborted state */
-        ELE_Abort();
+        else
+        {
+            /* No FW loaded, assume ELE is in an aborted state */
+            ELE_Abort();
+        }
 #endif
     }
 
