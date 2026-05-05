@@ -40,7 +40,6 @@
 
 #include "sm.h"
 #include "brd_sm.h"
-#include "fsl_fract_pll.h"
 
 /* Local defines */
 
