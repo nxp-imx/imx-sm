@@ -16,6 +16,7 @@ New Feature {#RN_CL_NEW}
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
 | [SM-371](https://jira.sw.nxp.com/projects/SM/issues/SM-371) | Add support for i.MX94 A1 [[detail]](@ref RN_DETAIL_SM_371) |   | | | Y | |
+| [SM-405](https://jira.sw.nxp.com/projects/SM/issues/SM-405) | Add shadow fuse read/write in monitor and also support no ECC finalization [[detail]](@ref RN_DETAIL_SM_405) |   | Y | Y | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -40,7 +41,9 @@ Improvement {#RN_CL_IMP}
 | [SM-396](https://jira.sw.nxp.com/projects/SM/issues/SM-396) | Move all MISRA exceptions into SM codebase as comments [[detail]](@ref RN_DETAIL_SM_396) |   | Y | Y | Y | Y |
 | [SM-397](https://jira.sw.nxp.com/projects/SM/issues/SM-397) | Process TMPSNS handler only if MIX is powered on [[detail]](@ref RN_DETAIL_SM_397) |   | Y | Y | Y | Y |
 | [SM-400](https://jira.sw.nxp.com/projects/SM/issues/SM-400) | The crc.h filename conflicts with AUTOSAR specification [[detail]](@ref RN_DETAIL_SM_400) |   | Y | Y | Y | Y |
-| [SM-409](https://jira.sw.nxp.com/projects/SM/issues/SM-409) | Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer |   | Y | Y | Y | Y |
+| [SM-409](https://jira.sw.nxp.com/projects/SM/issues/SM-409) | Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer [[detail]](@ref RN_DETAIL_SM_409) |   | Y | Y | Y | Y |
+| [SM-410](https://jira.sw.nxp.com/projects/SM/issues/SM-410) | In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 [[detail]](@ref RN_DETAIL_SM_410) |   | Y | | | |
+| [SM-411](https://jira.sw.nxp.com/projects/SM/issues/SM-411) | Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM [[detail]](@ref RN_DETAIL_SM_411) |   | Y | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -59,6 +62,7 @@ Bug {#RN_CL_BUG}
 | [SM-403](https://jira.sw.nxp.com/projects/SM/issues/SM-403) | Parallel make does not handle the all target [[detail]](@ref RN_DETAIL_SM_403) |   | Y | Y | Y | Y |
 | [SM-406](https://jira.sw.nxp.com/projects/SM/issues/SM-406) | Incorrect handling of seenvId in FUSA SEENV state management functions [[detail]](@ref RN_DETAIL_SM_406) |   | Y | Y | Y | Y |
 | [SM-408](https://jira.sw.nxp.com/projects/SM/issues/SM-408) | Some SM owned pins also assigned to other LMs [[detail]](@ref RN_DETAIL_SM_408) |   | | Y | Y | |
+| [SM-412](https://jira.sw.nxp.com/projects/SM/issues/SM-412) | Add missing pins for i.MX952 [[detail]](@ref RN_DETAIL_SM_412) |   | | | | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -74,7 +78,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-390](https://jira.sw.nxp.com/projects/SM/issues/SM-390) | Fix ENET clock to 266MHz on iMX952 [[detail]](@ref RN_DETAIL_SM_390) |   | | | | Y |
 | [SM-392](https://jira.sw.nxp.com/projects/SM/issues/SM-392) | Disable mission faults as the response time for many PCIe cards exceeds 10ms [[detail]](@ref RN_DETAIL_SM_392) |   | Y | Y | Y | Y |
 | [SM-398](https://jira.sw.nxp.com/projects/SM/issues/SM-398) | Enable DDR RX replica SW workaround [[detail]](@ref RN_DETAIL_SM_398) |   | | | | Y |
-| [SM-405](https://jira.sw.nxp.com/projects/SM/issues/SM-405) | Add shadow fuse read/write in monitor and also support no ECC finalization |   | Y | Y | Y | Y |
+| [SM-413](https://jira.sw.nxp.com/projects/SM/issues/SM-413) | Disable FCCU parity fault 61 due to incorrect triggers (ERR053263) |   | Y | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -310,6 +314,19 @@ SM-403: Parallel make does not handle the all target {#RN_DETAIL_SM_403}
 
 Modified makefile all target to serialize clean and image build.
 
+SM-405: Add shadow fuse read/write in monitor and also support no ECC finalization {#RN_DETAIL_SM_405}
+----------
+
+Added sfuse.r/sfuse.w commands to interact with fuse shadows. Added 3rd parameter to fuse.w to not finalize the ECC.
+
+| Command                     | Description                                                  |
+|-----------------------------|--------------------------------------------------------------|
+| fuse.r *wordIdx* [*count*]  | display *count* number of fuse words starting at *wordIdx*   |
+| fuse.w *wordIdx* *value* [*noecc*]   | write *value* to fuse *wordIdx* (try) *noecc* update|
+| sfuse.r *wordIdx* [*count*] | display *count* no of words starting at *wordIdx* frm shadows|
+| sfuse.w *wordIdx* *value*   | write *value* to fuse shadows *wordIdx* (if possible)        |
+
+
 SM-406: Incorrect handling of seenvId in FUSA SEENV state management functions {#RN_DETAIL_SM_406}
 ----------
 
@@ -323,4 +340,49 @@ SM-408: Some SM owned pins also assigned to other LMs {#RN_DETAIL_SM_408}
 ----------
 
 Removed duplicate SM-owned pin assignments and corrected LM ownership in imx94evk configuration.
+
+SM-409: Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer {#RN_DETAIL_SM_409}
+----------
+
+Some operating systems, such as Linux, do not currently support automatically setting the parent rate of SCMI-based clocks. An example of this can be seen with the DISP1PIX clock on the i.MX 95 SoC. This means only a single parent frequency is supported at
+runtime, and any set rate calls for a clock root (such as DISP1PIX) must request a rate that is divisible from this initial parent PLL frequency.
+
+This code redirects an incoming clock set rate call from the operating system and will automatically set the parent clock's rate based on a table of known working frequency combinations. This mechanism is referred to as clock source preparation, and at present only the DISP1PIX and LDBPLL clocks are supported.
+
+The SM device layer maintains a state variable (SRCPRE) to indicate if clock source preparation should occur. By default, the clock source preparation behavior is ENABLED.
+This variable can be changed with the clock extended function using the DEV_SM_CLOCK_EXT_SRCPRE value. An agent, such as Linux, can call SCMI_ClockConfigSet() to disable it. When SRCPRE is enabled and a set rate request is received for a supported clock, the appropriate board code may:
+
+- Detect known pixel clock rates (e.g. 297MHz, 148.5MHz, etc.)
+- Compute PLL parameters (mfi, mfn, odiv)
+- Program the appropriate PLL directly via: FRACTPLL_UpdateRate()
+- Force rounding mode to CLK_ROUND_AUTO
+
+Customers may want to duplicate this functionality in their board ports and fine tune it for their specific display use-case.
+
+SM-410: In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 {#RN_DETAIL_SM_410}
+----------
+
+In the mx95evkrpmsg.cfg file, moved most of the eDMA1/2 resource from the M7 to AP-NS.
+
+SM-411: Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM {#RN_DETAIL_SM_411}
+----------
+
+SCMI LMM protocol permission check updated. An EXCLUSIVE permission level is required when a client agent controls a foreign LM. The PRIV level remains good to access agent's own parent LM. 
+
+SM-412: Add missing pins for i.MX952 {#RN_DETAIL_SM_412}
+----------
+
+Added the following missing pins:
+
+    GPIO_IO38   42U
+    GPIO_IO39   43U
+    GPIO_IO40   44U
+    LD_SPI_CS0  45U
+    LD_SPI_SCK  46U
+    LD_SPI_DI   47U
+    LD_SPI_DO   48U
+    LD_HSYNC    49U
+    LD_VSYNC    50U
+    LD_GPIO0    51U
+    LD_GPIO1    52U
 

@@ -24,7 +24,8 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-- Added new SCMI_ERR_TIMEOUT vendor status code
+- Fixed non-complaince issue with the clock protocol, added clockEnableDelay to
+  SCMI_ClockAttributes(), **not backwards compatible**
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
@@ -32,14 +33,13 @@ Configuration Changes {#RN_ADD_CONFIG}
 The following are cfg file changes that customers **must** make to their cfg files
 and rebuild their config headers.
 
-- On i.MX95, removed references to CLOCK_DISP2PIX and CLOCK_DISP3PIX
+- For i.MX94, removed AP-NS access to SM owned pins
+- For i.MX952, removed unused resources, added new pins (assigned to AP-NS)
 
 Optional:
 
-- For V2X fast hash:
-  - Gave V2X read-only access to all of DDR
-  - On i.MX95, gave ELE ownership of EDMA2_CH0_1 and access to EDMA2_MP
-  - On i.MX94, moved ownership of ATU_V2X to AP-NS
+- Defined fault reactions for mission and parity faults (default is system reset)
+- Lots of changes to cfg files delivered in *other*
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
@@ -51,13 +51,18 @@ Board Implementation Changes {#RN_ADD_BOARD_IMP}
 
 Customers **must** make the following changes in their board port:
 
-- Fixed issue with the PCA2131 RTC domain index
-- Increased ELE group interrupts to preempt critical
-- LDO3 change if using PF53B
-- PMIC init changes
+- Disallowed ROM WDOG from resetting the system after SM WDOG enabled
+- Made debounce setting specific to rev B0 PMIC only
+- For i.MX94 boards, fixed bus expander mask to enable PMIC interrupts
 
 Optional, but recommended:
 
-- Added range checking to support code for the PCA2131 RTC
-- On i.MX94, removed unused UART3 pin settings
+- Added clock overrides for display clocks (required for Linux)
+- Added capture of board init times
+- Use DEV_SM_SystemHalt() in place of infinite while loop (halting)
+- Use PMIC register defines
+- For i.MX94 boards, made init of the glitchfilter optional based on silicon rev,
+  let FRO go off in system suspend
+- Misc. coding standards and test coverage fixes
+
 

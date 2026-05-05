@@ -34,6 +34,7 @@ Highlights {#RN_HIGH}
 Added:
 
 - **Support for i.MX94 A1**
+- Added shadow fuse commands to the debug monitor
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.
