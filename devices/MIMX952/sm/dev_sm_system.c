@@ -690,9 +690,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Extract and clamp performance level from system sleep mode */
             uint32_t perfLevelSleep = (s_sysSleepMode & 0xF0U) >> 4U;
-            if (perfLevelSleep > DEV_SM_PERF_LVL_ODV)
+            uint32_t numPerfLevels = DEV_SM_PERF_LVL_ODV + 1U;
+            (void) DEV_SM_PerfNumLevelsGet(DEV_SM_PERF_M33, &numPerfLevels);
+            if (perfLevelSleep >= numPerfLevels)
             {
-                perfLevelSleep = DEV_SM_PERF_LVL_ODV;
+                if (numPerfLevels > 1U)
+                {
+                    perfLevelSleep = numPerfLevels - 1U;
+                }
+                else
+                {
+                    perfLevelSleep = 0U;
+                }
             }
 
             /* System remains active during sleep based on performance level

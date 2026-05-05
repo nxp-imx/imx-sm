@@ -1271,7 +1271,6 @@ static int32_t DEV_SM_PerfSupplyUpdate(dev_sm_perf_ps_cfg_t const *psCfg,
     uint32_t perfLevel);
 static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel);
-static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t * perfLevel);
 static uint32_t DEV_SM_PerfDramTypeGet(void);
 static void DEV_SM_PerfEleUpdateAll(uint32_t perfLevel, bool initMode);
 static void DEV_SM_PerfEleUpdate(uint32_t domainId, uint32_t perfLevel,
@@ -1305,7 +1304,20 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
-    if ((bootPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC) ||
+    /* Get power state of DDRMIX */
+    uint8_t ddrPwrState = DEV_SM_POWER_STATE_OFF;
+    (void) DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &ddrPwrState);
+
+    /* If DDR active, target performance level cannot exceed boot
+     * performance level (DDR training level) to avoid impacts
+     * on DDR-PHY (connected to VDD_SOC)
+     */
+    if ((ddrPwrState == DEV_SM_POWER_STATE_ON) &&
+        (runPerfLevel > bootPerfLevel))
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+    else if ((bootPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC) ||
         (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC))
     {
         status = SM_ERR_OUT_OF_RANGE;
@@ -1352,7 +1364,13 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
             if ((domainId == DEV_SM_PERF_DRAM) && (perfLevel != DEV_SM_PERF_LVL_PRK))
             {
                 /* Adapt to DRAM setpoint established during OEI phase */
-                status = DEV_SM_PerfCurrentGet(DEV_SM_PERF_DRAM, &perfLevel);
+                perfLevel = bootPerfLevel;
+
+                /* Max VDD_SOC performance level cannot exceed boot
+                 * performance level (DDR training level) to avoid impacts
+                 * on DDR-PHY (connected to VDD_SOC)
+                 */
+                s_perfNumLevels[PS_VDD_SOC] = bootPerfLevel + 1U;
             }
             else
             {
@@ -1575,6 +1593,46 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
             {
                 /* Scan for highest perf level of respective power supply */
                 status = DEV_SM_PerfMaxScan(domainId, &supplyPerfLevel);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Special handling required due to DDR-PHY connection
+                 * to VDD_SOC.  When DDR is active, setpoint requests
+                 * above the current DDR performance level must be
+                 * rejected to avoid conflicts with DDR training.
+                 */
+
+                /* Get power state of DDRMIX */
+                uint8_t ddrPwrState = DEV_SM_POWER_STATE_OFF;
+                (void) DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &ddrPwrState);
+
+                /* Check if DDRMIX is powered and requested performance
+                 * level exceeds current DDR performance level
+                 */
+                if (ddrPwrState == DEV_SM_POWER_STATE_ON)
+                {
+                    if (domainId == DEV_SM_PERF_DRAM)
+                    {
+                        /* DRAM perf level request below current VDD_SOC perf
+                         * level is not supported.
+                         */
+                        if (perfLevel < supplyPerfLevel)
+                        {
+                            status = SM_ERR_NOT_SUPPORTED;
+                        }
+                    }
+                    else
+                    {
+                        /* Non-DRAM perf level request above current DRAM perf
+                         * level is not supported.
+                         */
+                        if (perfLevel > s_perfLevelCurrent[DEV_SM_PERF_DRAM])
+                        {
+                            status = SM_ERR_NOT_SUPPORTED;
+                        }
+                    }
+                }
             }
 
             if (status == SM_ERR_SUCCESS)
@@ -2513,82 +2571,6 @@ static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel)
     else
     {
         s_perfLevelCurrent[domainId] = perfLevel;
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Query current performance level                                          */
-/*--------------------------------------------------------------------------*/
-static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    uint32_t clockId;
-    dev_sm_perf_desc_t const *perfDesc;
-
-    switch (domainId)
-    {
-        case DEV_SM_PERF_DRAM:
-            clockId = DEV_SM_CLK_DRAM_GPR_SEL;
-
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                perfDesc = s_perfDescDramLp4x;
-            }
-            else
-            {
-                perfDesc = s_perfDescDramLp5;
-            }
-            break;
-
-        /*
-         * Caller ensures valid parameters
-         */
-        /* gcov_excl_multiline 4 */
-        default:
-            status = SM_ERR_NOT_FOUND;
-            break;
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Get rate of clock associated with PERF domain*/
-        uint64_t rate;
-        status = DEV_SM_ClockRateGet(clockId, &rate);
-
-        if (status == SM_ERR_SUCCESS)
-        {
-            uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-            uint32_t numLevels = s_perfNumLevels[psIdx];
-
-            /* Convert rate to KHz */
-            uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
-
-            /* Default to highest level to handle overclocking case */
-            if (numLevels > 0U)
-            {
-                *perfLevel = numLevels - 1U;
-            }
-
-            /* Map current rate to PERF level */
-            uint32_t level = 0U;
-            bool bSearch = true;
-            while (bSearch && (level < numLevels))
-            {
-                /* Rate in KHz for level stored in value field of PERF description */
-                if (perfDesc[level].value >= rateKHz)
-                {
-                    bSearch = false;
-                    *perfLevel = level;
-                }
-                else
-                {
-                    ++level;
-                }
-            }
-        }
     }
 
     /* Return status */
