@@ -13,79 +13,81 @@ Below is a list of changes between the previous release (imx_sm_2026q1) and this
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-371](https://jira.sw.nxp.com/projects/SM/issues/SM-371) | Add support for i.MX94 A1 [[detail]](@ref RN_DETAIL_SM_371) |   | | | Y | |
-| [SM-405](https://jira.sw.nxp.com/projects/SM/issues/SM-405) | Add shadow fuse read/write in monitor and also support no ECC finalization [[detail]](@ref RN_DETAIL_SM_405) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+|------------|-------------------------------|-------|---|---|---|---|---|
+| [SM-371](https://jira.sw.nxp.com/projects/SM/issues/SM-371) | Add support for i.MX94 A1 [[detail]](@ref RN_DETAIL_SM_371) |   | | | Y | | |
+| [SM-402](https://jira.sw.nxp.com/projects/SM/issues/SM-402) | Add support for i.MX952 A1 [[detail]](@ref RN_DETAIL_SM_402) |   | | | | | Y |
+| [SM-405](https://jira.sw.nxp.com/projects/SM/issues/SM-405) | Add shadow fuse read/write in monitor and also support no ECC finalization [[detail]](@ref RN_DETAIL_SM_405) |   | Y | Y | Y | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-317](https://jira.sw.nxp.com/projects/SM/issues/SM-317) | Test and coding standards improvements [[detail]](@ref RN_DETAIL_SM_317) |   | Y | Y | Y | Y |
-| [SM-329](https://jira.sw.nxp.com/projects/SM/issues/SM-329) | Remove A55 access to the GPU CGC on i.MX952 [[detail]](@ref RN_DETAIL_SM_329) |   | | | | Y |
-| [SM-348](https://jira.sw.nxp.com/projects/SM/issues/SM-348) | Upgrade GCC toolchain to 15.2.rel1 [[detail]](@ref RN_DETAIL_SM_348) |   | Y | Y | Y | Y |
-| [SM-356](https://jira.sw.nxp.com/projects/SM/issues/SM-356) | Add support to read MBC block size and block count from TRDC registers in ERR command [[detail]](@ref RN_DETAIL_SM_356) |   | Y | Y | Y | Y |
-| [SM-362](https://jira.sw.nxp.com/projects/SM/issues/SM-362) | Enhance monitor with volt.r range command [[detail]](@ref RN_DETAIL_SM_362) |   | Y | Y | Y | Y |
-| [SM-367](https://jira.sw.nxp.com/projects/SM/issues/SM-367) | Add Android config for i.MX952 [[detail]](@ref RN_DETAIL_SM_367) |   | | | | Y |
-| [SM-368](https://jira.sw.nxp.com/projects/SM/issues/SM-368) | Add additional init times to btime output [[detail]](@ref RN_DETAIL_SM_368) |   | Y | Y | Y | Y |
-| [SM-374](https://jira.sw.nxp.com/projects/SM/issues/SM-374) | Make using the SMCT config tool fails to abort when python is not available [[detail]](@ref RN_DETAIL_SM_374) |   | Y | Y | Y | Y |
-| [SM-375](https://jira.sw.nxp.com/projects/SM/issues/SM-375) | Fix coding standard issues from new version of scan tools [[detail]](@ref RN_DETAIL_SM_375) |   | Y | Y | Y | Y |
-| [SM-378](https://jira.sw.nxp.com/projects/SM/issues/SM-378) | Enable mission and parity faults [[detail]](@ref RN_DETAIL_SM_378) |   | Y | Y | Y | Y |
-| [SM-384](https://jira.sw.nxp.com/projects/SM/issues/SM-384) | Switch from macros to wrapper functions to enable line coverage testing [[detail]](@ref RN_DETAIL_SM_384) |   | Y | Y | Y | Y |
-| [SM-385](https://jira.sw.nxp.com/projects/SM/issues/SM-385) | Enable auto boot for Android on i.MX952 [[detail]](@ref RN_DETAIL_SM_385) |   | | | | Y |
-| [SM-386](https://jira.sw.nxp.com/projects/SM/issues/SM-386) | Add Android cfg file for i.MX95 19x19 FRDM board [[detail]](@ref RN_DETAIL_SM_386) |   | Y | | | |
-| [SM-394](https://jira.sw.nxp.com/projects/SM/issues/SM-394) | Android cfg changes to move some VPU resources into secure env [[detail]](@ref RN_DETAIL_SM_394) |   | | | | Y |
-| [SM-395](https://jira.sw.nxp.com/projects/SM/issues/SM-395) | Enable debug halt for M33 WDOGs during SM startup [[detail]](@ref RN_DETAIL_SM_395) |   | Y | Y | Y | Y |
-| [SM-396](https://jira.sw.nxp.com/projects/SM/issues/SM-396) | Move all MISRA exceptions into SM codebase as comments [[detail]](@ref RN_DETAIL_SM_396) |   | Y | Y | Y | Y |
-| [SM-397](https://jira.sw.nxp.com/projects/SM/issues/SM-397) | Process TMPSNS handler only if MIX is powered on [[detail]](@ref RN_DETAIL_SM_397) |   | Y | Y | Y | Y |
-| [SM-400](https://jira.sw.nxp.com/projects/SM/issues/SM-400) | The crc.h filename conflicts with AUTOSAR specification [[detail]](@ref RN_DETAIL_SM_400) |   | Y | Y | Y | Y |
-| [SM-409](https://jira.sw.nxp.com/projects/SM/issues/SM-409) | Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer [[detail]](@ref RN_DETAIL_SM_409) |   | Y | Y | Y | Y |
-| [SM-410](https://jira.sw.nxp.com/projects/SM/issues/SM-410) | In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 [[detail]](@ref RN_DETAIL_SM_410) |   | Y | | | |
-| [SM-411](https://jira.sw.nxp.com/projects/SM/issues/SM-411) | Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM [[detail]](@ref RN_DETAIL_SM_411) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+|------------|-------------------------------|-------|---|---|---|---|---|
+| [SM-317](https://jira.sw.nxp.com/projects/SM/issues/SM-317) | Test and coding standards improvements [[detail]](@ref RN_DETAIL_SM_317) |   | Y | Y | Y | Y | Y |
+| [SM-329](https://jira.sw.nxp.com/projects/SM/issues/SM-329) | Remove A55 access to the GPU CGC on i.MX952 [[detail]](@ref RN_DETAIL_SM_329) |   | | | | Y | Y |
+| [SM-348](https://jira.sw.nxp.com/projects/SM/issues/SM-348) | Upgrade GCC toolchain to 15.2.rel1 [[detail]](@ref RN_DETAIL_SM_348) |   | Y | Y | Y | Y | Y |
+| [SM-356](https://jira.sw.nxp.com/projects/SM/issues/SM-356) | Add support to read MBC block size and block count from TRDC registers in ERR command [[detail]](@ref RN_DETAIL_SM_356) |   | Y | Y | Y | Y | Y |
+| [SM-362](https://jira.sw.nxp.com/projects/SM/issues/SM-362) | Enhance monitor with volt.r range command [[detail]](@ref RN_DETAIL_SM_362) |   | Y | Y | Y | Y | Y |
+| [SM-367](https://jira.sw.nxp.com/projects/SM/issues/SM-367) | Add Android config for i.MX952 [[detail]](@ref RN_DETAIL_SM_367) |   | | | | Y | Y |
+| [SM-368](https://jira.sw.nxp.com/projects/SM/issues/SM-368) | Add additional init times to btime output [[detail]](@ref RN_DETAIL_SM_368) |   | Y | Y | Y | Y | Y |
+| [SM-374](https://jira.sw.nxp.com/projects/SM/issues/SM-374) | Make using the SMCT config tool fails to abort when python is not available [[detail]](@ref RN_DETAIL_SM_374) |   | Y | Y | Y | Y | Y |
+| [SM-375](https://jira.sw.nxp.com/projects/SM/issues/SM-375) | Fix coding standard issues from new version of scan tools [[detail]](@ref RN_DETAIL_SM_375) |   | Y | Y | Y | Y | Y |
+| [SM-378](https://jira.sw.nxp.com/projects/SM/issues/SM-378) | Enable mission and parity faults [[detail]](@ref RN_DETAIL_SM_378) |   | Y | Y | Y | Y | Y |
+| [SM-384](https://jira.sw.nxp.com/projects/SM/issues/SM-384) | Switch from macros to wrapper functions to enable line coverage testing [[detail]](@ref RN_DETAIL_SM_384) |   | Y | Y | Y | Y | Y |
+| [SM-385](https://jira.sw.nxp.com/projects/SM/issues/SM-385) | Enable auto boot for Android on i.MX952 [[detail]](@ref RN_DETAIL_SM_385) |   | | | | Y | Y |
+| [SM-386](https://jira.sw.nxp.com/projects/SM/issues/SM-386) | Add Android cfg file for i.MX95 19x19 FRDM board [[detail]](@ref RN_DETAIL_SM_386) |   | Y | | | | |
+| [SM-394](https://jira.sw.nxp.com/projects/SM/issues/SM-394) | Android cfg changes to move some VPU resources into secure env [[detail]](@ref RN_DETAIL_SM_394) |   | | | | Y | Y |
+| [SM-395](https://jira.sw.nxp.com/projects/SM/issues/SM-395) | Enable debug halt for M33 WDOGs during SM startup [[detail]](@ref RN_DETAIL_SM_395) |   | Y | Y | Y | Y | Y |
+| [SM-396](https://jira.sw.nxp.com/projects/SM/issues/SM-396) | Move all MISRA exceptions into SM codebase as comments [[detail]](@ref RN_DETAIL_SM_396) |   | Y | Y | Y | Y | Y |
+| [SM-397](https://jira.sw.nxp.com/projects/SM/issues/SM-397) | Process TMPSNS handler only if MIX is powered on [[detail]](@ref RN_DETAIL_SM_397) |   | Y | Y | Y | Y | Y |
+| [SM-400](https://jira.sw.nxp.com/projects/SM/issues/SM-400) | The crc.h filename conflicts with AUTOSAR specification [[detail]](@ref RN_DETAIL_SM_400) |   | Y | Y | Y | Y | Y |
+| [SM-409](https://jira.sw.nxp.com/projects/SM/issues/SM-409) | Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer [[detail]](@ref RN_DETAIL_SM_409) |   | Y | Y | Y | Y | Y |
+| [SM-410](https://jira.sw.nxp.com/projects/SM/issues/SM-410) | In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 [[detail]](@ref RN_DETAIL_SM_410) |   | Y | | | | |
+| [SM-411](https://jira.sw.nxp.com/projects/SM/issues/SM-411) | Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM [[detail]](@ref RN_DETAIL_SM_411) |   | Y | Y | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-363](https://jira.sw.nxp.com/projects/SM/issues/SM-363) | Continuous reset if DDR not configured by OEI [[detail]](@ref RN_DETAIL_SM_363) |   | | Y | | |
-| [SM-369](https://jira.sw.nxp.com/projects/SM/issues/SM-369) | Fix SCMI compliance issue with clock attribute message [[detail]](@ref RN_DETAIL_SM_369) |   | Y | Y | Y | Y |
-| [SM-373](https://jira.sw.nxp.com/projects/SM/issues/SM-373) | i.MX94 EVK board port does not unmask PMIC interrupt [[detail]](@ref RN_DETAIL_SM_373) |   | | Y | Y | |
-| [SM-376](https://jira.sw.nxp.com/projects/SM/issues/SM-376) | Too many arguments on monitor command overflows buffers [[detail]](@ref RN_DETAIL_SM_376) |   | Y | Y | Y | Y |
-| [SM-377](https://jira.sw.nxp.com/projects/SM/issues/SM-377) | Remove undefined configtool resources [[detail]](@ref RN_DETAIL_SM_377) |   | | | | Y |
-| [SM-381](https://jira.sw.nxp.com/projects/SM/issues/SM-381) | Insufficient error checking when parsing monitor commands [[detail]](@ref RN_DETAIL_SM_381) |   | Y | Y | Y | Y |
-| [SM-383](https://jira.sw.nxp.com/projects/SM/issues/SM-383) | Fuse FRO trim value not used [[detail]](@ref RN_DETAIL_SM_383) |   | Y | Y | Y | Y |
-| [SM-393](https://jira.sw.nxp.com/projects/SM/issues/SM-393) | Incorrect MDAC for i.MX952 VPU-related resources [[detail]](@ref RN_DETAIL_SM_393) |   | | | | Y |
-| [SM-401](https://jira.sw.nxp.com/projects/SM/issues/SM-401) | Add missing DAISY IOMUX permissions to config file for i.MX952 [[detail]](@ref RN_DETAIL_SM_401) |   | | | | Y |
-| [SM-403](https://jira.sw.nxp.com/projects/SM/issues/SM-403) | Parallel make does not handle the all target [[detail]](@ref RN_DETAIL_SM_403) |   | Y | Y | Y | Y |
-| [SM-406](https://jira.sw.nxp.com/projects/SM/issues/SM-406) | Incorrect handling of seenvId in FUSA SEENV state management functions [[detail]](@ref RN_DETAIL_SM_406) |   | Y | Y | Y | Y |
-| [SM-408](https://jira.sw.nxp.com/projects/SM/issues/SM-408) | Some SM owned pins also assigned to other LMs [[detail]](@ref RN_DETAIL_SM_408) |   | | Y | Y | |
-| [SM-412](https://jira.sw.nxp.com/projects/SM/issues/SM-412) | Add missing pins for i.MX952 [[detail]](@ref RN_DETAIL_SM_412) |   | | | | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+|------------|-------------------------------|-------|---|---|---|---|---|
+| [SM-363](https://jira.sw.nxp.com/projects/SM/issues/SM-363) | Continuous reset if DDR not configured by OEI [[detail]](@ref RN_DETAIL_SM_363) |   | | Y | | | |
+| [SM-369](https://jira.sw.nxp.com/projects/SM/issues/SM-369) | Fix SCMI compliance issue with clock attribute message [[detail]](@ref RN_DETAIL_SM_369) |   | Y | Y | Y | Y | Y |
+| [SM-373](https://jira.sw.nxp.com/projects/SM/issues/SM-373) | i.MX94 EVK board port does not unmask PMIC interrupt [[detail]](@ref RN_DETAIL_SM_373) |   | | Y | Y | | |
+| [SM-376](https://jira.sw.nxp.com/projects/SM/issues/SM-376) | Too many arguments on monitor command overflows buffers [[detail]](@ref RN_DETAIL_SM_376) |   | Y | Y | Y | Y | Y |
+| [SM-377](https://jira.sw.nxp.com/projects/SM/issues/SM-377) | Remove undefined configtool resources [[detail]](@ref RN_DETAIL_SM_377) |   | | | | Y | Y |
+| [SM-381](https://jira.sw.nxp.com/projects/SM/issues/SM-381) | Insufficient error checking when parsing monitor commands [[detail]](@ref RN_DETAIL_SM_381) |   | Y | Y | Y | Y | Y |
+| [SM-383](https://jira.sw.nxp.com/projects/SM/issues/SM-383) | Fuse FRO trim value not used [[detail]](@ref RN_DETAIL_SM_383) |   | Y | Y | Y | Y | Y |
+| [SM-393](https://jira.sw.nxp.com/projects/SM/issues/SM-393) | Incorrect MDAC for i.MX952 VPU-related resources [[detail]](@ref RN_DETAIL_SM_393) |   | | | | Y | Y |
+| [SM-401](https://jira.sw.nxp.com/projects/SM/issues/SM-401) | Add missing DAISY IOMUX permissions to config file for i.MX952 [[detail]](@ref RN_DETAIL_SM_401) |   | | | | Y | Y |
+| [SM-403](https://jira.sw.nxp.com/projects/SM/issues/SM-403) | Parallel make does not handle the all target [[detail]](@ref RN_DETAIL_SM_403) |   | Y | Y | Y | Y | Y |
+| [SM-406](https://jira.sw.nxp.com/projects/SM/issues/SM-406) | Incorrect handling of seenvId in FUSA SEENV state management functions [[detail]](@ref RN_DETAIL_SM_406) |   | Y | Y | Y | Y | Y |
+| [SM-408](https://jira.sw.nxp.com/projects/SM/issues/SM-408) | Some SM owned pins also assigned to other LMs [[detail]](@ref RN_DETAIL_SM_408) |   | | Y | Y | | |
+| [SM-412](https://jira.sw.nxp.com/projects/SM/issues/SM-412) | Add missing pins for i.MX952 [[detail]](@ref RN_DETAIL_SM_412) |   | | | | Y | Y |
+| [SM-414](https://jira.sw.nxp.com/projects/SM/issues/SM-414) | Early device init errors not retained [[detail]](@ref RN_DETAIL_SM_414) |   | Y | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
 
 These are a mix of silicon errata workarounds and recommended usage changes.
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-342](https://jira.sw.nxp.com/projects/SM/issues/SM-342) | Implement SWA for ERR053228 (CORTEXAMIX MTR repair can fail at various clock rates) [[detail]](@ref RN_DETAIL_SM_342) |   | | Y | Y | |
-| [SM-358](https://jira.sw.nxp.com/projects/SM/issues/SM-358) | Manage WDOG instances enabled during ROM phase [[detail]](@ref RN_DETAIL_SM_358) |   | Y | Y | | Y |
-| [SM-365](https://jira.sw.nxp.com/projects/SM/issues/SM-365) | Support i.MX952 DDR PHY scaling restrictions for VDD_SOC |   | | | | Y |
-| [SM-366](https://jira.sw.nxp.com/projects/SM/issues/SM-366) | Avoid applying PF09 RevB errata workarounds to other revs [[detail]](@ref RN_DETAIL_SM_366) |   | Y | Y | Y | Y |
-| [SM-390](https://jira.sw.nxp.com/projects/SM/issues/SM-390) | Fix ENET clock to 266MHz on iMX952 [[detail]](@ref RN_DETAIL_SM_390) |   | | | | Y |
-| [SM-392](https://jira.sw.nxp.com/projects/SM/issues/SM-392) | Disable mission faults as the response time for many PCIe cards exceeds 10ms [[detail]](@ref RN_DETAIL_SM_392) |   | Y | Y | Y | Y |
-| [SM-398](https://jira.sw.nxp.com/projects/SM/issues/SM-398) | Enable DDR RX replica SW workaround [[detail]](@ref RN_DETAIL_SM_398) |   | | | | Y |
-| [SM-413](https://jira.sw.nxp.com/projects/SM/issues/SM-413) | Disable FCCU parity fault 61 due to incorrect triggers (ERR053263) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+|------------|-------------------------------|-------|---|---|---|---|---|
+| [SM-342](https://jira.sw.nxp.com/projects/SM/issues/SM-342) | Implement SWA for ERR053228 (CORTEXAMIX MTR repair can fail at various clock rates) [[detail]](@ref RN_DETAIL_SM_342) |   | | Y | Y | | |
+| [SM-358](https://jira.sw.nxp.com/projects/SM/issues/SM-358) | Manage WDOG instances enabled during ROM phase [[detail]](@ref RN_DETAIL_SM_358) |   | Y | Y | | Y | Y |
+| [SM-365](https://jira.sw.nxp.com/projects/SM/issues/SM-365) | Support i.MX952 DDR PHY scaling restrictions for VDD_SOC |   | | | | Y | Y |
+| [SM-366](https://jira.sw.nxp.com/projects/SM/issues/SM-366) | Avoid applying PF09 RevB errata workarounds to other revs [[detail]](@ref RN_DETAIL_SM_366) |   | Y | Y | Y | Y | Y |
+| [SM-390](https://jira.sw.nxp.com/projects/SM/issues/SM-390) | Fix ENET clock to 266MHz on iMX952 [[detail]](@ref RN_DETAIL_SM_390) |   | | | | Y | Y |
+| [SM-392](https://jira.sw.nxp.com/projects/SM/issues/SM-392) | Disable mission faults as the response time for many PCIe cards exceeds 10ms [[detail]](@ref RN_DETAIL_SM_392) |   | Y | Y | Y | Y | Y |
+| [SM-398](https://jira.sw.nxp.com/projects/SM/issues/SM-398) | Enable DDR RX replica SW workaround [[detail]](@ref RN_DETAIL_SM_398) |   | | | | Y | Y |
+| [SM-413](https://jira.sw.nxp.com/projects/SM/issues/SM-413) | Disable FCCU parity fault 61 due to incorrect triggers (ERR053263) [[detail]](@ref RN_DETAIL_SM_413) |   | Y | Y | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-364](https://jira.sw.nxp.com/projects/SM/issues/SM-364) | SM 2026Q2 documentation updates |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+|------------|-------------------------------|-------|---|---|---|---|---|
+| [SM-364](https://jira.sw.nxp.com/projects/SM/issues/SM-364) | SM 2026Q2 documentation updates |   | Y | Y | Y | Y | Y |
 
 Details {#CL_DETAIL}
 =======
@@ -309,6 +311,11 @@ SM-401: Add missing DAISY IOMUX permissions to config file for i.MX952 {#RN_DETA
 
 Added USB related DAISY entries to config file. Customers would need to do the same for their custom config files. 
 
+SM-402: Add support for i.MX952 A1 {#RN_DETAIL_SM_402}
+----------
+
+No SM changes required for this new i.MX952 silicon revision.
+
 SM-403: Parallel make does not handle the all target {#RN_DETAIL_SM_403}
 ----------
 
@@ -385,4 +392,14 @@ Added the following missing pins:
     LD_VSYNC    50U
     LD_GPIO0    51U
     LD_GPIO1    52U
+
+SM-413: Disable FCCU parity fault 61 due to incorrect triggers (ERR053263) {#RN_DETAIL_SM_413}
+----------
+
+Disable fault 61 due to ERR053263. 
+
+SM-414: Early device init errors not retained {#RN_DETAIL_SM_414}
+----------
+
+During device init, early error responses were overwritten with DEV_SM_SUCCESS. This would cause additional init steps to be run and possibly bus error. Code restructured to no do this overwrite. 
 
