@@ -45,6 +45,7 @@ Improvement {#RN_CL_IMP}
 | [SM-409](https://jira.sw.nxp.com/projects/SM/issues/SM-409) | Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer [[detail]](@ref RN_DETAIL_SM_409) |   | Y | Y | Y | Y | Y |
 | [SM-410](https://jira.sw.nxp.com/projects/SM/issues/SM-410) | In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 [[detail]](@ref RN_DETAIL_SM_410) |   | Y | | | | |
 | [SM-411](https://jira.sw.nxp.com/projects/SM/issues/SM-411) | Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM [[detail]](@ref RN_DETAIL_SM_411) |   | Y | Y | Y | Y | Y |
+| [SM-417](https://jira.sw.nxp.com/projects/SM/issues/SM-417) | Config updates for mx952evkrpmsg.cfg [[detail]](@ref RN_DETAIL_SM_417) |   | | | | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -75,7 +76,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 |------------|-------------------------------|-------|---|---|---|---|---|
 | [SM-342](https://jira.sw.nxp.com/projects/SM/issues/SM-342) | Implement SWA for ERR053228 (CORTEXAMIX MTR repair can fail at various clock rates) [[detail]](@ref RN_DETAIL_SM_342) |   | | Y | Y | | |
 | [SM-358](https://jira.sw.nxp.com/projects/SM/issues/SM-358) | Manage WDOG instances enabled during ROM phase [[detail]](@ref RN_DETAIL_SM_358) |   | Y | Y | | Y | Y |
-| [SM-365](https://jira.sw.nxp.com/projects/SM/issues/SM-365) | Support i.MX952 DDR PHY scaling restrictions for VDD_SOC |   | | | | Y | Y |
+| [SM-365](https://jira.sw.nxp.com/projects/SM/issues/SM-365) | Support i.MX952 DDR PHY scaling restrictions for VDD_SOC [[detail]](@ref RN_DETAIL_SM_365) |   | | | | Y | Y |
 | [SM-366](https://jira.sw.nxp.com/projects/SM/issues/SM-366) | Avoid applying PF09 RevB errata workarounds to other revs [[detail]](@ref RN_DETAIL_SM_366) |   | Y | Y | Y | Y | Y |
 | [SM-390](https://jira.sw.nxp.com/projects/SM/issues/SM-390) | Fix ENET clock to 266MHz on iMX952 [[detail]](@ref RN_DETAIL_SM_390) |   | | | | Y | Y |
 | [SM-392](https://jira.sw.nxp.com/projects/SM/issues/SM-392) | Disable mission faults as the response time for many PCIe cards exceeds 10ms [[detail]](@ref RN_DETAIL_SM_392) |   | Y | Y | Y | Y | Y |
@@ -141,6 +142,11 @@ SM-363: Continuous reset if DDR not configured by OEI {#RN_DETAIL_SM_363}
 ----------
 
 Added code to check DDR clocks to see if enabled by OEI. If not, power down the DDR MIX.
+
+SM-365: Support i.MX952 DDR PHY scaling restrictions for VDD_SOC {#RN_DETAIL_SM_365}
+----------
+
+The i.MX952 internally connects DDR PHY to VDD_SOC.  DDR training is dependent on the DDR PHY voltage and, therefore, sensitive to changes in VDD_SOC.  SM support of SCMI performance domains supplied by VDD_SOC will now be constrained to avoid modifying VDD_SOC while DDR is active.
 
 SM-366: Avoid applying PF09 RevB errata workarounds to other revs {#RN_DETAIL_SM_366}
 ----------
@@ -402,4 +408,9 @@ SM-414: Early device init errors not retained {#RN_DETAIL_SM_414}
 ----------
 
 During device init, early error responses were overwritten with DEV_SM_SUCCESS. This would cause additional init steps to be run and possibly bus error. Code restructured to no do this overwrite. 
+
+SM-417: Config updates for mx952evkrpmsg.cfg {#RN_DETAIL_SM_417}
+----------
+
+For the mx952evkrpmsg.cfg file, moved SAI6 from AP-NS to M7. Also configured M7 as secure so it can access the secure parts of the RGPIO.
 

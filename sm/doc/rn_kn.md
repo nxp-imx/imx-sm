@@ -9,4 +9,5 @@ New Feature {#RN_KN_NEW}
 | Key     | Summary                        | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
 |------------|-------------------------------|---|---|---|---|---|
 | [SM-372](https://jira.sw.nxp.com/projects/SM/issues/SM-372) | Remove support for i.MX94 A0 | | Y | | | |
+| [SM-407](https://jira.sw.nxp.com/projects/SM/issues/SM-407) | Remove support for i.MX952 A0 | | | | Y | |
 
