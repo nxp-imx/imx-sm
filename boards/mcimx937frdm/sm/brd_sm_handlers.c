@@ -1,0 +1,332 @@
+/*
+** ###################################################################
+**
+** Copyright 2026 NXP
+**
+** Redistribution and use in source and binary forms, with or without modification,
+** are permitted provided that the following conditions are met:
+**
+** o Redistributions of source code must retain the above copyright notice, this list
+**   of conditions and the following disclaimer.
+**
+** o Redistributions in binary form must reproduce the above copyright notice, this
+**   list of conditions and the following disclaimer in the documentation and/or
+**   other materials provided with the distribution.
+**
+** o Neither the name of the copyright holder nor the names of its
+**   contributors may be used to endorse or promote products derived from this
+**   software without specific prior written permission.
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+** DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+** (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+** LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+** ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
+
+/*==========================================================================*/
+/* File containing the implementation of the handlers for the board.        */
+/*==========================================================================*/
+
+/* Includes */
+
+#include "sm.h"
+#include "brd_sm.h"
+#include "dev_sm.h"
+#include "fsl_lpi2c.h"
+#include "fsl_rgpio.h"
+
+/* Local defines */
+
+/* I2C device addresses */
+#define BOARD_PCAL6408A_DEV_ADDR    0x20U
+#define BOARD_PCA2131_DEV_ADDR      0x53U
+#define BOARD_PCA9451C_DEV_ADDR     0x25U
+
+#define PCAL6408A_INPUT_PCA2131_INT  1U
+#define PCAL6408A_INPUT_PCA9451_INT  3U
+
+/* Local types */
+
+/* Local variables */
+
+/* Global variables */
+
+PCAL6408A_Type g_pcal6408aDev;
+PCA2131_Type g_pca2131Dev;
+PCA9451_Type g_pca9451Dev;
+
+irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
+{
+    [BOARD_IRQ_PRIO_IDX_GPIO1_0] =
+    {
+        .irqId = GPIO1_0_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    }
+};
+
+uint32_t g_pmicFaultFlags = 0U;
+
+/* Local functions */
+
+static void BRD_SM_PCA9451Handler(void);
+
+/*--------------------------------------------------------------------------*/
+/* Init serial devices                                                      */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_SerialDevicesInit(void)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    LPI2C_Type *const s_i2cBases[] = LPI2C_BASE_PTRS;
+    pcal6408a_config_t pcal6408Config;
+
+    /* Fill in PCAL6408A dev */
+    g_pcal6408aDev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
+    g_pcal6408aDev.devAddr = BOARD_PCAL6408A_DEV_ADDR;
+
+    /* Init the bus expander */
+    PCAL6408A_GetDefaultConfig(&pcal6408Config);
+    pcal6408Config.inputLatch = 0xFFU;
+    if (!PCAL6408A_Init(&g_pcal6408aDev, &pcal6408Config))
+    {
+        status = SM_ERR_HARDWARE_ERROR;
+    }
+    else
+    {
+        if (!PCAL6408A_IntMaskSet(&g_pcal6408aDev, PCAL6408A_INITIAL_MASK))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    /* PCA9451 PMIC Init */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Fill in PCA9451 PMIC handle */
+        g_pca9451Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
+        g_pca9451Dev.devAddr = BOARD_PCA9451C_DEV_ADDR;
+
+        /* Initialize PCA9451 PMIC */
+        if (!PCA9451_Init(&g_pca9451Dev, PCA9451_WDOG_RST_COLD_KEEP_LDO1,
+            PCA9451_I2C_LVL_TRANS_FORCE_ENABLE))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Set the BUCK1 out limit */
+            if (!PCA9451_BuckLimitSet(&g_pca9451Dev,
+                PCA9451_REG_SW1, ES_NOM_UV_VDD_SOC))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Set the STBY voltage */
+            if (!PCA9451_VoltageSet(&g_pca9451Dev, PCA9451_REG_SW1,
+                PCA9451_STATE_STBY, ES_SUSPEND_UV_VDD_SOC))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Set the SW1 STBY voltage driven by PMIC_STBY_REQ */
+            if (!PCA9451_DVSModeSet(&g_pca9451Dev, PCA9451_REG_SW1,
+                PCA9451_DVS_CTRL_BY_PMIC_STBY_REQ))
+            {
+                /* Set the status */
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /*
+             * Set the PRESET_EN to 0U to determine SW1-3 voltage
+             * via BUCKxOUT_DVS0/1
+             */
+            if (!PCA9451_SWPresetSet(&g_pca9451Dev,
+                PCA9451_BUCK123_VOLT_BY_DVS0_DVS1))
+            {
+                /* Set the status */
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            bool enable = true;
+            /*
+             * Unmask thermal interrupts
+             */
+            if (!PCA9451_IntEnable(&g_pca9451Dev,
+                (PCA9451_INT1_THERM_105_MSK | PCA9451_INT1_THERM_125_MSK),
+                enable))
+            {
+                /* Set the status */
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /*
+             * Get the reset fault status
+             */
+            if (!PCA9451_FaultFlags(&g_pca9451Dev,
+                (uint8_t *)&g_pmicFaultFlags))
+            {
+                /* Set the status */
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Check for the pending interrupt */
+            BRD_SM_PCA9451Handler();
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Fill in PCA2131 RTC handle */
+        g_pca2131Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
+        g_pca2131Dev.devAddr = BOARD_PCA2131_DEV_ADDR;
+
+        /* Initialize PCA2131 RTC */
+        if (!PCA2131_Init(&g_pca2131Dev))
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        rgpio_pin_config_t gpioConfig =
+        {
+            kRGPIO_DigitalInput,
+            0U
+        };
+
+        /* Init GPIO1-10 */
+        RGPIO_PinInit(GPIO1, 10U, &gpioConfig);
+        RGPIO_SetPinInterruptConfig(GPIO1, 10U, kRGPIO_InterruptOutput0,
+            kRGPIO_InterruptLogicZero);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set bus expander interrupt mask                                          */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_BusExpMaskSet(uint8_t val, uint8_t mask)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    static uint8_t cachedMask = PCAL6408A_INITIAL_MASK;
+    uint8_t newMask = (cachedMask & ~mask);
+
+    newMask |= val;
+
+    /* Mask changed? */
+    if (cachedMask != newMask)
+    {
+        if (PCAL6408A_IntMaskSet(&g_pcal6408aDev, newMask))
+        {
+            cachedMask = newMask;
+        }
+        else
+        {
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* GPIO1 handler                                                            */
+/*--------------------------------------------------------------------------*/
+void GPIO1_0_IRQHandler(void)
+{
+    uint32_t flags;
+    uint8_t status, val;
+
+    /* Get GPIO status */
+    flags = RGPIO_GetPinsInterruptFlags(GPIO1, kRGPIO_InterruptOutput0);
+
+    /* Get PCAL6408A status */
+    (void) PCAL6408A_IntStatusGet(&g_pcal6408aDev, &status);
+
+    /* Get value and Clear PCAL6408A interrupts */
+    (void) PCAL6408A_InputGet(&g_pcal6408aDev, &val);
+
+    /* Clear GPIO interrupts */
+    RGPIO_ClearPinsInterruptFlags(GPIO1, kRGPIO_InterruptOutput0, flags);
+
+    /* Handle PCA9451 interrupt */
+    if ((status & BIT8(PCAL6408A_INPUT_PCA9451_INT)) != 0U)
+    {
+        /* Asserts low */
+        /* gcov_excl_ntbr_nextline - rising edge not seen */
+        if ((val & BIT8(PCAL6408A_INPUT_PCA9451_INT)) == 0U)
+        {
+            BRD_SM_PCA9451Handler();
+        }
+    }
+
+    /* Handle PCA2131 interrupt */
+    if ((status & BIT8(PCAL6408A_INPUT_PCA2131_INT)) != 0U)
+    {
+        /* Asserts low */
+        /* gcov_excl_ntbr_nextline - rising edge not seen */
+        if ((val & BIT8(PCAL6408A_INPUT_PCA2131_INT)) == 0U)
+        {
+            BRD_SM_BbmHandler();
+        }
+    }
+
+    /* Handle controls interrupts */
+    BRD_SM_ControlHandler(status, val);
+
+    /* Adjust dynamic IRQ priority */
+    (void) DEV_SM_IrqPrioUpdate();
+}
+
+/*==========================================================================*/
+
+/*--------------------------------------------------------------------------*/
+/* PCA9451 handler                                                             */
+/*--------------------------------------------------------------------------*/
+static void BRD_SM_PCA9451Handler(void)
+{
+    uint8_t stat = 0U;
+
+    /* Read status of interrupts */
+    (void) PCA9451_IntStatus(&g_pca9451Dev, &stat);
+
+    /* Handle pending temp interrupts */
+    if (((stat & PCA9451_INT1_THERM_105_MSK) != 0U) ||
+        ((stat & PCA9451_INT1_THERM_125_MSK) != 0U))
+    {
+        BRD_SM_SensorHandler();
+    }
+}

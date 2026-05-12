@@ -5,9 +5,9 @@
  */
 
 /*!
-@defgroup pca9451 PCA9451A Driver
-@brief Component driver for a PCA9451A PMIC
-@details Component driver for a PCA9451A PMIC.
+@defgroup pca9451 PCA9451 Driver
+@brief Component driver for a PCA9451 PMIC
+@details Component driver for a PCA9451 PMIC.
 */
 
 /** @} */
