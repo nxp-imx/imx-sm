@@ -143,6 +143,8 @@ SM-363: Continuous reset if DDR not configured by OEI {#RN_DETAIL_SM_363}
 
 Added code to check DDR clocks to see if enabled by OEI. If not, power down the DDR MIX.
 
+Note the issue only occurred on i.MX94 but the solution was implemented on all SoC to keep the code aligned.
+
 SM-365: Support i.MX952 DDR PHY scaling restrictions for VDD_SOC {#RN_DETAIL_SM_365}
 ----------
 
@@ -198,7 +200,7 @@ Added buffer overflow checks to the monitor code. Increased the buffer size to 3
 SM-377: Remove undefined configtool resources {#RN_DETAIL_SM_377}
 ----------
 
-Removed unused configtool resources. None of these were used so removal does not change the resulting config header files.
+Removed unused configtool resources from cfg files. None of these were used so removal does not change the resulting config header files.
  
 - CLK_ELE
 - ATU_M
@@ -220,12 +222,14 @@ Removed unused configtool resources. None of these were used so removal does not
 - PCIE2_ROOT
 - SPDIF1
 
-Customers should also remove.
+Customers should also remove any reference to these in their cfg files.
 
 SM-378: Enable mission and parity faults {#RN_DETAIL_SM_378}
 ----------
 
-Enable Mission and Parity Faults. Set the NOC fabric timeouts to maximum. 
+Enable Mission and Parity Faults. Set the NOC fabric timeouts to maximum.
+
+Note some of these were later disabled as part of SM-413. Can be reenabled by reversing that one change but be aware PCI use can trigger the mission faults.
 
 SM-381: Insufficient error checking when parsing monitor commands {#RN_DETAIL_SM_381}
 ----------
@@ -244,7 +248,7 @@ The SM debug monitor did not fully check arguments for validity in a few cases. 
 SM-383: Fuse FRO trim value not used {#RN_DETAIL_SM_383}
 ----------
 
-Ensure the fuses are initialized very early in the boot sequence.
+Ensure the fuse cache is initialized very early in the boot sequence.
 
 SM-384: Switch from macros to wrapper functions to enable line coverage testing {#RN_DETAIL_SM_384}
 ----------
@@ -325,7 +329,7 @@ No SM changes required for this new i.MX952 silicon revision.
 SM-403: Parallel make does not handle the all target {#RN_DETAIL_SM_403}
 ----------
 
-Modified makefile all target to serialize clean and image build.
+Modified makefile "all" target to serialize clean and image build.
 
 SM-405: Add shadow fuse read/write in monitor and also support no ECC finalization {#RN_DETAIL_SM_405}
 ----------
@@ -336,7 +340,7 @@ Added sfuse.r/sfuse.w commands to interact with fuse shadows. Added 3rd paramete
 |-----------------------------|--------------------------------------------------------------|
 | fuse.r *wordIdx* [*count*]  | display *count* number of fuse words starting at *wordIdx*   |
 | fuse.w *wordIdx* *value* [*noecc*]   | write *value* to fuse *wordIdx* (try) *noecc* update|
-| sfuse.r *wordIdx* [*count*] | display *count* no of words starting at *wordIdx* frm shadows|
+| sfuse.r *wordIdx* [*count*] | display *count* no of words starting at *wordIdx* from shadows|
 | sfuse.w *wordIdx* *value*   | write *value* to fuse shadows *wordIdx* (if possible)        |
 
 
@@ -407,7 +411,7 @@ Disable fault 61 due to ERR053263.
 SM-414: Early device init errors not retained {#RN_DETAIL_SM_414}
 ----------
 
-During device init, early error responses were overwritten with DEV_SM_SUCCESS. This would cause additional init steps to be run and possibly bus error. Code restructured to no do this overwrite. 
+During device init, early error responses were overwritten with DEV_SM_SUCCESS. This would cause additional init steps to be run and possibly bus error. Code restructured to not do this overwrite. 
 
 SM-417: Config updates for mx952evkrpmsg.cfg {#RN_DETAIL_SM_417}
 ----------
