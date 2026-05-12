@@ -24,7 +24,7 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-- Fixed non-complaince issue with the clock protocol, added clockEnableDelay to
+- Fixed non-compliance issue with the clock protocol, added clockEnableDelay to
   SCMI_ClockAttributes(), **not backwards compatible**
 
 Configuration Changes {#RN_ADD_CONFIG}

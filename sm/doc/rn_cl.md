@@ -183,7 +183,7 @@ Updated the PCAL6416A_INITIAL_MASK define for the i.MX94 EVK board port. It did 
 SM-374: Make using the SMCT config tool fails to abort when python is not available {#RN_DETAIL_SM_374}
 ----------
 
-New way of launching the 'smct' configuration tool during build process. The 'make cfg SMCT=1' will attempt to lauch the smct tool assuming it is installed on PATH. Alternatively, use the 'make cfg SMCT=smct-dir'. 
+New way of launching the 'smct' configuration tool during build process. The 'make cfg SMCT=1' will attempt to launch the smct tool assuming it is installed on PATH. Alternatively, use the 'make cfg SMCT=smct-dir'. 
 
 SM-375: Fix coding standard issues from new version of scan tools {#RN_DETAIL_SM_375}
 ----------
@@ -346,7 +346,7 @@ SM-406: Incorrect handling of seenvId in FUSA SEENV state management functions {
 Fixed incorrect seenvId handling in FUSA SEENV state management functions:
 
 - LMM_FusaSeenvStateGet(): Updated to use target->seenvId to get the seenvState.
-- LMM_FusaSeenvStateSet(): Updated to use seenvState paramete to set the seenvState.
+- LMM_FusaSeenvStateSet(): Updated to use seenvState parameter to set the seenvState.
 - SCMI RPC handlers: Updated to add offset adjustments to caller's seenvId in FusaSeenvStateGet() and FusaSeenvStateSet() functions.
 
 SM-408: Some SM owned pins also assigned to other LMs {#RN_DETAIL_SM_408}
