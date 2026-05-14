@@ -83,7 +83,7 @@ repository and then compile the SM for the target configuration.
 
 For example, in the top directory of the code base (e.g. imx-sm):
 
-    make config=mx95evk cfg  (optional if the associated mx95evk.cfg file has been changed)
+    make config=mx95evk cfg  (required only if the associated mx95evk.cfg file has been changed)
     make config=mx95evk all
 
 Then copy the resulting binary image file, *build/mx95evk/m33_image.bin*, to the iMX95 directory of the
@@ -100,4 +100,7 @@ their use-case.
 
 Complete documentation on compiling the SM, building a boot image, and programming the boot image is
 contained in the *Developer's Guide* section of the full doxygen-based RM described above.
+
+The SM comes with a basic configuration tool. A more comprehensive alternative SM config tool (SMCT)
+is available here: [imx-smct](https://github.com/nxp-imx/imx-smct).
 

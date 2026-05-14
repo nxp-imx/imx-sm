@@ -603,6 +603,9 @@ The SM implementation includes a command-line tool to process a single configura
 [config_dev.h](@ref DEV_CONFIG) file is custom raw config of IP registers the
 generated file is just a skeleton to be filled in manually.
 
+The default configtool is pretty basic. A more comprehensive alternative SM config tool
+(SMCT) is available here: [imx-smct](https://github.com/nxp-imx/imx-smct).
+
 The tool is a perl script and located in configs and is named configtool.pl.
 The usage info is as follows:
 

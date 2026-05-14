@@ -135,6 +135,9 @@ are the *m33_image.bin* which is used to build boot containers and the *m33_imag
 which is used for loading via JTAG tools. For simulation builds the output is an
 executable named *sm*.
 
+The SM comes with a basic configuration tool. A more comprehensive alternative SM config tool (SMCT)
+is available here: [imx-smct](https://github.com/nxp-imx/imx-smct).
+
 Running the SM {#GUIDE_RUN}
 ==============
 
