@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## ###################################################################
 ##
-## Copyright 2023-2025 NXP
+## Copyright 2023-2026 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -114,7 +114,7 @@ if ($help || (not defined $inputFile) || (not defined $outDir))
     print "  -h  display this help and exit\n\n";
     print "The input configuration file is loaded, processed, and\n";
     print "configuration header files written to the output directory\n";
-    exit;
+    exit 0;
 }
 
 # Support other cfg files
@@ -233,8 +233,8 @@ sub load_config_files
         $maxLoop--;
         if ($maxLoop == 0)
         {
-            print "error: max recursive substitution reached\n";
-            exit;
+            print STDERR "error: max recursive substitution reached\n";
+            exit 1;
         }
     }
 
@@ -534,7 +534,7 @@ sub sanity_check
             if ($lmIdx != $lmCnt)
             {
 			    print STDERR 'error: invalid LM numerical order' . "\n";
-			    exit;
+			    exit 1;
             }
 
 	        if ((my $parm = &param($l, 'name')) ne '!')
@@ -548,7 +548,7 @@ sub sanity_check
 					{
 					    print STDERR 'error: invalid LM0 name (must be SM)'
 					        . "\n";
-					    exit;
+					    exit 1;
 					}
 				}
 				if ($parm eq 'SM')
@@ -557,7 +557,7 @@ sub sanity_check
 					{
 					    print STDERR 'error: invalid SM LM (must be LM0)'
 					        . "\n";
-					    exit;
+					    exit 1;
 					}
 				}
 	        }
@@ -570,7 +570,7 @@ sub sanity_check
 					{
 					    print STDERR 'error: invalid SM/LM0 DID (must be 2)'
 					        . "\n";
-					    exit;
+					    exit 1;
 					}
 				}
 	        }
@@ -585,7 +585,7 @@ sub sanity_check
 					{
 					    print STDERR 'error: invalid SM/LM0 RPC type (must be none)'
 					        . "\n";
-					    exit;
+					    exit 1;
 					}
 				}
             }
@@ -601,14 +601,14 @@ sub sanity_check
             if ($agentIdx != $agentCnt)
             {
 			    print STDERR 'error: invalid agent numerical order' . "\n";
-			    exit;
+			    exit 1;
             }
 
             # Check LM defined before agent
             if ($lmCnt == -1)
             {
 			    print STDERR 'error: agent before lm' . "\n";
-			    exit;
+			    exit 1;
             }
         }
 
@@ -1596,7 +1596,7 @@ sub generate_lmm
 					if ($parm ne '1')
 					{
 					    print STDERR 'error: invalid SM/LM0 boot order (must be 1)' . "\n";
-					    exit;
+					    exit 1;
 					}
 				}
 	        }
@@ -1622,7 +1622,7 @@ sub generate_lmm
 					if (uc $parm ne 'FEENV')
 					{
 					    print STDERR 'error: invalid SM/LM0 safe type (must be feenv)' . "\n";
-					    exit;
+					    exit 1;
 					}
 				}
 	        }
@@ -4058,7 +4058,7 @@ sub error_line
 
     # Print error message
     print STDERR 'error: ' . $msg . "\n";
-    exit;
+    exit 1;
 }
 
 ###############################################################################
