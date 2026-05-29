@@ -457,6 +457,7 @@
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M33S] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M70] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_M71] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN1] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
@@ -1119,6 +1120,7 @@
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M33S] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M70] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_M71] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN1] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
@@ -1772,6 +1774,7 @@
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M33S] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M70] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_M71] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN1] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
@@ -2425,6 +2428,7 @@
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M33S] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M70] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_M71] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN1] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
@@ -3078,6 +3082,7 @@
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M33S] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M70] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_M71] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN1] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
@@ -3731,6 +3736,7 @@
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M33S] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_M70] = SM_SCMI_PERM_ALL, \
+        .perfPerms[DEV_SM_PERF_M71] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN1] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
