@@ -56,14 +56,12 @@ static uint64_t BRD_SM_SourceCalcVcoRate(uint64_t clockRate);
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_ClockInit(void)
 {
-    int32_t status;
-
     /* Default to enable LDB PLL override */
-    status = DEV_SM_ClockExtendedSet(DEV_SM_CLK_LDBPLL,
+    (void) DEV_SM_ClockExtendedSet(DEV_SM_CLK_LDBPLL,
         DEV_SM_CLOCK_EXT_SRCPRE, 1U);
 
     /* Return status */
-    return status;
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/

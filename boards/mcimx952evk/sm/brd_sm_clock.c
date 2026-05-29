@@ -59,21 +59,16 @@ static uint64_t BRD_SM_SourceCalcVcoRate(uint64_t clockRate);
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_ClockInit(void)
 {
-    int32_t status;
-
     /* Default to enable LDB PLL override */
-    status = DEV_SM_ClockExtendedSet(DEV_SM_CLK_LDBPLL,
+    (void) DEV_SM_ClockExtendedSet(DEV_SM_CLK_LDBPLL,
         DEV_SM_CLOCK_EXT_SRCPRE, 1U);
 
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Default to enable DISP clock override */
-        status = DEV_SM_ClockExtendedSet(DEV_SM_CLK_DISP1PIX,
-            DEV_SM_CLOCK_EXT_SRCPRE, 1U);
-    }
+    /* Default to enable DISP clock override */
+    (void) DEV_SM_ClockExtendedSet(DEV_SM_CLK_DISP1PIX,
+        DEV_SM_CLOCK_EXT_SRCPRE, 1U);
 
     /* Return status */
-    return status;
+    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -86,12 +81,14 @@ int32_t BRD_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
     uint32_t roundParm = roundSel;
 
     /* Check clock */
-    if (DEV_SM_ClockIsReserved(clockId)) {
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
-        if (clockId == DEV_SM_CLK_DISP1PIX) {
+        if (clockId == DEV_SM_CLK_DISP1PIX)
+        {
             uint32_t extConfigValue = 0U;
 
             /* Get DISP clock override */
@@ -106,7 +103,8 @@ int32_t BRD_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
             }
         }
 
-        if (clockId == DEV_SM_CLK_LDBPLL) {
+        if (clockId == DEV_SM_CLK_LDBPLL)
+        {
             uint32_t extConfigValue = 0U;
 
             /* Get LDBPLL override */
@@ -148,7 +146,8 @@ static void BRD_SM_ClockSourcePrepare(uint32_t clockId, uint64_t clockRate,
     uint32_t mfn;
     uint32_t odiv;
 
-    switch (clockRate) {
+    switch (clockRate)
+    {
         case 297000000UL:
         case 296703000UL:
         case 148500000UL:
@@ -258,7 +257,8 @@ static void BRD_SM_ClockSourcePrepare(uint32_t clockId, uint64_t clockRate,
     };
 
     /* Check if rate match found */
-    if (rateMatch) {
+    if (rateMatch)
+    {
         /* Configure PLL based on requested rate */
         (void)FRACTPLL_UpdateRate(pllIdx, mfi, mfn, odiv,
             false);
