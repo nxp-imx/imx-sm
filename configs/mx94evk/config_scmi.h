@@ -184,7 +184,7 @@
         .scmiInst = 1U, \
         .domId = 4U, \
         .secure = 0U, \
-        .seenvId = 1U, \
+        .seenvId = 0U, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_BISS] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_CAN1] = SM_SCMI_PERM_ALL, \
@@ -381,7 +381,7 @@
         .scmiInst = 2U, \
         .domId = 14U, \
         .secure = 0U, \
-        .seenvId = 2U, \
+        .seenvId = 1U, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_GPT1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_GPT2] = SM_SCMI_PERM_ALL, \

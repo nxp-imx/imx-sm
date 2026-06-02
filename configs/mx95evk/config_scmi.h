@@ -64,7 +64,7 @@
         .scmiInst = 0U, \
         .domId = 4U, \
         .secure = 0U, \
-        .seenvId = 1U, \
+        .seenvId = 0U, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_CAN1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPTMR1] = SM_SCMI_PERM_ALL, \

@@ -239,7 +239,7 @@ Configures the SCMI RPC. The defines in this file are as follows:
   - *name* - agent name
   - *domId* - RDC domain ID (DID)
   - *secure* - security state, 1=secure, 0=not secure
-  - *seenvId* - S-EENV ID, 0=not an S-EENV, otherwise ID + 1
+  - *seenvId* - S-EENV ID, only valid if safeType=S-EENV
   - *scmiInst* - SCMI instance this agent belongs to
   - *basePerms[]* - array of base protocol permissions, one per agent, device
   - *pdPerms[]* - array of power protocol permissions, one per power domain

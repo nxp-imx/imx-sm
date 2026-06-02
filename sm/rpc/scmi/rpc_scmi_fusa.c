@@ -881,7 +881,7 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
         /* Fill in target S-EENV info */
         if (in->seenvId == FUSA_ID_DISCOVER)
         {
-            target.seenvId = caller->seenvId - 1U;
+            target.seenvId = caller->seenvId;
             target.lmId = caller->lmId;
         }
         else
@@ -914,7 +914,7 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
     {
         lmm_fusa_id_t fusaCaller =
         {
-            .seenvId = caller->seenvId - 1U,
+            .seenvId = caller->seenvId,
             .lmId = caller->lmId
         };
 
@@ -975,7 +975,7 @@ static int32_t FusaSeenvStateSet(const scmi_caller_t *caller,
     {
         lmm_fusa_id_t fusaCaller =
         {
-            .seenvId = caller->seenvId - 1U,
+            .seenvId = caller->seenvId,
             .lmId = caller->lmId
         };
 

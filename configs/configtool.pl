@@ -75,7 +75,7 @@ sub error_line;
 sub get_define;
 
 # Config version
-my $configVer = 2;
+my $configVer = 3;
 
 my @protocols = ('base', 'pd', 'sys', 'perf', 'clk', 'sensor',
     'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'perlpi',
@@ -1216,11 +1216,6 @@ sub generate_scmi
                 $dup = $agnt;
             }
 
-            if ($safe == 1)
-            {
-                $seenvid++;
-            }
-
             # Output banner
             print $out &banner($line);
 
@@ -1260,6 +1255,11 @@ sub generate_scmi
                 $i++;
             }
             print $out '    }' . "\n\n";
+
+            if ($safe == 1)
+            {
+                $seenvid++;
+            }
 
             next;
         }

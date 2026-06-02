@@ -30,7 +30,7 @@
 ##
 ## ###################################################################
 
-GEN_CONFIG_VER ?= 2U
+GEN_CONFIG_VER ?= 3U
 BOARD ?= mcimx95evk
 USES_FUSA ?= 1
 
