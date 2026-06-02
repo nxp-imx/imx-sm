@@ -2,30 +2,30 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2026-01-26T02:11:57Z",
+    "created": "2026-06-02T02:50:21Z",
     "creators": [
       "Organization: NXP"
     ],
     "licenseListVersion": "3.26"
   },
-  "name": "imx-sm-LF_6.18.20_2.0.0",
+  "name": "imx-sm-lf-6.18.20-2.0.0",
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://nxp.com/spdx/bde51693-957e-46d6-a1b4-37cf28b3817e",
+  "documentNamespace": "https://nxp.com/spdx/cc474761-a2e6-4e6a-bac1-8290aa7d00c4",
   "packages": [
     {
-      "SPDXID": "SPDXRef-package-bde51693-957e-46d6-a1b4-37cf28b3817e",
+      "SPDXID": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4",
       "name": "imx-sm",
-      "versionInfo": "LF_6.18.20_2.0.0",
-      "licenseConcluded": "(BSD-3-Clause)",
-      "licenseDeclared": "(BSD-3-Clause)",
-      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b rel_imx_sm_2026q2",
+      "versionInfo": "lf-6.18.20-2.0.0",
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b lf-6.18.20-2.0.0",
       "originator": "Organization: NXP",
       "supplier": "NOASSERTION",
       "externalRefs": [],
       "filesAnalyzed": false
     },
     {
-      "SPDXID": "SPDXRef-package-f872a562-49f7-464f-a9a6-2ceb45966850",
+      "SPDXID": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4---f872a562-49f7-464f-a9a6-2ceb45966850",
       "name": "CMSIS_5",
       "versionInfo": "5.9.0",
       "licenseConcluded": "Apache-2.0",
@@ -42,12 +42,12 @@
     {
       "spdxElementId": "SPDXRef-DOCUMENT",
       "relationshipType": "DESCRIBES",
-      "relatedSpdxElement": "SPDXRef-package-bde51693-957e-46d6-a1b4-37cf28b3817e"
+      "relatedSpdxElement": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4"
     },
     {
-      "spdxElementId": "SPDXRef-package-bde51693-957e-46d6-a1b4-37cf28b3817e",
+      "spdxElementId": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4",
       "relationshipType": "CONTAINS",
-      "relatedSpdxElement": "SPDXRef-package-f872a562-49f7-464f-a9a6-2ceb45966850"
+      "relatedSpdxElement": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4---f872a562-49f7-464f-a9a6-2ceb45966850"
     }
   ]
 }

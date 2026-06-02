@@ -46,6 +46,7 @@ Improvement {#RN_CL_IMP}
 | [SM-410](https://jira.sw.nxp.com/projects/SM/issues/SM-410) | In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 [[detail]](@ref RN_DETAIL_SM_410) |   | Y | | | | |
 | [SM-411](https://jira.sw.nxp.com/projects/SM/issues/SM-411) | Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM [[detail]](@ref RN_DETAIL_SM_411) |   | Y | Y | Y | Y | Y |
 | [SM-417](https://jira.sw.nxp.com/projects/SM/issues/SM-417) | Config updates for mx952evkrpmsg.cfg [[detail]](@ref RN_DETAIL_SM_417) |   | | | | Y | Y |
+| [SM-427](https://jira.sw.nxp.com/projects/SM/issues/SM-427) | Sync configs for android [[detail]](@ref RN_DETAIL_SM_427) |   | Y | | | | |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -66,6 +67,7 @@ Bug {#RN_CL_BUG}
 | [SM-408](https://jira.sw.nxp.com/projects/SM/issues/SM-408) | Some SM owned pins also assigned to other LMs [[detail]](@ref RN_DETAIL_SM_408) |   | | Y | Y | | |
 | [SM-412](https://jira.sw.nxp.com/projects/SM/issues/SM-412) | Add missing pins for i.MX952 [[detail]](@ref RN_DETAIL_SM_412) |   | | | | Y | Y |
 | [SM-414](https://jira.sw.nxp.com/projects/SM/issues/SM-414) | Early device init errors not retained [[detail]](@ref RN_DETAIL_SM_414) |   | Y | Y | Y | Y | Y |
+| [SM-426](https://jira.sw.nxp.com/projects/SM/issues/SM-426) | Second M7 resource incorrectly mapped to the first M7 performance domain [[detail]](@ref RN_DETAIL_SM_426) |   | | Y | Y | | |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -417,4 +419,14 @@ SM-417: Config updates for mx952evkrpmsg.cfg {#RN_DETAIL_SM_417}
 ----------
 
 For the mx952evkrpmsg.cfg file, moved SAI6 from AP-NS to M7. Also configured M7 as secure so it can access the secure parts of the RGPIO.
+
+SM-426: Second M7 resource incorrectly mapped to the first M7 performance domain {#RN_DETAIL_SM_426}
+----------
+
+Fixed the mapping in the configtool source files. Rebuilt all of the header files. Customers should also rebuild their header files using the configtool.
+
+SM-427: Sync configs for android {#RN_DETAIL_SM_427}
+----------
+
+Pulled changes from the mx95evk.cfg into the matching Android config file.
 
