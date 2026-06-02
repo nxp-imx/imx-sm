@@ -52,7 +52,7 @@ int32_t __wrap_DEV_SM_FaultComplete(dev_sm_rst_rec_t resetRec)
 
     if (status == SM_ERR_SUCCESS)
     {
-        __real_DEV_SM_FaultComplete(resetRec);
+        status = __real_DEV_SM_FaultComplete(resetRec);
     }
 
     /* Return status */
