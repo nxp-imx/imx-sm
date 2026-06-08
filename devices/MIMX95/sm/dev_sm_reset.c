@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -236,14 +236,6 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
 
     switch (domainId)
     {
-        case DEV_SM_RST_M7MIX:
-            pwrDomainId = DEV_SM_PD_M7;
-            break;
-
-        case DEV_SM_RST_NPUMIX:
-            pwrDomainId = DEV_SM_PD_NPU;
-            break;
-
         case DEV_SM_RST_GPUMIX:
             pwrDomainId = DEV_SM_PD_GPU;
             break;
@@ -257,10 +249,6 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
         case DEV_SM_RST_LVDS_RESETN:
         case DEV_SM_RST_DISPLAYMIX:
             pwrDomainId = DEV_SM_PD_DISPLAY;
-            break;
-
-        case DEV_SM_RST_NETCMIX:
-            pwrDomainId = DEV_SM_PD_NETC;
             break;
 
         case DEV_SM_RST_A55C2_NCPUPORESET:

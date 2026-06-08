@@ -238,6 +238,9 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
             pwrDomainId = DEV_SM_PD_VPU;
             break;
 
+        case DEV_SM_RST_DISP0_RESETN:
+        case DEV_SM_RST_DISP1_RESETN:
+        case DEV_SM_RST_LVDS_RESETN:
         case DEV_SM_RST_DISPLAYMIX:
             pwrDomainId = DEV_SM_PD_DISPLAY;
             break;

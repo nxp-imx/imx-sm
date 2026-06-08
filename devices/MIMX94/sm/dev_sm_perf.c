@@ -1472,10 +1472,6 @@ bool DEV_SM_PerfIsReserved(uint32_t domainId)
             pwrDomainId = DEV_SM_PD_M71;
             break;
 
-        case DEV_SM_PERF_NPU:
-            pwrDomainId = DEV_SM_PD_NPU;
-            break;
-
         default:
             ; /* Intentional empty default */
             break;

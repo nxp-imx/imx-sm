@@ -1826,10 +1826,6 @@ bool DEV_SM_PerfIsReserved(uint32_t domainId)
 
     switch (domainId)
     {
-        case DEV_SM_PERF_M7:
-            pwrDomainId = DEV_SM_PD_M7;
-            break;
-
         case DEV_SM_PERF_GPU:
             pwrDomainId = DEV_SM_PD_GPU;
             break;

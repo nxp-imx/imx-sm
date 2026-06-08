@@ -201,7 +201,6 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
         [DEV_SM_PD_GPU] =     DEV_SM_FUSE_GPU3D_DISABLE,
         [DEV_SM_PD_VPU] =     DEV_SM_FUSE_VPU_DISABLE,
         [DEV_SM_PD_DISPLAY] = DEV_SM_FUSE_DCSS_DISABLE,
-        [DEV_SM_PD_NETC] =    DEV_SM_FUSE_NETC_DISABLE
     };
 
     if (domainId >= DEV_SM_NUM_POWER)

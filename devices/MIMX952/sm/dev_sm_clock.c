@@ -1554,10 +1554,19 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
             pwrDomainId = DEV_SM_PD_A55C3;
             break;
 
-        case DEV_SM_CLK_DISP1PIX:
+        case DEV_SM_CLK_VIDEOPLL1_VCO:
+        case DEV_SM_CLK_VIDEOPLL1:
+        case DEV_SM_CLK_LDBPLL_VCO:
+        case DEV_SM_CLK_LDBPLL:
         case DEV_SM_CLK_DISPAPB:
         case DEV_SM_CLK_DISPAXI:
         case DEV_SM_CLK_DISPOCRAM:
+        case DEV_SM_CLK_DISP1PIX:
+        case DEV_SM_CLK_DISPPHYCFG:
+        case DEV_SM_CLK_DISPCDPHYAPB:
+        case DEV_SM_CLK_DISPOCRAM_CGC:
+        case DEV_SM_CLK_DISPSEERIS_CGC:
+        case DEV_SM_CLK_DISPDSI_CGC:
             pwrDomainId = DEV_SM_PD_DISPLAY;
             break;
 
@@ -1569,6 +1578,10 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
 
         case DEV_SM_CLK_VPU:
         case DEV_SM_CLK_VPUAPB:
+        case DEV_SM_CLK_VPUENC_CGC:
+        case DEV_SM_CLK_VPUJPEGENC_CGC:
+        case DEV_SM_CLK_VPUJPEGDEC_CGC:
+        case DEV_SM_CLK_VPUDEC_CGC:
             pwrDomainId = DEV_SM_PD_VPU;
             break;
 

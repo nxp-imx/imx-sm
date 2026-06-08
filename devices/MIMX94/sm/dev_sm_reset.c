@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -242,10 +242,6 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
 
         case DEV_SM_RST_M71MIX:
             pwrDomainId = DEV_SM_PD_M71;
-            break;
-
-        case DEV_SM_RST_NPUMIX:
-            pwrDomainId = DEV_SM_PD_NPU;
             break;
 
         case DEV_SM_RST_A55C1_NCPUPORESET:
