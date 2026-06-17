@@ -70,7 +70,7 @@
         .basePerms[DEV_SM_BASE_AGENT_3] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_4] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_5] = SM_SCMI_PERM_ALL, \
-        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
+        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -733,7 +733,7 @@
         .basePerms[DEV_SM_BASE_AGENT_3] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_4] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_5] = SM_SCMI_PERM_ALL, \
-        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
+        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -1387,7 +1387,7 @@
         .basePerms[DEV_SM_BASE_AGENT_3] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_4] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_5] = SM_SCMI_PERM_ALL, \
-        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
+        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -2041,7 +2041,7 @@
         .basePerms[DEV_SM_BASE_AGENT_3] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_4] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_5] = SM_SCMI_PERM_ALL, \
-        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
+        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -2695,7 +2695,7 @@
         .basePerms[DEV_SM_BASE_AGENT_3] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_4] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_5] = SM_SCMI_PERM_ALL, \
-        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
+        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -3349,7 +3349,7 @@
         .basePerms[DEV_SM_BASE_AGENT_3] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_4] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_5] = SM_SCMI_PERM_ALL, \
-        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
+        .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
