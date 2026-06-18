@@ -110,8 +110,7 @@ typedef struct {
   __IO uint32_t GPC_PMIC_STBY_ACK_CTRL;            /**< PMIC standby acknowledge control, offset: 0x108 */
        uint8_t RESERVED_6[244];
   __IO uint32_t GPC_ROSC_CTRL;                     /**< RCOSC control, offset: 0x200 */
-       uint8_t RESERVED_7[4];
-  __IO uint32_t GPC_EFUSE_CTRL;                    /**< eFUSE control, offset: 0x208 */
+       uint8_t RESERVED_7[8];
   __IO uint32_t GPC_ELE_HDSK_CTRL;                 /**< ELE Handshake control, offset: 0x20C */
 } GPC_GLOBAL_Type;
 
@@ -278,18 +277,6 @@ typedef struct {
  *  0b1..Shut off 24 MHz ROSC clock during system sleep
  */
 #define GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN(x)  (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_SHIFT)) & GPC_GLOBAL_GPC_ROSC_CTRL_ROSC_OFF_EN_MASK)
-/*! @} */
-
-/*! @name GPC_EFUSE_CTRL - eFUSE control */
-/*! @{ */
-
-#define GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK (0x1U)
-#define GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_SHIFT (0U)
-/*! EFUSE_PD_EN - eFUSE power down enable
- *  0b0..Do not Power Down efuse during system sleep
- *  0b1..Power Down efuse during system sleep
- */
-#define GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN(x) (((uint32_t)(((uint32_t)(x)) << GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_SHIFT)) & GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK)
 /*! @} */
 
 /*! @name GPC_ELE_HDSK_CTRL - ELE Handshake control */

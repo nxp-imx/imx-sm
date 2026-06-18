@@ -711,10 +711,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 GPC_GLOBAL->GPC_PMIC_CTRL = 0U;
             }
 
-            /* Power down eFUSE */
-            GPC_GLOBAL->GPC_EFUSE_CTRL =
-                GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK;
-
             /* Disable bypass for clock sources */
             DEV_SM_ClockSourceBypass(false, true);
 
@@ -867,9 +863,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Enable bypass for clock sources */
             DEV_SM_ClockSourceBypass(true, true);
-
-            /* Power up eFUSE */
-            GPC_GLOBAL->GPC_EFUSE_CTRL = 0U;
 
             /* Restore GPC LP handshakes */
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM = lpHsSm;

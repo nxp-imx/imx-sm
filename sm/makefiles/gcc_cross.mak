@@ -86,7 +86,7 @@ ifeq ($(wildcard $(TOOLS)/srec/srec_cat),)
 else
     SREC_CAT = $(TOOLS)/srec/srec_cat
 endif
-FLAGS += -D__STARTUP_CLEAR_BSS -DCPU_$(SOCFULL)_c$(cpu) -D$(SOC) -Dlink_$(mem)
+FLAGS += -D__STARTUP_CLEAR_BSS -DCPU_$(SOC)_c$(cpu) -D$(SOC) -Dlink_$(mem)
 GCOV ?= 0
 
 # Configure linker control file
@@ -95,7 +95,7 @@ ifdef FLASH
 else
     mem = ram
 endif
-LCF = $(SOC)_c$(cpu)_$(mem)
+LCF = $(SOCFULL)_c$(cpu)_$(mem)
 ROM_LCF = $(SOC)_c$(cpu)_rom
 
 # Configure warnings

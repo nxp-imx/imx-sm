@@ -206,6 +206,15 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
                 if ((tp & 1U) != 0U)
                 {
                     /* Clear the theshold point */
+                    /*
+                     * False Positive: The sensorId value of zero is associated with
+                     * the device layer function. Its handling is correctly
+                     * implemented within the underrun end function
+                     * (BRD_SM_SensorTripPointSet), ensuring
+                     * appropriate processing of sensorId value zero.
+                     */
+                    /* coverity[cert_arr30_c_violation:FALSE] */
+                    /* coverity[cert_str31_c_violation:FALSE] */
                     (void)LMM_SensorTripPointSet(lmId, sensorId, count,
                         tripPoint, DEV_SM_SENSOR_TP_NONE);
                 }

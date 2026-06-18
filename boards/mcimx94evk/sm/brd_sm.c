@@ -602,7 +602,9 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
     int32_t status = SM_ERR_INVALID_PARAMETERS;
 
     /* Check for wrap */
+#if (BOARD_PERF_VDROP != 0)
     if (microVolt <= (INT32_MAX - BOARD_PERF_VDROP))
+#endif
     {
         /* Set voltage level */
         status = BRD_SM_VoltageLevelSet(domain, microVolt

@@ -135,14 +135,6 @@ typedef struct {
  */
 #define FRO_CSR_TRUPEN(x)                 (((uint32_t)(((uint32_t)(x)) << FRO_CSR_TRUPEN_SHIFT)) & FRO_CSR_TRUPEN_MASK)
 
-#define FRO_CSR_COARSEN_MASK              (0x40U)
-#define FRO_CSR_COARSEN_SHIFT             (6U)
-/*! COARSEN - Coarse Trim Enable
- *  0b0..Disable
- *  0b1..Enable
- */
-#define FRO_CSR_COARSEN(x)                (((uint32_t)(((uint32_t)(x)) << FRO_CSR_COARSEN_SHIFT)) & FRO_CSR_COARSEN_MASK)
-
 #define FRO_CSR_TUNEONCE_MASK             (0x80U)
 #define FRO_CSR_TUNEONCE_SHIFT            (7U)
 /*! TUNEONCE - Tune Once Control */

@@ -411,6 +411,15 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
         case COMMAND_SENSOR_TRIP_POINT_CONFIG:
             lenOut = sizeof(const scmi_msg_status_t);
             /* Pointer coversion required from comm buffer */
+            /*
+             * False Positive: The sensorId value of zero is associated with
+             * the device layer function. Its handling is correctly
+             * implemented within the underrun end function
+             * (BRD_SM_SensorTripPointSet), ensuring
+             * appropriate processing of sensorId value zero.
+             */
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorTripPointConfig(caller, (const msg_rsensor5_t*) in,
                 /* Pointer coversion required from comm buffer */
@@ -419,6 +428,7 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
             break;
         case COMMAND_SENSOR_READING_GET:
             lenOut = sizeof(msg_tsensor6_t);
+            /* Pointer coversion required from comm buffer */
             /*
              * False Positive: The sensorId value of zero is associated with
              * the device layer function. Its handling is correctly
@@ -428,7 +438,6 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
              */
             /* coverity[cert_arr30_c_violation:FALSE] */
             /* coverity[cert_str31_c_violation:FALSE] */
-            /* Pointer coversion required from comm buffer */
             /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorReadingGet(caller, (const msg_rsensor6_t*) in,
                 /* Pointer coversion required from comm buffer */
@@ -437,6 +446,7 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
             break;
         case COMMAND_SENSOR_CONFIG_GET:
             lenOut = sizeof(msg_tsensor9_t);
+            /* Pointer coversion required from comm buffer */
             /*
              * False Positive: The sensorId value of zero is associated with
              * the device layer function. Its handling is correctly
@@ -446,7 +456,6 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
              */
             /* coverity[cert_arr30_c_violation:FALSE] */
             /* coverity[cert_str31_c_violation:FALSE] */
-            /* Pointer coversion required from comm buffer */
             /* coverity[misra_c_2012_rule_11_3_violation] */
             status = SensorConfigGet(caller, (const msg_rsensor9_t*) in,
                 /* Pointer coversion required from comm buffer */

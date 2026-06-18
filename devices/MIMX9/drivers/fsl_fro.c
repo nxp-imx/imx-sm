@@ -361,9 +361,8 @@ bool FRO_SetEnable(bool enable)
             FRO->CSR.CLR = (FRO_CSR_TUNEONCE_DONE_MASK |
                 FRO_CSR_TRIM_LOCK_MASK | FRO_CSR_TRUPREQ_MASK |
                 FRO_CSR_TUNE_ERR_MASK | FRO_CSR_LOL_ERR_MASK |
-                FRO_CSR_TUNEONCE_MASK | FRO_CSR_COARSEN_MASK |
-                FRO_CSR_TRUPEN_MASK | FRO_CSR_TREN_MASK |
-                FRO_CSR_SMODE_MASK | FRO_CSR_FROEN_MASK);
+                FRO_CSR_TUNEONCE_MASK | FRO_CSR_TRUPEN_MASK |
+                FRO_CSR_TREN_MASK | FRO_CSR_SMODE_MASK | FRO_CSR_FROEN_MASK);
 
             /* Clear the froEnable flag */
             s_froEnabled = false;
