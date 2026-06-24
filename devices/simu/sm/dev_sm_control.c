@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -52,6 +52,41 @@
 
 static uint32_t s_ctrl[DEV_SM_NUM_CTRL];
 static uint32_t s_extCtrl[DEV_SM_NUM_CTRL][MAX_EXTCTRL_WORDS];
+
+/*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ControlAttributes(uint32_t ctrlId, bool *get, bool *set,
+    bool *extGet, bool *extSet, bool *action, bool *notify)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check control */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        *get = true;
+        *set = true;
+        *extGet = false;
+        *extSet = false;
+        *action = true;
+        *notify = true;
+
+        /* Check for test control */
+        if (ctrlId == DEV_SM_CTRL_TEST_E)
+        {
+            *extGet = true;
+            *extSet = true;
+            *notify = false;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
 
 /*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
@@ -137,6 +172,10 @@ int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
             status = SM_ERR_INVALID_PARAMETERS;
         }
     }
+    else if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
     else
     {
         status = SM_ERR_NOT_FOUND;
@@ -178,6 +217,10 @@ int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
             status = SM_ERR_INVALID_PARAMETERS;
         }
     }
+    else if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
     else
     {
         status = SM_ERR_NOT_FOUND;
@@ -195,13 +238,21 @@ int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Return what was sent */
-    *numRtn = numArg;
-
-    /* Copy data */
-    for (uint32_t idx = 0U; idx < numArg; idx++)
+    if (ctrlId < DEV_SM_NUM_CTRL)
     {
-        rtn[idx] = 2U * arg[idx];
+        /* Return what was sent */
+        *numRtn = numArg;
+
+        /* Copy data */
+        for (uint32_t idx = 0U; idx < numArg; idx++)
+        {
+            rtn[idx] = 2U * arg[idx];
+        }
+    }
+    else
+    {
+        *numRtn = 0U;
+        status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
@@ -213,7 +264,24 @@ int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags)
 {
-    return SM_ERR_SUCCESS;
+    int32_t status;
+
+    /* Check control */
+    if (ctrlId == DEV_SM_CTRL_TEST)
+    {
+        status = SM_ERR_SUCCESS;
+    }
+    else if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

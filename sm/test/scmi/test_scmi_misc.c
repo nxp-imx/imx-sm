@@ -640,40 +640,55 @@ static void TEST_ScmiMiscNotify(bool pass, uint32_t channel,
     if (pass)
     {
 #ifdef SIMU
-        /* RPC_00360 Misc Control Notify & Event */
-        uint32_t flags = 1U;
+        uint32_t attributes = 0U;
 
-        /* Request notification */
-        printf("SCMI_MiscControlNotify(%u, %u)\n", channel, ctrlId);
-        CHECK(SCMI_MiscControlNotify(channel, ctrlId, flags));
+        /* Get control attributes */
+        CHECK(SCMI_MiscControlAttributes(channel, ctrlId, &attributes));
 
-        /* Wait for the notification */
-        printf("Wait for notification...\n");
-        printf("SCMI_MiscControlEvent(%u, %u)\n", channel, ctrlId);
+        /* Notify supported? */
+        if (SCMI_MISC_ATTR_NOTIFY(attributes) == 0U)
+        {
+            /* Check errors as expected */
+            NECHECK(SCMI_MiscControlNotify(channel, ctrlId, 1U),
+                SCMI_ERR_NOT_SUPPORTED);
+        }
+        else
+        {
+            /* RPC_00360 Misc Control Notify & Event */
+            uint32_t flags = 1U;
 
-        uint32_t recChannel = channel + 1U;
-        uint32_t tempId = ctrlId;
+            /* Request notification */
+            printf("SCMI_MiscControlNotify(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlNotify(channel, ctrlId, flags));
 
-        CHECK(SCMI_MiscControlEvent(recChannel, &tempId, &flags));
+            /* Wait for the notification */
+            printf("Wait for notification...\n");
+            printf("SCMI_MiscControlEvent(%u, %u)\n", channel, ctrlId);
 
-        /* Branch -- Invalid Channel */
-        NECHECK(SCMI_MiscControlEvent(SM_SCMI_NUM_CHN, NULL, NULL),
-            SCMI_ERR_INVALID_PARAMETERS);
+            uint32_t recChannel = channel + 1U;
+            uint32_t tempId = ctrlId;
 
-        /* Branch -- Nullpointer */
-        flags = 1U;
+            CHECK(SCMI_MiscControlEvent(recChannel, &tempId, &flags));
 
-        /* Request notification */
-        printf("SCMI_MiscControlNotify(%u, %u)\n", channel, ctrlId);
-        CHECK(SCMI_MiscControlNotify(channel, ctrlId, flags));
+            /* Branch -- Invalid Channel */
+            NECHECK(SCMI_MiscControlEvent(SM_SCMI_NUM_CHN, NULL, NULL),
+                SCMI_ERR_INVALID_PARAMETERS);
 
-        /* Wait for the notification */
-        printf("Wait for notification...\n");
-        printf("SCMI_MiscControlEvent(%u, %u)\n", channel, ctrlId);
+            /* Branch -- Nullpointer */
+            flags = 1U;
 
-        tempId = ctrlId;
+            /* Request notification */
+            printf("SCMI_MiscControlNotify(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlNotify(channel, ctrlId, flags));
 
-        CHECK(SCMI_MiscControlEvent(recChannel, NULL, NULL));
+            /* Wait for the notification */
+            printf("Wait for notification...\n");
+            printf("SCMI_MiscControlEvent(%u, %u)\n", channel, ctrlId);
+
+            tempId = ctrlId;
+
+            CHECK(SCMI_MiscControlEvent(recChannel, NULL, NULL));
+        }
 #endif
     }
     /* ACCESS DENIED */
@@ -701,6 +716,11 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
     /* Adequate Set Permissions */
     if (pass)
     {
+        uint32_t attributes = 0U;
+
+        /* Get control attributes */
+        CHECK(SCMI_MiscControlAttributes(channel, ctrlId, &attributes));
+
         /* RPC_00360 Control Set */
         printf("SCMI_MiscControlSet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlSet(channel, ctrlId,
@@ -732,33 +752,43 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         }
 #endif
 
-#ifdef SIMU
-        if ((numVal != 1U) || (rtnVal[0] != 0x1234ABCDU))
+        /* Action supported? */
+        if (SCMI_MISC_ATTR_ACTION(attributes) == 0U)
         {
-            CHECK(SM_ERR_TEST);
-        }
-
-        /* Control Action */
-        printf("SCMI_MiscControlAction(%u, %u)\n", channel, ctrlId);
-        CHECK(SCMI_MiscControlAction(channel, ctrlId, 23U, 3, arg,
-            &numVal, rtnVal));
-
-        if (numVal != 3U)
-        {
-            CHECK(SM_ERR_TEST);
+            /* Check errors as expected */
+            NECHECK(SCMI_MiscControlAction(channel, ctrlId, 23U,
+                3, arg, NULL, NULL), SCMI_ERR_NOT_SUPPORTED);
         }
         else
         {
-            for (uint32_t idx = 0U; idx < numVal; idx++)
+#ifdef SIMU
+            if ((numVal != 1U) || (rtnVal[0] != 0x1234ABCDU))
             {
-                printf("  rtnVal[%u] = %u\n", idx, rtnVal[idx]);
+                CHECK(SM_ERR_TEST);
             }
-        }
+
+            /* Control Action */
+            printf("SCMI_MiscControlAction(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlAction(channel, ctrlId, 23U, 3, arg,
+                &numVal, rtnVal));
+
+            if (numVal != 3U)
+            {
+                CHECK(SM_ERR_TEST);
+            }
+            else
+            {
+                for (uint32_t idx = 0U; idx < numVal; idx++)
+                {
+                    printf("  rtnVal[%u] = %u\n", idx, rtnVal[idx]);
+                }
+            }
 #endif
 
-        /* Branch -- Nullpointer */
-        CHECK(SCMI_MiscControlAction(channel, ctrlId, 23U,
-            3, arg, NULL, NULL));
+            /* Branch -- Nullpointer */
+            CHECK(SCMI_MiscControlAction(channel, ctrlId, 23U,
+                3, arg, NULL, NULL));
+        }
 
 #ifdef SIMU
         /* Reset Config */

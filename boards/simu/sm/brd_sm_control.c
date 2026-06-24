@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024-2025 NXP
+**     Copyright 2024-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -51,6 +51,60 @@
 
 static uint32_t s_brdCtrl = 0U;
 static uint32_t s_brdExtCtrl[MAX_EXTCTRL_WORDS] = { 0 };
+
+/*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_ControlAttributes(uint32_t ctrlId, bool *get, bool *set,
+    bool *extGet, bool *extSet, bool *action, bool *notify)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check to see if ctrlId is within bounds*/
+    if (ctrlId < SM_NUM_CTRL)
+    {
+        /* Check if device or board */
+        if (ctrlId < DEV_SM_NUM_CTRL)
+        {
+            status = DEV_SM_ControlAttributes(ctrlId, get, set, extGet,
+                extSet, action, notify);
+        }
+        else if (ctrlId < BRD_SM_CTRL_TEST)
+        {
+            *get = true;
+            *set = false;
+            *extGet = false;
+            *extSet = false;
+            *action = false;
+            *notify = true;
+        }
+        else if (ctrlId == BRD_SM_CTRL_TEST_E)
+        {
+            *get = false;
+            *set = false;
+            *extGet = true;
+            *extSet = true;
+            *action = false;
+            *notify = false;
+        }
+        else
+        {
+            *get = false;
+            *set = false;
+            *extGet = false;
+            *extSet = false;
+            *action = true;
+            *notify = false;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
 
 /*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */

@@ -57,6 +57,60 @@
 /* Local variables */
 
 /*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t BRD_SM_ControlAttributes(uint32_t ctrlId, bool *get, bool *set,
+    bool *extGet, bool *extSet, bool *action, bool *notify)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check to see if ctrlId is within bounds*/
+    if (ctrlId < SM_NUM_CTRL)
+    {
+        /* Check if device or board */
+        if (ctrlId < DEV_SM_NUM_CTRL)
+        {
+            status = DEV_SM_ControlAttributes(ctrlId, get, set, extGet,
+                extSet, action, notify);
+        }
+        else if (ctrlId < BRD_SM_CTRL_TEST)
+        {
+            *get = true;
+            *set = false;
+            *extGet = false;
+            *extSet = false;
+            *action = false;
+            *notify = true;
+        }
+        else if (ctrlId == BRD_SM_CTRL_PCA2131)
+        {
+            *get = false;
+            *set = false;
+            *extGet = true;
+            *extSet = true;
+            *action = false;
+            *notify = false;
+        }
+        else
+        {
+            *get = false;
+            *set = false;
+            *extGet = false;
+            *extSet = false;
+            *action = true;
+            *notify = false;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,

@@ -570,6 +570,11 @@
 #define SM_CPUPERLPMCONFIGSET  DEV_SM_CpuPerLpmConfigSet
 #endif
 
+#ifndef SM_CONTROLATTR
+/*! Redirector (device/board) to get control attributes */
+#define SM_CONTROLATTR         DEV_SM_ControlAttributes
+#endif
+
 #ifndef SM_CONTROLSET
 /*! Redirector (device/board) to write a control */
 #define SM_CONTROLSET           DEV_SM_ControlSet

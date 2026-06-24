@@ -1222,6 +1222,79 @@ int32_t SCMI_MiscDdrInfoGet(uint32_t channel, uint32_t ddrRgdId,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_MiscControlAttributes(uint32_t channel, uint32_t ctrlId,
+    uint32_t *attributes)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t attributes;
+    } msg_rmiscd35_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t ctrlId;
+        } msg_tmiscd35_t;
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
+        msg_tmiscd35_t *msgTx = (msg_tmiscd35_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->ctrlId = ctrlId;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_MISC_CONTROL_ATTRIBUTES, sizeof(msg_tmiscd35_t),
+            &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rmiscd35_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Pointer coversion required from comm buffer */
+        /* coverity[misra_c_2012_rule_11_5_violation] */
+        const msg_rmiscd35_t *msgRx = (const msg_rmiscd35_t*) msg;
+
+        /* Extract attributes */
+        if (attributes != NULL)
+        {
+            *attributes = msgRx->attributes;
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Read control notification event                                          */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_MiscControlEvent(uint32_t channel, uint32_t *ctrlId,

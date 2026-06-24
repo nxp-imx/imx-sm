@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2023-2026 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,6 +60,29 @@
 /* Types */
 
 /* Functions */
+
+/*!
+ * Get LM control attributes.
+ *
+ * @param[in]     lmId     LM call is for
+ * @param[in]     ctrlId   Index of control
+ * @param[out]    get      True if get supported
+ * @param[out]    set      True if set supported
+ * @param[out]    extGet   True if extended get supported
+ * @param[out]    extSet   True if extended set supported
+ * @param[out]    action   True if action supported
+ * @param[out]    notify   True if notify supported
+ *
+ * This function allows a caller to get control attributes.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the value is set.
+ * - others returned by ::SM_CONTROLATTR
+ */
+int32_t LMM_MiscControlAttributes(uint32_t lmId, uint32_t ctrlId, bool *get,
+    bool *set, bool *extGet, bool *extSet, bool *action, bool *notify);
 
 /*!
  * Set an LM control value.

@@ -84,6 +84,8 @@
 #define SCMI_MSG_MISC_CONTROL_EXT_GET        0x21U
 /*! Get DDR memory region info */
 #define SCMI_MSG_MISC_DDR_INFO_GET           0x22U
+/*! Get control attributes */
+#define SCMI_MSG_MISC_CONTROL_ATTRIBUTES     0x23U
 /*! Read control notification event */
 #define SCMI_MSG_MISC_CONTROL_EVENT          0x0U
 /** @} */
@@ -252,6 +254,24 @@
 #define SCMI_MISC_DDR_ATTR_WIDTH(x)    (((x) & 0x700U) >> 8U)
 /*! DDR type */
 #define SCMI_MISC_DDR_ATTR_TYPE(x)     (((x) & 0x1FU) >> 0U)
+/** @} */
+
+/*!
+ * @name SCMI control attributes
+ */
+/** @{ */
+/*! Supports notifications */
+#define SCMI_MISC_ATTR_NOTIFY(x)   (((x) & 0x20U) >> 5U)
+/*! Supports actions */
+#define SCMI_MISC_ATTR_ACTION(x)   (((x) & 0x10U) >> 4U)
+/*! Supports extended set */
+#define SCMI_MISC_ATTR_EXT_SET(x)  (((x) & 0x8U) >> 3U)
+/*! Supports extended get */
+#define SCMI_MISC_ATTR_EXT_GET(x)  (((x) & 0x4U) >> 2U)
+/*! Supports set */
+#define SCMI_MISC_ATTR_SET(x)      (((x) & 0x2U) >> 1U)
+/*! Supports get */
+#define SCMI_MISC_ATTR_GET(x)      (((x) & 0x1U) >> 0U)
 /** @} */
 
 /* Functions */
@@ -796,6 +816,62 @@ int32_t SCMI_MiscControlExtGet(uint32_t channel, uint32_t ctrlId,
 int32_t SCMI_MiscDdrInfoGet(uint32_t channel, uint32_t ddrRgdId,
     uint32_t *attributes, uint32_t *mts, uint32_t *startLow,
     uint32_t *startHigh, uint32_t *endLow, uint32_t *endHigh);
+
+/*!
+ * Get control attributes.
+ *
+ * @param[in]     channel     A2P channel for comms
+ * @param[in]     ctrlId      Identifier for the control
+ * @param[out]    attributes  Control attributes:<BR>
+ *                            Bits[31:6] Reserved, must be zero.<BR>
+ *                            Bit[5] Notification support.<BR>
+ *                            If set to 1, the control device supports
+ *                            notifications.<BR>
+ *                            If set to 0, the control device does not support
+ *                            notifications.<BR>
+ *                            Bit[4] Action support.<BR>
+ *                            If set to 1, the control device supports
+ *                            actions.<BR>
+ *                            If set to 0, the control device does not support
+ *                            action.<BR>
+ *                            Bit[3] Extended set support.<BR>
+ *                            If set to 1, the control device supports extended
+ *                            set.<BR>
+ *                            If set to 0, the control device does not support
+ *                            extended set.<BR>
+ *                            Bit[2] Extended get support.<BR>
+ *                            If set to 1, the control device supports extended
+ *                            get.<BR>
+ *                            If set to 0, the control device does not support
+ *                            extended get.<BR>
+ *                            Bit[1] Set support.<BR>
+ *                            If set to 1, the control device supports set.<BR>
+ *                            If set to 0, the control device does not support
+ *                            set.<BR>
+ *                            Bit[0] Get support.<BR>
+ *                            If set to 1, the control device supports get.<BR>
+ *                            If set to 0, the control device does not support
+ *                            get
+ *
+ * This function returns the attributes that are associated with a specific
+ * control.
+ *
+ * Access macros:
+ * - ::SCMI_MISC_ATTR_NOTIFY() - Supports notifications
+ * - ::SCMI_MISC_ATTR_ACTION() - Supports actions
+ * - ::SCMI_MISC_ATTR_EXT_SET() - Supports extended set
+ * - ::SCMI_MISC_ATTR_EXT_GET() - Supports extended get
+ * - ::SCMI_MISC_ATTR_SET() - Supports set
+ * - ::SCMI_MISC_ATTR_GET() - Supports get
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if valid control attributes are returned.
+ * - ::SCMI_ERR_NOT_FOUND: if \a ctrlId does not point to a valid control.
+ */
+int32_t SCMI_MiscControlAttributes(uint32_t channel, uint32_t ctrlId,
+    uint32_t *attributes);
 
 /*!
  * Read control notification event.

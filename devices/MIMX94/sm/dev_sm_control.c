@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2025 NXP
+**     Copyright 2025-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -195,6 +195,33 @@ static const dev_sm_ctrl_t s_control[DEV_SM_NUM_CTRL] =
 };
 
 /*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ControlAttributes(uint32_t ctrlId, bool *get, bool *set,
+    bool *extGet, bool *extSet, bool *action, bool *notify)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check control */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        *get = true;
+        *set = true;
+        *extGet = false;
+        *extSet = false;
+        *action = false;
+        *notify = false;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
@@ -298,7 +325,20 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
 int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
     uint32_t numVal, const uint32_t *val)
 {
-    return SM_ERR_NOT_SUPPORTED;
+    int32_t status;
+
+    /* Check control */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -307,12 +347,26 @@ int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
 int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
     uint32_t numRtn, uint32_t *rtn)
 {
+    int32_t status;
+
+    /* Check control */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
     if (numRtn > 0U)
     {
+        /* Nothing to return */
         *rtn = 0U;
     }
 
-    return SM_ERR_NOT_SUPPORTED;
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -322,7 +376,17 @@ int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
     /* coverity[misra_c_2012_rule_8_13_violation] */
     uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
+
+    /* Check control */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
 
     /* Nothing to return */
     *numRtn = 0U;
@@ -336,6 +400,19 @@ int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ControlFlagsSet(uint32_t ctrlId, uint32_t flags)
 {
-    return SM_ERR_NOT_SUPPORTED;
+    int32_t status;
+
+    /* Check control */
+    if (ctrlId < DEV_SM_NUM_CTRL)
+    {
+        status = SM_ERR_NOT_SUPPORTED;
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 

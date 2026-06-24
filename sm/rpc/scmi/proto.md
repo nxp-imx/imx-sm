@@ -188,6 +188,7 @@ supported, the message will be supported. In some cases, an entire protocol migh
 | Misc | 0x84 | [MISC_CONTROL_EXT_SET](@ref SCMI_PROTO_MISC_MISC_CONTROL_EXT_SET) | 0x20 | EXCLUSIVE | Mandatory if number of controls not 0. |
 | Misc | 0x84 | [MISC_CONTROL_EXT_GET](@ref SCMI_PROTO_MISC_MISC_CONTROL_EXT_GET) | 0x21 | GET | Mandatory if number of controls not 0. |
 | Misc | 0x84 | [MISC_DDR_INFO_GET](@ref SCMI_PROTO_MISC_MISC_DDR_INFO_GET) | 0x22 |  | Mandatory if number of DDRC not 0. |
+| Misc | 0x84 | [MISC_CONTROL_ATTRIBUTES](@ref SCMI_PROTO_MISC_MISC_CONTROL_ATTRIBUTES) | 0x23 |  | Mandatory |
 | Misc\n(notification) | 0x84 | [MISC_CONTROL_EVENT](@ref SCMI_PROTO_MISC_MISC_CONTROL_EVENT) | 0x0 |  | Mandatory if number of controls not 0. |
 
 SCMI Payloads {#SCMI_PAYLOADS}
@@ -3581,6 +3582,26 @@ See SCMI_MiscDdrInfoGet() for details.
     | uint32         | end_low                                                      |
     ---------------------------------------------------------------------------------
     | uint32         | end_high                                                     |
+    ---------------------------------------------------------------------------------
+
+## Misc: MISC_CONTROL_ATTRIBUTES ## {#SCMI_PROTO_MISC_MISC_CONTROL_ATTRIBUTES}
+
+See SCMI_MiscControlAttributes() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0x23                         |
+    ---------------------------------------------------------------------------------
+    | uint32         | ctrl_id                                                      |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x84, msg=0x23                         |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | attributes                                                   |
     ---------------------------------------------------------------------------------
 
 ## Misc: MISC_CONTROL_EVENT ## {#SCMI_PROTO_MISC_MISC_CONTROL_EVENT}

@@ -50,6 +50,16 @@
 /* Local variables */
 
 /*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_MiscControlAttributes(uint32_t lmId, uint32_t ctrlId, bool *get,
+    bool *set, bool *extGet, bool *extSet, bool *action, bool *notify)
+{
+    /* Just passthru to board/device */
+    return SM_CONTROLATTR(ctrlId, get, set, extGet, extSet, action, notify);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_MiscControlSet(uint32_t lmId, uint32_t ctrlId, uint32_t numVal,

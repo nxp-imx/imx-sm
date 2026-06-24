@@ -67,7 +67,8 @@
 #define COMMAND_MISC_CONTROL_EXT_SET         0x20U
 #define COMMAND_MISC_CONTROL_EXT_GET         0x21U
 #define COMMAND_MISC_DDR_INFO_GET            0x22U
-#define COMMAND_SUPPORTED_MASK               0x700017FFFULL
+#define COMMAND_MISC_CONTROL_ATTRIBUTES      0x23U
+#define COMMAND_SUPPORTED_MASK               0xF00017FFFULL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
@@ -131,6 +132,14 @@
 #define MISC_DDR_ATTR_NUM_RGD(x)  (((x) & 0x3U) << 16U)
 #define MISC_DDR_ATTR_WIDTH(x)    (((x) & 0x7U) << 8U)
 #define MISC_DDR_ATTR_TYPE(x)     (((x) & 0x1FU) << 0U)
+
+/* SCMI control attributes */
+#define MISC_ATTR_NOTIFY(x)   (((x) & 0x1U) << 5U)
+#define MISC_ATTR_ACTION(x)   (((x) & 0x1U) << 4U)
+#define MISC_ATTR_EXT_SET(x)  (((x) & 0x1U) << 3U)
+#define MISC_ATTR_EXT_GET(x)  (((x) & 0x1U) << 2U)
+#define MISC_ATTR_SET(x)      (((x) & 0x1U) << 1U)
+#define MISC_ATTR_GET(x)      (((x) & 0x1U) << 0U)
 
 /* Local types */
 
@@ -475,6 +484,26 @@ typedef struct
     uint32_t endHigh;
 } msg_tmisc34_t;
 
+/* Request type for MiscControlAttributes() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the control */
+    uint32_t ctrlId;
+} msg_rmisc35_t;
+
+/* Response type for MiscControlAttributes() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Control attributes */
+    uint32_t attributes;
+} msg_tmisc35_t;
+
 /* Request type for MiscControlEvent() */
 typedef struct
 {
@@ -526,6 +555,8 @@ static int32_t MiscControlExtGet(const scmi_caller_t *caller,
     const msg_rmisc33_t *in, msg_tmisc33_t *out, uint32_t *len);
 static int32_t MiscDdrInfoGet(const scmi_caller_t *caller,
     const msg_rmisc34_t *in, msg_tmisc34_t *out);
+static int32_t MiscControlAttributes(const scmi_caller_t *caller,
+    const msg_rmisc35_t *in, msg_tmisc35_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
     const lmm_rpc_trigger_t *trigger);
 static int32_t MiscResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -710,6 +741,15 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
                 /* Pointer coversion required from comm buffer */
                 /* coverity[misra_c_2012_rule_11_3_violation] */
                 (msg_tmisc34_t*) out);
+            break;
+        case COMMAND_MISC_CONTROL_ATTRIBUTES:
+            lenOut = sizeof(msg_tmisc35_t);
+            /* Pointer coversion required from comm buffer */
+            /* coverity[misra_c_2012_rule_11_3_violation] */
+            status = MiscControlAttributes(caller, (const msg_rmisc35_t*) in,
+                /* Pointer coversion required from comm buffer */
+                /* coverity[misra_c_2012_rule_11_3_violation] */
+                (msg_tmisc35_t*) out);
             break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
@@ -2193,6 +2233,153 @@ static int32_t MiscDdrInfoGet(const scmi_caller_t *caller,
         /* Return end address */
         out->endLow = UINT64_L(endAddr);
         out->endHigh = UINT64_H(endAddr);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get control attributes                                                   */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->ctrlId: Identifier for the control                                 */
+/* - out->attributes: Control attributes:                                   */
+/*   Bits[31:6] Reserved, must be zero.                                     */
+/*   Bit[5] Notification support.                                           */
+/*   If set to 1, the control device supports notifications.                */
+/*   If set to 0, the control device does not support notifications.        */
+/*   Bit[4] Action support.                                                 */
+/*   If set to 1, the control device supports actions.                      */
+/*   If set to 0, the control device does not support action.               */
+/*   Bit[3] Extended set support.                                           */
+/*   If set to 1, the control device supports extended set.                 */
+/*   If set to 0, the control device does not support extended set.         */
+/*   Bit[2] Extended get support.                                           */
+/*   If set to 1, the control device supports extended get.                 */
+/*   If set to 0, the control device does not support extended get.         */
+/*   Bit[1] Set support.                                                    */
+/*   If set to 1, the control device supports set.                          */
+/*   If set to 0, the control device does not support set.                  */
+/*   Bit[0] Get support.                                                    */
+/*   If set to 1, the control device supports get.                          */
+/*   If set to 0, the control device does not support get                   */
+/*                                                                          */
+/* Process the MISC_CONTROL_ATTRIBUTES message. Platform handler for        */
+/* SCMI_MiscControlAttributes().                                            */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - MISC_ATTR_NOTIFY() - Supports notifications                            */
+/* - MISC_ATTR_ACTION() - Supports actions                                  */
+/* - MISC_ATTR_EXT_SET() - Supports extended set                            */
+/* - MISC_ATTR_EXT_GET() - Supports extended get                            */
+/* - MISC_ATTR_SET() - Supports set                                         */
+/* - MISC_ATTR_GET() - Supports get                                         */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if valid control attributes are returned.              */
+/* - SM_ERR_NOT_FOUND: if ctrlId does not point to a valid control.         */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscControlAttributes(const scmi_caller_t *caller,
+    const msg_rmisc35_t *in, msg_tmisc35_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+    uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
+#else
+    uint32_t uCtrlId = in->ctrlId;
+#endif
+    bool get;
+    bool set;
+    bool extGet;
+    bool extSet;
+    bool action;
+    bool notify;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check and generate unified ctrlId */
+    if (status == SM_ERR_SUCCESS)
+    {
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+        if ((in->ctrlId & MISC_CTRL_FLAG_BRD) == 0U)
+#endif
+        {
+            /* Check control */
+            if (uCtrlId >= DEV_SM_NUM_CTRL)
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+        }
+#if (SM_NUM_CTRL - DEV_SM_NUM_CTRL) > 0
+        else
+        {
+            /* Check control */
+            if (uCtrlId >= (SM_NUM_CTRL - DEV_SM_NUM_CTRL))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
+
+            /* Adjust to end of device controls */
+            uCtrlId += DEV_SM_NUM_CTRL;
+        }
+#endif
+    }
+
+    /* Get control attributes */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_MiscControlAttributes(caller->lmId, uCtrlId,
+            &get, &set, &extGet, &extSet, &action, &notify);
+    }
+
+    /* Return results */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Start with zero */
+         out->attributes = 0U;
+
+        /* Return get attribute */
+        if (get)
+        {
+            out->attributes |= MISC_ATTR_GET(1UL);
+        }
+
+        /* Return set attribute */
+        if (set)
+        {
+            out->attributes |= MISC_ATTR_SET(1UL);
+        }
+
+        /* Return extGet attribute */
+        if (extGet)
+        {
+            out->attributes |= MISC_ATTR_EXT_GET(1UL);
+        }
+
+        /* Return extSet attribute */
+        if (extSet)
+        {
+            out->attributes |= MISC_ATTR_EXT_SET(1UL);
+        }
+
+        /* Return action attribute */
+        if (action)
+        {
+            out->attributes |= MISC_ATTR_ACTION(1UL);
+        }
+
+        /* Return notify attribute */
+        if (notify)
+        {
+            out->attributes |= MISC_ATTR_NOTIFY(1UL);
+        }
     }
 
     /* Return status */

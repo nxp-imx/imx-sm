@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2023-2026 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -58,6 +58,7 @@
  * @name Board redirection defines
  * @{
  */
+#define SM_CONTROLATTR         BRD_SM_ControlAttributes   /*!< Control attributes */
 #define SM_CONTROLSET          BRD_SM_ControlSet          /*!< Control set */
 #define SM_CONTROLGET          BRD_SM_ControlGet          /*!< Control get */
 #define SM_CONTROLEXTSET       BRD_SM_ControlExtSet       /*!< Extended control set */
@@ -94,6 +95,27 @@
  * @name Board control functions
  * @{
  */
+
+/*!
+ * Get board control attributes.
+ *
+ * @param[in]     ctrlId   Index of control
+ * @param[out]    get      True if get supported
+ * @param[out]    set      True if set supported
+ * @param[out]    extGet   True if extended get supported
+ * @param[out]    extSet   True if extended set supported
+ * @param[out]    action   True if action supported
+ * @param[out]    notify   True if notify supported
+ *
+ * This function allows a caller to get control attributes.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ */
+int32_t BRD_SM_ControlAttributes(uint32_t ctrlId, bool *get, bool *set,
+    bool *extGet, bool *extSet, bool *action, bool *notify);
 
 /*!
  * Set a board control value.
