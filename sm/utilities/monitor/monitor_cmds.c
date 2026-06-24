@@ -1652,36 +1652,136 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
     {
         default:  /* read */
             {
-                for (uint32_t domain = 0U; domain < SM_NUM_PERF;
-                    domain++)
+                int32_t firstArgv = 0;
+                int32_t newArgc = argc;
+                uint32_t startDomain = 0U;
+                uint32_t stopDomain = SM_NUM_PERF - 1U;
+
+                /* Check for domain specifier */
+                if (argc > 0)
                 {
-                    string perfName;
-                    uint32_t perfLevel;
-                    dev_sm_perf_desc_t desc;
-                    int32_t wName = 0;
+                    uint32_t num;
 
-                    status = LMM_PerfNameGet(s_lm, domain, &perfName,
-                        &wName);
-                    if (status == SM_ERR_SUCCESS)
+                    if (MONITOR_NameToId(argv[0], &num,
+                        LMM_PerfNameGet, SM_NUM_PERF)
+                        == SM_ERR_SUCCESS)
                     {
-                        status = LMM_PerfLevelGet(s_lm, domain, &perfLevel);
+                        firstArgv = 1;
+                        newArgc = argc - 1;
+                        startDomain = num;
+                        stopDomain = num;
                     }
-                    if (status == SM_ERR_SUCCESS)
-                    {
-                        status = LMM_PerfDescribe(s_lm, domain, perfLevel,
-                            &desc);
-                    }
+                }
 
-                    if (status == SM_ERR_SUCCESS)
+                if (newArgc < 1)
+                {
+                    for (uint32_t domain = startDomain; domain <= stopDomain;
+                        domain++)
                     {
-                        printf("%03u: %*s = %u (%7ukHz)\n", domain, -wName,
-                            perfName, perfLevel, desc.value);
-                    }
+                        string perfName;
+                        uint32_t perfLevel;
+                        dev_sm_perf_desc_t desc;
+                        int32_t wName = 0;
 
-                    /* Handle reserved/fused domains */
-                    if (status == SM_ERR_NOT_FOUND)
+                        status = LMM_PerfNameGet(s_lm, domain, &perfName,
+                            &wName);
+                        if (status == SM_ERR_SUCCESS)
+                        {
+                            status = LMM_PerfLevelGet(s_lm, domain, &perfLevel);
+                        }
+
+                        if (status == SM_ERR_SUCCESS)
+                        {
+                            status = LMM_PerfDescribe(s_lm, domain, perfLevel,
+                                &desc);
+                        }
+
+                        if (status == SM_ERR_SUCCESS)
+                        {
+                            printf("%03u: %*s = %u (%7ukHz)\n", domain, -wName,
+                                perfName, perfLevel, desc.value);
+                        }
+
+                        /* Handle reserved/fused domains */
+                        if (status == SM_ERR_NOT_FOUND)
+                        {
+                            status = SM_ERR_SUCCESS;
+                        }
+                    }
+                }
+                else
+                {
+                    string const subCmds[] =
                     {
-                        status = SM_ERR_SUCCESS;
+                        "possible"
+                    };
+
+                    uint8_t subCmd = (uint8_t) MONITOR_Find(subCmds,
+                        (int32_t) ARRAY_SIZE(subCmds), argv[firstArgv]);
+
+                    switch (subCmd)
+                    {
+                        /* possible */
+                        case 0:
+                            for (uint32_t domain = startDomain;
+                                domain <= stopDomain; domain++)
+                            {
+                                string perfName;
+                                uint32_t perfNumLevel;
+                                dev_sm_perf_desc_t desc = {0, 0, 0};
+                                int32_t wName = 0;
+
+                                status = LMM_PerfNameGet(s_lm, domain,
+                                    &perfName, &wName);
+
+                                if (status == SM_ERR_SUCCESS)
+                                {
+                                    status = LMM_PerfNumLevelsGet(s_lm, domain,
+                                        &perfNumLevel);
+                                }
+
+                                if (status == SM_ERR_SUCCESS)
+                                {
+                                    for (uint32_t currentPerfLevel = 0U;
+                                        currentPerfLevel < perfNumLevel;
+                                        currentPerfLevel++)
+                                    {
+                                        status = LMM_PerfDescribe(s_lm, domain,
+                                            currentPerfLevel, &desc);
+
+                                        if (status == SM_ERR_SUCCESS)
+                                        {
+                                            if (currentPerfLevel == 0U)
+                                            {
+                                                printf("%03u: %*s level "
+                                                    "= %u (%7ukHz)\n", domain,
+                                                    -wName, perfName,
+                                                    currentPerfLevel,
+                                                    desc.value);
+                                            }
+                                            else
+                                            {
+                                                printf("     %*s level "
+                                                    "= %u (%7ukHz)\n", -wName,
+                                                    "", currentPerfLevel,
+                                                    desc.value);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                /* Handle reserved/fused domains */
+                                if (status == SM_ERR_NOT_FOUND)
+                                {
+                                    status = SM_ERR_SUCCESS;
+                                }
+
+                            }
+                            break;
+
+                        default:
+                            status = SM_ERR_INVALID_PARAMETERS;
+                            break;
                     }
                 }
             }

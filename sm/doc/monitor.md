@@ -115,7 +115,8 @@ Resource Commands
 |-----------------------------|--------------------------------------------------------------|
 | power.r [*domain*]          | read/get power mode of *domain* (default = all)              |
 | power.w *domain* *state*    | set power mode of *domain* to *state* (off, on)              |
-| perf.r                      | display level/rate for all performance domains               |
+| perf.r [*domain*]           | display level/rate of *domain* (default = all)               |
+| perf.r [*domain*] possible  | display possible levels/rates of *domain* (default = all)    |
 | perf.w *domain* *level*     | set *level* for performance *domain*                         |
 | clock.r [*clk*]             | display rate/enable of *clk* (default = all)                 |
 | clock.r [*clk*] range       | display range of *clk* (default = all)                       |
