@@ -631,6 +631,70 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 The mx937alt config puts all cores in one LM and they share all IP. This config **isn't valid** but it is
 useful for testing OS drivers and starting various M7 images booted by the AP.
 
+NXP i.MX95 FRDM  {#PORT_MX95_FRDM}
+---------------
+
+This port supports i.MX95 LPDDR5 15*15 FRDM board. This board consists of a base board with
+soldered i.MX95 SoC. The board design allocates LPI2C1, GPIO1, and LPUART2 as modules to be managed exclusively
+by the SM running on the CM33. Connected to LPI2C1 is a PF09 PMIC, a PF53 PMIC, a PCAL6408A I2C bus
+expander, and a PCA2131 RTC. The interrupts from these go to the bus expander
+(along with other wakeup signals) and the interrupt from the bus expander goes to GPIO1-10. This means the
+CM33 must be the exclusive owner of LPI2C1 and GPIO1. Because it owns GPIO1, no other pads can be routed to
+GPIO1 and directly used by any of the other CPUs. Other CPUs must use I/O that can be routed to GPIO2-5.
+LPUART2 is connected to an FTDI chip to convert to USB serial.
+
+The port makes use of the following additional drivers: [RGPIO](@ref rgpio), [PF09](@ref pf09), [PF53](@ref pf53),
+[PCAL6408A](@ref pcal6408a) and [PCA2131](@ref pca2131). In addition it adds voltage domains, a sensor, and controls.
+These are implemented in corresponding
+[brd_sm_voltage.h/c](@ref mcimx95frdm/sm/brd_sm_voltage.h), [brd_sm_sensor.h/c](@ref mcimx95frdm/sm/brd_sm_sensor.h),
+and [brd_sm_control.h/c](@ref mcimx95frdm/sm/brd_sm_control.h) files. These define redirection
+macros to route the LMM function calls for these type of resources to these files. They then
+append the following resources to the existing device resources:
+
+| Resource                  | Protocol | Description                                   |
+|---------------------------|----------|-----------------------------------------------|
+| DEV_SM_VOLT_SOC           | Voltage  | i.MX95 VDD_SOC via PF53                       |
+| DEV_SM_VOLT_ARM           | Voltage  | i.MX95 VDD_SOC via PF53                       |
+| BRD_SM_VOLT_VDD_GPIO_3P3  | Voltage  | i.MX95 VDD_GPIO_3P3 via PF09 SW1              |
+| BRD_SM_VOLT_VDD_ANA_0P8   | Voltage  | i.MX95 VDD_ANA_0P8 via PF09 SW2               |
+| BRD_SM_VOLT_VDD_GPIO_1P8  | Voltage  | i.MX95 VDD_GPIO_1P8 via PF09 SW3              |
+| BRD_SM_VOLT_VDDQ_DDR      | Voltage  | i.MX95 VDDQ_DDR via PF09 SW4                  |
+| BRD_SM_VOLT_VDD2_DDR      | Voltage  | i.MX95 VDD2_DDR via PF09 SW5                  |
+| BRD_SM_VOLT_SD_CARD       | Voltage  | i.MX95 SD_CARD via PF09 LDO1                  |
+| BRD_SM_VOLT_NVCC_SD2      | Voltage  | i.MX95 NVCC_SD2 via PF09 LDO2                 |
+| BRD_SM_RTC_PCA2131        | Bbm      | PCA2131 RTC                                   |
+| BRD_SM_SENSOR_TEMP_PF09   | Sensor   | PF09 temp sensor                              |
+| BRD_SM_SENSOR_TEMP_PF5302 | Sensor   | PF5302 temp sensor                            |
+| BRD_SM_CTRL_SD3_WAKE      | Misc     | SD3 wakeup via PCAL6408A.0                    |
+| BRD_SM_CTRL_PCIE1_WAKE    | Misc     | PCIE1 wakeup via PCAL6408A.4                  |
+| BRD_SM_CTRL_UART_WAKE     | Misc     | UART wakeup via PCAL6408A.5                   |
+| BRD_SM_CTRL_PCIE2_WAKE    | Misc     | PCIE2 wakeup via PCAL6408A.6                  |
+| BRD_SM_CTRL_BUTTON        | Misc     | Button via PCAL6408A.7                        |
+| BRD_SM_CTRL_PCA2131       | Misc     | PCA2131 RTC I2C                               |
+
+Voltages can be enabled/disabled and their level can be read and written. The sensor can be read (limited
+discrete temps 110C, 125C, 140C, 155C. Temps below 110F are reported as 105C. A trip point can be used
+to generate a notification. The controls can be read and can generate notifications (also generate a wake up)
+on state change.
+
+Board interrupt support is implemented in [brd_sm_handlers.h/c](@ref mcimx95frdm/sm/brd_sm_handlers.h). This
+makes used of GPIO1 signal 10 to get an interrupt from a PCAL6408A. This gets wakeup signals as well as an
+interrupt from the PF09.
+
+The BRD_SM_ShutdownRecordLoad() and BRD_SM_ShutdownRecordSave() functions record information in the BBNSM
+persistent storage. They makes use of GPR0-3. Access to these should not be granted to other agents in the
+configuration files.
+
+The default configuration for this board is [mx95frdm](@ref CONFIG_MX95FRDM). It defines the following boot
+mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
+
+| mSel        | Description (mx95frdm)                                                                 |
+|-------------|-----------------------------------------------------------------------------------------|
+| 0 (default) | Boot LM1 (M7) and/or LM2 (AP) if images found in container, no error if images missing  |
+| 1           | Boot LM1 (M7), error if no image in container                                           |
+| 2           | Boot nothing                                                                            |
+
+
 Reset Record Output  {#PORT_NXP_PRINT}
 -------------------
 
