@@ -2343,7 +2343,7 @@ static int32_t MiscControlAttributes(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         /* Start with zero */
-         out->attributes = 0U;
+        out->attributes = 0U;
 
         /* Return get attribute */
         if (get)
