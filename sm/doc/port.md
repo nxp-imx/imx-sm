@@ -265,13 +265,17 @@ NXP Reference Board Ports  {#PORT_NXP}
 The SM release contains the following NXP ports that can be used as source/reference for a new
 board port.
 
-| Board Port                         | Description                                                                          |
-|------------------------------------|--------------------------------------------------------------------------------------|
-| [mcimx95evk](@ref PORT_MX95_EVK)   | i.MX95 EVK, PF09/53 PMICs, PCAL6408A bus expander, added controls, voltages, sensor  |
-| [mcimx95stub](@ref PORT_MX95_SB)   | i.MX95 stub, no PMIC or board resources                                              |
-| [mcimx94evk](@ref PORT_MX94_EVK)   | i.MX94 EVK, PF09/53 PMICs, PCAL6408A bus expander, added controls, voltages, sensor |
-| [mcimx94stub](@ref PORT_MX94_SB)   | i.MX94 stub, no PMIC or board resources                                             |
-| simu                               | Simulated board, no PMIC, added sensor for test, **only for simulation builds**      |
+| Board Port                           | Description                                                                           |
+|--------------------------------------|---------------------------------------------------------------------------------------|
+| [mcimx95evk](@ref PORT_MX95_EVK)     | i.MX95 EVK and LPDDR4 FRDM, PF09/53 PMICs, PCAL6408A bus expander, added controls, voltages, sensor |
+| [mcimx95frdm](@ref PORT_MX95_FRDM)   | i.MX95 LPDDR5 FRDM, PF09/53 PMICs, PCAL6408A bus expander, added controls, voltages, sensor |
+| [mcimx95stub](@ref PORT_MX95_SB)     | i.MX95 stub, no PMIC or board resources                                               |
+| [mcimx94evk](@ref PORT_MX94_EVK)     | i.MX94 EVK, PF09/53 PMICs, PCAL6416A bus expander, added controls, voltages, sensor   |
+| [mcimx94stub](@ref PORT_MX94_SB)     | i.MX94 stub, no PMIC or board resources                                               |
+| [mcimx952evk](@ref PORT_MX952_EVK)   | i.MX952 EVK, PF09/53 PMICs, PCAL6408A bus expander, added controls, voltages, sensor  |
+| [mcimx952stub](@ref PORT_MX952_SB)   | i.MX952 stub, no PMIC or board resources                                              |
+| [mcimx937frdm](@ref PORT_MX937_FRDM) | i.MX937 FRDM, PCA9451 PMIC, PCAL6408A bus expander, added controls, voltages, sensor  |
+| simu                                 | Simulated board, no PMIC, added sensor for test, **only for simulation builds**       |
 
 These can have multiple [configurations](@ref CONFIGURATION) linked to them.
 
@@ -349,9 +353,9 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 
 | mSel        | Description (mx95alt)                                                                   |
 |-------------|-----------------------------------------------------------------------------------------|
-| 0 (default) | Boot LM1 (M7) if images found in container, no error if image missing                   |
-| 1           | Boot LM1 (AP), error if no image in container                                           |
-| 2           | Boot LM1 (M7 and AP), error if no image in container                                    |
+| 0 (default) | Boot LM1 (M7) error if missing images in container                                      |
+| 1           | Boot LM1 (AP), error if missing images in container                                     |
+| 2           | Boot LM1 (M7 and AP), error if missing images in container                              |
 
 The mx95alt config puts all cores in one LM and they share all IP. This config **isn't valid** but it is
 useful for testing OS drivers and starting various M7 images booted by the AP.
@@ -435,7 +439,7 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 | mSel        | Description (mx94evk)                                                                   |
 |-------------|-----------------------------------------------------------------------------------------|
 | 0 (default) | Boot all LM (M33S, M7s, AP) if images found in container, no error if images missing    |
-| 1           | Boot M33S if image found, boot LM2 (M70), error if no image in container                |
+| 1           | Boot LM1 (M33S) if image found, boot LM2 (M70), error if no image in container          |
 | 2           | Boot nothing                                                                            |
 
 An alternative configuration for this board is [mx94alt](@ref CONFIG_MX94ALT). It defines the following boot
@@ -443,9 +447,12 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 
 | mSel        | Description (mx94alt)                                                                   |
 |-------------|-----------------------------------------------------------------------------------------|
-| 0 (default) | Boot LM1 (M7) if images found in container, no error if image missing                   |
-| 1           | Boot LM1 (AP), error if no image in container                                           |
-| 2           | Boot LM1 (M7 and AP), error if no image in container                                    |
+| 0 (default) | Boot LM1 (all M), error if missing images in container                                  |
+| 1           | Boot LM1 (AP), error if missing images in container                                     |
+| 2           | Boot LM1 (all M and AP), error if missing images in container                           |
+| 3           | Boot LM1 (M33S), error if missing images in container                                   |
+| 4           | Boot LM1 (M7_0), error if missing images in container                                   |
+| 5           | Boot LM1 (M7_1), error if missing images in container                                   |
 
 The mx94alt config puts all cores in one LM and they share all IP. This config **isn't valid** but it is
 useful for testing OS drivers and starting various M7 images booted by the AP.
@@ -532,11 +539,11 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 An alternative configuration for this board is [mx952alt](@ref CONFIG_MX952ALT). It defines the following boot
 mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
 
-| mSel        | Description (mx952alt)                                                                  |
+| mSel        | Description (mx95alt)                                                                   |
 |-------------|-----------------------------------------------------------------------------------------|
-| 0 (default) | Boot LM1 (M7) if images found in container, no error if image missing                   |
-| 1           | Boot LM1 (AP), error if no image in container                                           |
-| 2           | Boot LM1 (M7 and AP), error if no image in container                                    |
+| 0 (default) | Boot LM1 (M7) error if missing images in container                                      |
+| 1           | Boot LM1 (AP), error if missing images in container                                     |
+| 2           | Boot LM1 (M7 and AP), error if missing images in container                              |
 
 The mx952alt config puts all cores in one LM and they share all IP. This config **isn't valid** but it is
 useful for testing OS drivers and starting various M7 images booted by the AP.
@@ -559,7 +566,7 @@ DEV_SM_SystemShutdown() to functions that just print a message and loop forever.
 and debug and **should not be copied to a real board port**.
 
 NXP i.MX937 FRDM  {#PORT_MX937_FRDM}
----------------
+----------------
 
 This port supports i.MX937 LPDDR5 FRDM board. This board consists of a base board and CPU card with
 soldered i.MX937 SoC. The board design allocates LPI2C1, GPIO1, and LPUART2 as modules to be managed exclusively
@@ -622,11 +629,11 @@ mode select (mSel) options which can be specified using the MSEL=\<mSel\> option
 An alternative configuration for this board is [mx937alt](@ref CONFIG_MX937ALT). It defines the following boot
 mode select (mSel) options which can be specified using the MSEL=\<mSel\> option with mkimage.
 
-| mSel        | Description (mx937alt)                                                                  |
+| mSel        | Description (mx95alt)                                                                   |
 |-------------|-----------------------------------------------------------------------------------------|
-| 0 (default) | Boot LM1 (M7) if images found in container, no error if image missing                   |
-| 1           | Boot LM1 (AP), error if no image in container                                           |
-| 2           | Boot LM1 (M7 and AP), error if no image in container                                    |
+| 0 (default) | Boot LM1 (M7) error if missing images in container                                      |
+| 1           | Boot LM1 (AP), error if missing images in container                                     |
+| 2           | Boot LM1 (M7 and AP), error if missing images in container                              |
 
 The mx937alt config puts all cores in one LM and they share all IP. This config **isn't valid** but it is
 useful for testing OS drivers and starting various M7 images booted by the AP.

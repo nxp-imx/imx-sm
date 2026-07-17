@@ -81,19 +81,13 @@
         .rpcType = SM_RPC_SCMI, \
         .rpcInst = 0U, \
         .boot[0] = 2U, \
-        .bootSkip[0] = 1U, \
         .start = 1U, \
         .stop = 1U, \
         .boot[1] = 2U, \
-        .bootSkip[1] = 1U, \
         .boot[2] = 2U, \
-        .bootSkip[2] = 1U, \
         .boot[3] = 2U, \
-        .bootSkip[3] = 1U, \
         .boot[4] = 2U, \
-        .bootSkip[4] = 1U, \
         .boot[5] = 2U, \
-        .bootSkip[5] = 1U, \
     }
 
 /*--------------------------------------------------------------------------*/
