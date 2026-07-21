@@ -77,6 +77,7 @@
  */
 /** @{ */
 #define DEV_SM_SIVER_A0  0x00000000U  /*!< A0 */
+#define DEV_SM_SIVER_A1  0x00000001U  /*!< A1 */
 /** @} */
 
 /*!
