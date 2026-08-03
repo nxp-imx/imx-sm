@@ -73,10 +73,6 @@ static bool CPU_VirtLpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx,
 
 static GPC_CPU_CTRL_Type *const s_gpcCpuCtrlPtrs[] = GPC_CPU_CTRL_BASE_PTRS;
 
-static uint32_t s_cpuDdrMixDependMask;
-static uint32_t s_cpuNocMixDependMask;
-static uint32_t s_cpuWakeMixDependMask;
-
 static cpu_wdog_info_t const s_cpuWdogInfoM7P =
 {
     .secIrq = NotAvail_IRQn,
@@ -1890,12 +1886,6 @@ bool CPU_LpmConfigInit(uint32_t cpuIdx)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        /* Clear MIX dependency flags */
-        uint32_t cpuMask = (1UL << cpuIdx);
-        s_cpuDdrMixDependMask &= (~cpuMask);
-        s_cpuNocMixDependMask &= (~cpuMask);
-        s_cpuWakeMixDependMask &= (~cpuMask);
-
         /* Initialize CPU LPM MIX dependencies */
         rc = CPU_LpmMixDependSet(cpuIdx, CPU_PD_LPM_ON_RUN_WAIT_STOP);
 
@@ -1961,12 +1951,6 @@ bool CPU_LpmConfigDeInit(uint32_t cpuIdx, uint32_t lpmSetting)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        /* Clear MIX dependency flags */
-        uint32_t cpuMask = (1UL << cpuIdx);
-        s_cpuDdrMixDependMask &= (~cpuMask);
-        s_cpuNocMixDependMask &= (~cpuMask);
-        s_cpuWakeMixDependMask &= (~cpuMask);
-
         /* Remove CPU sleep status in evaluation of system suspend */
         if (lpmSetting == CPU_PD_LPM_ON_NEVER)
         {
@@ -2159,47 +2143,6 @@ bool CPU_PerLpiProcess(uint32_t cpuIdx, uint32_t sleepMode)
 /*--------------------------------------------------------------------------*/
 void CPU_MixPowerUpNotify(uint32_t srcMixIdx)
 {
-    uint32_t cpuMixDependMask = 0U;
-
-    switch (srcMixIdx)
-    {
-        case PWR_MIX_SLICE_IDX_DDR:
-            cpuMixDependMask = s_cpuDdrMixDependMask;
-            cpuMixDependMask &= (~s_cpuNocMixDependMask);
-            cpuMixDependMask &= (~s_cpuWakeMixDependMask);
-            s_cpuDdrMixDependMask = 0U;
-            break;
-
-        case PWR_MIX_SLICE_IDX_NOC:
-            cpuMixDependMask = s_cpuNocMixDependMask;
-            cpuMixDependMask &= (~s_cpuDdrMixDependMask);
-            cpuMixDependMask &= (~s_cpuWakeMixDependMask);
-            s_cpuNocMixDependMask = 0U;
-            break;
-
-        case PWR_MIX_SLICE_IDX_WAKEUP:
-            cpuMixDependMask = s_cpuWakeMixDependMask;
-            cpuMixDependMask &= (~s_cpuDdrMixDependMask);
-            cpuMixDependMask &= (~s_cpuNocMixDependMask);
-            s_cpuWakeMixDependMask = 0U;
-            break;
-
-        default:
-            ; /* Intentional empty default */
-            break;
-    }
-
-    /* Release CPUs with all dependencies done */
-    while (cpuMixDependMask != 0U)
-    {
-        /* Convert mask into index */
-        uint8_t cpuIdx = U8(31U - __CLZ(cpuMixDependMask));
-
-        (void) CPU_WaitSet(cpuIdx, false);
-
-        /* Clear CPU mask bit to mark done */
-        cpuMixDependMask &= (~(1UL << (cpuIdx)));
-    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -2207,42 +2150,6 @@ void CPU_MixPowerUpNotify(uint32_t srcMixIdx)
 /*--------------------------------------------------------------------------*/
 void CPU_MixPowerDownNotify(uint32_t srcMixIdx)
 {
-    uint32_t *cpuMixDependMask = NULL;
-
-    switch (srcMixIdx)
-    {
-        case PWR_MIX_SLICE_IDX_DDR:
-            cpuMixDependMask = &s_cpuDdrMixDependMask;
-            break;
-
-        case PWR_MIX_SLICE_IDX_NOC:
-            cpuMixDependMask = &s_cpuNocMixDependMask;
-            break;
-
-        case PWR_MIX_SLICE_IDX_WAKEUP:
-            cpuMixDependMask = &s_cpuWakeMixDependMask;
-            break;
-
-        default:
-            ; /* Intentional empty default */
-            break;
-    }
-
-    if (cpuMixDependMask != NULL)
-    {
-        uint32_t lpmSetting = 0U;
-        uint32_t cpuMask = (1UL << CPU_IDX_M7P);
-
-        if (SRC_MixCpuLpmGet(srcMixIdx, CPU_IDX_M7P, &lpmSetting))
-        {
-            /* If CPU has MIX dependency, set global flag and assert CPUWAIT */
-            if (lpmSetting != CPU_PD_LPM_ON_NEVER)
-            {
-                *cpuMixDependMask |= cpuMask;
-                (void) CPU_WaitSet(CPU_IDX_M7P, true);
-            }
-        }
-    }
 }
 
 /*--------------------------------------------------------------------------*/
