@@ -24,22 +24,20 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-- Fixed non-compliance issue with the clock protocol, added clockEnableDelay to
-  SCMI_ClockAttributes(), **not backwards compatible**
+- Added SCMI_MiscControlAttributes()
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
 
-The following are cfg file changes that customers **must** make to their cfg files
-and rebuild their config headers.
+- Added a lot of cfg files for i.MX937 boards
+- Added a lot of cfg files for multiple freedom boards
 
-- For i.MX94, removed AP-NS access to SM owned pins
-- For i.MX952, removed unused resources, added new pins (assigned to AP-NS)
+No changes are required to customer cfg files but they **must** rebuild their config
+headers due to parameter and version changes.
 
 Optional:
 
-- Defined fault reactions for mission and parity faults (default is system reset)
-- Lots of changes to cfg files delivered in *other*
+- Change FUSA permissions from PRIV to ALL
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
@@ -49,20 +47,14 @@ None
 Board Implementation Changes {#RN_ADD_BOARD_IMP}
 ============================
 
+- Added a board port for the i.MX95 15x15 LPDDR5 board
+- Added a board port for the i.MX937 freedom board
+
 Customers **must** make the following changes in their board port:
 
-- Disallowed ROM WDOG from resetting the system after SM WDOG enabled
-- Made debounce setting specific to rev B0 PMIC only
-- For i.MX94 boards, fixed bus expander mask to enable PMIC interrupts
+- Assuming board controls, add BRD_SM_ControlAttributes() and redirect
 
 Optional, but recommended:
 
-- Added clock overrides for display clocks (required for Linux)
-- Added capture of board init times
-- Use DEV_SM_SystemHalt() in place of infinite while loop (halting)
-- Use PMIC register defines
-- For i.MX94 boards, made init of the glitchfilter optional based on silicon rev,
-  let FRO go off in system suspend
-- Misc. coding standards and test coverage fixes
-
+- For i.MX94 A1, remove glitch filter support
 

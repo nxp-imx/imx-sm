@@ -2,431 +2,219 @@ Change List {#RN_CL}
 ===========
 
 The tables below also indicate which patch version, if any, in the previous release (
-imx_sm_2026q1) includes the change. Note some of these patches may not have been released yet and
+imx_sm_2026q2) includes the change. Note some of these patches may not have been released yet and
 the data could change.
 
-SM 2026Q2 Change List {#RN_P0}
+SM 2026Q3 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2026q1) and this release (imx_sm_2026q2).
+Below is a list of changes between the previous release (imx_sm_2026q2) and this release (imx_sm_2026q3).
 
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+| Key     | Summary                        | Patch | MX937<br> (A1) | MX94<br> (A1) | MX95<br> (B0) | MX95<br> (B1) | MX952<br> (A1) |
 |------------|-------------------------------|-------|---|---|---|---|---|
-| [SM-371](https://jira.sw.nxp.com/projects/SM/issues/SM-371) | Add support for i.MX94 A1 [[detail]](@ref RN_DETAIL_SM_371) |   | | | Y | | |
-| [SM-402](https://jira.sw.nxp.com/projects/SM/issues/SM-402) | Add support for i.MX952 A1 [[detail]](@ref RN_DETAIL_SM_402) |   | | | | | Y |
-| [SM-405](https://jira.sw.nxp.com/projects/SM/issues/SM-405) | Add shadow fuse read/write in monitor and also support no ECC finalization [[detail]](@ref RN_DETAIL_SM_405) |   | Y | Y | Y | Y | Y |
+| [SM-372](https://jira.sw.nxp.com/projects/SM/issues/SM-372) | Remove support for i.MX94 A0 [[detail]](@ref RN_DETAIL_SM_372) |   | | | | | |
+| [SM-379](https://jira.sw.nxp.com/projects/SM/issues/SM-379) | Add support for i.MX937 [[detail]](@ref RN_DETAIL_SM_379) |   | Y | | | | |
+| [SM-380](https://jira.sw.nxp.com/projects/SM/issues/SM-380) | Add support for the i.MX937 freedom board [[detail]](@ref RN_DETAIL_SM_380) |   | Y | | | | |
+| [SM-416](https://jira.sw.nxp.com/projects/SM/issues/SM-416) | Add perf.r possible command [[detail]](@ref RN_DETAIL_SM_416) |   | Y | Y | Y | Y | Y |
+| [SM-440](https://jira.sw.nxp.com/projects/SM/issues/SM-440) | Add support for the i.MX95 freedom board LP5 15*15 [[detail]](@ref RN_DETAIL_SM_440) |   | | | Y | Y | |
+| [SM-443](https://jira.sw.nxp.com/projects/SM/issues/SM-443) | Add i.MX937 jailhouse and rpmsg configuration files [[detail]](@ref RN_DETAIL_SM_443) |   | Y | | | | |
+| [SM-444](https://jira.sw.nxp.com/projects/SM/issues/SM-444) | Add Android support for i.MX95 15x15 freedom LPDDR5 board [[detail]](@ref RN_DETAIL_SM_444) |   | | | Y | Y | |
+| [SM-445](https://jira.sw.nxp.com/projects/SM/issues/SM-445) | Add rpmsg support for FRDM-IMX952 [[detail]](@ref RN_DETAIL_SM_445) |   | | | | | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+| Key     | Summary                        | Patch | MX937<br> (A1) | MX94<br> (A1) | MX95<br> (B0) | MX95<br> (B1) | MX952<br> (A1) |
 |------------|-------------------------------|-------|---|---|---|---|---|
-| [SM-317](https://jira.sw.nxp.com/projects/SM/issues/SM-317) | Test and coding standards improvements [[detail]](@ref RN_DETAIL_SM_317) |   | Y | Y | Y | Y | Y |
-| [SM-329](https://jira.sw.nxp.com/projects/SM/issues/SM-329) | Remove A55 access to the GPU CGC on i.MX952 [[detail]](@ref RN_DETAIL_SM_329) |   | | | | Y | Y |
-| [SM-348](https://jira.sw.nxp.com/projects/SM/issues/SM-348) | Upgrade GCC toolchain to 15.2.rel1 [[detail]](@ref RN_DETAIL_SM_348) |   | Y | Y | Y | Y | Y |
-| [SM-356](https://jira.sw.nxp.com/projects/SM/issues/SM-356) | Add support to read MBC block size and block count from TRDC registers in ERR command [[detail]](@ref RN_DETAIL_SM_356) |   | Y | Y | Y | Y | Y |
-| [SM-362](https://jira.sw.nxp.com/projects/SM/issues/SM-362) | Enhance monitor with volt.r range command [[detail]](@ref RN_DETAIL_SM_362) |   | Y | Y | Y | Y | Y |
-| [SM-367](https://jira.sw.nxp.com/projects/SM/issues/SM-367) | Add Android config for i.MX952 [[detail]](@ref RN_DETAIL_SM_367) |   | | | | Y | Y |
-| [SM-368](https://jira.sw.nxp.com/projects/SM/issues/SM-368) | Add additional init times to btime output [[detail]](@ref RN_DETAIL_SM_368) |   | Y | Y | Y | Y | Y |
-| [SM-374](https://jira.sw.nxp.com/projects/SM/issues/SM-374) | Make using the SMCT config tool fails to abort when python is not available [[detail]](@ref RN_DETAIL_SM_374) |   | Y | Y | Y | Y | Y |
-| [SM-375](https://jira.sw.nxp.com/projects/SM/issues/SM-375) | Fix coding standard issues from new version of scan tools [[detail]](@ref RN_DETAIL_SM_375) |   | Y | Y | Y | Y | Y |
-| [SM-378](https://jira.sw.nxp.com/projects/SM/issues/SM-378) | Enable mission and parity faults [[detail]](@ref RN_DETAIL_SM_378) |   | Y | Y | Y | Y | Y |
-| [SM-384](https://jira.sw.nxp.com/projects/SM/issues/SM-384) | Switch from macros to wrapper functions to enable line coverage testing [[detail]](@ref RN_DETAIL_SM_384) |   | Y | Y | Y | Y | Y |
-| [SM-385](https://jira.sw.nxp.com/projects/SM/issues/SM-385) | Enable auto boot for Android on i.MX952 [[detail]](@ref RN_DETAIL_SM_385) |   | | | | Y | Y |
-| [SM-386](https://jira.sw.nxp.com/projects/SM/issues/SM-386) | Add Android cfg file for i.MX95 19x19 FRDM board [[detail]](@ref RN_DETAIL_SM_386) |   | Y | | | | |
-| [SM-394](https://jira.sw.nxp.com/projects/SM/issues/SM-394) | Android cfg changes to move some VPU resources into secure env [[detail]](@ref RN_DETAIL_SM_394) |   | | | | Y | Y |
-| [SM-395](https://jira.sw.nxp.com/projects/SM/issues/SM-395) | Enable debug halt for M33 WDOGs during SM startup [[detail]](@ref RN_DETAIL_SM_395) |   | Y | Y | Y | Y | Y |
-| [SM-396](https://jira.sw.nxp.com/projects/SM/issues/SM-396) | Move all MISRA exceptions into SM codebase as comments [[detail]](@ref RN_DETAIL_SM_396) |   | Y | Y | Y | Y | Y |
-| [SM-397](https://jira.sw.nxp.com/projects/SM/issues/SM-397) | Process TMPSNS handler only if MIX is powered on [[detail]](@ref RN_DETAIL_SM_397) |   | Y | Y | Y | Y | Y |
-| [SM-400](https://jira.sw.nxp.com/projects/SM/issues/SM-400) | The crc.h filename conflicts with AUTOSAR specification [[detail]](@ref RN_DETAIL_SM_400) |   | Y | Y | Y | Y | Y |
-| [SM-409](https://jira.sw.nxp.com/projects/SM/issues/SM-409) | Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer [[detail]](@ref RN_DETAIL_SM_409) |   | Y | Y | Y | Y | Y |
-| [SM-410](https://jira.sw.nxp.com/projects/SM/issues/SM-410) | In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 [[detail]](@ref RN_DETAIL_SM_410) |   | Y | | | | |
-| [SM-411](https://jira.sw.nxp.com/projects/SM/issues/SM-411) | Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM [[detail]](@ref RN_DETAIL_SM_411) |   | Y | Y | Y | Y | Y |
-| [SM-417](https://jira.sw.nxp.com/projects/SM/issues/SM-417) | Config updates for mx952evkrpmsg.cfg [[detail]](@ref RN_DETAIL_SM_417) |   | | | | Y | Y |
-| [SM-427](https://jira.sw.nxp.com/projects/SM/issues/SM-427) | Sync configs for android [[detail]](@ref RN_DETAIL_SM_427) |   | Y | | | | |
+| [SM-399](https://jira.sw.nxp.com/projects/SM/issues/SM-399) | Test and coding standards improvements [[detail]](@ref RN_DETAIL_SM_399) |   | Y | Y | Y | Y | Y |
+| [SM-422](https://jira.sw.nxp.com/projects/SM/issues/SM-422) | Change agent seenvId numbering from one-based to zero-based [[detail]](@ref RN_DETAIL_SM_422) |   | Y | Y | Y | Y | Y |
+| [SM-425](https://jira.sw.nxp.com/projects/SM/issues/SM-425) | Remove redundant MX95 power domain dependency tracking [[detail]](@ref RN_DETAIL_SM_425) |   | | | Y | Y | |
+| [SM-431](https://jira.sw.nxp.com/projects/SM/issues/SM-431) | Move cm0p resources to secure domain for secure local dimming module for Android [[detail]](@ref RN_DETAIL_SM_431) |   | | | | | Y |
+| [SM-435](https://jira.sw.nxp.com/projects/SM/issues/SM-435) | Sync common changes across devices [[detail]](@ref RN_DETAIL_SM_435) |   | Y | Y | Y | Y | Y |
+| [SM-437](https://jira.sw.nxp.com/projects/SM/issues/SM-437) | Add MISC protocol API to get control attributes [[detail]](@ref RN_DETAIL_SM_437) |   | Y | Y | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+| Key     | Summary                        | Patch | MX937<br> (A1) | MX94<br> (A1) | MX95<br> (B0) | MX95<br> (B1) | MX952<br> (A1) |
 |------------|-------------------------------|-------|---|---|---|---|---|
-| [SM-363](https://jira.sw.nxp.com/projects/SM/issues/SM-363) | Continuous reset if DDR not configured by OEI [[detail]](@ref RN_DETAIL_SM_363) |   | | Y | | | |
-| [SM-369](https://jira.sw.nxp.com/projects/SM/issues/SM-369) | Fix SCMI compliance issue with clock attribute message [[detail]](@ref RN_DETAIL_SM_369) |   | Y | Y | Y | Y | Y |
-| [SM-373](https://jira.sw.nxp.com/projects/SM/issues/SM-373) | i.MX94 EVK board port does not unmask PMIC interrupt [[detail]](@ref RN_DETAIL_SM_373) |   | | Y | Y | | |
-| [SM-376](https://jira.sw.nxp.com/projects/SM/issues/SM-376) | Too many arguments on monitor command overflows buffers [[detail]](@ref RN_DETAIL_SM_376) |   | Y | Y | Y | Y | Y |
-| [SM-377](https://jira.sw.nxp.com/projects/SM/issues/SM-377) | Remove undefined configtool resources [[detail]](@ref RN_DETAIL_SM_377) |   | | | | Y | Y |
-| [SM-381](https://jira.sw.nxp.com/projects/SM/issues/SM-381) | Insufficient error checking when parsing monitor commands [[detail]](@ref RN_DETAIL_SM_381) |   | Y | Y | Y | Y | Y |
-| [SM-383](https://jira.sw.nxp.com/projects/SM/issues/SM-383) | Fuse FRO trim value not used [[detail]](@ref RN_DETAIL_SM_383) |   | Y | Y | Y | Y | Y |
-| [SM-393](https://jira.sw.nxp.com/projects/SM/issues/SM-393) | Incorrect MDAC for i.MX952 VPU-related resources [[detail]](@ref RN_DETAIL_SM_393) |   | | | | Y | Y |
-| [SM-401](https://jira.sw.nxp.com/projects/SM/issues/SM-401) | Add missing DAISY IOMUX permissions to config file for i.MX952 [[detail]](@ref RN_DETAIL_SM_401) |   | | | | Y | Y |
-| [SM-403](https://jira.sw.nxp.com/projects/SM/issues/SM-403) | Parallel make does not handle the all target [[detail]](@ref RN_DETAIL_SM_403) |   | Y | Y | Y | Y | Y |
-| [SM-406](https://jira.sw.nxp.com/projects/SM/issues/SM-406) | Incorrect handling of seenvId in FUSA SEENV state management functions [[detail]](@ref RN_DETAIL_SM_406) |   | Y | Y | Y | Y | Y |
-| [SM-408](https://jira.sw.nxp.com/projects/SM/issues/SM-408) | Some SM owned pins also assigned to other LMs [[detail]](@ref RN_DETAIL_SM_408) |   | | Y | Y | | |
-| [SM-412](https://jira.sw.nxp.com/projects/SM/issues/SM-412) | Add missing pins for i.MX952 [[detail]](@ref RN_DETAIL_SM_412) |   | | | | Y | Y |
-| [SM-414](https://jira.sw.nxp.com/projects/SM/issues/SM-414) | Early device init errors not retained [[detail]](@ref RN_DETAIL_SM_414) |   | Y | Y | Y | Y | Y |
-| [SM-426](https://jira.sw.nxp.com/projects/SM/issues/SM-426) | Second M7 resource incorrectly mapped to the first M7 performance domain [[detail]](@ref RN_DETAIL_SM_426) |   | | Y | Y | | |
+| [SM-420](https://jira.sw.nxp.com/projects/SM/issues/SM-420) | Configtool ends with success (0) even on error [[detail]](@ref RN_DETAIL_SM_420) |   | Y | Y | Y | Y | Y |
+| [SM-429](https://jira.sw.nxp.com/projects/SM/issues/SM-429) | Restrict access to resources which are disabled in fuses [[detail]](@ref RN_DETAIL_SM_429) |   | Y | Y | Y | Y | Y |
+| [SM-430](https://jira.sw.nxp.com/projects/SM/issues/SM-430) | i.MX943 EVK I2C2 pinmuxing is impossible [[detail]](@ref RN_DETAIL_SM_430) |   | | Y | | | |
+| [SM-432](https://jira.sw.nxp.com/projects/SM/issues/SM-432) | Minor errors in alt and emul config files [[detail]](@ref RN_DETAIL_SM_432) |   | | Y | | | |
 
-Silicon Workaround {#RN_CL_REQ}
+Task {#RN_CL_TASK}
 ------------
 
-These are a mix of silicon errata workarounds and recommended usage changes.
-
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+| Key     | Summary                        | Patch | MX937<br> (A1) | MX94<br> (A1) | MX95<br> (B0) | MX95<br> (B1) | MX952<br> (A1) |
 |------------|-------------------------------|-------|---|---|---|---|---|
-| [SM-342](https://jira.sw.nxp.com/projects/SM/issues/SM-342) | Implement SWA for ERR053228 (CORTEXAMIX MTR repair can fail at various clock rates) [[detail]](@ref RN_DETAIL_SM_342) |   | | Y | Y | | |
-| [SM-358](https://jira.sw.nxp.com/projects/SM/issues/SM-358) | Manage WDOG instances enabled during ROM phase [[detail]](@ref RN_DETAIL_SM_358) |   | Y | Y | | Y | Y |
-| [SM-365](https://jira.sw.nxp.com/projects/SM/issues/SM-365) | Support i.MX952 DDR PHY scaling restrictions for VDD_SOC [[detail]](@ref RN_DETAIL_SM_365) |   | | | | Y | Y |
-| [SM-366](https://jira.sw.nxp.com/projects/SM/issues/SM-366) | Avoid applying PF09 RevB errata workarounds to other revs [[detail]](@ref RN_DETAIL_SM_366) |   | Y | Y | Y | Y | Y |
-| [SM-390](https://jira.sw.nxp.com/projects/SM/issues/SM-390) | Fix ENET clock to 266MHz on iMX952 [[detail]](@ref RN_DETAIL_SM_390) |   | | | | Y | Y |
-| [SM-392](https://jira.sw.nxp.com/projects/SM/issues/SM-392) | Disable mission faults as the response time for many PCIe cards exceeds 10ms [[detail]](@ref RN_DETAIL_SM_392) |   | Y | Y | Y | Y | Y |
-| [SM-398](https://jira.sw.nxp.com/projects/SM/issues/SM-398) | Enable DDR RX replica SW workaround [[detail]](@ref RN_DETAIL_SM_398) |   | | | | Y | Y |
-| [SM-413](https://jira.sw.nxp.com/projects/SM/issues/SM-413) | Disable FCCU parity fault 61 due to incorrect triggers (ERR053263) [[detail]](@ref RN_DETAIL_SM_413) |   | Y | Y | Y | Y | Y |
+| [SM-439](https://jira.sw.nxp.com/projects/SM/issues/SM-439) | SCMI_FusaFaultSet() documentation has incorrect flag use |   | Y | Y | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) | MX94<br> (A1) | MX952<br> (A0) | MX952<br> (A1) |
+| Key     | Summary                        | Patch | MX937<br> (A1) | MX94<br> (A1) | MX95<br> (B0) | MX95<br> (B1) | MX952<br> (A1) |
 |------------|-------------------------------|-------|---|---|---|---|---|
-| [SM-364](https://jira.sw.nxp.com/projects/SM/issues/SM-364) | SM 2026Q2 documentation updates |   | Y | Y | Y | Y | Y |
+| [SM-407](https://jira.sw.nxp.com/projects/SM/issues/SM-407) | Remove support for i.MX952 A0 [[detail]](@ref RN_DETAIL_SM_407) |   | | | | | |
+| [SM-421](https://jira.sw.nxp.com/projects/SM/issues/SM-421) | SM 2026Q3 documentation updates |   | Y | Y | Y | Y | Y |
+| [SM-442](https://jira.sw.nxp.com/projects/SM/issues/SM-442) | mx94alt mSel description incomplete in docs [[detail]](@ref RN_DETAIL_SM_442) |   | | Y | | | |
+| [SM-446](https://jira.sw.nxp.com/projects/SM/issues/SM-446) | Add support for i.MX95 B1 [[detail]](@ref RN_DETAIL_SM_446) |   | | | | Y | |
 
 Details {#CL_DETAIL}
 =======
 
 This section provides details for select changes.
 
-SM-317: Test and coding standards improvements {#RN_DETAIL_SM_317}
+SM-372: Remove support for i.MX94 A0 {#RN_DETAIL_SM_372}
 ----------
 
-Added test code to increase function, statement, and branch coverage.
+Removed support for i.MX94 A0. This included removing the dynamic glitch filter code.
 
-SM-329: Remove A55 access to the GPU CGC on i.MX952 {#RN_DETAIL_SM_329}
+
+SM-379: Add support for i.MX937 {#RN_DETAIL_SM_379}
 ----------
 
-Enable GPU auto clock gating and remove AP access to the GPU LPCG node. 
+Added device support for [i.MX937 family devices](@ref DEV_SM_MX937) inc. i.MX9375. See the devices/MIMX937 directory.
 
-SM-342: Implement SWA for ERR053228 (CORTEXAMIX MTR repair can fail at various clock rates) {#RN_DETAIL_SM_342}
+Cfg files targeted at this device should include the following:
+
+    MAKE soc=MIMX937, board=<board name>, build=gcc_cross
+
+    include ../devices/MIMX937/configtool/device.cfg
+
+Note the list of resources, memory areas, etc. are different from i.MX95. See the configs/mx937frdm.cfg file for reference.
+
+SM-380: Add support for the i.MX937 freedom board {#RN_DETAIL_SM_380}
 ----------
 
-Add a delay to the reset de-assert phase of the mix power up sequence. 
- 
+Added board support for the [i.MX937 FRDM](@ref BRD_SM_MX937FRDM). See the boards/mcimx937frdm directory. Compile with the following:
 
-SM-348: Upgrade GCC toolchain to 15.2.rel1 {#RN_DETAIL_SM_348}
+    make config=mx937frdm
+
+Information about this port can be found in the [NXP i.MX937 FRDM](@ref PORT_MX937_FRDM) section of the RM.
+
+Cfg files targeted at this board should include the following:
+
+    MAKE soc=MIMX937, board=mcimx937frdm, build=gcc_cross
+
+
+SM-399: Test and coding standards improvements {#RN_DETAIL_SM_399}
 ----------
 
-Moved to the 15.2.rel1 version of the GCC toolchain. No code changes required.
+Removed the SIMU macro dependency and updated the test and simulation code to run all tests across all boards and SIMU.
 
-[arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi.tar.xz](https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-x86_64-arm-none-eabi.tar.xz)
-
-SM-356: Add support to read MBC block size and block count from TRDC registers in ERR command {#RN_DETAIL_SM_356}
+SM-407: Remove support for i.MX952 A0 {#RN_DETAIL_SM_407}
 ----------
 
-Logic added to read the MBC slave memory block sizes and the number of blocks from the global configuration register which will enable accurate calculation of the block number for addresses reported in the Domain Error Word Register during access violation detection by the MBC.
+Removed support for i.MX952 A0. This is just a doc change. Also note i.MX952 A0 is no longer tested as part of the SM release.
 
-SM-358: Manage WDOG instances enabled during ROM phase {#RN_DETAIL_SM_358}
+SM-416: Add perf.r possible command {#RN_DETAIL_SM_416}
 ----------
 
-A fuse can be blown to configure the ROM to enable a watchdog (usually WDOG1) at boot. As WDOG1 does not go to the FCCU, the SM uses WDOG2 which does. As a result, the SM needs to disable (or mask in the SRC which is faster) WDOG1 after WDOG2 is configured and providing protection.
+Added the perf.r [domainId] possible command to display all available performance levels and corresponding frequencies for a given domain (defaults to all domains if not specified).
 
-This change is to modify NXP reference board ports to mask WDOG1 immediately after full configuration of WDOG2. If customers plan to use the ROM WDOG feature, they will need similar code in their board port (board.c).
-
-SM-362: Enhance monitor with volt.r range command {#RN_DETAIL_SM_362}
+SM-420: Configtool ends with success (0) even on error {#RN_DETAIL_SM_420}
 ----------
 
-Monitor command "volt.r" has been enhanced to support "range" option.
+Modified configtool script to return 1 on all exits due to an error.
 
-    volt.r [vlt]            display mode/microvolts of vlt (default = all)
-    volt.r [vlt] range      display range of vlt (default = all)
-
-SM-363: Continuous reset if DDR not configured by OEI {#RN_DETAIL_SM_363}
+SM-422: Change agent seenvId numbering from one-based to zero-based {#RN_DETAIL_SM_422}
 ----------
 
-Added code to check DDR clocks to see if enabled by OEI. If not, power down the DDR MIX.
+Modified configtool to create 0-based ssenvId values. Updated the configtool version to 3. Modified the FuSa protocol RPC functions to use the cfg value and not subtract one. Customers need to regenerate headers after this change. 
 
-Note the issue only occurred on i.MX94 but the solution was implemented on all SoC to keep the code aligned.
-
-SM-365: Support i.MX952 DDR PHY scaling restrictions for VDD_SOC {#RN_DETAIL_SM_365}
+SM-425: Remove redundant MX95 power domain dependency tracking {#RN_DETAIL_SM_425}
 ----------
 
-The i.MX952 internally connects DDR PHY to VDD_SOC.  DDR training is dependent on the DDR PHY voltage and, therefore, sensitive to changes in VDD_SOC.  SM support of SCMI performance domains supplied by VDD_SOC will now be constrained to avoid modifying VDD_SOC while DDR is active.
+The SM device-layer support for MX95 SCMI CPU protocol previously included software logic for power domain dependency tracking of DDRMIX, NOCMIX, and WAKEUPMIX.  This logic is now redundant and has been removed to align with other members of the MX9 family.
 
-SM-366: Avoid applying PF09 RevB errata workarounds to other revs {#RN_DETAIL_SM_366}
+SM-429: Restrict access to resources which are disabled in fuses {#RN_DETAIL_SM_429}
 ----------
 
-Used PF09 silicon rev to apply errata workarounds.
+Resources disabled in fuses are kept reserved. Clock/perf/power/reset dumps from SM will only list resources that are not disabled by fuses.
 
-SM-367: Add Android config for i.MX952 {#RN_DETAIL_SM_367}
+SM-430: i.MX943 EVK I2C2 pinmuxing is impossible {#RN_DETAIL_SM_430}
 ----------
 
-Added a new mx952evk-android.cfg file for use with Android. This file is in the others directory so the cfg must be built.
+Moved conflicting pinmux setting code under correct ifdef. 
 
-SM-368: Add additional init times to btime output {#RN_DETAIL_SM_368}
+SM-431: Move cm0p resources to secure domain for secure local dimming module for Android {#RN_DETAIL_SM_431}
 ----------
 
-Added output of device and board init times with new "btime init" command (actually btime with any argument). Customers should add the same board code metrics capture to their board port. This will allow customers to optimize their board design and initialization.
+Moved ownership of the M0+ core in the display mix to the AP-S (aka secure) agent.
 
-SM-369: Fix SCMI compliance issue with clock attribute message {#RN_DETAIL_SM_369}
+SM-432: Minor errors in alt and emul config files {#RN_DETAIL_SM_432}
 ----------
 
-The SCMI CLOCK_ATTRIBUTES message was missing a new field added in SCMI 3.1 final. This field is clockEnableDelay. This fix adds the field and always sets to 0 in order to be compliant. This change is not backwards compatible as it makes the response message longer.
+Fixed an i.MX94 ALT config issue with an M7 start step using an already used step. Removed some unused resource names.
 
-Depending on the agent SCMI implementation, this change may require the agent be updated to accept the longer message response. SPL/ATF/u-boot/Linux/MCUX-SDK must all be on the 2026 Q2 version or later.
-
-SM-371: Add support for i.MX94 A1 {#RN_DETAIL_SM_371}
+SM-435: Sync common changes across devices {#RN_DETAIL_SM_435}
 ----------
 
-Modified the i.MX94 device support to conditionalize some behaviors based on silicon rev. This includes using the glitch filter bypass on A1 (or later) and only enabling the glitch filter for A0. Only keeping the FRO enabled during suspend on A0 (the FRO clocks the glitch filter).
+Remove the code and update the header files to incorporate the FRO coarsen bit and GPC_EFUSE_CTRL changes in the GPC global configuration across all platforms, in alignment with the updated CRR headers received from the SDK team. Also fixed various coding standards issues.
 
-SM-373: i.MX94 EVK board port does not unmask PMIC interrupt {#RN_DETAIL_SM_373}
+SM-437: Add MISC protocol API to get control attributes {#RN_DETAIL_SM_437}
 ----------
 
-Updated the PCAL6416A_INITIAL_MASK define for the i.MX94 EVK board port. It did not unmask the interrupt from the PMIC. Customers only need to do this if they have copied the bus expander logic from the EVK.
+Added a new SCMI MISC protocol message, ::SCMI_MSG_MISC_CONTROL_ATTRIBUTES. This message can be called with the client SCMI_MiscControlAttributes() function. It is used to get the attributes of a control. Attributes indicate which MISC message/functions are valid for that control: NOTIFY, SET, GET, EXT_SET, EXT_GET, ACTION.
 
-SM-374: Make using the SMCT config tool fails to abort when python is not available {#RN_DETAIL_SM_374}
+SM-440: Add support for the i.MX95 freedom board LP5 15*15 {#RN_DETAIL_SM_440}
 ----------
 
-New way of launching the 'smct' configuration tool during build process. The 'make cfg SMCT=1' will attempt to launch the smct tool assuming it is installed on PATH. Alternatively, use the 'make cfg SMCT=smct-dir'. 
+Added support for the i.MX95 FRDM LP5 (15x15) board. Refer the boards/mcimx95frdm directory for the board-specific implementation.
 
-SM-375: Fix coding standard issues from new version of scan tools {#RN_DETAIL_SM_375}
+Build command:
+
+    make config=mx95frdm
+
+SM-442: mx94alt mSel description incomplete in docs {#RN_DETAIL_SM_442}
 ----------
 
-Fixed MISRA issues identified by Coverity scan.
+The cfg skip feature is for LM only, not CPUs in an LM. As the mx94alt cfg defines only a single user LM, the skip feature is useless. Removed all use of the skip flag from this cfg. Reminder the alt cfg files are not for production. They are only for NXP testing. 
 
-SM-376: Too many arguments on monitor command overflows buffers {#RN_DETAIL_SM_376}
+Updated porting docs to reflect the correct behavior for various mSel.
+
+
+
+SM-443: Add i.MX937 jailhouse and rpmsg configuration files {#RN_DETAIL_SM_443}
 ----------
 
-Added buffer overflow checks to the monitor code. Increased the buffer size to 30 to allow the 24+3 word commands to extctrl.w for the PCA2131 RTC.
+Added two new SM config files: mx937frdmjailhouse.cfg and mx937frdmrpmsg.cfg.
 
-SM-377: Remove undefined configtool resources {#RN_DETAIL_SM_377}
+Build command:
+
+    make config=mx937frdmjailhouse cfg
+    make config=mx937frdmjailhouse
+
+And:
+
+    make config=mx937frdmrpmsg cfg
+    make config=mx937frdmrpmsg
+
+
+SM-444: Add Android support for i.MX95 15x15 freedom LPDDR5 board {#RN_DETAIL_SM_444}
 ----------
 
-Removed unused configtool resources from cfg files. None of these were used so removal does not change the resulting config header files.
- 
-- CLK_ELE
-- ATU_M
-- GPV_MAIN
-- JTAG
-- SRAM_CTL_N
-- CLOCK_ISI
-- CAN_FD4
-- CAN_FD5
-- PCI2_LUT0
-- PCI2_LUT1
-- PCI2_LUT2
-- PCI2_LUT3
-- PCI2_LUT4
-- PCI2_LUT5
-- PCI2_LUT6
-- PCI2_LUT7
-- PCIE2_OUT
-- PCIE2_ROOT
-- SPDIF1
+Added an SM config file for running Android on the i.MX95 LPDDR5 Freedom board.
 
-Customers should also remove any reference to these in their cfg files.
+    make config=mx95frdm-android cfg
+    make config=mx95frdm-android
 
-SM-378: Enable mission and parity faults {#RN_DETAIL_SM_378}
+Note builds for the i.MX95 LPDDR4 Freedom board should use the EVK versions of the configuration file as at the SM-level that board is compatible with the EVK. The LPDDR5 board is not due to PMIC changes.
+
+SM-445: Add rpmsg support for FRDM-IMX952 {#RN_DETAIL_SM_445}
 ----------
 
-Enable Mission and Parity Faults. Set the NOC fabric timeouts to maximum.
+Added a new config file for rpmsg use with the i.MX952 Freedom board. Compile with:
 
-Note some of these were later disabled as part of SM-413. Can be reenabled by reversing that one change but be aware PCI use can trigger the mission faults.
+    make config=mx952frdmrpmsg cfg
+    make config=mx952frdmrpmsg
 
-SM-381: Insufficient error checking when parsing monitor commands {#RN_DETAIL_SM_381}
+SM-446: Add support for i.MX95 B1 {#RN_DETAIL_SM_446}
 ----------
 
-The SM debug monitor did not fully check arguments for validity in a few cases. All failing cases are parsing where a numerical argument is expected but instead a text argument is entered. In these cases, the text is treated as 0 rather than an invalid input. This could result in an unexpected result or it might still result in an error (maybe different error) if 0 is not a valid parameter.
-
-- perf.w domain text
-- clock.r clock ex text
-- clock.w clock ex text text
-- md text text
-- mm text text
-- pmic.r text text
-- pmic.w text text text
-
-
-SM-383: Fuse FRO trim value not used {#RN_DETAIL_SM_383}
-----------
-
-Ensure the fuse cache is initialized very early in the boot sequence.
-
-SM-384: Switch from macros to wrapper functions to enable line coverage testing {#RN_DETAIL_SM_384}
-----------
-
-The methodology for testing error handling has been changed. Before SM_TEST macros were placed in the code to force error responses. Those have all been removed and instead the GNU linker wrap feature is used. This feature allows linker phase wrapping of lower-level functions to then alter response behavior to for calls from upper layer code.
-
-SM-385: Enable auto boot for Android on i.MX952 {#RN_DETAIL_SM_385}
-----------
-
-Updated Android cfg to boot the AP core on button press.
-
-SM-386: Add Android cfg file for i.MX95 19x19 FRDM board {#RN_DETAIL_SM_386}
-----------
-
-Add Android cfg file for i.MX95 19x19 FRDM board. The file is mx95frdm-pro-android.cfg and in the other directory so the cfg must be built.
-
-SM-390: Fix ENET clock to 266MHz on iMX952 {#RN_DETAIL_SM_390}
-----------
-
-Drop ENET clock to 266MHz to support both SGMII and RGMII modes
-
-SM-392: Disable mission faults as the response time for many PCIe cards exceeds 10ms {#RN_DETAIL_SM_392}
-----------
-
-Disable NOCMIX and WakeupMIX mission faults since the max timeout allowed by current HW design is lower than the minimum timeout specified by many PCIE devices. 
-
-SM-393: Incorrect MDAC for i.MX952 VPU-related resources {#RN_DETAIL_SM_393}
-----------
-
-Updated the VPU resource mapping to be consistent with the i.MX952 RM.
-
-SM-394: Android cfg changes to move some VPU resources into secure env {#RN_DETAIL_SM_394}
-----------
-
-Moved the following resources from AP-NS to AP-S.
-
-- VPU_DEC
-- VPU_DEC1
-- VPU_DEC2
-
-This is to support secure video decode in Android.
-
-SM-395: Enable debug halt for M33 WDOGs during SM startup {#RN_DETAIL_SM_395}
-----------
-
-Modified startup code to configure WDOG 1/2 to halt when a debugger is attached. Adding a looper before this at the reset vector will result in a reset if WDOG1 is enabled in ROM. Halting with a debugger at the reset vector will also result in a reset.
-
-SM-396: Move all MISRA exceptions into SM codebase as comments {#RN_DETAIL_SM_396}
-----------
-
-Most MISRA violations were only exceptioned in the scan tool server. Moved exception info to the source code using scan tool exception comments and a comment with the explanation.
-
-SM-397: Process TMPSNS handler only if MIX is powered on {#RN_DETAIL_SM_397}
-----------
-
-Updated the TMPSNS sensor handler to access sensor registers only when the associated MIX power domain is powered on.
-
-SM-398: Enable DDR RX replica SW workaround {#RN_DETAIL_SM_398}
-----------
-
-Modified the i.MX952 configs to enable DDR RX Replica SW workaround.
-
-SM-400: The crc.h filename conflicts with AUTOSAR specification {#RN_DETAIL_SM_400}
-----------
-
-Renamed crc.h to sm_crc.h and crc.c to sm_crc.c.
-
-SM-401: Add missing DAISY IOMUX permissions to config file for i.MX952 {#RN_DETAIL_SM_401}
-----------
-
-Added USB related DAISY entries to config file. Customers would need to do the same for their custom config files. 
-
-SM-402: Add support for i.MX952 A1 {#RN_DETAIL_SM_402}
-----------
-
-No SM changes required for this new i.MX952 silicon revision.
-
-SM-403: Parallel make does not handle the all target {#RN_DETAIL_SM_403}
-----------
-
-Modified makefile "all" target to serialize clean and image build.
-
-SM-405: Add shadow fuse read/write in monitor and also support no ECC finalization {#RN_DETAIL_SM_405}
-----------
-
-Added sfuse.r/sfuse.w commands to interact with fuse shadows. Added 3rd parameter to fuse.w to not finalize the ECC.
-
-| Command                     | Description                                                  |
-|-----------------------------|--------------------------------------------------------------|
-| fuse.r *wordIdx* [*count*]  | display *count* number of fuse words starting at *wordIdx*   |
-| fuse.w *wordIdx* *value* [*noecc*]   | write *value* to fuse *wordIdx* (try) *noecc* update|
-| sfuse.r *wordIdx* [*count*] | display *count* no of words starting at *wordIdx* from shadows|
-| sfuse.w *wordIdx* *value*   | write *value* to fuse shadows *wordIdx* (if possible)        |
-
-
-SM-406: Incorrect handling of seenvId in FUSA SEENV state management functions {#RN_DETAIL_SM_406}
-----------
-
-Fixed incorrect seenvId handling in FUSA SEENV state management functions:
-
-- LMM_FusaSeenvStateGet(): Updated to use target->seenvId to get the seenvState.
-- LMM_FusaSeenvStateSet(): Updated to use seenvState parameter to set the seenvState.
-- SCMI RPC handlers: Updated to add offset adjustments to caller's seenvId in FusaSeenvStateGet() and FusaSeenvStateSet() functions.
-
-SM-408: Some SM owned pins also assigned to other LMs {#RN_DETAIL_SM_408}
-----------
-
-Removed duplicate SM-owned pin assignments and corrected LM ownership in imx94evk configuration.
-
-SM-409: Refactor DISP1PIX and LDBPLL clock prepare functionality to board layer {#RN_DETAIL_SM_409}
-----------
-
-Some operating systems, such as Linux, do not currently support automatically setting the parent rate of SCMI-based clocks. An example of this can be seen with the DISP1PIX clock on the i.MX 95 SoC. This means only a single parent frequency is supported at
-runtime, and any set rate calls for a clock root (such as DISP1PIX) must request a rate that is divisible from this initial parent PLL frequency.
-
-This code redirects an incoming clock set rate call from the operating system and will automatically set the parent clock's rate based on a table of known working frequency combinations. This mechanism is referred to as clock source preparation, and at present only the DISP1PIX and LDBPLL clocks are supported.
-
-The SM device layer maintains a state variable (SRCPRE) to indicate if clock source preparation should occur. By default, the clock source preparation behavior is ENABLED.
-This variable can be changed with the clock extended function using the DEV_SM_CLOCK_EXT_SRCPRE value. An agent, such as Linux, can call SCMI_ClockConfigSet() to disable it. When SRCPRE is enabled and a set rate request is received for a supported clock, the appropriate board code may:
-
-- Detect known pixel clock rates (e.g. 297MHz, 148.5MHz, etc.)
-- Compute PLL parameters (mfi, mfn, odiv)
-- Program the appropriate PLL directly via: FRACTPLL_UpdateRate()
-- Force rounding mode to CLK_ROUND_AUTO
-
-Customers may want to duplicate this functionality in their board ports and fine tune it for their specific display use-case.
-
-SM-410: In the mx95evkrpmsg cfg give AP partial ownership of EDMA1/EDMA2 {#RN_DETAIL_SM_410}
-----------
-
-In the mx95evkrpmsg.cfg file, moved most of the eDMA1/2 resource from the M7 to AP-NS.
-
-SM-411: Request EXCLUSIVE permission for LMM protocol commands when agent controls a foreign LM {#RN_DETAIL_SM_411}
-----------
-
-SCMI LMM protocol permission check updated. An EXCLUSIVE permission level is required when a client agent controls a foreign LM. The PRIV level remains good to access agent's own parent LM. 
-
-SM-412: Add missing pins for i.MX952 {#RN_DETAIL_SM_412}
-----------
-
-Added the following missing pins:
-
-    GPIO_IO38   42U
-    GPIO_IO39   43U
-    GPIO_IO40   44U
-    LD_SPI_CS0  45U
-    LD_SPI_SCK  46U
-    LD_SPI_DI   47U
-    LD_SPI_DO   48U
-    LD_HSYNC    49U
-    LD_VSYNC    50U
-    LD_GPIO0    51U
-    LD_GPIO1    52U
-
-SM-413: Disable FCCU parity fault 61 due to incorrect triggers (ERR053263) {#RN_DETAIL_SM_413}
-----------
-
-Disable fault 61 due to ERR053263. 
-
-SM-414: Early device init errors not retained {#RN_DETAIL_SM_414}
-----------
-
-During device init, early error responses were overwritten with DEV_SM_SUCCESS. This would cause additional init steps to be run and possibly bus error. Code restructured to not do this overwrite. 
-
-SM-417: Config updates for mx952evkrpmsg.cfg {#RN_DETAIL_SM_417}
-----------
-
-For the mx952evkrpmsg.cfg file, moved SAI6 from AP-NS to M7. Also configured M7 as secure so it can access the secure parts of the RGPIO.
-
-SM-426: Second M7 resource incorrectly mapped to the first M7 performance domain {#RN_DETAIL_SM_426}
-----------
-
-Fixed the mapping in the configtool source files. Rebuilt all of the header files. Customers should also rebuild their header files using the configtool.
-
-SM-427: Sync configs for android {#RN_DETAIL_SM_427}
-----------
-
-Pulled changes from the mx95evk.cfg into the matching Android config file.
+Added support for i.MX95 B1. This is just a doc change.
 

@@ -33,9 +33,14 @@ Highlights {#RN_HIGH}
 
 Added:
 
-- **Support for i.MX94 A1**
-- **Support for i.MX952 A1** (no changes, just testing)
-- Added shadow fuse commands to the debug monitor
+- **Support for i.MX937**
+- Support for the i.MX937 freedom board (inc. various configurations)
+- Support for the i.MX95 freedom board (inc. various configurations)
+- Enhancements to the debug monitor
+
+Removed:
+
+- **Support for i.MX94 A0**						
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.
