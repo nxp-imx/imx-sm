@@ -47,9 +47,6 @@
 #ifdef DEVICE_HAS_FCCU
 #include "eMcem_Vfccu.h"
 #endif
-#if defined(MONITOR) || defined(TEST_ALL)
-#include "fsl_ele.h"
-#endif
 
 /* Local defines */
 
@@ -912,24 +909,6 @@ static void FaultHandler(uint32_t faultId)
 /* coverity[misra_c_2012_rule_17_11_violation] */
 static void ELEHandler(IRQn_Type excId, const uint32_t *sp)
 {
-#if defined(MONITOR) || defined(TEST_ALL)
-    /* Print ELE status (5ms until reset) */
-    printf("\n%X\n", Read32(0x57510400));
-    printf("%X\n", Read32(0x57510404));
-    printf("%X\n", Read32(0x57510408));
-    printf("%X\n", Read32(0x5751040C));
-    printf("%X\n", Read32(0x57510410));
-    printf("%X\n", Read32(0x57510414));
-    printf("%X\n", Read32(0x57510418));
-    printf("%X\n", Read32(0x5751041C));
-    printf("%X\n", Read32(0x57510424));
-    printf("%X\n\n", Read32(0x57510428));
-
-    /* Print debug log */
-    /* coverity[misra_c_2012_rule_2_2_violation] */
-    ELE_DebugDump();
-#endif
-
     /* Call common handler */
     ExceptionHandler(excId, sp,
         BLK_CTRL_S_AONMIX->ELE_RST_REQ_STAT,
