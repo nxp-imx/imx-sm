@@ -381,8 +381,8 @@ int32_t SCMI_FusaFaultGet(uint32_t channel, uint32_t faultId,
  * @param[in]     flags    State of the fault:<BR>
  *                         Bits[31:2] Reserved, must be zero.<BR>
  *                         Bit[1:0] Fault state.<BR>
- *                         Set to 0 to set the fault.<BR>
- *                         Set to 1 to clear the fault.<BR>
+ *                         Set to 0 to clear the fault.<BR>
+ *                         Set to 1 to set the fault.<BR>
  *                         Set to 2 to report the fault is recovered.<BR>
  *                         Set to 3 to report the fault could not be reovered
  *

@@ -1080,8 +1080,8 @@ static int32_t FusaFaultGet(const scmi_caller_t *caller,
 /* - in->flags: State of the fault:                                         */
 /*   Bits[31:2] Reserved, must be zero.                                     */
 /*   Bit[1:0] Fault state.                                                  */
-/*   Set to 0 to set the fault.                                             */
-/*   Set to 1 to clear the fault.                                           */
+/*   Set to 0 to clear the fault.                                           */
+/*   Set to 1 to set the fault.                                             */
 /*   Set to 2 to report the fault is recovered.                             */
 /*   Set to 3 to report the fault could not be reovered                     */
 /*                                                                          */
