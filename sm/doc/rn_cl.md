@@ -23,6 +23,7 @@ New Feature {#RN_CL_NEW}
 | [SM-443](https://jira.sw.nxp.com/projects/SM/issues/SM-443) | Add i.MX937 jailhouse and rpmsg configuration files [[detail]](@ref RN_DETAIL_SM_443) |   | Y | | | | |
 | [SM-444](https://jira.sw.nxp.com/projects/SM/issues/SM-444) | Add Android support for i.MX95 15x15 freedom LPDDR5 board [[detail]](@ref RN_DETAIL_SM_444) |   | | | Y | Y | |
 | [SM-445](https://jira.sw.nxp.com/projects/SM/issues/SM-445) | Add rpmsg support for FRDM-IMX952 [[detail]](@ref RN_DETAIL_SM_445) |   | | | | | Y |
+| [SM-447](https://jira.sw.nxp.com/projects/SM/issues/SM-447) | Add i.MX95 LPDDR5 FRDM jailhouse and rpmsg configuration files [[detail]](@ref RN_DETAIL_SM_447) |   | | | Y | Y | |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -46,13 +47,6 @@ Bug {#RN_CL_BUG}
 | [SM-430](https://jira.sw.nxp.com/projects/SM/issues/SM-430) | i.MX943 EVK I2C2 pinmuxing is impossible [[detail]](@ref RN_DETAIL_SM_430) |   | | Y | | | |
 | [SM-432](https://jira.sw.nxp.com/projects/SM/issues/SM-432) | Minor errors in alt and emul config files [[detail]](@ref RN_DETAIL_SM_432) |   | | Y | | | |
 
-Task {#RN_CL_TASK}
-------------
-
-| Key     | Summary                        | Patch | MX937<br> (A1) | MX94<br> (A1) | MX95<br> (B0) | MX95<br> (B1) | MX952<br> (A1) |
-|------------|-------------------------------|-------|---|---|---|---|---|
-| [SM-439](https://jira.sw.nxp.com/projects/SM/issues/SM-439) | SCMI_FusaFaultSet() documentation has incorrect flag use |   | Y | Y | Y | Y | Y |
-
 Documentation {#RN_CL_DOC}
 ------------
 
@@ -60,6 +54,7 @@ Documentation {#RN_CL_DOC}
 |------------|-------------------------------|-------|---|---|---|---|---|
 | [SM-407](https://jira.sw.nxp.com/projects/SM/issues/SM-407) | Remove support for i.MX952 A0 [[detail]](@ref RN_DETAIL_SM_407) |   | | | | | |
 | [SM-421](https://jira.sw.nxp.com/projects/SM/issues/SM-421) | SM 2026Q3 documentation updates |   | Y | Y | Y | Y | Y |
+| [SM-439](https://jira.sw.nxp.com/projects/SM/issues/SM-439) | SCMI_FusaFaultSet() documentation has incorrect flag use [[detail]](@ref RN_DETAIL_SM_439) |   | Y | Y | Y | Y | Y |
 | [SM-442](https://jira.sw.nxp.com/projects/SM/issues/SM-442) | mx94alt mSel description incomplete in docs [[detail]](@ref RN_DETAIL_SM_442) |   | | Y | | | |
 | [SM-446](https://jira.sw.nxp.com/projects/SM/issues/SM-446) | Add support for i.MX95 B1 [[detail]](@ref RN_DETAIL_SM_446) |   | | | | Y | |
 
@@ -161,6 +156,11 @@ SM-437: Add MISC protocol API to get control attributes {#RN_DETAIL_SM_437}
 
 Added a new SCMI MISC protocol message, ::SCMI_MSG_MISC_CONTROL_ATTRIBUTES. This message can be called with the client SCMI_MiscControlAttributes() function. It is used to get the attributes of a control. Attributes indicate which MISC message/functions are valid for that control: NOTIFY, SET, GET, EXT_SET, EXT_GET, ACTION.
 
+SM-439: SCMI_FusaFaultSet() documentation has incorrect flag use {#RN_DETAIL_SM_439}
+----------
+
+Update dox for SCMI_FusaFaultSet() to swap 0 and 1 for the set/clear flag options.
+
 SM-440: Add support for the i.MX95 freedom board LP5 15*15 {#RN_DETAIL_SM_440}
 ----------
 
@@ -217,4 +217,19 @@ SM-446: Add support for i.MX95 B1 {#RN_DETAIL_SM_446}
 ----------
 
 Added support for i.MX95 B1. This is just a doc change.
+
+SM-447: Add i.MX95 LPDDR5 FRDM jailhouse and rpmsg configuration files {#RN_DETAIL_SM_447}
+----------
+
+Added two new SM config files: mx95frdmjailhouse.cfg and mx95frdmrpmsg.cfg.
+
+Build command:
+
+make config=mx95frdmjailhouse cfg
+make config=mx95frdmjailhouse
+
+And:
+
+make config=mx95frdmrpmsg cfg
+make config=mx95frdmrpmsg
 
