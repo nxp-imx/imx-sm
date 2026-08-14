@@ -303,14 +303,14 @@ int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
             {
                 /* Disable alarm */
                 if ((sensorId == BRD_SM_SENSOR_TEMP_PF09)
-                    && !sensorEnb[brdSensorId])
+                    && sensorEnb[brdSensorId] && !enable)
                 {
                     if (!PF09_TempAlarmSet(&g_pf09Dev, 500))
                     {
                         status = SM_ERR_HARDWARE_ERROR;
                     }
                 }
-                else
+                if (status == SM_ERR_SUCCESS)
                 {
                     /* Record sensor enable */
                     sensorEnb[brdSensorId] = enable;
