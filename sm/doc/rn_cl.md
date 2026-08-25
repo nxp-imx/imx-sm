@@ -46,6 +46,7 @@ Bug {#RN_CL_BUG}
 | [SM-429](https://jira.sw.nxp.com/projects/SM/issues/SM-429) | Restrict access to resources which are disabled in fuses [[detail]](@ref RN_DETAIL_SM_429) |   | Y | Y | Y | Y | Y |
 | [SM-430](https://jira.sw.nxp.com/projects/SM/issues/SM-430) | i.MX943 EVK I2C2 pinmuxing is impossible [[detail]](@ref RN_DETAIL_SM_430) |   | | Y | | | |
 | [SM-432](https://jira.sw.nxp.com/projects/SM/issues/SM-432) | Minor errors in alt and emul config files [[detail]](@ref RN_DETAIL_SM_432) |   | | Y | | | |
+| [SM-451](https://jira.sw.nxp.com/projects/SM/issues/SM-451) | PF09 temp sensor enable broken on the i.MX95 FRDM LPDDR5 board [[detail]](@ref RN_DETAIL_SM_451) |   | | | Y | Y | |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -232,4 +233,11 @@ And:
 
     make config=mx95frdmrpmsg cfg
     make config=mx95frdmrpmsg
+
+SM-451: PF09 temp sensor enable broken on the i.MX95 FRDM LPDDR5 board {#RN_DETAIL_SM_451}
+----------
+
+This issue was caused by improper handling of board sensors (PMIC sensor) enable/disable operations in the BRD_SM_SensorEnable() function for the i.MX95-FRDM-LP5 board. The implementation has been updated to correctly manage PMIC sensor states.
+
+ 
 
