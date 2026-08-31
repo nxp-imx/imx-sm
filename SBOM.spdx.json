@@ -2,18 +2,18 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2026-06-02T02:50:21Z",
+    "created": "2026-08-25T03:39:27Z",
     "creators": [
       "Organization: NXP"
     ],
-    "licenseListVersion": "3.26"
+    "licenseListVersion": "3.28"
   },
   "name": "imx-sm-lf-6.18.37-2.1.0",
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://nxp.com/spdx/cc474761-a2e6-4e6a-bac1-8290aa7d00c4",
+  "documentNamespace": "https://nxp.com/spdx/6dab6d78-d8fc-47c3-9cc5-7da3c216a9df",
   "packages": [
     {
-      "SPDXID": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4",
+      "SPDXID": "SPDXRef-package-6dab6d78-d8fc-47c3-9cc5-7da3c216a9df",
       "name": "imx-sm",
       "versionInfo": "lf-6.18.37-2.1.0",
       "licenseConcluded": "BSD-3-Clause",
@@ -25,7 +25,7 @@
       "filesAnalyzed": false
     },
     {
-      "SPDXID": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4---f872a562-49f7-464f-a9a6-2ceb45966850",
+      "SPDXID": "SPDXRef-package-6dab6d78-d8fc-47c3-9cc5-7da3c216a9df---f872a562-49f7-464f-a9a6-2ceb45966850",
       "name": "CMSIS_5",
       "versionInfo": "5.9.0",
       "licenseConcluded": "Apache-2.0",
@@ -42,12 +42,12 @@
     {
       "spdxElementId": "SPDXRef-DOCUMENT",
       "relationshipType": "DESCRIBES",
-      "relatedSpdxElement": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4"
+      "relatedSpdxElement": "SPDXRef-package-6dab6d78-d8fc-47c3-9cc5-7da3c216a9df"
     },
     {
-      "spdxElementId": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4",
+      "spdxElementId": "SPDXRef-package-6dab6d78-d8fc-47c3-9cc5-7da3c216a9df",
       "relationshipType": "CONTAINS",
-      "relatedSpdxElement": "SPDXRef-package-cc474761-a2e6-4e6a-bac1-8290aa7d00c4---f872a562-49f7-464f-a9a6-2ceb45966850"
+      "relatedSpdxElement": "SPDXRef-package-6dab6d78-d8fc-47c3-9cc5-7da3c216a9df---f872a562-49f7-464f-a9a6-2ceb45966850"
     }
   ]
 }
